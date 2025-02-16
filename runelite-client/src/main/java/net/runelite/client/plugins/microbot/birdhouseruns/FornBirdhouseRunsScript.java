@@ -46,7 +46,7 @@ public class FornBirdhouseRunsScript extends Script {
                 switch (botStatus) {
                     case GEARING:
                         if (Rs2Bank.openBank()) {
-                            //Rs2Bank.depositAll();
+                            Rs2Bank.depositAll();
                             if (config.GRACEFUL()) {
                                 Rs2Bank.depositEquipment();
                                 equipGraceful();
@@ -236,13 +236,18 @@ public class FornBirdhouseRunsScript extends Script {
 
     private void dismantleAndRebuildBirdhouse(int itemId, states status) {
         if (!Rs2Player.isMoving() &&
-                !Rs2Player.isAnimating() &&
-                !Rs2Player.isInteracting()
+            !Rs2Player.isAnimating() &&
+            !Rs2Player.isInteracting()
         ) {
             Rs2GameObject.interact(itemId, "reset");
-            sleepUntil(() -> (!Rs2Player.isAnimating() && Rs2Player.waitForXpDrop(Skill.CRAFTING,8000)), 10000);
-            sleep(Rs2Random.between(2000, 3000));
+            sleepUntil(() -> (!Rs2Player.isAnimating() && !Rs2Player.isInteracting() && Rs2Player.waitForXpDrop(Skill.CRAFTING,5000)), 5000);
+            sleep(2000, 3000);
             botStatus = status;
         }
+
+
+
+
+
     }
 }
