@@ -2,7 +2,6 @@ package net.runelite.client.plugins.microbot.birdhouseruns;
 
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuAction;
-import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.Notifier;
 import net.runelite.client.config.Notification;
@@ -13,7 +12,6 @@ import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
-import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
@@ -26,12 +24,12 @@ import java.util.concurrent.TimeUnit;
 
 import static net.runelite.client.plugins.microbot.birdhouseruns.FornBirdhouseRunsInfo.*;
 
-public class FornBirdhouseRunsScript extends Script {
+public class FornBirdhouseRunsScript2 extends Script {
     private static final WorldPoint birdhouseLocation1 = new WorldPoint(3763, 3755, 0);
     private static final WorldPoint birdhouseLocation2 = new WorldPoint(3768, 3761, 0);
     private static final WorldPoint birdhouseLocation3 = new WorldPoint(3677, 3882, 0);
     private static final WorldPoint birdhouseLocation4 = new WorldPoint(3679, 3815, 0);
-    public static double version = 1.1;
+    public static double version = 1.0;
     @Inject
     private Notifier notifier;
 
@@ -80,13 +78,18 @@ public class FornBirdhouseRunsScript extends Script {
                         }
                         break;
                     case DISMANTLE_HOUSE_1:
-                        dismantleAndRebuildBirdhouse(30568, states.SEED_HOUSE_1);
+                        dismantleBirdhouse(30568, states.BUILD_HOUSE_1);
+                        break;
+                    case BUILD_HOUSE_1:
+                        buildBirdhouse(birdhouseLocation1, states.SEED_HOUSE_1);
                         break;
                     case SEED_HOUSE_1:
                         seedHouse(birdhouseLocation1, states.DISMANTLE_HOUSE_2);
-                        break;
                     case DISMANTLE_HOUSE_2:
-                        dismantleAndRebuildBirdhouse(30567, states.SEED_HOUSE_2);
+                        dismantleBirdhouse(30567, states.BUILD_HOUSE_2);
+                        break;
+                    case BUILD_HOUSE_2:
+                        buildBirdhouse(birdhouseLocation2, states.SEED_HOUSE_2);
                         break;
                     case SEED_HOUSE_2:
                         seedHouse(birdhouseLocation2, states.MUSHROOM_TELEPORT);
@@ -100,14 +103,20 @@ public class FornBirdhouseRunsScript extends Script {
                         }
                         break;
                     case DISMANTLE_HOUSE_3:
-                        dismantleAndRebuildBirdhouse(30565, states.SEED_HOUSE_3);
+                        dismantleBirdhouse(30565, states.BUILD_HOUSE_3);
+                        break;
+                    case BUILD_HOUSE_3:
+                        buildBirdhouse(birdhouseLocation3, states.SEED_HOUSE_3);
                         break;
                     case SEED_HOUSE_3:
                         seedHouse(birdhouseLocation3, states.DISMANTLE_HOUSE_4);
                         break;
                     case DISMANTLE_HOUSE_4:
-                        Rs2Walker.walkTo(new WorldPoint(3680, 3815, 0));
-                        dismantleAndRebuildBirdhouse(30566, states.SEED_HOUSE_4);
+                        Rs2Walker.walkTo(new WorldPoint(3680, 3813, 0));
+                        dismantleBirdhouse(30566, states.BUILD_HOUSE_4);
+                        break;
+                    case BUILD_HOUSE_4:
+                        buildBirdhouse(birdhouseLocation4, states.SEED_HOUSE_4);
                         break;
                     case SEED_HOUSE_4:
                         seedHouse(birdhouseLocation4, states.FINISHING);
@@ -234,20 +243,31 @@ public class FornBirdhouseRunsScript extends Script {
         }
     }
 
-    private void dismantleAndRebuildBirdhouse(int itemId, states status) {
-        if (!Rs2Player.isMoving() &&
-            !Rs2Player.isAnimating() &&
-            !Rs2Player.isInteracting()
-        ) {
-            Rs2GameObject.interact(itemId, "reset");
-            sleepUntil(() -> (!Rs2Player.isAnimating() && !Rs2Player.isInteracting() && Rs2Player.waitForXpDrop(Skill.CRAFTING,5000)), 5000);
-            sleep(2000, 3000);
-            botStatus = status;
+    private void buildBirdhouse(WorldPoint worldPoint, states status) {
+        if (!Rs2Inventory.hasItem(birdhouseType) && Rs2Inventory.hasItem(ItemID.CLOCKWORK)) {
+            Rs2Inventory.use(ItemID.HAMMER);
+            Rs2Inventory.use(selectedLogs);
+            sleep(1000, 2000);
         }
+        if (!Rs2Player.isAnimating() &&
+            !Rs2Player.isInteracting() &&
+            Rs2GameObject.interact(worldPoint, "build")) {
+            sleep(1000, 1500);
+            if (!Rs2Inventory.hasItem(birdhouseType)) {
+                botStatus = status;
+            }
+        }
+    }
 
+    private void dismantleBirdhouse(int itemId, states status) {
+        if (Rs2Inventory.hasItem(ItemID.CLOCKWORK)) {
+            botStatus = status;
+        } else if (!Rs2Player.isMoving() &&
+                !Rs2Player.isAnimating() &&
+                !Rs2Player.isInteracting()
+        ) {
 
-
-
-
+            Rs2GameObject.interact(itemId, "empty");
+        }
     }
 }
