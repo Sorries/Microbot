@@ -85,9 +85,9 @@ public class TitheFarmingScript extends Script {
                         new TitheFarmPlant(35, 46, 13),
                         new TitheFarmPlant(40, 46, 14),
                         new TitheFarmPlant(35, 49, 15),
-                        new TitheFarmPlant(40, 49, 16),
-                        new TitheFarmPlant(45, 49, 17),
-                        new TitheFarmPlant(45, 46, 18)));
+                        new TitheFarmPlant(40, 49, 16)));
+//                        new TitheFarmPlant(45, 49, 17),
+//                        new TitheFarmPlant(45, 46, 18),
 //                        new TitheFarmPlant(45, 49, 19),
 //                        new TitheFarmPlant(45, 46, 20),
 //                        new TitheFarmPlant(45, 43, 21)));
