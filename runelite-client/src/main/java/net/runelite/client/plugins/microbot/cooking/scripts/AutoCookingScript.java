@@ -152,10 +152,10 @@ public class AutoCookingScript extends Script {
                         Rs2Bank.closeBank();
                         break;
                     case WALKING:
-                        if (!isNearCookingLocation(location, 10)) {
+                        if (!isNearCookingLocation(location, 30)) {
                             boolean walkTo = Rs2Walker.walkTo(location.getCookingObjectWorldPoint(), 2);
                             if (!walkTo) return;
-                        } else if (!isNearCookingLocation(location, 2)) {
+                        } else if (!isNearCookingLocation(location, 15)) {
                             Rs2Walker.walkFastCanvas(location.getCookingObjectWorldPoint());
                         }
 
