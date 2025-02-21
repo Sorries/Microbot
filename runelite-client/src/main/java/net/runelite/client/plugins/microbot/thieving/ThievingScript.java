@@ -13,6 +13,7 @@ import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
+import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
@@ -158,17 +159,36 @@ public class ThievingScript extends Script {
         }
     }
 
+//    private void handleWealthyCitizen() {
+//        List<NPC> wealthyCitizenInteracting = Rs2Npc.getNpcs("Wealthy citizen", true)
+//                .filter(x -> x.isInteracting()
+//                        && x.getInteracting() != null
+//                        && x.getInteracting().getCombatLevel() == 0)
+//                .collect(Collectors.toList());
+//        NPC wealthyCitizenToPickpocket = wealthyCitizenInteracting.stream().findFirst().orElse(null);
+//        if (wealthyCitizenToPickpocket != null) {
+//            if (!Rs2Player.isAnimating(3000) && Rs2Npc.pickpocket(wealthyCitizenToPickpocket)) {
+//                Microbot.status = "Pickpocketting " + wealthyCitizenToPickpocket.getName();
+//                sleep(300, 600);
+//            }
+//        }
+//    }
+
     private void handleWealthyCitizen() {
-        List<NPC> wealthyCitizenInteracting = Rs2Npc.getNpcs("Wealthy citizen", true)
-                .filter(x -> x.isInteracting()
-                        && x.getInteracting() != null
-                        && x.getInteracting().getCombatLevel() == 0)
+        List<Rs2NpcModel> wealthyCitizenInteracting = Rs2Npc.getNpcs("Wealthy citizen", true)
+                .map(Rs2NpcModel::new)
+                .filter(npc -> npc.getNpc().getInteracting() != null)
                 .collect(Collectors.toList());
-        NPC wealthyCitizenToPickpocket = wealthyCitizenInteracting.stream().findFirst().orElse(null);
+
+        Rs2NpcModel wealthyCitizenToPickpocket = wealthyCitizenInteracting.stream().findFirst().orElse(null);
+
         if (wealthyCitizenToPickpocket != null) {
-            if (!Rs2Player.isAnimating(3000) && Rs2Npc.pickpocket(wealthyCitizenToPickpocket)) {
-                Microbot.status = "Pickpocketting " + wealthyCitizenToPickpocket.getName();
-                sleep(300, 600);
+            if (!Rs2Player.isAnimating(3000)) {
+                boolean interacted = Rs2Npc.interact(wealthyCitizenToPickpocket);
+                if (interacted) {
+                    Microbot.status = "Pickpocketing " + wealthyCitizenToPickpocket.getNpc().getName();
+                    sleep(300, 600);
+                }
             }
         }
     }
