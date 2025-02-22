@@ -1,14 +1,10 @@
 package net.runelite.client.plugins.microbot.sandcrabs2;
 
 import com.google.inject.Provides;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.microbot.sandcrabs2.SandCrabConfig;
-import net.runelite.client.plugins.microbot.sandcrabs2.SandCrabOverlay;
-import net.runelite.client.plugins.microbot.sandcrabs2.SandCrabScript;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 import javax.inject.Inject;
@@ -21,7 +17,7 @@ import java.awt.*;
         enabledByDefault = false
 )
 @Slf4j
-public class SandCrabPlugin extends Plugin {
+public class SandCrab2Plugin extends Plugin {
     @Inject
     private net.runelite.client.plugins.microbot.sandcrabs2.SandCrabConfig config;
     @Provides
