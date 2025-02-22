@@ -5,7 +5,7 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.plugins.microbot.util.misc.Rs2Food;
 
-@ConfigGroup("SandCrabPlugin")
+@ConfigGroup("SandCrab2Plugin")
 public interface SandCrabConfig extends Config {
 
     @ConfigItem(
