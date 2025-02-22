@@ -1,7 +1,5 @@
 package net.runelite.client.plugins.microbot.sandcrabs2;
 
-import net.runelite.client.plugins.microbot.sandcrabs2.SandCrabPlugin;
-import net.runelite.client.plugins.microbot.sandcrabs2.SandCrabScript;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
@@ -11,10 +9,10 @@ import javax.inject.Inject;
 import java.awt.*;
 
 public class SandCrabOverlay extends OverlayPanel {
-    private final net.runelite.client.plugins.microbot.sandcrabs2.SandCrabPlugin plugin;
+    private final net.runelite.client.plugins.microbot.sandcrabs2.SandCrab2Plugin plugin;
 
     @Inject
-    SandCrabOverlay(SandCrabPlugin plugin)
+    SandCrabOverlay(SandCrab2Plugin plugin)
     {
         super(plugin);
         this.plugin = plugin;
@@ -26,7 +24,7 @@ public class SandCrabOverlay extends OverlayPanel {
         try {
             panelComponent.setPreferredSize(new Dimension(200, 300));
             panelComponent.getChildren().add(TitleComponent.builder()
-                    .text("Micro SandCrabs Plugin V" + SandCrabScript.version)
+                    .text("Micro SandCrabs Plugin" + SandCrabScript.version)
                     .color(Color.decode("#a4ffff"))
                     .build());
 
