@@ -13,7 +13,6 @@ import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
-import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import static net.runelite.client.plugins.microbot.birdhouseruns.FornBirdhouseRunsInfo.*;
 
-public class FornBirdhouseRunsScript extends Script {
+public class FornBirdhouseRunsScriptR extends Script {
     private static final WorldPoint birdhouseLocation1 = new WorldPoint(3763, 3755, 0);
     private static final WorldPoint birdhouseLocation2 = new WorldPoint(3768, 3761, 0);
     private static final WorldPoint birdhouseLocation3 = new WorldPoint(3677, 3882, 0);
