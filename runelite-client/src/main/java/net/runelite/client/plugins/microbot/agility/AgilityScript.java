@@ -215,6 +215,26 @@ public class AgilityScript extends Script {
                         }
                     }
                 }
+//                if (Microbot.getClient().getTopLevelWorldView().getPlane() == 0
+//                        && playerWorldLocation.distanceTo(startCourse) > 6
+//                        && config.agilityCourse() != GNOME_STRONGHOLD_AGILITY_COURSE) {
+//
+//                    currentObstacle = 0;
+//                    LocalPoint startCourseLocal = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), startCourse);
+//
+//                    // Remove unnecessary distance check & make walking back a priority
+//                    if (startCourseLocal == null || playerLocation.distanceTo(startCourseLocal) >= MAX_DISTANCE) {
+//                        Microbot.log("Detected fall! Returning to start immediately...");
+//
+//                        // Skip alchemy if we fell; prioritize getting back quickly
+//                        if (!isWalkingToStart) {
+//                            isWalkingToStart = true; // Ensure we only trigger walk once
+//                            Rs2Walker.walkTo(startCourse, 8);
+//                        }
+//                        return;
+//                    }
+//                }
+
 
                 if (!marksOfGrace.isEmpty() && !Rs2Inventory.isFull()) {
                     for (RS2Item markOfGraceTile : marksOfGrace) {
