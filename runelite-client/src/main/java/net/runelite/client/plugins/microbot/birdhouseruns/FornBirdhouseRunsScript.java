@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import static net.runelite.client.plugins.microbot.birdhouseruns.FornBirdhouseRunsInfo.*;
 
-public class FornBirdhouseRunsScript extends Script {
+public class FornBirdhouseRunsScriptR extends Script {
     private static final WorldPoint birdhouseLocation1 = new WorldPoint(3763, 3755, 0);
     private static final WorldPoint birdhouseLocation2 = new WorldPoint(3768, 3761, 0);
     private static final WorldPoint birdhouseLocation3 = new WorldPoint(3677, 3882, 0);
