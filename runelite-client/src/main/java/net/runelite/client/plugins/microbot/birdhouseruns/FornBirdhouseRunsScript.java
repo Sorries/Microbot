@@ -13,7 +13,6 @@ import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
-import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
@@ -236,8 +235,8 @@ public class FornBirdhouseRunsScriptR extends Script {
 
     private void dismantleAndRebuildBirdhouse(int itemId, states status) {
         if (!Rs2Player.isMoving() &&
-            !Rs2Player.isAnimating() &&
-            !Rs2Player.isInteracting()
+                !Rs2Player.isAnimating() &&
+                !Rs2Player.isInteracting()
         ) {
             Rs2GameObject.interact(itemId, "reset");
             sleepUntil(() -> (!Rs2Player.isAnimating() && !Rs2Player.isInteracting() && Rs2Player.waitForXpDrop(Skill.CRAFTING,8000)), 10000);
