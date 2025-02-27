@@ -45,7 +45,7 @@ public class FornBirdhouseRunsScript extends Script {
                 switch (botStatus) {
                     case GEARING:
                         if (Rs2Bank.openBank()) {
-                            Rs2Bank.depositAll();
+                            //Rs2Bank.depositAll();
                             if (config.GRACEFUL()) {
                                 Rs2Bank.depositEquipment();
                                 equipGraceful();
