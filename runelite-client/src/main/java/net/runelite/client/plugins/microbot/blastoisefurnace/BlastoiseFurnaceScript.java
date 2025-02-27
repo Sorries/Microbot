@@ -148,9 +148,11 @@ public class BlastoiseFurnaceScript extends Script {
 
                             while (true) {
                                 if (hasGauntlets && super.run()) {
+                                    sleep(1000,1500);
                                     Rs2Keyboard.keyPress(32);
 
                                     if (config.getBars().isRequiresGoldsmithGloves()) {
+                                        sleep(1500,2500);
                                         Rs2Inventory.interact(ItemID.GOLDSMITH_GAUNTLETS, "Wear");
                                     }
 
@@ -173,7 +175,7 @@ public class BlastoiseFurnaceScript extends Script {
                                 }
                             }
                         }
-
+                        sleep(1250,2000);
                         this.openBank();
                         this.sleepUntil(Rs2Bank::isOpen, Rs2Player::isMoving, 300);
                         state = State.BANKING;
@@ -243,11 +245,13 @@ public class BlastoiseFurnaceScript extends Script {
             Rs2Bank.withdrawAll(GOLD_ORE);
             return;
         }
+        Rs2Bank.closeBank();
+        sleep(500,1000);
        depositOre();
 
         Rs2Walker.walkFastCanvas(new WorldPoint(1940, 4962, 0));
 
-        sleep(3400);
+        sleep(3500,4500);
         sleepUntil(() -> {
             return barsInDispenser(config.getBars()) > 5;
         }, 300000);
