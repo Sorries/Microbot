@@ -306,6 +306,8 @@ public class MotherloadMineScript extends Script
                 Rs2Bank.withdrawOne(pickaxeName);
             }
             sleep(600);
+            Rs2Bank.closeBank();
+            sleep(300, 800);
         }
         status = MLMStatus.IDLE;
     }
