@@ -24,6 +24,7 @@ import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 
 import static net.runelite.api.ItemID.COAL;
 import static net.runelite.api.ItemID.GOLD_ORE;
@@ -70,7 +71,7 @@ public class BlastoiseFurnaceScript extends Script {
         waitingnexttick = false;
         primaryOreEmpty = !Rs2Inventory.hasItem(config.getBars().getPrimaryOre());
         secondaryOreEmpty = !Rs2Inventory.hasItem(config.getBars().getSecondaryOre());
-        Rs2Antiban.resetAntibanSettings();
+//        Rs2Antiban.resetAntibanSettings();
         applyAntiBanSettings();
 
 
@@ -131,12 +132,11 @@ public class BlastoiseFurnaceScript extends Script {
                             this.shutdown();
                         }
 
-                        if (!Rs2Player.hasStaminaBuffActive() && Microbot.getClient().getEnergy() < 8100) {
+                        if (!Rs2Player.hasStaminaBuffActive() && Microbot.getClient().getEnergy() < 5000) {
                             this.useStaminaPotions();
                         }
 
                         this.retrieveItemsForCurrentFurnaceInteraction();
-                        Rs2Bank.closeBank();
                         state = State.SMITHING;
                         break;
                     case SMITHING:
@@ -247,9 +247,13 @@ public class BlastoiseFurnaceScript extends Script {
         }
         Rs2Bank.closeBank();
         sleep(500,1000);
-       depositOre();
+        depositOre();
 
-        Rs2Walker.walkFastCanvas(new WorldPoint(1940, 4962, 0));
+        if (Rs2Random.dicePercentage(50)) { // 50% chance
+            Rs2Walker.walkFastCanvas(new WorldPoint(1940, 4962, 0));
+        } else {
+            Rs2Walker.walkFastCanvas(new WorldPoint(1939, 4963, 0));
+        }
 
         sleep(3500,4500);
         sleepUntil(() -> {
@@ -434,7 +438,7 @@ public class BlastoiseFurnaceScript extends Script {
         }
 
         // Step 2: If energy is above 71% but below 81%, use Stamina potion if no stamina buff is active
-        if (Microbot.getClient().getEnergy() < 8100 && !Rs2Player.hasStaminaBuffActive()) {
+        if (Microbot.getClient().getEnergy() < 5000 && !Rs2Player.hasStaminaBuffActive()) {
             usedPotion = usePotionIfNeeded("Stamina potion", 8100);
         }
 
