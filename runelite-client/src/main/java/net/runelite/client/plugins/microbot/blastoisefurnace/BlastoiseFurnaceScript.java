@@ -132,7 +132,7 @@ public class BlastoiseFurnaceScript extends Script {
                             this.shutdown();
                         }
 
-                        if (!Rs2Player.hasStaminaBuffActive() && Microbot.getClient().getEnergy() < 8100) {
+                        if (!Rs2Player.hasStaminaBuffActive() && Microbot.getClient().getEnergy() < 5000) {
                             this.useStaminaPotions();
                         }
 
