@@ -138,7 +138,6 @@ public class BlastoiseFurnaceScript extends Script {
                         }
 
                         this.retrieveItemsForCurrentFurnaceInteraction();
-                        Rs2Bank.closeBank();
                         state = State.SMITHING;
                         break;
                     case SMITHING:
