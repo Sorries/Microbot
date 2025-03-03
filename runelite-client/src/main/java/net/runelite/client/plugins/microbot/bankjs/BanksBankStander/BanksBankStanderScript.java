@@ -183,7 +183,7 @@ public class BanksBankStanderScript extends Script {
         }
         // We loop through executing this method "combineItems()", so we want to force return to do nothing while we wait for processing.
         if (config.waitForAnimation()) {
-            if (Rs2Player.isAnimating() || (System.currentTimeMillis() - previousItemChange) < 2400) { return false; }
+            if (Rs2Player.isAnimating() || (System.currentTimeMillis() - previousItemChange) < 3000) { return false; }// temp change from 2400 to 3000 as chiseling diamond takes longer time
         }
 
         if (currentStatus != CurrentStatus.COMBINE_ITEMS) { currentStatus = CurrentStatus.COMBINE_ITEMS; }
@@ -215,6 +215,8 @@ public class BanksBankStanderScript extends Script {
             sleepUntil(() -> !isWaitingForPrompt, Rs2Random.between(800, 1200));
             Rs2Keyboard.keyPress(KeyEvent.VK_SPACE);
             previousItemChange = System.currentTimeMillis();
+            sleep(100); // Short delay to ensure prompt processing
+            isWaitingForPrompt = false; // Ensure prompt flag is reset
             if (secondItemId != null) {
                  sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId), 40000);
             } else {
