@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ArrowScript extends Script {
 
-    public static double version = 1.0;
+    public static double version = 1.1;
 
     private int sleepMin;
     private int sleepMax;
@@ -31,6 +31,7 @@ public class ArrowScript extends Script {
             if (!super.run()) return;
             if (!Microbot.isLoggedIn()) return;
             try {
+                long startTime = System.currentTimeMillis();
                 if (Microbot.pauseAllScripts) return;
                 if (config.ARROWBool()) {
                     checkAndUseItem(config.ARROW().getItem1(), config.ARROW().getItem2());
@@ -47,6 +48,9 @@ public class ArrowScript extends Script {
                 if (config.DRAGONTIPPINGBool()) {
                     checkAndUseItem(config.DragonTIP().getItem1(), config.DragonTIP().getItem2());
                 }
+                long endTime = System.currentTimeMillis();
+                long totalTime = endTime - startTime;
+                System.out.println("Total time for loop " + totalTime);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
