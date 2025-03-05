@@ -3,6 +3,9 @@ package net.runelite.client.plugins.microbot.nateplugins.skilling.arrowmaker;
 import net.runelite.api.Skill;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
+import net.runelite.client.plugins.microbot.util.antiban.Rs2AntibanSettings;
+import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
@@ -26,6 +29,22 @@ public class ArrowScript extends Script {
         sleepMin = 60;
         sleepMax = 1800;
         sleepTarget = 900;
+
+        Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
+        Rs2AntibanSettings.antibanEnabled = true;
+        Rs2AntibanSettings.contextualVariability = true;
+        Rs2AntibanSettings.usePlayStyle = true;
+
+
+        Rs2AntibanSettings.simulateFatigue = true;
+        Rs2AntibanSettings.simulateAttentionSpan = true;
+        Rs2AntibanSettings.behavioralVariability = true;
+        Rs2AntibanSettings.nonLinearIntervals = true;
+
+        Rs2AntibanSettings.simulateMistakes = true;
+        Rs2AntibanSettings.naturalMouse = true;
+
+        Rs2AntibanSettings.universalAntiban = true;
 
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             if (!super.run()) return;
