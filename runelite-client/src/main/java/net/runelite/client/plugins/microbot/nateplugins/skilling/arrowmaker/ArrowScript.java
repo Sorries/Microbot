@@ -40,11 +40,13 @@ public class ArrowScript extends Script {
         Rs2AntibanSettings.simulateAttentionSpan = true;
         Rs2AntibanSettings.behavioralVariability = true;
         Rs2AntibanSettings.nonLinearIntervals = true;
+        Rs2AntibanSettings.dynamicActivity = true;
+        Rs2AntibanSettings.profileSwitching = true;
 
         Rs2AntibanSettings.simulateMistakes = true;
         Rs2AntibanSettings.naturalMouse = true;
 
-        Rs2AntibanSettings.universalAntiban = true;
+        //Rs2AntibanSettings.universalAntiban = true;
 
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             if (!super.run()) return;
