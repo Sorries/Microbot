@@ -132,7 +132,7 @@ public class BlastoiseFurnaceScript extends Script {
                             this.shutdown();
                         }
 
-                        if (!Rs2Player.hasStaminaBuffActive() && Microbot.getClient().getEnergy() < 5000) {
+                        if (!Rs2Player.hasStaminaBuffActive() && Microbot.getClient().getEnergy() < 8100) {
                             this.useStaminaPotions();
                         }
 
@@ -430,8 +430,8 @@ public class BlastoiseFurnaceScript extends Script {
         boolean usedPotion = false;
 
         // Step 1: Keep using Energy potions until energy is above 71%
-        while (Microbot.getClient().getEnergy() < 6900) {
-            usedPotion = usePotionIfNeeded("Energy potion", 6900);
+        while (Microbot.getClient().getEnergy() < 2500) {
+            usedPotion = usePotionIfNeeded("Energy potion", 2500);
             if (!usedPotion) {
                 break; // Exit if no Energy potion is available
             }
@@ -439,7 +439,7 @@ public class BlastoiseFurnaceScript extends Script {
 
         // Step 2: If energy is above 71% but below 81%, use Stamina potion if no stamina buff is active
         if (Microbot.getClient().getEnergy() < 5000 && !Rs2Player.hasStaminaBuffActive()) {
-            usedPotion = usePotionIfNeeded("Stamina potion", 8100);
+            usedPotion = usePotionIfNeeded("Stamina potion", 5000);
         }
 
         // Sleep after using a potion
