@@ -240,7 +240,7 @@ public class FornBirdhouseRunsScript extends Script {
                 !Rs2Player.isInteracting()
         ) {
             Rs2GameObject.interact(itemId, "reset");
-            sleepUntil(() -> (!Rs2Player.isAnimating() && Rs2Player.waitForXpDrop(Skill.CRAFTING,8000)), 10000);
+            sleepUntil(() -> (!Rs2Player.isAnimating() &&!Rs2Player.isInteracting() && Rs2Player.waitForXpDrop(Skill.CRAFTING,8000)), 10000);
             sleep(Rs2Random.between(2000, 3000));
             botStatus = status;
         }
