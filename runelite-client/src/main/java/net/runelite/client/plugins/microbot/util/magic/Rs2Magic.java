@@ -361,13 +361,13 @@ public class Rs2Magic {
     public static boolean repairPouchesWithLunar() {
         log("Repairing pouches...");
         if (npcContact("dark mage")) {
-            sleep(Rs2Random.randomGaussian(900, 300));
+            sleep(Rs2Random.randomGaussian(1000, 300));
             Rs2Dialogue.clickContinue();
-            sleep(Rs2Random.randomGaussian(900, 500));
+            sleep(Rs2Random.randomGaussian(1000, 500));
             Rs2Widget.sleepUntilHasWidget("Can you repair my pouches?");
-            sleep(Rs2Random.randomGaussian(900, 300));
+            sleep(Rs2Random.randomGaussian(1000, 300));
             Rs2Widget.clickWidget("Can you repair my pouches?", Optional.of(162), 0, true);
-            sleep(Rs2Random.randomGaussian(900, 500));
+            sleep(Rs2Random.randomGaussian(1000, 500));
             Rs2Dialogue.clickContinue();
             sleep(Rs2Random.randomGaussian(1500, 300));
             Rs2Tab.switchToInventoryTab();
