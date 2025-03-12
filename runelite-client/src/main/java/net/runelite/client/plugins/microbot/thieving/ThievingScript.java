@@ -187,6 +187,7 @@ public class ThievingScript extends Script {
             Rs2Magic.cast(MagicAction.SHADOW_VEIL);
             sleep(Rs2Random.between(1000, 1500));
             Rs2Tab.switchToInventoryTab();
+            sleep(Rs2Random.between(500, 1000));
         }
     }
 
