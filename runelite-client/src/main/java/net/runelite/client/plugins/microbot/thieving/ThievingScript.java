@@ -13,9 +13,11 @@ import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 
@@ -183,6 +185,8 @@ public class ThievingScript extends Script {
             Microbot.getVarbitValue(Varbits.SHADOW_VEIL_COOLDOWN) == 0
         ) {
             Rs2Magic.cast(MagicAction.SHADOW_VEIL);
+            sleep(Rs2Random.between(1000, 1500));
+            Rs2Tab.switchToInventoryTab();
         }
     }
 
