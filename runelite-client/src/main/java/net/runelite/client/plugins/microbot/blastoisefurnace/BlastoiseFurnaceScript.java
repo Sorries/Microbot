@@ -2,6 +2,7 @@
 
 package net.runelite.client.plugins.microbot.blastoisefurnace;
 
+import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
 
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
@@ -149,7 +150,7 @@ public class BlastoiseFurnaceScript extends Script {
                             while (true) {
                                 if (hasGauntlets && super.run()) {
                                     sleep(1000,1500);
-                                    Rs2Keyboard.keyPress(32);
+                                    Rs2Keyboard.keyPress(KeyEvent.VK_SPACE);
 
                                     if (config.getBars().isRequiresGoldsmithGloves()) {
                                         sleep(1500,2500);
