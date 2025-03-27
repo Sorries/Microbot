@@ -138,13 +138,16 @@ public class NmzScript extends Script {
     public boolean useOrbs() {
         boolean orbHasSpawned = false;
         if (config.useZapper()) {
+
             orbHasSpawned = interactWithObject(ObjectID.ZAPPER_26256);
         }
         if (config.useReccurentDamage()) {
+
             orbHasSpawned = interactWithObject(ObjectID.RECURRENT_DAMAGE);
         }
 
         if (config.usePowerSurge()) {
+
             orbHasSpawned = interactWithObject(ObjectID.POWER_SURGE);
         }
 
@@ -154,6 +157,7 @@ public class NmzScript extends Script {
     public boolean interactWithObject(int objectId) {
         TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
         if (rs2GameObject != null) {
+            sleep(Rs2Random.between(1000, 5000));
             Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
             sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 5);
             Rs2GameObject.interact(objectId);
@@ -192,7 +196,7 @@ public class NmzScript extends Script {
     public void randomlyToggleRapidHeal() {
         if (Random.random(1, 50) == 2) {
             Rs2Prayer.toggle(Rs2PrayerEnum.RAPID_HEAL, true);
-            sleep(300, 600);
+            sleep(500, 800);
             Rs2Prayer.toggle(Rs2PrayerEnum.RAPID_HEAL, false);
         }
     }
@@ -209,7 +213,7 @@ public class NmzScript extends Script {
         if (Microbot.getVarbitValue(NMZ_ABSORPTION) < minAbsorption && Rs2Inventory.hasItem("absorption")) {
             for (int i = 0; i < Random.random(4, 8); i++) {
                 Rs2Inventory.interact(x -> x.name.toLowerCase().contains("absorption"), "drink");
-                sleep(600, 1000);
+                sleep(1000, 1500);
             }
             minAbsorption = Random.random(100, 300);
         }
