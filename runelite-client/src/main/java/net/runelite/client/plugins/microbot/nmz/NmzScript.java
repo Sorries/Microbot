@@ -41,6 +41,8 @@ public class NmzScript extends Script {
     public static int maxHealth = Random.random(2, 8);
     public static int minAbsorption = Random.random(100, 300);
 
+    private boolean hasWalkedToCenter = false;
+
     private WorldPoint center = new WorldPoint(Random.random(2270, 2276), Random.random(4693, 4696), 0);
 
     @Getter
@@ -69,6 +71,7 @@ public class NmzScript extends Script {
                 useOverload = Microbot.getClient().getBoostedSkillLevel(Skill.RANGED) == Microbot.getClient().getRealSkillLevel(Skill.RANGED) && config.overloadPotionAmount() > 0;
                 if (isOutsideNmz) {
                     Rs2Walker.setTarget(null);
+                    hasWalkedToCenter = false;
                     handleOutsideNmz();
                 } else {
                     handleInsideNmz();
@@ -108,6 +111,10 @@ public class NmzScript extends Script {
             Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_MELEE, true);
         if (!useOrbs() && config.walkToCenter()) {
             walkToCenter();
+        }
+        if (!hasWalkedToCenter) {
+            walkToCenter();
+            hasWalkedToCenter = true;
         }
         useOverloadPotion();
         manageSelfHarm();
@@ -157,8 +164,10 @@ public class NmzScript extends Script {
     public boolean interactWithObject(int objectId) {
         TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
         if (rs2GameObject != null) {
-            sleep(Rs2Random.between(1000, 5000));
-            Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
+            sleep(Rs2Random.between(2000, 5000));
+            if(Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) > 10) {
+                Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
+            }
             sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 5);
             Rs2GameObject.interact(objectId);
             return true;
