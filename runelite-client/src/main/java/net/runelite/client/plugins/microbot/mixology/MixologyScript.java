@@ -31,6 +31,9 @@ public class MixologyScript extends Script {
 
     public java.util.List<PotionOrder> potionOrders = Collections.emptyList();
 
+    private int sleepMin;
+    private int sleepMax;
+    private int sleepTarget;
     public static MixologyState mixologyState = MixologyState.IDLE;
     public static int lyePasteAmount, agaPasteAmount, moxPasteAmount = 0;
     public static int startLyePoints, startAgaPoints, startMoxPoints = 0;
@@ -47,10 +50,15 @@ public class MixologyScript extends Script {
 
     public boolean run(MixologyConfig config) {
         Microbot.enableAutoRunOn = false;
+        sleepMin = 60;
+        sleepMax = 1800;
+        sleepTarget = 900;
         currentMoxPoints = 0;
         currentAgaPoints = 0;
         currentLyePoints = 0;
         leverRetries = 0;
+        Rs2AntibanSettings.simulateMistakes = true;
+        Rs2AntibanSettings.naturalMouse = true;
         if (!Rs2AntibanSettings.naturalMouse) {
             Microbot.log("Hey! Did you know this script works really well with natural mouse? Feel free to enable it in the antiban settings.");
         }
@@ -70,7 +78,7 @@ public class MixologyScript extends Script {
 
 
                 if (!isInMinigame && mixologyState != MixologyState.REFINER) {
-                    Rs2Walker.walkTo(1395, 9322, 0, 2);
+                    Rs2Walker.walkTo(1393, 9322, 0, 2);
                     return;
                 }
 
@@ -84,6 +92,7 @@ public class MixologyScript extends Script {
 
                     if (digweed != null && !Rs2Player.isAnimating() && !Rs2Inventory.hasItem("digweed")
                             && config.pickDigWeed()) {
+                        sleep(calculateSleepDuration(1));
                         Rs2GameObject.interact(digweed.coordinate());
                         Rs2Player.waitForWalking();
                         Rs2Player.waitForAnimation();
@@ -97,6 +106,7 @@ public class MixologyScript extends Script {
                                 .map(x -> x.potionType().itemId())
                                 .findFirst();
                         if (potionItemId.isPresent()) {
+                            sleep(calculateSleepDuration(0.75));
                             Rs2Inventory.interact("digweed", "use");
                             Rs2Inventory.interact(potionItemId.get(), "use");
                             Rs2Player.waitForAnimation();
@@ -155,6 +165,7 @@ public class MixologyScript extends Script {
                             Rs2Player.waitForAnimation();
                             sleepGaussian(450, 150);
                             if (!config.useQuickActionRefiner()) {
+                                System.out.println("Gaining Exp Status: " + Microbot.isGainingExp);
                                 sleepUntil(() -> !Microbot.isGainingExp, 30000);
                             }
                             return;
@@ -192,6 +203,7 @@ public class MixologyScript extends Script {
                         }
                         break;
                     case DEPOSIT_HOPPER:
+                        sleep(calculateSleepDuration(1));
                         if (Rs2GameObject.interact(ObjectID.HOPPER_54903)) {
                             Rs2Player.waitForWalking();
                             Rs2Inventory.waitForInventoryChanges(10000);
@@ -238,6 +250,7 @@ public class MixologyScript extends Script {
                         }
                         break;
                     case TAKE_FROM_MIXIN_VESSEL:
+                        sleep(calculateSleepDuration(0.75));
                         Rs2GameObject.interact(MIXING_VESSEL.objectId());
                         boolean result = Rs2Inventory.waitForInventoryChanges(5000);
                         if (result) {
@@ -282,7 +295,7 @@ public class MixologyScript extends Script {
                             mixologyState = MixologyState.MIX_POTION_STAGE_1;
                             return;
                         }
-
+                        sleep(calculateSleepDuration(1));
                         processPotion(nonFulfilledPotion);
                         sleepUntil(Rs2Player::isAnimating);
                         break;
@@ -291,6 +304,7 @@ public class MixologyScript extends Script {
                             mixologyState = MixologyState.MIX_POTION_STAGE_1;
                             return;
                         }
+                        sleep(calculateSleepDuration(1));
                         if (Rs2GameObject.interact(AlchemyObject.CONVEYOR_BELT.objectId())) {
                             Rs2Inventory.waitForInventoryChanges(5000);
                             currentAgaPoints = getAgaPoints();
@@ -387,10 +401,13 @@ public class MixologyScript extends Script {
         for (PotionComponent component : potionOrder.potionType().components()) {
             if (canCreatePotion(potionOrder)) break;
             if (component.character() == 'A') {
+                sleep(calculateSleepDuration(0.1));
                 Rs2GameObject.interact(AlchemyObject.AGA_LEVER.objectId());
             } else if (component.character() == 'L') {
+                sleep(calculateSleepDuration(0.1));
                 Rs2GameObject.interact(AlchemyObject.LYE_LEVER.objectId());
             } else if (component.character() == 'M') {
+                sleep(calculateSleepDuration(0.1));
                 Rs2GameObject.interact(AlchemyObject.MOX_LEVER.objectId());
             }
             if (config.useQuickActionLever()) {
@@ -456,6 +473,28 @@ public class MixologyScript extends Script {
 
     private int getLyePoints() {
         return Integer.parseInt(Rs2Widget.getWidget(882, 2).getDynamicChildren()[18].getText());
+    }
+
+    private int calculateSleepDuration(double multiplier) { //credit to BankStanderScript
+        // Create a Random object
+        Random random = new Random();
+
+        // Calculate the mean (average) of sleepMin and sleepMax, adjusted by sleepTarget
+        double mean = (sleepMin + sleepMax + sleepTarget) / 3.0;
+
+        // Calculate the standard deviation with added noise
+        double noiseFactor = 0.2; // Adjust the noise factor as needed (0.0 to 1.0)
+        double stdDeviation = Math.abs(sleepTarget - mean) / 3.0 * (1 + noiseFactor * (random.nextDouble() - 0.5) * 2);
+
+        // Generate a random number following a normal distribution
+        int sleepDuration;
+        do {
+            // Generate a random number using nextGaussian method, scaled by standard deviation
+            sleepDuration = (int) Math.round(mean + random.nextGaussian() * stdDeviation);
+        } while (sleepDuration < sleepMin || sleepDuration > sleepMax); // Ensure the duration is within the specified range
+        if ((int) Math.round(sleepDuration * multiplier) < 60)
+            sleepDuration += ((60 - sleepDuration) + Rs2Random.between(11, 44));
+        return sleepDuration;
     }
 
     @Override

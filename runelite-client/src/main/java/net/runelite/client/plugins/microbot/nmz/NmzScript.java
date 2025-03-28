@@ -241,7 +241,9 @@ public class NmzScript extends Script {
         String widgetText = "How many doses of ";
         sleepUntil(() -> Rs2Widget.hasWidget(widgetText));
         if (Rs2Widget.hasWidget(widgetText)) {
+            sleep(800, 1300);
             Rs2Keyboard.typeString(Integer.toString(requiredAmount * 4));
+            sleep(500, 1000);
             Rs2Keyboard.enter();
             sleepUntil(() -> Rs2Inventory.count(itemName) == requiredAmount);
         }
