@@ -56,7 +56,7 @@ public class PlayerMonitorScript extends Script {
                             }
                             playAlarm = true;
                             if (config.useFlash()) {
-                                flashOverlay.setFlashColor(config.flashColor());
+                                //flashOverlay.setFlashColor(config.flashColor());
                             }
                             //if ((config.useFlash() || config.playAlarmSound()) && config.useEmergency() && !newPlayer && (config.onlyWilderness() && Microbot.getVarbitValue(Varbits.IN_WILDERNESS) == 1) || !config.onlyWilderness()) {
                             if ((config.useFlash() || config.playAlarmSound()) && config.useEmergency() && (config.onlyWilderness() && Microbot.getVarbitValue(Varbits.IN_WILDERNESS) == 1) || !config.onlyWilderness()) {
