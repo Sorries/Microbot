@@ -1,8 +1,10 @@
 package net.runelite.client.plugins.microbot.bankjs.BanksBankStander;
 
+import net.runelite.api.ItemID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
@@ -140,10 +142,23 @@ public class BanksBankStanderScript extends Script {
                 Rs2Bank.openBank();
                 sleepUntil(Rs2Bank::isOpen);
             }
+
             depositUnwantedItems(firstItemId, config.firstItemQuantity());
             depositUnwantedItems(secondItemId, config.secondItemQuantity());
             depositUnwantedItems(thirdItemId, config.thirdItemQuantity());
             depositUnwantedItems(fourthItemId, config.fourthItemQuantity());
+
+            if (config.amuletOfChemistry()){
+                //check for equipment amulet of chemistry and if not wear one.
+                if (!Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY)){
+                    if (Rs2Bank.hasItem(ItemID.AMULET_OF_CHEMISTRY)) {
+                        Rs2Bank.withdrawAndEquip(ItemID.AMULET_OF_CHEMISTRY);
+                    }else{
+                        Microbot.log("Missing Amulet of Chemistry. (disable button if not require to wear amulet)");
+                        shutdown();
+                    }
+                }
+            }
 
             // Checking that we have enough items in the bank
             String missingItem = checkItemSums();
