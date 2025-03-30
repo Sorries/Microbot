@@ -168,7 +168,7 @@ public class NmzScript extends Script {
             if(Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) > 10) {
                 Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
             }
-            sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 5);
+            sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
             Rs2GameObject.interact(objectId);
             return true;
         }
