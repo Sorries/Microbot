@@ -203,12 +203,6 @@ public class BanksBankStanderScript extends Script {
             }
         }
 
-        if (config.amuletOfChemistry()){
-            checkForAmulet();
-            Rs2Bank.closeBank();
-            sleepUntil(() -> !Rs2Bank.isOpen());
-        }
-
         // using our items from the config string and the selected interaction order.
         timeValue = System.currentTimeMillis();
         interactOrder(firstItemId);
@@ -231,9 +225,17 @@ public class BanksBankStanderScript extends Script {
             sleep(100); // Short delay to ensure prompt processing
             isWaitingForPrompt = false; // Ensure prompt flag is reset
             if (secondItemId != null) {
-                 sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId), 40000); // add amulet check during combining phase
+                if(config.amuletOfChemistry()){
+                    sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId) || !Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY), 40000);
+                    sleep(calculateSleepDuration(1));
+                    checkForAmulet();
+                    Rs2Bank.closeBank();
+                    sleepUntil(() -> !Rs2Bank.isOpen());
+                }else{
+                    sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId), 40000);
+                }
             } else {
-                 sleepUntil(() -> !Rs2Inventory.hasItem(config.secondItemIdentifier()), 40000);
+                sleepUntil(() -> !Rs2Inventory.hasItem(config.secondItemIdentifier()), 40000);
             }
             sleep(calculateSleepDuration(1));
         }
