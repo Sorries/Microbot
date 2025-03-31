@@ -149,15 +149,7 @@ public class BanksBankStanderScript extends Script {
             depositUnwantedItems(fourthItemId, config.fourthItemQuantity());
 
             if (config.amuletOfChemistry()){
-                //check for equipment amulet of chemistry and if not wear one.
-                if (!Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY)){
-                    if (Rs2Bank.hasItem(ItemID.AMULET_OF_CHEMISTRY)) {
-                        Rs2Bank.withdrawAndEquip(ItemID.AMULET_OF_CHEMISTRY);
-                    }else{
-                        Microbot.log("Missing Amulet of Chemistry. (disable button if not require to wear amulet)");
-                        shutdown();
-                    }
-                }
+                checkForAmulet();
             }
 
             // Checking that we have enough items in the bank
@@ -211,6 +203,12 @@ public class BanksBankStanderScript extends Script {
             }
         }
 
+        if (config.amuletOfChemistry()){
+            checkForAmulet();
+            Rs2Bank.closeBank();
+            sleepUntil(() -> !Rs2Bank.isOpen());
+        }
+
         // using our items from the config string and the selected interaction order.
         timeValue = System.currentTimeMillis();
         interactOrder(firstItemId);
@@ -233,7 +231,7 @@ public class BanksBankStanderScript extends Script {
             sleep(100); // Short delay to ensure prompt processing
             isWaitingForPrompt = false; // Ensure prompt flag is reset
             if (secondItemId != null) {
-                 sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId), 40000);
+                 sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId), 40000); // add amulet check during combining phase
             } else {
                  sleepUntil(() -> !Rs2Inventory.hasItem(config.secondItemIdentifier()), 40000);
             }
@@ -415,6 +413,24 @@ public class BanksBankStanderScript extends Script {
         } catch (NumberFormatException ex) {
             System.out.println("Could not Parse Int from Item, lookup item and return id");
             return Microbot.getItemManager().search(text).stream().map(ItemPrice::getId).findFirst().orElse(null);
+        }
+    }
+    private void checkForAmulet(){
+        if (!Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY)){
+            if (!Rs2Bank.isOpen()) {
+                Rs2Bank.openBank();
+                sleepUntil(Rs2Bank::isOpen);
+            }
+            if (Rs2Bank.isOpen() && Rs2Bank.hasItem(ItemID.AMULET_OF_CHEMISTRY)) {
+                Rs2Bank.withdrawAndEquip(ItemID.AMULET_OF_CHEMISTRY);
+            }else{
+                Microbot.log("Missing Amulet of Chemistry. (disable button if not require to wear amulet)");
+                shutdown();
+            }
+//            if(Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY)){
+//                Rs2Bank.closeBank();
+//                sleepUntil(() -> !Rs2Bank.isOpen());
+//            }
         }
     }
 }
