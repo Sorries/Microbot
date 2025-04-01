@@ -229,8 +229,10 @@ public class BanksBankStanderScript extends Script {
                     sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId) || !Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY), 40000);
                     sleep(calculateSleepDuration(1));
                     checkForAmulet();
-                    Rs2Bank.closeBank();
-                    sleepUntil(() -> !Rs2Bank.isOpen());
+                    if(Rs2Bank.isOpen()) {
+                        Rs2Bank.closeBank();
+                        sleepUntil(() -> !Rs2Bank.isOpen());
+                    }
                 }else{
                     sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId), 40000);
                 }
