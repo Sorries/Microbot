@@ -226,7 +226,7 @@ public class BanksBankStanderScript extends Script {
             isWaitingForPrompt = false; // Ensure prompt flag is reset
             if (secondItemId != null) {
                 if(config.amuletOfChemistry()){
-                    sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId) || !Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY), 40000);
+                    sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId) || !Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY) || Rs2Equipment.isWearing(ItemID.ALCHEMISTS_AMULET), 40000);
                     sleep(calculateSleepDuration(1));
                     checkForAmulet();
                     if(Rs2Bank.isOpen()) {
@@ -420,14 +420,16 @@ public class BanksBankStanderScript extends Script {
         }
     }
     private void checkForAmulet(){
-        if (!Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY)){
+        if (!Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY) || !Rs2Equipment.isWearing(ItemID.ALCHEMISTS_AMULET_29990) || Rs2Equipment.isWearing(ItemID.ALCHEMISTS_AMULET)){
             if (!Rs2Bank.isOpen()) {
                 Rs2Bank.openBank();
                 sleepUntil(Rs2Bank::isOpen);
             }
-            if (Rs2Bank.isOpen() && Rs2Bank.hasItem(ItemID.AMULET_OF_CHEMISTRY)) {
+            if (Rs2Bank.isOpen() && Rs2Bank.hasItem(ItemID.ALCHEMISTS_AMULET_29990)){
+                Rs2Bank.withdrawAndEquip(ItemID.ALCHEMISTS_AMULET_29990);
+            } else if (Rs2Bank.isOpen() && Rs2Bank.hasItem(ItemID.AMULET_OF_CHEMISTRY)) {
                 Rs2Bank.withdrawAndEquip(ItemID.AMULET_OF_CHEMISTRY);
-            }else{
+            } else {
                 Microbot.log("Missing Amulet of Chemistry. (disable button if not require to wear amulet)");
                 shutdown();
             }
