@@ -250,7 +250,8 @@ public class FarmTreeRunScript extends Script {
                     case FINISHED:
                         Microbot.getClientThread().runOnClientThread(() -> {
                                     Microbot.getClient().addChatMessage(ChatMessageType.ENGINE, "", "Tree run completed.", "Acun", false);
-                                    Microbot.getClient().addChatMessage(ChatMessageType.ENGINE, "", "Made with love by Acun.", "Acun", false);
+//                                    Microbot.getClient().addChatMessage(ChatMessageType.ENGINE, "", "Tree run completed.", "Acun", false);
+//                                    Microbot.getClient().addChatMessage(ChatMessageType.ENGINE, "", "Made with love by Acun.", "Acun", false);
                                     return null;
                                 }
                         );
