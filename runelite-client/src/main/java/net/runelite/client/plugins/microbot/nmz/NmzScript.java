@@ -35,6 +35,7 @@ public class NmzScript extends Script {
     public static NmzConfig config;
 
     public static boolean useOverload = false;
+    private boolean firstIterationOfOverLoad = true;
 
     public static PrayerPotionScript prayerPotionScript;
 
@@ -72,6 +73,7 @@ public class NmzScript extends Script {
                 if (isOutsideNmz) {
                     Rs2Walker.setTarget(null);
                     hasWalkedToCenter = false;
+                    firstIterationOfOverLoad = true;
                     handleOutsideNmz();
                 } else {
                     handleInsideNmz();
@@ -212,9 +214,12 @@ public class NmzScript extends Script {
 
     public void useOverloadPotion() {
         if (useOverload && Rs2Inventory.hasItem("overload") && Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) > 50) {
-            sleep(Rs2Random.between(3000, 10000));
+            if (!firstIterationOfOverLoad) {
+                sleep(Rs2Random.between(3000, 10000));
+            }
             Rs2Inventory.interact(x -> x.name.toLowerCase().contains("overload"), "drink");
             sleep(10000);
+            firstIterationOfOverLoad = false; // Mark first iteration as completed
         }
     }
 
