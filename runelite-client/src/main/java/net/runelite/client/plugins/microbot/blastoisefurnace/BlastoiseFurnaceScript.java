@@ -28,6 +28,7 @@ import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 
 import static net.runelite.api.ItemID.COAL;
 import static net.runelite.api.ItemID.GOLD_ORE;
@@ -282,11 +283,17 @@ public class BlastoiseFurnaceScript extends Script {
             Rs2Bank.withdrawAll(GOLD_ORE);
             return;
         }
+//        Rs2Bank.closeBank();
+        sleep(500,1000);
         depositOre();
 
-        Rs2Walker.walkFastCanvas(new WorldPoint(1940, 4962, 0));
+        if (Rs2Random.dicePercentage(50)) { // 50% chance
+            Rs2Walker.walkFastCanvas(new WorldPoint(1940, 4962, 0));
+        } else {
+            Rs2Walker.walkFastCanvas(new WorldPoint(1939, 4963, 0));
+        }
 
-        sleep(3400);
+        sleep(3500,4500);
         sleepUntil(() -> barsInDispenser(config.getBars()) > 0, 10000);
         Rs2Inventory.interact(ItemID.ICE_GLOVES, "wear");
         Rs2Inventory.waitForInventoryChanges(2000);
@@ -453,16 +460,16 @@ public class BlastoiseFurnaceScript extends Script {
         boolean usedPotion = false;
 
         // Step 1: Keep using Energy potions until energy is above 71%
-        while (Microbot.getClient().getEnergy() < 6900) {
-            usedPotion = usePotionIfNeeded("Energy potion", 6900);
+        while (Microbot.getClient().getEnergy() < 2500) {
+            usedPotion = usePotionIfNeeded("Energy potion", 2500);
             if (!usedPotion) {
                 break; // Exit if no Energy potion is available
             }
         }
 
         // Step 2: If energy is above 71% but below 81%, use Stamina potion if no stamina buff is active
-        if (Microbot.getClient().getEnergy() < 8100 && !Rs2Player.hasStaminaBuffActive()) {
-            usedPotion = usePotionIfNeeded("Stamina potion", 8100);
+        if (Microbot.getClient().getEnergy() < 5000 && !Rs2Player.hasStaminaBuffActive()) {
+            usedPotion = usePotionIfNeeded("Stamina potion", 5000);
         }
 
         // Sleep after using a potion
