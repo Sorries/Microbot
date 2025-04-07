@@ -11,12 +11,6 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.aiofighter.combat.PrayerPotionScript;
-import net.runelite.client.plugins.microbot.pluginscheduler.api.SchedulablePlugin;
-import net.runelite.client.plugins.microbot.pluginscheduler.condition.logical.AndCondition;
-import net.runelite.client.plugins.microbot.pluginscheduler.condition.logical.LogicalCondition;
-import net.runelite.client.plugins.microbot.pluginscheduler.event.PluginScheduleEntrySoftStopEvent;
-import net.runelite.client.plugins.microbot.util.Global;
-import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.ui.overlay.OverlayManager;
 
@@ -30,7 +24,7 @@ import java.awt.*;
         enabledByDefault = false
 )
 @Slf4j
-public class NmzPlugin extends Plugin implements SchedulablePlugin{
+public class NmzPlugin extends Plugin {
     @Inject
     private NmzConfig config;
 
@@ -48,14 +42,14 @@ public class NmzPlugin extends Plugin implements SchedulablePlugin{
     NmzScript nmzScript;
     @Inject
     PrayerPotionScript prayerPotionScript;
-    private LogicalCondition stopCondition = new AndCondition();
+
 
     @Override
     protected void startUp() throws AWTException {
         if (overlayManager != null) {
             overlayManager.add(nmzOverlay);
         }
-        nmzScript.run();
+        nmzScript.run(config);
         if (config.togglePrayerPotions()) {
             prayerPotionScript.run(config);
         }
@@ -68,28 +62,10 @@ public class NmzPlugin extends Plugin implements SchedulablePlugin{
     }
 
     @Subscribe
-    public void onPluginScheduleEntrySoftStopEvent(PluginScheduleEntrySoftStopEvent event) {
-        if (event.getPlugin() == this) {
-            nmzScript.shutdown();
-            Microbot.getClientThread().runOnSeperateThread(() -> {
-                if(!nmzScript.isOutside()) {
-                    Rs2GameObject.interact(26276, "Drink");
-                    Global.sleepUntil(nmzScript::isOutside, 10000);
-                }
-                Microbot.stopPlugin(this);
-                return true;
-            });
-        }
-    }
-
-    @Subscribe
     public void onActorDeath(ActorDeath actorDeath) {
         if (config.stopAfterDeath() && actorDeath.getActor() == Microbot.getClient().getLocalPlayer()) {
-            Microbot.getClientThread().runOnSeperateThread(() -> {
-                Global.sleepUntil(nmzScript::isOutside, 10000);
-                Microbot.stopPlugin(this);
-                return true;
-            });
+            Rs2Player.logout();
+            shutDown();
         }
     }
 
@@ -103,10 +79,4 @@ public class NmzPlugin extends Plugin implements SchedulablePlugin{
             }
         }
     }
-    @Override     
-    public LogicalCondition getStopCondition() {
-        // Create a new stop condition        
-        return this.stopCondition;
-    }
-
 }
