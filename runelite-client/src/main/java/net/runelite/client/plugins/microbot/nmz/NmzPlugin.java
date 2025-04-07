@@ -11,9 +11,6 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.aiofighter.combat.PrayerPotionScript;
-import net.runelite.client.plugins.microbot.pluginscheduler.event.ScheduledStopEvent;
-import net.runelite.client.plugins.microbot.util.Global;
-import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.ui.overlay.OverlayManager;
 
@@ -24,8 +21,7 @@ import java.awt.*;
         name = PluginDescriptor.Mocrosoft + "Nmz",
         description = "Microbot NMZ",
         tags = {"nmz", "microbot"},
-        enabledByDefault = false,
-        canBeScheduled = true
+        enabledByDefault = false
 )
 @Slf4j
 public class NmzPlugin extends Plugin {
@@ -53,7 +49,7 @@ public class NmzPlugin extends Plugin {
         if (overlayManager != null) {
             overlayManager.add(nmzOverlay);
         }
-        nmzScript.run();
+        nmzScript.run(config);
         if (config.togglePrayerPotions()) {
             prayerPotionScript.run(config);
         }
@@ -66,28 +62,10 @@ public class NmzPlugin extends Plugin {
     }
 
     @Subscribe
-    public void onScheduledStopEvent(ScheduledStopEvent event) {
-        if (event.getPlugin() == this) {
-            nmzScript.shutdown();
-            Microbot.getClientThread().runOnSeperateThread(() -> {
-                if(!nmzScript.isOutside()) {
-                    Rs2GameObject.interact(26276, "Drink");
-                    Global.sleepUntil(nmzScript::isOutside, 10000);
-                }
-                Microbot.stopPlugin(this);
-                return true;
-            });
-        }
-    }
-
-    @Subscribe
     public void onActorDeath(ActorDeath actorDeath) {
         if (config.stopAfterDeath() && actorDeath.getActor() == Microbot.getClient().getLocalPlayer()) {
-            Microbot.getClientThread().runOnSeperateThread(() -> {
-                Global.sleepUntil(nmzScript::isOutside, 10000);
-                Microbot.stopPlugin(this);
-                return true;
-            });
+            Rs2Player.logout();
+            shutDown();
         }
     }
 
