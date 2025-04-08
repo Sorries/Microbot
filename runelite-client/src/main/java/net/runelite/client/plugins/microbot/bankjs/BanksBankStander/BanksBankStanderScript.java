@@ -439,6 +439,7 @@ public class BanksBankStanderScript extends Script {
                 shutdown();
             }
             if (currentAmulet != null) {
+                sleep(Rs2Random.between(750, 1250));
                 Rs2Bank.depositOne(currentAmulet.getId());
             }
 //            Todo: Add a check if any necklace slot item in inventory, bank them
