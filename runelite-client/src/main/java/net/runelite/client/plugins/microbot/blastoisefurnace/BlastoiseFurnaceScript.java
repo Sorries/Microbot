@@ -471,8 +471,8 @@ public class BlastoiseFurnaceScript extends Script {
         }
 
         // Step 2: If energy is above 71% but below 81%, use Stamina potion if no stamina buff is active
-        if (Microbot.getClient().getEnergy() < 5000 && !Rs2Player.hasStaminaBuffActive()) {
-            usedPotion = usePotionIfNeeded("Stamina potion", 5000);
+        if (Microbot.getClient().getEnergy() < 4000 && !Rs2Player.hasStaminaBuffActive()) {
+            usedPotion = usePotionIfNeeded("Stamina potion", 4000);
         }
 
         // Sleep after using a potion
