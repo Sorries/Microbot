@@ -326,7 +326,7 @@ public class FarmTreeRunScript extends Script {
 
 
             // Add must have items
-            items.add(new FarmingItem(ItemID.COINS_995, 5000));
+            items.add(new FarmingItem(ItemID.COINS_995, 10000));
             items.add(new FarmingItem(ItemID.SPADE, 1));
             items.add(new FarmingItem(ItemID.RAKE, 1));
             items.add(new FarmingItem(ItemID.SEED_DIBBER, 1));
@@ -389,11 +389,11 @@ public class FarmTreeRunScript extends Script {
                 }
             }
 
-            items.add(new FarmingItem(ItemID.LAW_RUNE, 10));
-            items.add(new FarmingItem(ItemID.FIRE_RUNE, 30));
-            items.add(new FarmingItem(ItemID.AIR_RUNE, 30));
-            items.add(new FarmingItem(ItemID.EARTH_RUNE, 30));
-            items.add(new FarmingItem(ItemID.WATER_RUNE, 30));
+            items.add(new FarmingItem(ItemID.LAW_RUNE, 100));
+            items.add(new FarmingItem(ItemID.FIRE_RUNE, 100));
+            items.add(new FarmingItem(ItemID.AIR_RUNE, 100));
+            items.add(new FarmingItem(ItemID.EARTH_RUNE, 100));
+            items.add(new FarmingItem(ItemID.WATER_RUNE, 100));
 
 
 //              TODO: Need to handle what happens if a required item does not exist
