@@ -101,7 +101,6 @@ public class NmzScript extends Script {
             fetchPotions(ObjectID.ABSORPTION_POTION, absorption, config.absorptionPotionAmount());
             if (canStartNmz()) {
                 consumeEmptyVial();
-                sleep(Rs2Random.between(1500, 3000));
             } else {
                 sleep(2000);
             }
