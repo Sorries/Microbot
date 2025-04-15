@@ -285,6 +285,7 @@ public class BlastoiseFurnaceScript extends Script {
             Rs2Bank.withdrawAll(GOLD_ORE);
             return;
         }
+        sleep(750,1250);
         Rs2Bank.closeBank();
         sleep(750,1250);
         depositOre();
