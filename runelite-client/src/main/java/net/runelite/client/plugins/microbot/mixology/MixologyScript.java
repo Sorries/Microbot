@@ -70,7 +70,7 @@ public class MixologyScript extends Script {
 
 
                 if (!isInMinigame && mixologyState != MixologyState.REFINER) {
-                    Rs2Walker.walkTo(1395, 9322, 0, 2);
+                    Rs2Walker.walkTo(1394, 9321, 0, 2);
                     return;
                 }
 
@@ -238,6 +238,7 @@ public class MixologyScript extends Script {
                         }
                         break;
                     case TAKE_FROM_MIXIN_VESSEL:
+                        sleep(Rs2Random.randomGaussian(Rs2Random.between(750, 1000), Rs2Random.between(100, 250)));
                         Rs2GameObject.interact(MIXING_VESSEL.objectId());
                         boolean result = Rs2Inventory.waitForInventoryChanges(5000);
                         if (result) {
@@ -387,10 +388,13 @@ public class MixologyScript extends Script {
         for (PotionComponent component : potionOrder.potionType().components()) {
             if (canCreatePotion(potionOrder)) break;
             if (component.character() == 'A') {
+                sleep(Rs2Random.randomGaussian(Rs2Random.between(750, 1000), Rs2Random.between(100, 250)));
                 Rs2GameObject.interact(AlchemyObject.AGA_LEVER.objectId());
             } else if (component.character() == 'L') {
+                sleep(Rs2Random.randomGaussian(Rs2Random.between(750, 1000), Rs2Random.between(100, 250)));
                 Rs2GameObject.interact(AlchemyObject.LYE_LEVER.objectId());
             } else if (component.character() == 'M') {
+                sleep(Rs2Random.randomGaussian(Rs2Random.between(750, 1000), Rs2Random.between(100, 250)));
                 Rs2GameObject.interact(AlchemyObject.MOX_LEVER.objectId());
             }
             if (config.useQuickActionLever()) {
