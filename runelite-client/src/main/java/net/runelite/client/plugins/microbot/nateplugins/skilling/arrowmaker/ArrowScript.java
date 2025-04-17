@@ -73,7 +73,7 @@ public class ArrowScript extends Script {
                 long totalTime = endTime - startTime;
                 System.out.println("Total time for loop " + totalTime);
             } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                Microbot.logStackTrace(this.getClass().getSimpleName(), ex);
             }
         }, 0, 600, TimeUnit.MILLISECONDS);
         return true;
