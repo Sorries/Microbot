@@ -118,7 +118,7 @@ public class FornBirdhouseRunsScript extends Script {
                             sleep(2500);
                         }
 
-                        emptyNests();
+//                        emptyNests();
 
                         botStatus = states.FINISHED;
                         notifier.notify(Notification.ON, "Birdhouse run is finished.");
