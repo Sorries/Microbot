@@ -140,8 +140,8 @@ public class PestControlScript extends Script {
                     }
                     if (!walkToCenter) {
                         WorldPoint worldPoint = WorldPoint.fromRegion(Rs2Player.getWorldLocation().getRegionID(), 32, 17, Microbot.getClient().getPlane());
-                        Rs2Walker.walkTo(worldPoint, 3);
-                        if (worldPoint.distanceTo(Rs2Player.getWorldLocation()) > 4) {
+                        Rs2Walker.walkTo(worldPoint, 5);
+                        if (worldPoint.distanceTo(Rs2Player.getWorldLocation()) > 6) {
                             return;
                         } else {
                             walkToCenter = true;
