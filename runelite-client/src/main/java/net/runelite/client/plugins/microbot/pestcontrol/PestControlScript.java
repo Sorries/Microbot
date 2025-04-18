@@ -142,8 +142,8 @@ public class PestControlScript extends Script {
                         int region_x = Rs2Random.between(29,38);
                         int region_y = Rs2Random.between(16,20);
                         WorldPoint worldPoint = WorldPoint.fromRegion(Rs2Player.getWorldLocation().getRegionID(), region_x, region_y, Microbot.getClient().getPlane());
-                        Rs2Walker.walkTo(worldPoint, 7);
-                        if (worldPoint.distanceTo(Rs2Player.getWorldLocation()) > 8) {
+                        Rs2Walker.walkTo(worldPoint, 5);
+                        if (worldPoint.distanceTo(Rs2Player.getWorldLocation()) > 6) {
                             return;
                         } else {
                             walkToCenter = true;
@@ -326,7 +326,7 @@ public class PestControlScript extends Script {
         for (Portal portal : portals) {
             if (!portal.isHasShield() && !portal.getHitPoints().getText().trim().equals("0") && closestAttackablePortal == portal) {
                 if (!Rs2Walker.isCloseToRegion(distanceToPortal, portal.getRegionX(), portal.getRegionY())) {
-                    Rs2Walker.walkTo(WorldPoint.fromRegion(Rs2Player.getWorldLocation().getRegionID(), portal.getRegionX(), portal.getRegionY(), Microbot.getClient().getPlane()), 5);
+                    Rs2Walker.walkTo(WorldPoint.fromRegion(Rs2Player.getWorldLocation().getRegionID(), portal.getRegionX(), portal.getRegionY(), Microbot.getClient().getPlane()), 7);
                     attackPortal();
                 } else {
                     attackPortal();
