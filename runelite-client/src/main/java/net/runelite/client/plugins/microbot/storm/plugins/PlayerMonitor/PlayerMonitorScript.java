@@ -153,11 +153,7 @@ public class PlayerMonitorScript extends Script {
     private void logoutPlayer() {
         ClientUI.getClient().setEnabled(false);
         if (this.isRunning()) {
-            sleep(61, 93);}
-        if (this.isRunning()) {
             Rs2Player.logout();}
-        if (this.isRunning()) {
-            sleep(61, 93);}
         ClientUI.getClient().setEnabled(true);
     }
 
