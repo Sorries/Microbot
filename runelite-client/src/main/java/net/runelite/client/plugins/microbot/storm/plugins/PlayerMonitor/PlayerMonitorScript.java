@@ -151,10 +151,8 @@ public class PlayerMonitorScript extends Script {
     }
 
     private void logoutPlayer() {
-        ClientUI.getClient().setEnabled(false);
         if (this.isRunning()) {
             Rs2Player.logout();}
-        ClientUI.getClient().setEnabled(true);
     }
 
     @Override
