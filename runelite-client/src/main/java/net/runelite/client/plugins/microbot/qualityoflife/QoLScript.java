@@ -118,7 +118,9 @@ public class QoLScript extends Script {
     }
 
     private void handleAutoDrinkPrayPot(int points) {
+        points += Rs2Random.between(-1,2);
         Rs2Player.drinkPrayerPotionAt(points);
+        //Microbot.log("Drank at " + points + " points");
     }
 
     // handle dialogue continue
