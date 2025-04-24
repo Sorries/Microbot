@@ -1,6 +1,7 @@
 package net.runelite.client.plugins.microbot.qualityoflife;
 
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Skill;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
@@ -21,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 public class QoLScript extends Script {
 
     private final boolean bankOpen = false;
+    private boolean runOnce = false;
+    private int randomPoints = 0;
 
     public boolean run(QoLConfig config) {
         Microbot.enableAutoRunOn = false;
@@ -114,13 +117,21 @@ public class QoLScript extends Script {
 
     // handle auto eat
     private void handleAutoEat(int percent) {
-        Rs2Player.eatAt(percent, true);
+        Rs2Player.eatAt(percent);
     }
 
     private void handleAutoDrinkPrayPot(int points) {
-        points += Rs2Random.between(-1,2);
-        Rs2Player.drinkPrayerPotionAt(points);
-        //Microbot.log("Drank at " + points + " points");
+        if(!runOnce) {
+            randomPoints = points + Rs2Random.between(-1,2);
+            runOnce = true;
+            Microbot.log("Generated prayer drink threshold: " + randomPoints);
+        }
+        if (Rs2Player.getBoostedSkillLevel(Skill.PRAYER) <= randomPoints) {
+            if(Rs2Player.drinkPrayerPotionAt(randomPoints)) {
+                Microbot.log("Drank at " + randomPoints + " prayer points");
+                runOnce = false;
+            }
+        }
     }
 
     // handle dialogue continue
@@ -255,6 +266,7 @@ public class QoLScript extends Script {
 
     @Override
     public void shutdown() {
+        runOnce = false;
         super.shutdown();
         log.info("QoLScript shutdown complete.");
     }
