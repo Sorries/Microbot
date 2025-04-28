@@ -30,7 +30,7 @@ public class Rs2Cannon {
     }
 
     public static boolean refill() {
-        return refill(Rs2Random.between(10, 15));
+        return refill(Rs2Random.between(5, 15));
     }
 
     public static boolean refill(int cannonRefillAmount) {
@@ -52,9 +52,9 @@ public class Rs2Cannon {
         if (!cannonLocation.toWorldPoint().equals(CannonPlugin.getCannonPosition().toWorldPoint())) return false;
         Microbot.pauseAllScripts = true;
         Rs2GameObject.interact(cannon, "Fire");
-        Rs2Player.waitForWalking();
+        //Rs2Player.waitForWalking();
         sleep(1200);
-        Rs2GameObject.interact(cannon, "Fire");
+        //Rs2GameObject.interact(cannon, "Fire");
         sleepUntil(() -> Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getVarpValue(VarPlayer.CANNON_AMMO)).orElse(0) > Rs2Random.between(10, 15));
         Microbot.pauseAllScripts = false;
         return true;
