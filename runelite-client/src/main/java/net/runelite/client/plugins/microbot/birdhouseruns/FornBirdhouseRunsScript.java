@@ -9,6 +9,7 @@ import net.runelite.client.config.Notification;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
+import net.runelite.client.plugins.microbot.util.bank.enums.BankLocation;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
@@ -119,7 +120,8 @@ public class FornBirdhouseRunsScript extends Script {
                         }
 
 //                        emptyNests();
-
+                        Rs2Walker.setTarget(null);
+                        Rs2Bank.walkToBank(BankLocation.GRAND_EXCHANGE);
                         botStatus = states.FINISHED;
                         notifier.notify(Notification.ON, "Birdhouse run is finished.");
                         super.shutdown();
