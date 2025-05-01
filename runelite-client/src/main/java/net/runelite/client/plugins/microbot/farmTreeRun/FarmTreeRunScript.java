@@ -251,7 +251,11 @@ public class FarmTreeRunScript extends Script {
                     case FINISHED:
                         Rs2Walker.setTarget(null);
                         sleep(750,1250);
-                        Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
+                        if (!Rs2Bank.isOpen()){
+                            Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
+                            return;
+                        }
+                        System.out.println("Bank opened successfully.");
                         Microbot.getClientThread().runOnClientThreadOptional(() -> {
                                     Microbot.getClient().addChatMessage(ChatMessageType.ENGINE, "", "Tree run completed.", "Acun", false);
                                     Microbot.getClient().addChatMessage(ChatMessageType.ENGINE, "", "Made with love by Acun.", "Acun", false);

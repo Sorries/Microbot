@@ -120,10 +120,12 @@ public class FornBirdhouseRunsScript extends Script {
                         }
 
 //                        emptyNests();
-                        sleep(500,1000);
                         Rs2Walker.setTarget(null);
                         sleep(750,1250);
-                        Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
+                        if (!Rs2Bank.isOpen()){
+                            Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
+                            return;
+                        }
                         botStatus = states.FINISHED;
                         notifier.notify(Notification.ON, "Birdhouse run is finished.");
                         super.shutdown();
