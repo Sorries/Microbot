@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.*;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.Notifier;
+import net.runelite.client.config.Notification;
 import net.runelite.client.plugins.microbot.farmTreeRun.enums.FarmTreeRunState;
 import net.runelite.client.plugins.microbot.farmTreeRun.enums.FruitTreeEnum;
 import net.runelite.client.plugins.microbot.farmTreeRun.enums.TreeEnums;
@@ -43,6 +45,7 @@ public class FarmTreeRunScript extends Script {
     public static boolean test = false;
     public static Integer compostItemId = null;
     private List<FarmingItem> items = new ArrayList<>();
+    private Notifier notifier;
 
     private enum TreeKind {
         FRUIT_TREE,
@@ -75,6 +78,7 @@ public class FarmTreeRunScript extends Script {
         private final TreeKind kind;
         private final int farmingLevel;
         private final int leprechaunId;
+
 
         public boolean hasRequiredLevel() {
             if (Rs2Player.getSkillRequirement(Skill.FARMING, this.farmingLevel))
@@ -249,19 +253,12 @@ public class FarmTreeRunScript extends Script {
                         botStatus = FINISHED;
                         break;
                     case FINISHED:
-                        Rs2Walker.setTarget(null);
                         sleep(750,1250);
                         if (!Rs2Bank.isOpen()){
                             Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
                             return;
                         }
-                        System.out.println("Bank opened successfully.");
-                        Microbot.getClientThread().runOnClientThreadOptional(() -> {
-                                    Microbot.getClient().addChatMessage(ChatMessageType.ENGINE, "", "Tree run completed.", "Acun", false);
-                                    Microbot.getClient().addChatMessage(ChatMessageType.ENGINE, "", "Made with love by Acun.", "Acun", false);
-                                    return null;
-                                }
-                        );
+                        notifier.notify(Notification.ON, "Tree run is finished.");
                         shutdown();
                         break;
                 }

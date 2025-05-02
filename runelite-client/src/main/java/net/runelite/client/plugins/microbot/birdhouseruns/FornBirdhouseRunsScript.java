@@ -118,19 +118,19 @@ public class FornBirdhouseRunsScript extends Script {
                             Rs2Magic.cast(MagicAction.VARROCK_TELEPORT);
                             sleep(2500);
                         }
-
 //                        emptyNests();
-                        Rs2Walker.setTarget(null);
+                        botStatus = states.FINISHED;
+                        break;
+                    case FINISHED:
+//                        Rs2Walker.setTarget(null);
                         sleep(750,1250);
                         if (!Rs2Bank.isOpen()){
                             Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
                             return;
                         }
-                        botStatus = states.FINISHED;
                         notifier.notify(Notification.ON, "Birdhouse run is finished.");
                         super.shutdown();
                         break;
-                    case FINISHED:
 
                 }
 
