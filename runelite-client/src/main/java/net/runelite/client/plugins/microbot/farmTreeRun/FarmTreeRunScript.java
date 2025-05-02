@@ -25,6 +25,7 @@ import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +46,9 @@ public class FarmTreeRunScript extends Script {
     public static boolean test = false;
     public static Integer compostItemId = null;
     private List<FarmingItem> items = new ArrayList<>();
+    @Inject
     private Notifier notifier;
+
 
     private enum TreeKind {
         FRUIT_TREE,
