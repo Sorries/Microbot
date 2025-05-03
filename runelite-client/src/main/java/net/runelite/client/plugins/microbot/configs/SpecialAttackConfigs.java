@@ -108,17 +108,21 @@ public class SpecialAttackConfigs {
                         .orElse(null);
 
                 if (shield != null) {
+                    sleep(750,1250);
                     Rs2Inventory.wear(shield.name);
                 }
                 if (weapon != null) {
+                    sleep(750,1250);
                     Rs2Inventory.wear(Objects.requireNonNull(weapon).name);
                 }
             }
             return false;
         }
-
+        sleep(1000,2000);
         boolean didInteract = Rs2Inventory.wear(name);
-        if (didInteract) sleep(600);
+        if (didInteract) {
+            sleep(1250,1750);
+        }
         return Rs2Combat.setSpecState(true, specEnergy);
     }
 }
