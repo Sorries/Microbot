@@ -24,6 +24,7 @@ public class SpecialAttackScript extends Script {
                 if (Rs2Player.isInteracting()) {
                     npc.set((Rs2NpcModel) Rs2Player.getInteracting());
                     if (Microbot.getSpecialAttackConfigs().useSpecWeapon()) {
+                        sleep(750,1250);
                         Rs2Npc.attack(npc.get());
                     }
                 }
