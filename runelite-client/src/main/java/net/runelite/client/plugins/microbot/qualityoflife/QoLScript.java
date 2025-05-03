@@ -122,7 +122,7 @@ public class QoLScript extends Script {
 
     private void handleAutoDrinkPrayPot(int points) {
         if(!runOnce) {
-            randomPoints = points + Rs2Random.between(-1,2);
+            randomPoints = points + Rs2Random.between(-2,3);
             if (randomPoints <= 0) {return;}
             runOnce = true;
 //            Microbot.log("Generated prayer drink threshold: " + randomPoints);
@@ -131,7 +131,7 @@ public class QoLScript extends Script {
             if(Rs2Player.drinkPrayerPotionAt(randomPoints)) {
 //                Microbot.log("Drank at " + randomPoints + " prayer points");
                 runOnce = false;
-                sleep(300);
+                sleep(400);
             }
         }
     }
