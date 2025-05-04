@@ -124,7 +124,7 @@ public class SpecialAttackConfigs {
         sleep(1000,5000);
         boolean didInteract = Rs2Inventory.wear(name);
         if (didInteract) {
-            sleep(1250,1750);
+            sleep(1250,2000);
         }
         return Rs2Combat.setSpecState(true, specEnergy);
     }
