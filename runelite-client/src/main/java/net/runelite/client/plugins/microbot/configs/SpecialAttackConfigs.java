@@ -121,7 +121,7 @@ public class SpecialAttackConfigs {
             }
             return false;
         }
-        sleep(1000,2000);
+        sleep(1000,5000);
         boolean didInteract = Rs2Inventory.wear(name);
         if (didInteract) {
             sleep(1250,1750);
