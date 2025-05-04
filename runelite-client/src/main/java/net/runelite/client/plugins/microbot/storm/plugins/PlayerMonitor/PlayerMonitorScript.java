@@ -60,7 +60,7 @@ public class PlayerMonitorScript extends Script {
                                 if (config.useFlash()) {
                                     flashOverlay.setFlashColor(config.flashColor());
                                 }
-                                if (config.useEmergency() && (config.onlyWilderness() && Microbot.getVarbitValue(Varbits.IN_WILDERNESS) == 1) || !config.onlyWilderness()) {
+                                if (config.useEmergency() && (config.onlyWilderness() && Microbot.getVarbitValue(Varbits.IN_WILDERNESS) == 1)) {
                                     newPlayer = true;
                                     otherPlayerLocation = Rs2Player.getWorldLocation();
                                     otherPlayerWorld = Rs2Player.getWorld();
