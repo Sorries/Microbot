@@ -152,7 +152,9 @@ public class PlayerMonitorScript extends Script {
 
     private void logoutPlayer() {
         if (this.isRunning()) {
-            Rs2Player.logout();}
+            Microbot.hopToWorld(Login.getRandomWorld(Rs2Player.isMember()));
+            //Rs2Player.logout();
+        }
     }
 
     @Override
