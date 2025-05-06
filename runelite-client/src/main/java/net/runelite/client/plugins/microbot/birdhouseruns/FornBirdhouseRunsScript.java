@@ -124,9 +124,11 @@ public class FornBirdhouseRunsScript extends Script {
                     case FINISHED:
 //                        Rs2Walker.setTarget(null);
                         sleep(750,1250);
-                        if (!Rs2Bank.isOpen()){
-                            Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
-                            return;
+                        if (config.TELEPORT()) {
+                            if (!Rs2Bank.isOpen()) {
+                                Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
+                                return;
+                            }
                         }
                         notifier.notify(Notification.ON, "Birdhouse run is finished.");
                         super.shutdown();
