@@ -126,7 +126,7 @@ public class FornBirdhouseRunsScript extends Script {
                         sleep(750,1250);
                         if (config.TELEPORT()) {
                             if (!Rs2Bank.isOpen()) {
-                                Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
+                                Rs2Bank.walkToBankAndUseBank();
                                 return;
                             }
                         }
