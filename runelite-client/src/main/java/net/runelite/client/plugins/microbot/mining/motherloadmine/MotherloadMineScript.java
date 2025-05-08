@@ -227,10 +227,12 @@ public class MotherloadMineScript extends Script
             {
                 Rs2GameObject.interact(SACK_ID);
                 sleepUntil(this::hasOreInInventory);
+                sleep((int)Rs2Random.skewedRand(800, 600, 1200, 4.0));
             }
             if (hasOreInInventory())
             {
                 bankItems();
+                sleep((int)Rs2Random.skewedRand(800, 600, 1200, 4.0));
             }
         }
 
