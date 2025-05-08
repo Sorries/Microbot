@@ -130,11 +130,13 @@ public class MotherloadMineScript extends Script
         }
     }
 
-    private void handlePickaxeSpec()
+    private void handleDragonPickaxeSpec()
     {
-        if (Rs2Equipment.isWearing("dragon pickaxe") || Rs2Equipment.isWearing("crystal pickaxe"))
+        if (Rs2Equipment.isWearing("dragon pickaxe"))
         {
+            sleep(750,1250);
             Rs2Combat.setSpecState(true, 1000);
+            sleep(750,1250);
         }
     }
 
@@ -227,7 +229,7 @@ public class MotherloadMineScript extends Script
             {
                 Rs2GameObject.interact(SACK_ID);
                 sleepUntil(this::hasOreInInventory);
-                sleep((int)Rs2Random.skewedRand(800, 600, 1200, 4.0));
+                sleep((int)Rs2Random.skewedRand(1000, 900, 1400, 4.0));
             }
             if (hasOreInInventory())
             {
@@ -276,7 +278,7 @@ public class MotherloadMineScript extends Script
                 return;
             }
         }
-        
+
         WorldPoint hopperDeposit = (isUpperFloor() && config.upstairsHopperUnlocked()) ? HOPPER_DEPOSIT_UP : HOPPER_DEPOSIT_DOWN;
         Optional<GameObject> hopper = Optional.ofNullable(Rs2GameObject.findObject(ObjectID.HOPPER_26674, hopperDeposit));
 
@@ -305,7 +307,7 @@ public class MotherloadMineScript extends Script
             sleepUntil(Rs2Bank::isOpen);
 
             // if using the gem sack, empty its contents directly into the bank
-            if (Rs2Gembag.hasGemBag() && !gemBagEmptiedThisCycle) 
+            if (Rs2Gembag.hasGemBag() && !gemBagEmptiedThisCycle)
             {
                 Rs2Gembag.checkGemBag();
                 if (Rs2Gembag.getTotalGemCount() > 0)
@@ -315,7 +317,7 @@ public class MotherloadMineScript extends Script
                 }
                 gemBagEmptiedThisCycle = true;
             }
-            
+
             Rs2Bank.depositAllExcept("hammer", pickaxeName, "gem bag");
             sleep(100, 300);
 
@@ -371,8 +373,7 @@ public class MotherloadMineScript extends Script
             repositionCameraAndMove();
             return;
         }
-        // once a vein is found and ready to be interacted (mined), trigger the pickaxe special attack function
-        handlePickaxeSpec();
+        handleDragonPickaxeSpec();
         if (Rs2GameObject.interact(vein))
         {
             oreVein = vein;
