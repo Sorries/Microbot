@@ -26,7 +26,7 @@ public class PotionManagerScript extends Script {
                 }
 
                 // Always attempt to drink prayer potion
-                if (!config.toggleFood()) {
+                if (config.toggleFood()) {
                     Rs2Player.drinkPrayerPotion();
                 }
 
