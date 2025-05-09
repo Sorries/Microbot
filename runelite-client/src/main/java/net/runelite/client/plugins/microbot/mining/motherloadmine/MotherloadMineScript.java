@@ -229,12 +229,18 @@ public class MotherloadMineScript extends Script
             {
                 Rs2GameObject.interact(SACK_ID);
                 sleepUntil(this::hasOreInInventory);
-                sleep((int)Rs2Random.skewedRand(1000, 900, 1400, 4.0));
+                int time = (int) Rs2Random.skewedRand(1500, 1300, 1900, 4.0);
+//                sleep((int)Rs2Random.skewedRand(1000, 900, 1400, 4.0));
+                Microbot.log("s1 "+ time );
+                sleep(time);
             }
             if (hasOreInInventory())
             {
                 bankItems();
-                sleep((int)Rs2Random.skewedRand(800, 600, 1200, 4.0));
+                int time = (int)Rs2Random.skewedRand(800, 600, 1200, 4.0);
+                Microbot.log("s2 "+ time );
+                sleep(time);
+
             }
         }
 
@@ -373,13 +379,13 @@ public class MotherloadMineScript extends Script
             repositionCameraAndMove();
             return;
         }
+        handleDragonPickaxeSpec();
         if (Rs2GameObject.interact(vein))
         {
             oreVein = vein;
             sleepUntil(Rs2Player::isAnimating, 5000);
             if (!Rs2Player.isAnimating())
             {
-                handleDragonPickaxeSpec();
                 oreVein = null;
             }
         }
