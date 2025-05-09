@@ -26,7 +26,9 @@ public class PotionManagerScript extends Script {
                 }
 
                 // Always attempt to drink prayer potion
-                Rs2Player.drinkPrayerPotion();
+                if (!config.toggleFood()) {
+                    Rs2Player.drinkPrayerPotion();
+                }
 
                 // Always attempt to drink ranging potion
                 if (Rs2Player.drinkCombatPotionAt(Skill.RANGED, false)) {
