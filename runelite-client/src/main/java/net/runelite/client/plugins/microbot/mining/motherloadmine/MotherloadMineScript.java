@@ -229,15 +229,14 @@ public class MotherloadMineScript extends Script
             {
                 Rs2GameObject.interact(SACK_ID);
                 sleepUntil(this::hasOreInInventory);
-                int time = (int) Rs2Random.skewedRand(1500, 1300, 1900, 4.0);
-//                sleep((int)Rs2Random.skewedRand(1000, 900, 1400, 4.0));
+                int time = Rs2Random.skewedRandAuto(1700);
                 Microbot.log("s1 "+ time );
                 sleep(time);
             }
             if (hasOreInInventory())
             {
                 bankItems();
-                int time = (int)Rs2Random.skewedRand(800, 600, 1200, 4.0);
+                int time = Rs2Random.skewedRandAuto(800);
                 Microbot.log("s2 "+ time );
                 sleep(time);
 
