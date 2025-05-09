@@ -373,13 +373,13 @@ public class MotherloadMineScript extends Script
             repositionCameraAndMove();
             return;
         }
-        handleDragonPickaxeSpec();
         if (Rs2GameObject.interact(vein))
         {
             oreVein = vein;
             sleepUntil(Rs2Player::isAnimating, 5000);
             if (!Rs2Player.isAnimating())
             {
+                handleDragonPickaxeSpec();
                 oreVein = null;
             }
         }
