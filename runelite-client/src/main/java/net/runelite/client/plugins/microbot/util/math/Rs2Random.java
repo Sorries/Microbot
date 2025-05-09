@@ -205,6 +205,16 @@ public class Rs2Random {
         return Math.round(skewedRand((double) mode, (double) lo, (double) hi, cutoff));
     }
 
+    public static int skewedRandAuto(long mode) {
+        return skewedRandAuto(mode, 4.0); // Default cutoff
+    }
+
+    public static int skewedRandAuto(long mode, double cutoff) {
+        long lo = mode - 200;
+        long hi = mode + 400;
+        return (int) Math.round(skewedRand((double) mode, (double) lo, (double) hi, cutoff));
+    }
+
     /**
      * Generates a random number within the specified range, biased towards the mean.
      * The distribution has a higher likelihood of generating numbers closer to the midpoint of the range.
