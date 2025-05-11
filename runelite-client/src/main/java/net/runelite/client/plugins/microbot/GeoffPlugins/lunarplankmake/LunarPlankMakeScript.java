@@ -8,6 +8,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.magic.Rs2Spells;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
@@ -42,22 +43,19 @@ public class LunarPlankMakeScript extends Script {
         profitPerPlank = processedItemPrice - unprocessedItemPrice;
 
         useSetDelay = config.useSetDelay();
-//        setDelay = config.setDelay();
-//        useRandomDelay = config.useRandomDelay();
-//        maxRandomDelay = config.maxRandomDelay();
+        setDelay = config.setDelay();
+        useRandomDelay = config.useRandomDelay();
+        maxRandomDelay = config.maxRandomDelay();
 
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!super.run() || !Microbot.isLoggedIn()) return;
                 switch (currentState) {
-                    case PLANKING:
-                        plankItems(config);
-                        break;
                     case BANKING:
                         bank(config);
                         break;
-                    case WAITING:
-                        //waitUntilReady();
+                    case PLANKING:
+                        plankItems(config);
                         break;
                 }
             } catch (Exception ex) {
@@ -67,69 +65,40 @@ public class LunarPlankMakeScript extends Script {
         return true;
     }
 
-    private void plankItems(LunarPlankMakeConfig config) {
-        if (Rs2Inventory.hasItem(config.ITEM().getName(), true)) {
-            int initialLogCount = Rs2Inventory.count(config.ITEM().getName());
-            Rs2Magic.cast(MagicAction.PLANK_MAKE);
-            addDelay();
-            Rs2Inventory.interact(config.ITEM().getName());
-            sleep(800,1250);
-            //Rs2Tab.switchToInventoryTab();
-            sleepUntil(() -> !Rs2Inventory.hasItem(config.ITEM().getName(),true) && !Microbot.isGainingExp, 120000);
-            int processedPlankCount = Rs2Inventory.count(config.ITEM().getFinished());
-            System.out.println(processedPlankCount);
-            if (processedPlankCount == initialLogCount) {
-                plankMade += processedPlankCount;
-                System.out.println(plankMade);
-                Microbot.log("Pm: " + plankMade);
-            }
-//            // Wait for the inventory count to change indicating Planks have been made
-//            if (waitForInventoryChange(config.ITEM().getFinished(), initialPlankCount)) {
-//                int plankMadeThisAction = Rs2Inventory.count(config.ITEM().getFinished()) - initialPlankCount;
-//                plankMade += plankMadeThisAction;
-//                addDelay();
-//            } else {
-//                Microbot.log("Failed to detect plank creation.");
-//                currentState = State.WAITING;
-//            }
-        } else {
-            currentState = State.BANKING;
-        }
-    }
-
-//    private boolean waitForInventoryChange(String itemName, int initialCount) {
-//        long start = System.currentTimeMillis();
-//        while (Rs2Inventory.count(itemName) == initialCount) {
-//            if (System.currentTimeMillis() - start > 3000) { // 3-second timeout
-//                return false;
-//            }
-//            sleep(10);
-//        }
-//        return true;
-//    }
-
     private void bank(LunarPlankMakeConfig config) {
+        Microbot.log("B");
         if (!Rs2Bank.openBank()) return;
 
-        Rs2Bank.depositAll(config.ITEM().getFinished());
-        Rs2Inventory.waitForInventoryChanges(1800);
-//        sleep(800,1250);
+        // Deposit Plank
+        if (Rs2Inventory.hasItem(config.ITEM().getFinished(), true)) {
+            Rs2Bank.depositAll(config.ITEM().getFinished());
+            Rs2Inventory.waitForInventoryChanges(1800);
+            sleep(800,1250);
+        }
 
         int emptyslot = Rs2Inventory.getEmptySlots();
 
-//        //Check for coin
-//        if(!Rs2Inventory.hasItemAmount(ItemID.COINS_995, emptyslot * config.ITEM().getCost())) {
-//            if(Rs2Bank.hasItem(ItemID.COINS_995)) {
-//                Rs2Bank.withdrawAllButOne(ItemID.COINS_995);
-//            }else{
-//                shutdown();
-//            }
-//        }
+        // Check for coin
+        if(!Rs2Inventory.hasItemAmount(ItemID.COINS_995, (emptyslot - 1) * config.ITEM().getCost())) {
+            if(Rs2Bank.hasBankItem(ItemID.COINS_995,2)) {
+                Rs2Bank.withdrawAllButOne(ItemID.COINS_995);
+                Rs2Inventory.waitForInventoryChanges(1800);
+                sleep(800,1250);
+                emptyslot -= 1;
+            }else{
+                Microbot.log("Out of coins");
+                shutdown();
+                return;
+            }
+        }
+        //Microbot.log(String.valueOf(emptyslot));
 
-        if (Rs2Bank.hasItem(config.ITEM().getName())) {
-            Rs2Bank.withdrawX(config.ITEM().getName(),10,true);
-            //Rs2Inventory.waitForInventoryChanges(1800);
-            //sleep(800,1250);
+        // Withdraw logs
+        if (Rs2Bank.hasItem(config.ITEM().getName()) && !Rs2Inventory.hasItem(config.ITEM().getName(),true)) {
+            if(emptyslot == 0){return;}
+            Rs2Bank.withdrawX(config.ITEM().getName(),emptyslot,true);
+            Rs2Inventory.waitForInventoryChanges(1800);
+            sleep(800,1250);
         } else {
             Microbot.showMessage("No more " + config.ITEM().getName() + " to plank.");
             shutdown();
@@ -139,13 +108,40 @@ public class LunarPlankMakeScript extends Script {
         Rs2Bank.closeBank();
         sleep(800,1250);
         currentState = State.PLANKING;
-        calculateProfitAndDisplay(config);
     }
 
-//    private void waitUntilReady() {
-//        sleep(500); // Short sleep before retrying
-//        currentState = State.PLANKING;
-//    }
+    private void plankItems(LunarPlankMakeConfig config) {
+        Microbot.log("P");
+        // check if lunar spell book and have plank make runes
+        if (!Rs2Magic.isLunar() || !Rs2Magic.hasRequiredRunes(Rs2Spells.PLANK_MAKE)){
+            Microbot.showMessage("Not on lunar spell book or able to cast plank make");
+            return;
+        }
+        // check if inventory have required logs
+        if (Rs2Inventory.hasItem(config.ITEM().getName())) {
+            int initialLogCount = Rs2Inventory.count(config.ITEM().getName());
+            Rs2Magic.cast(MagicAction.PLANK_MAKE);
+            addDelay();
+            if (Rs2Inventory.slotContains(18,config.ITEM().getName())){
+                Rs2Inventory.slotInteract(18,"cast");
+            }else {
+                //check if this works
+                Rs2Inventory.interact(config.ITEM().getName());
+            }
+            sleep(3000,15000);
+            Rs2Tab.switchToInventoryTab();
+            sleepUntil(() -> !Rs2Inventory.hasItem(config.ITEM().getName(),true) && !Microbot.isGainingExp, 120000);
+            int processedPlankCount = Rs2Inventory.count(config.ITEM().getFinished());
+            System.out.println("count " + processedPlankCount);
+            if (processedPlankCount == initialLogCount) {
+                plankMade += processedPlankCount;
+                System.out.println("plank " + plankMade);
+                Microbot.log("Pm: " + plankMade);
+                calculateProfitAndDisplay(config);
+            }
+        }
+        currentState = State.BANKING;
+    }
 
     private void calculateProfitAndDisplay(LunarPlankMakeConfig config) {
         double elapsedHours = (System.currentTimeMillis() - startTime) / 3600000.0;
@@ -162,10 +158,9 @@ public class LunarPlankMakeScript extends Script {
 
     private void addDelay() {
         if (useSetDelay) {
-//            sleep(setDelay);
-            sleep((int)Rs2Random.skewedRand(900,700,1400,4));
+            sleep(Rs2Random.skewedRandAuto(setDelay));
         } else if (useRandomDelay) {
-            sleep(Random.random(0, maxRandomDelay));
+            sleep(Random.random(750, maxRandomDelay));
 
         }
     }
