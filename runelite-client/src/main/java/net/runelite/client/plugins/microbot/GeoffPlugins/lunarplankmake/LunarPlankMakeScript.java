@@ -1,18 +1,22 @@
 package net.runelite.client.plugins.microbot.GeoffPlugins.lunarplankmake;
 
 import java.util.concurrent.TimeUnit;
+
+import net.runelite.api.ItemID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
+import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 import net.runelite.client.util.QuantityFormatter;
 import net.runelite.client.plugins.microbot.util.math.Random;
 
 public class LunarPlankMakeScript extends Script {
 
-    public static String version = "1.0.1";
+    public static String version = "1.0.2";
     public static String combinedMessage = "";
     public static long plankMade = 0;
     private int profitPerPlank = 0;
@@ -38,9 +42,9 @@ public class LunarPlankMakeScript extends Script {
         profitPerPlank = processedItemPrice - unprocessedItemPrice;
 
         useSetDelay = config.useSetDelay();
-        setDelay = config.setDelay();
-        useRandomDelay = config.useRandomDelay();
-        maxRandomDelay = config.maxRandomDelay();
+//        setDelay = config.setDelay();
+//        useRandomDelay = config.useRandomDelay();
+//        maxRandomDelay = config.maxRandomDelay();
 
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -53,57 +57,79 @@ public class LunarPlankMakeScript extends Script {
                         bank(config);
                         break;
                     case WAITING:
-                        waitUntilReady();
+                        //waitUntilReady();
                         break;
                 }
             } catch (Exception ex) {
                 Microbot.log("Exception in LunarPlankMakeScript: " + ex.getMessage());
             }
-        }, 0, 50, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
         return true;
     }
 
     private void plankItems(LunarPlankMakeConfig config) {
         if (Rs2Inventory.hasItem(config.ITEM().getName(), true)) {
-            int initialPlankCount = Rs2Inventory.count(config.ITEM().getFinished());
+            int initialLogCount = Rs2Inventory.count(config.ITEM().getName());
             Rs2Magic.cast(MagicAction.PLANK_MAKE);
             addDelay();
             Rs2Inventory.interact(config.ITEM().getName());
-
-            // Wait for the inventory count to change indicating Planks have been made
-            if (waitForInventoryChange(config.ITEM().getFinished(), initialPlankCount)) {
-                int plankMadeThisAction = Rs2Inventory.count(config.ITEM().getFinished()) - initialPlankCount;
-                plankMade += plankMadeThisAction;
-                addDelay();
-            } else {
-                Microbot.log("Failed to detect plank creation.");
-                currentState = State.WAITING;
+            sleep(800,1250);
+            //Rs2Tab.switchToInventoryTab();
+            sleepUntil(() -> !Rs2Inventory.hasItem(config.ITEM().getName(),true) && !Microbot.isGainingExp, 120000);
+            int processedPlankCount = Rs2Inventory.count(config.ITEM().getFinished());
+            System.out.println(processedPlankCount);
+            if (processedPlankCount == initialLogCount) {
+                plankMade += processedPlankCount;
+                System.out.println(plankMade);
+                Microbot.log("Pm: " + plankMade);
             }
+//            // Wait for the inventory count to change indicating Planks have been made
+//            if (waitForInventoryChange(config.ITEM().getFinished(), initialPlankCount)) {
+//                int plankMadeThisAction = Rs2Inventory.count(config.ITEM().getFinished()) - initialPlankCount;
+//                plankMade += plankMadeThisAction;
+//                addDelay();
+//            } else {
+//                Microbot.log("Failed to detect plank creation.");
+//                currentState = State.WAITING;
+//            }
         } else {
             currentState = State.BANKING;
         }
     }
 
-    private boolean waitForInventoryChange(String itemName, int initialCount) {
-        long start = System.currentTimeMillis();
-        while (Rs2Inventory.count(itemName) == initialCount) {
-            if (System.currentTimeMillis() - start > 3000) { // 3-second timeout
-                return false;
-            }
-            sleep(10);
-        }
-        return true;
-    }
+//    private boolean waitForInventoryChange(String itemName, int initialCount) {
+//        long start = System.currentTimeMillis();
+//        while (Rs2Inventory.count(itemName) == initialCount) {
+//            if (System.currentTimeMillis() - start > 3000) { // 3-second timeout
+//                return false;
+//            }
+//            sleep(10);
+//        }
+//        return true;
+//    }
 
     private void bank(LunarPlankMakeConfig config) {
         if (!Rs2Bank.openBank()) return;
 
         Rs2Bank.depositAll(config.ITEM().getFinished());
-        sleepUntilOnClientThread(() -> !Rs2Inventory.hasItem(config.ITEM().getFinished()));
+        Rs2Inventory.waitForInventoryChanges(1800);
+//        sleep(800,1250);
+
+        int emptyslot = Rs2Inventory.getEmptySlots();
+
+//        //Check for coin
+//        if(!Rs2Inventory.hasItemAmount(ItemID.COINS_995, emptyslot * config.ITEM().getCost())) {
+//            if(Rs2Bank.hasItem(ItemID.COINS_995)) {
+//                Rs2Bank.withdrawAllButOne(ItemID.COINS_995);
+//            }else{
+//                shutdown();
+//            }
+//        }
 
         if (Rs2Bank.hasItem(config.ITEM().getName())) {
-            Rs2Bank.withdrawAll(config.ITEM().getName());
-            sleepUntilOnClientThread(() -> Rs2Inventory.hasItem(config.ITEM().getName()));
+            Rs2Bank.withdrawX(config.ITEM().getName(),10,true);
+            //Rs2Inventory.waitForInventoryChanges(1800);
+            //sleep(800,1250);
         } else {
             Microbot.showMessage("No more " + config.ITEM().getName() + " to plank.");
             shutdown();
@@ -111,14 +137,15 @@ public class LunarPlankMakeScript extends Script {
         }
 
         Rs2Bank.closeBank();
+        sleep(800,1250);
         currentState = State.PLANKING;
         calculateProfitAndDisplay(config);
     }
 
-    private void waitUntilReady() {
-        sleep(500); // Short sleep before retrying
-        currentState = State.PLANKING;
-    }
+//    private void waitUntilReady() {
+//        sleep(500); // Short sleep before retrying
+//        currentState = State.PLANKING;
+//    }
 
     private void calculateProfitAndDisplay(LunarPlankMakeConfig config) {
         double elapsedHours = (System.currentTimeMillis() - startTime) / 3600000.0;
@@ -135,9 +162,11 @@ public class LunarPlankMakeScript extends Script {
 
     private void addDelay() {
         if (useSetDelay) {
-            sleep(setDelay);
+//            sleep(setDelay);
+            sleep((int)Rs2Random.skewedRand(900,700,1400,4));
         } else if (useRandomDelay) {
             sleep(Random.random(0, maxRandomDelay));
+
         }
     }
 
