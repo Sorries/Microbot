@@ -35,7 +35,7 @@ public class Rs2Cannon {
 
     public static boolean refill(int cannonRefillAmount) {
         if (!Rs2Inventory.hasItemAmount("cannonball", 15, true)) {
-            System.out.println("Not enough cannonballs!");
+            //System.out.println("Not enough cannonballs!");
             return false;
         }
 
