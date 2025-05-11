@@ -212,6 +212,9 @@ public class Rs2Random {
     public static int skewedRandAuto(long mode, double cutoff) {
         long lo = mode - 200;
         long hi = mode + 400;
+        if (lo <= 0 ){
+            lo = 0;
+        }
         return (int) Math.round(skewedRand((double) mode, (double) lo, (double) hi, cutoff));
     }
 
