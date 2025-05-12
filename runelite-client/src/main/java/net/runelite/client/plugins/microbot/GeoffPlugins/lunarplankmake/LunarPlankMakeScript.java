@@ -14,7 +14,6 @@ import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 import net.runelite.client.util.QuantityFormatter;
-import net.runelite.client.plugins.microbot.util.math.Random;
 
 public class LunarPlankMakeScript extends Script {
 
@@ -66,7 +65,7 @@ public class LunarPlankMakeScript extends Script {
     }
 
     private void bank(LunarPlankMakeConfig config) {
-        Microbot.log("B");
+        //Microbot.log("B");
         // Check if inventory already have log or else open bank
         if(!Rs2Inventory.hasItem(config.ITEM().getName(),true)) {
             if (!Rs2Bank.openBank()) return;
@@ -120,10 +119,11 @@ public class LunarPlankMakeScript extends Script {
     }
 
     private void plankItems(LunarPlankMakeConfig config) {
-        Microbot.log("P");
+        //Microbot.log("P");
         // check if lunar spell book and have plank make runes
         if (!Rs2Magic.isLunar() || !Rs2Magic.hasRequiredRunes(Rs2Spells.PLANK_MAKE)){
             Microbot.showMessage("Not on lunar spell book or able to cast plank make");
+            shutdown();
             return;
         }
         // check if inventory have required logs
@@ -141,10 +141,8 @@ public class LunarPlankMakeScript extends Script {
             sleepUntil(() -> !Rs2Inventory.hasItem(config.ITEM().getName(),true) && !Microbot.isGainingExp && !Rs2Player.isAnimating(), 120000);
             addDelay();
             int processedPlankCount = Rs2Inventory.count(config.ITEM().getFinished());
-            System.out.println("count " + processedPlankCount);
             if (processedPlankCount == initialLogCount) {
                 plankMade += processedPlankCount;
-                System.out.println("plank " + plankMade);
                 Microbot.log("Pm: " + plankMade);
                 calculateProfitAndDisplay(config);
             }
