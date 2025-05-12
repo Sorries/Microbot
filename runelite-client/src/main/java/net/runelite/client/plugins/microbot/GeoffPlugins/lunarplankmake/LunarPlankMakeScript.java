@@ -10,6 +10,7 @@ import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Spells;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
+import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 import net.runelite.client.util.QuantityFormatter;
@@ -30,11 +31,10 @@ public class LunarPlankMakeScript extends Script {
     // State management
     private enum State {
         PLANKING,
-        BANKING,
-        WAITING
+        BANKING
     }
 
-    private State currentState = State.PLANKING;
+    private State currentState = State.BANKING;
 
     public boolean run(LunarPlankMakeConfig config) {
         startTime = System.currentTimeMillis();
@@ -67,7 +67,10 @@ public class LunarPlankMakeScript extends Script {
 
     private void bank(LunarPlankMakeConfig config) {
         Microbot.log("B");
-        if (!Rs2Bank.openBank()) return;
+        // Check if inventory already have log or else open bank
+        if(!Rs2Inventory.hasItem(config.ITEM().getName(),true)) {
+            if (!Rs2Bank.openBank()) return;
+        }
 
         // Deposit Plank
         if (Rs2Inventory.hasItem(config.ITEM().getFinished(), true)) {
@@ -83,7 +86,7 @@ public class LunarPlankMakeScript extends Script {
             if(Rs2Bank.hasBankItem(ItemID.COINS_995,2)) {
                 Rs2Bank.withdrawAllButOne(ItemID.COINS_995);
                 Rs2Inventory.waitForInventoryChanges(1800);
-                sleep(800,1250);
+                sleep(800,1300);
                 emptyslot -= 1;
             }else{
                 Microbot.log("Out of coins");
@@ -91,6 +94,11 @@ public class LunarPlankMakeScript extends Script {
                 return;
             }
         }
+
+        // Check for rune
+
+        // Check for earth staff
+
         //Microbot.log(String.valueOf(emptyslot));
 
         // Withdraw logs
@@ -98,15 +106,16 @@ public class LunarPlankMakeScript extends Script {
             if(emptyslot == 0){return;}
             Rs2Bank.withdrawX(config.ITEM().getName(),emptyslot,true);
             Rs2Inventory.waitForInventoryChanges(1800);
-            sleep(800,1250);
-        } else {
+            sleep(800,1300);
+        }else if (Rs2Inventory.hasItem(config.ITEM().getName(),true)) {
+        }else{
             Microbot.showMessage("No more " + config.ITEM().getName() + " to plank.");
             shutdown();
             return;
         }
 
         Rs2Bank.closeBank();
-        sleep(800,1250);
+        sleep(800,1300);
         currentState = State.PLANKING;
     }
 
@@ -125,12 +134,12 @@ public class LunarPlankMakeScript extends Script {
             if (Rs2Inventory.slotContains(18,config.ITEM().getName())){
                 Rs2Inventory.slotInteract(18,"cast");
             }else {
-                //check if this works
                 Rs2Inventory.interact(config.ITEM().getName());
             }
             sleep(3000,15000);
             Rs2Tab.switchToInventoryTab();
-            sleepUntil(() -> !Rs2Inventory.hasItem(config.ITEM().getName(),true) && !Microbot.isGainingExp, 120000);
+            sleepUntil(() -> !Rs2Inventory.hasItem(config.ITEM().getName(),true) && !Microbot.isGainingExp && !Rs2Player.isAnimating(), 120000);
+            addDelay();
             int processedPlankCount = Rs2Inventory.count(config.ITEM().getFinished());
             System.out.println("count " + processedPlankCount);
             if (processedPlankCount == initialLogCount) {
@@ -160,8 +169,7 @@ public class LunarPlankMakeScript extends Script {
         if (useSetDelay) {
             sleep(Rs2Random.skewedRandAuto(setDelay));
         } else if (useRandomDelay) {
-            sleep(Random.random(750, maxRandomDelay));
-
+            sleep(Rs2Random.between(750, maxRandomDelay));
         }
     }
 
@@ -170,6 +178,6 @@ public class LunarPlankMakeScript extends Script {
         super.shutdown();
         plankMade = 0; // Reset the count of planks made
         combinedMessage = ""; // Reset the combined message
-        currentState = State.PLANKING; // Reset the current state
+        currentState = State.BANKING; // Reset the current state
     }
 }
