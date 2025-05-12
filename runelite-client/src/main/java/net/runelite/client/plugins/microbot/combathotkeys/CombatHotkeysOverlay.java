@@ -39,6 +39,7 @@ public class CombatHotkeysOverlay extends Overlay {
 //                    .build());
 
             if(config.yesDance()) {
+                if (config.tile1() == null || config.tile2() == null) return null;
                 drawTile(graphics, config.tile1(), Color.GREEN, "Tile 1", new BasicStroke(2));
                 drawTile(graphics, config.tile2(), Color.GREEN, "Tile 2", new BasicStroke(2));
             }
