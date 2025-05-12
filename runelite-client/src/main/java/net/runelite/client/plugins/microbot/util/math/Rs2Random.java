@@ -205,6 +205,7 @@ public class Rs2Random {
         return Math.round(skewedRand((double) mode, (double) lo, (double) hi, cutoff));
     }
 
+    // Added a automatic (int) skewedRand
     public static int skewedRandAuto(long mode) {
         return skewedRandAuto(mode, 4.0); // Default cutoff
     }
