@@ -121,6 +121,7 @@ public class BlastoiseFurnaceScript extends Script {
                             Microbot.log("Out of ores. Walking you out for coffer safety");
                             Rs2Walker.walkTo(new WorldPoint(2930, 10196, 0));                            Rs2Player.logout();
                             this.shutdown();
+
                         }
 
                         if (!Rs2Player.hasStaminaBuffActive() && Microbot.getClient().getEnergy() < 7500) {
