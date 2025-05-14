@@ -40,7 +40,7 @@ public class NmzScript extends Script {
     public static PrayerPotionScript prayerPotionScript;
 
     public static int maxHealth = Random.random(2, 8);
-    public static int minAbsorption = Random.random(100, 300);
+    public static int minAbsorption = Random.random(100, 500);
 
     private boolean hasWalkedToCenter = false;
 
@@ -230,7 +230,7 @@ public class NmzScript extends Script {
                 Rs2Inventory.interact(x -> x.name.toLowerCase().contains("absorption"), "drink");
                 sleep(1000, 1500);
             }
-            minAbsorption = Random.random(100, 300);
+            minAbsorption = Random.random(100, 500);
         }
     }
 
