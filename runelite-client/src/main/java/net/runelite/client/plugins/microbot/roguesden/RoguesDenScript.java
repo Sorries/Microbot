@@ -146,7 +146,7 @@ public class RoguesDenScript extends Script {
                         return;
                     }
 
-                    Rs2Camera.setPitch(Rs2Random.between(300, 383));
+                    //Rs2Camera.setPitch(Rs2Random.between(300, 383));
                     initObstacles();
                     Microbot.enableAutoRunOn = false;
                     Rs2Walker.disableTeleports = true;
@@ -266,7 +266,7 @@ public class RoguesDenScript extends Script {
     }
 
     private boolean useStaminaPotion() {
-        if (!Rs2Player.hasStaminaActive() && hasStaminaPotionInBank) {
+        if (Microbot.getClient().getEnergy() < 6000 && !Rs2Player.hasStaminaActive() && hasStaminaPotionInBank) {
             Microbot.log("Looking to withdraw stamina potion...");
             if (Rs2Bank.openBank()) {
                 if (!Rs2Bank.isOpen()) return true;
