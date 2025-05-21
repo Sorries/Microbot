@@ -1,6 +1,8 @@
 package net.runelite.client.plugins.microbot.eventdismiss;
 
 import net.runelite.api.NPC;
+import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.BlockingEvent;
 import net.runelite.client.plugins.microbot.BlockingEventPriority;
 import net.runelite.client.plugins.microbot.util.Global;
@@ -28,13 +30,17 @@ public class DismissNpcEvent implements BlockingEvent {
         Rs2NpcModel randomEventNPC = Rs2Npc.getRandomEventNPC();
         boolean shouldDismiss = shouldDismissNpc(randomEventNPC);
         if (shouldDismiss) {
+            sleep(800,1250);
             Rs2Npc.interact(randomEventNPC, "Dismiss");
             Global.sleepUntil(() -> Rs2Npc.getRandomEventNPC() == null);
+            sleep(800,1250);
             return true;
         } else if (!Rs2Inventory.isFull()) {
+            sleep(800,1250);
             Rs2Npc.interact(randomEventNPC, "Talk-to");
             Rs2Dialogue.sleepUntilHasContinue();
             Rs2Dialogue.clickContinue();
+            sleep(800,1250);
             return true;
         }
         return false;
