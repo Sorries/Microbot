@@ -127,6 +127,7 @@ public class NmzScript extends Script {
     private void walkToCenter() {
         if (center.distanceTo(Rs2Player.getWorldLocation()) > 4) {
             Rs2Walker.walkTo(center, 6);
+            sleepUntil(() -> !Rs2Player.isMoving(), Rs2Random.between(3000, 5000));
         }
     }
 
