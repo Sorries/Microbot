@@ -391,7 +391,7 @@ public class Rs2Widget {
 
         return true;
     }
-    public static boolean worldMapInterfaceOpen() {
+    public static boolean worldMapInterfaceClose() {
         if (!isWorldMapInterfaceOpen()) return false;
         Microbot.log("Detected WorldMap opened, interacting...");
         Rs2Widget.clickWidget(595, 38);

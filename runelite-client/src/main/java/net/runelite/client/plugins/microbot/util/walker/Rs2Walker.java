@@ -273,6 +273,10 @@ public class Rs2Walker {
 
                 System.out.println("start loop " + i);
 
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
+
                 if (ShortestPathPlugin.getMarker() == null) {
                     System.out.println("marker is null");
                     break;

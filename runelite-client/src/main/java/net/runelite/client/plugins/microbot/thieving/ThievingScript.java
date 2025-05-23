@@ -238,13 +238,16 @@ public class ThievingScript extends Script {
     private void handleShadowVeil() {
         if (!Rs2Magic.isShadowVeilActive() && Rs2Magic.isArceeus() &&
             Rs2Player.getBoostedSkillLevel(Skill.MAGIC) >= MagicAction.SHADOW_VEIL.getLevel() &&
-            Microbot.getVarbitValue(Varbits.SHADOW_VEIL_COOLDOWN) == 0
-        ) {
-            sleep(750, 1250);
-            Rs2Magic.cast(MagicAction.SHADOW_VEIL);
-            sleep(750, 1250);
-            Rs2Tab.switchToInventoryTab();
-            sleep(1000, 1500);
+            Microbot.getVarbitValue(Varbits.SHADOW_VEIL_COOLDOWN) == 0) {
+                sleep(1000, 1500);
+                    if (!Rs2Magic.cast(MagicAction.SHADOW_VEIL)) {
+                        Microbot.log("Do not have enough runes to cast shadow veil");
+                        shutdown();
+                        return;
+                    }
+                sleep(750, 1250);
+                Rs2Tab.switchToInventoryTab();
+                sleep(1000, 1500);
         }
     }
 
