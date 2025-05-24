@@ -2,7 +2,6 @@ package net.runelite.client.plugins.microbot.pluginscheduler.condition.time;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.GameTick;
 
@@ -25,8 +24,6 @@ import java.util.Optional;
 public abstract class TimeCondition implements Condition {
     @Getter
     private final long maximumNumberOfRepeats;
-    @Getter
-    @Setter
     protected transient long currentValidResetCount = 0;
      // Last reset timestamp tracking
     protected transient LocalDateTime lastValidResetTime;
@@ -76,13 +73,7 @@ public abstract class TimeCondition implements Condition {
     
     @Override
     public void reset() {        
-        this.reset(true);
-    }
-    @Override
-    public void hardReset() {
-        // Reset the condition state
-        this.currentValidResetCount = 0;
-        this.lastValidResetTime = LocalDateTime.now();
+        this.reset(false);
     }
     
     void updateValidReset() {        

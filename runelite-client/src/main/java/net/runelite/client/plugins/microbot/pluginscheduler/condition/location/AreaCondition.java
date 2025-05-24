@@ -11,7 +11,6 @@ import net.runelite.api.coords.WorldPoint;
  */
 @Slf4j
 @EqualsAndHashCode(callSuper = false)
-
 public class AreaCondition extends LocationCondition {
     public static String getVersion() {
         return "0.0.1";

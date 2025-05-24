@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.plugins.microbot.pluginscheduler.condition.time.SingleTriggerTimeCondition;
 
 import java.lang.reflect.Type;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -47,8 +46,6 @@ public class SingleTriggerTimeConditionAdapter implements JsonSerializer<SingleT
         data.addProperty("timeFormat", "UTC");
         // Store trigger state
         data.addProperty("maximumNumberOfRepeats", src.getMaximumNumberOfRepeats());
-        data.addProperty("currentValidResetCount", src.getCurrentValidResetCount());
-        data.addProperty("definedDelay", src.getDefinedDelay().toSeconds());
         
         // Add data to wrapper
         json.add("data", data);
@@ -79,21 +76,16 @@ public class SingleTriggerTimeConditionAdapter implements JsonSerializer<SingleT
                         ", got " + dataObj.get("version").getAsString());
             }
         }
-        Duration definedDelay = Duration.ofSeconds(dataObj.get("definedDelay").getAsLong());
+    
         // Parse time values
         LocalTime serializedStartTime = LocalTime.parse(dataObj.get("targetTime").getAsString(), TIME_FORMAT);
         // Parse date values
         LocalDate serializedStartDate = LocalDate.parse(dataObj.get("targetDate").getAsString(), DATE_FORMAT);
         // Convert to ZonedDateTime
-        ZonedDateTime targetZoned = ZonedDateTime.of(serializedStartDate, serializedStartTime, ZoneId.of("UTC"));
-        ZonedDateTime targetZonedSyDateTime = targetZoned.withZoneSameInstant(zoneId);
+        ZonedDateTime targetZoned = ZonedDateTime.of(serializedStartDate, serializedStartTime, zoneId);
         // Create condition
-        SingleTriggerTimeCondition condition = new SingleTriggerTimeCondition(targetZonedSyDateTime , definedDelay, 
-                dataObj.get("maximumNumberOfRepeats").getAsInt());
-        if (dataObj.has("currentValidResetCount")){
-            condition.setCurrentValidResetCount(dataObj.get("currentValidResetCount").getAsLong());
-        }
-          
+        SingleTriggerTimeCondition condition = new SingleTriggerTimeCondition(targetZoned);
+        
         return condition;
         
     }

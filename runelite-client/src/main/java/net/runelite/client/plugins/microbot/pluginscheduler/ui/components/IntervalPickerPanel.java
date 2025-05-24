@@ -31,8 +31,6 @@ public class IntervalPickerPanel extends JPanel {
     private JSpinner maxMinutesSpinner;
     private JPanel presetPanel;
     private JPanel randomPresetPanel;
-    private JComboBox<String> fixedPresetComboBox;
-    private JComboBox<String> randomPresetComboBox;
     private List<Consumer<IntervalCondition>> changeListeners = new ArrayList<>();
     
     /**
@@ -87,14 +85,14 @@ public class IntervalPickerPanel extends JPanel {
         JLabel hoursLabel = new JLabel("Hours:");
         hoursLabel.setForeground(Color.WHITE);
         
-        SpinnerNumberModel hoursModel = new SpinnerNumberModel(0, 0, 24, 1);
+        SpinnerNumberModel hoursModel = new SpinnerNumberModel(1, 0, 24, 1);
         hoursSpinner = new JSpinner(hoursModel);
         hoursSpinner.setPreferredSize(new Dimension(60, hoursSpinner.getPreferredSize().height));
         
         JLabel minutesLabel = new JLabel("Minutes:");
         minutesLabel.setForeground(Color.WHITE);
         
-        SpinnerNumberModel minutesModel = new SpinnerNumberModel(30, 0, 59, 1);
+        SpinnerNumberModel minutesModel = new SpinnerNumberModel(0, 0, 59, 5);
         minutesSpinner = new JSpinner(minutesModel);
         minutesSpinner.setPreferredSize(new Dimension(60, minutesSpinner.getPreferredSize().height));
         
@@ -124,7 +122,7 @@ public class IntervalPickerPanel extends JPanel {
         JLabel minMinutesLabel = new JLabel("Minutes:");
         minMinutesLabel.setForeground(Color.WHITE);
         
-        SpinnerNumberModel minMinutesModel = new SpinnerNumberModel(30, 0, 59, 1);
+        SpinnerNumberModel minMinutesModel = new SpinnerNumberModel(30, 0, 59, 5);
         minMinutesSpinner = new JSpinner(minMinutesModel);
         minMinutesSpinner.setPreferredSize(new Dimension(60, minMinutesSpinner.getPreferredSize().height));
         
@@ -140,14 +138,14 @@ public class IntervalPickerPanel extends JPanel {
         JLabel maxLabel = new JLabel("Max Interval - Hours:");
         maxLabel.setForeground(Color.WHITE);
         
-        SpinnerNumberModel maxHoursModel = new SpinnerNumberModel(1, 0, 24, 1);
+        SpinnerNumberModel maxHoursModel = new SpinnerNumberModel(2, 0, 24, 1);
         maxHoursSpinner = new JSpinner(maxHoursModel);
         maxHoursSpinner.setPreferredSize(new Dimension(60, maxHoursSpinner.getPreferredSize().height));
         
         JLabel maxMinutesLabel = new JLabel("Minutes:");
         maxMinutesLabel.setForeground(Color.WHITE);
         
-        SpinnerNumberModel maxMinutesModel = new SpinnerNumberModel(0, 0, 59, 1);
+        SpinnerNumberModel maxMinutesModel = new SpinnerNumberModel(0, 0, 59, 5);
         maxMinutesSpinner = new JSpinner(maxMinutesModel);
         maxMinutesSpinner.setPreferredSize(new Dimension(60, maxMinutesSpinner.getPreferredSize().height));
         
@@ -174,37 +172,25 @@ public class IntervalPickerPanel extends JPanel {
             presetsLabel.setForeground(Color.WHITE);
             presetPanel.add(presetsLabel);
             
-            String[][] presets = {                
-                {"Select a preset...", "0", "0"},
-                {"15m", "0", "15"},                                
+            String[][] presets = {
                 {"30m", "0", "30"},
-                {"45m", "0", "45"},
                 {"1h", "1", "0"},
-                {"1h30m", "1", "30"},
                 {"2h", "2", "0"},
-                {"2h30m", "2", "30"},
-                {"3h", "3", "0"},                
-                {"3h30m", "3", "30"},
+                {"3h", "3", "0"},
                 {"4h", "4", "0"},
-                {"4h30m", "4", "30"},                
                 {"6h", "6", "0"}
             };
             
-            fixedPresetComboBox = new JComboBox<>();
             for (String[] preset : presets) {
-                fixedPresetComboBox.addItem(preset[0]);
-            }
-            fixedPresetComboBox.setBackground(ColorScheme.DARK_GRAY_COLOR);
-            fixedPresetComboBox.setForeground(Color.WHITE);
-            fixedPresetComboBox.setPreferredSize(new Dimension(150, fixedPresetComboBox.getPreferredSize().height));
-            fixedPresetComboBox.addActionListener(e -> {
-                int selectedIndex = fixedPresetComboBox.getSelectedIndex();
-                if (selectedIndex > 0) { // Skip the "Select a preset..." option
+                JButton presetButton = new JButton(preset[0]);
+                presetButton.setBackground(ColorScheme.DARK_GRAY_COLOR);
+                presetButton.setForeground(Color.WHITE);
+                presetButton.setFocusPainted(false);
+                presetButton.addActionListener(e -> {
                     fixedRadioButton.setSelected(true);
                     updatePanelVisibility();
                     
                     // Apply preset values
-                    String[] preset = presets[selectedIndex];
                     hoursSpinner.setValue(Integer.parseInt(preset[1]));
                     minutesSpinner.setValue(Integer.parseInt(preset[2]));
                     
@@ -213,9 +199,9 @@ public class IntervalPickerPanel extends JPanel {
                     
                     // Notify listeners
                     notifyChangeListeners();
-                }
-            });
-            presetPanel.add(fixedPresetComboBox);
+                });
+                presetPanel.add(presetButton);
+            }
             
             add(presetPanel);
             
@@ -228,34 +214,21 @@ public class IntervalPickerPanel extends JPanel {
             randomPresetPanel.add(randomPresetsLabel);
             
             String[][] randomPresets = {
-                {"Select a preset...", "0", "0", "0", "0"},
-                {"1-5m", "0", "1", "0", "5"},
-                {"5-10m", "0", "5", "0", "10"},
-                {"10-15m", "0", "10", "0", "15"},
-                {"15-30m", "0", "15", "0", "30"},
                 {"30-60m", "0", "30", "1", "0"},
-                {"45m-1h15m", "0", "45", "1", "15"},
                 {"1-2h", "1", "0", "2", "0"},
-                {"1-3h", "1", "0", "3", "0"},
-                {"2-3h", "2", "0", "3", "0"},                
                 {"2-4h", "2", "0", "4", "0"},
             };
             
-            randomPresetComboBox = new JComboBox<>();
             for (String[] preset : randomPresets) {
-                randomPresetComboBox.addItem(preset[0]);
-            }
-            randomPresetComboBox.setBackground(ColorScheme.DARK_GRAY_COLOR);
-            randomPresetComboBox.setForeground(Color.WHITE);
-            randomPresetComboBox.setPreferredSize(new Dimension(150, randomPresetComboBox.getPreferredSize().height));
-            randomPresetComboBox.addActionListener(e -> {
-                int selectedIndex = randomPresetComboBox.getSelectedIndex();
-                if (selectedIndex > 0) { // Skip the "Select a preset..." option
+                JButton presetButton = new JButton(preset[0]);
+                presetButton.setBackground(ColorScheme.DARK_GRAY_COLOR);
+                presetButton.setForeground(Color.WHITE);
+                presetButton.setFocusPainted(false);
+                presetButton.addActionListener(e -> {
                     randomizedRadioButton.setSelected(true);
                     updatePanelVisibility();
                     
                     // Apply preset values to min
-                    String[] preset = randomPresets[selectedIndex];
                     minHoursSpinner.setValue(Integer.parseInt(preset[1]));
                     minMinutesSpinner.setValue(Integer.parseInt(preset[2]));
                     
@@ -268,9 +241,9 @@ public class IntervalPickerPanel extends JPanel {
                     
                     // Notify listeners
                     notifyChangeListeners();
-                }
-            });
-            randomPresetPanel.add(randomPresetComboBox);
+                });
+                randomPresetPanel.add(presetButton);
+            }
             
             randomPresetPanel.setVisible(false);
             add(randomPresetPanel);
@@ -355,13 +328,6 @@ public class IntervalPickerPanel extends JPanel {
         if (presetPanel != null && randomPresetPanel != null) {
             presetPanel.setVisible(useFixed);
             randomPresetPanel.setVisible(!useFixed);
-            
-            // Reset combo boxes to first item when switching modes
-            if (useFixed && fixedPresetComboBox != null) {
-                fixedPresetComboBox.setSelectedIndex(0);
-            } else if (!useFixed && randomPresetComboBox != null) {
-                randomPresetComboBox.setSelectedIndex(0);
-            }
         }
         
         revalidate();
@@ -473,7 +439,7 @@ public class IntervalPickerPanel extends JPanel {
         }
         
         // Check if this is a randomized min-max interval or a fixed interval
-        boolean isRandomized = condition.isRandomize();
+        boolean isRandomized = condition.isRandomized();
         
         if (isRandomized) {
             // Set to randomized mode
@@ -575,13 +541,21 @@ public class IntervalPickerPanel extends JPanel {
         maxHoursSpinner.setEnabled(enabled && randomizedRadioButton.isSelected());
         maxMinutesSpinner.setEnabled(enabled && randomizedRadioButton.isSelected());
         
-        // Update preset components if they exist
-        if (fixedPresetComboBox != null) {
-            fixedPresetComboBox.setEnabled(enabled);
+        // Update preset buttons if they exist
+        if (presetPanel != null) {
+            for (Component c : presetPanel.getComponents()) {
+                if (c instanceof JButton) {
+                    c.setEnabled(enabled);
+                }
+            }
         }
         
-        if (randomPresetComboBox != null) {
-            randomPresetComboBox.setEnabled(enabled);
+        if (randomPresetPanel != null) {
+            for (Component c : randomPresetPanel.getComponents()) {
+                if (c instanceof JButton) {
+                    c.setEnabled(enabled);
+                }
+            }
         }
     }
 }

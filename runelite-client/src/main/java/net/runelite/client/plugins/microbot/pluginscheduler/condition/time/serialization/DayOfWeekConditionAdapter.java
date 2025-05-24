@@ -115,9 +115,6 @@ public class DayOfWeekConditionAdapter implements JsonSerializer<DayOfWeekCondit
             IntervalCondition intervalCondition = context.deserialize(intervalJson, IntervalCondition.class);
             condition.setIntervalCondition(intervalCondition);
         }
-        if (dataObj.has("currentValidResetCount")){
-            condition.setCurrentValidResetCount(dataObj.get("currentValidResetCount").getAsLong());
-        }
         
         return condition;
        

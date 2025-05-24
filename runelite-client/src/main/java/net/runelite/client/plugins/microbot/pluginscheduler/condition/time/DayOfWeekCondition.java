@@ -39,14 +39,8 @@ public class DayOfWeekCondition extends TimeCondition {
     private final Set<DayOfWeek> activeDays;
     private final long maxRepeatsPerDay;
     private final long maxRepeatsPerWeek;
-    @Getter
-    @Setter
     private transient ZonedDateTime nextTriggerDay;
-    @Getter
-    @Setter
     private transient Map<LocalDate, Integer> dailyResetCounts = new HashMap<>();
-    @Getter
-    @Setter
     private transient Map<Integer, Integer> weeklyResetCounts = new HashMap<>();
     
     private final AndCondition combinedCondition;
@@ -667,13 +661,6 @@ public class DayOfWeekCondition extends TimeCondition {
         getIntervalCondition()
                 .ifPresent(IntervalCondition::reset);
         updateDailyResetCount();
-        updateNextTriggerDay();
-    }
-    @Override
-    public void hardReset() {
-        super.hardReset();
-        dailyResetCounts.clear();
-        weeklyResetCounts.clear();
         updateNextTriggerDay();
     }
     

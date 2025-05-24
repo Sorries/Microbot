@@ -71,7 +71,8 @@ public class AIOFighterOverlay extends OverlayPanel {
             }
         }
 
-        for (Rs2NpcModel npc : filteredAttackableNpcs.get()) {
+        for (Rs2NpcModel npc :
+                filteredAttackableNpcs) {
             if (npc != null && npc.getCanvasTilePoly() != null) {
                 try {
                     graphics.setColor(Color.CYAN);
@@ -83,7 +84,7 @@ public class AIOFighterOverlay extends OverlayPanel {
             }
         }
 
-        for (Monster currentMonster : currentMonstersAttackingUs.get()) {
+        for (Monster currentMonster: currentMonstersAttackingUs) {
             if (currentMonster != null && currentMonster.npc != null && currentMonster.npc.getCanvasTilePoly() != null) {
                 try {
                     graphics.setColor(Color.CYAN);
