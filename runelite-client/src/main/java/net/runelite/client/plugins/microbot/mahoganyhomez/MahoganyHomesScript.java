@@ -425,7 +425,7 @@ public class MahoganyHomesScript extends Script {
     }
 
     private boolean isMissingItems() {
-        return planksInInventory() < planksNeeded()
+        return (planksInInventory() + planksInPlankSack()) < planksNeeded()
                 || steelBarsInInventory() < steelBarsNeeded();
     }
 
