@@ -378,7 +378,6 @@ public class Rs2GroundItem {
 
         for (GroundItem groundItem : groundItems) {
             if (groundItem.getQuantity() < params.getMinItems()) continue;
-            if (params.getIgnoredNames() != null && Arrays.stream(params.getIgnoredNames()).anyMatch(name -> groundItem.getName().trim().toLowerCase().contains(name.trim().toLowerCase()))) continue;
             if (Rs2Inventory.getEmptySlots() < params.getMinInvSlots()) return true;
             coreLoot(groundItem);
         }

@@ -375,7 +375,8 @@ public class Rs2Player {
      * @return {@code true} if the player is interacting with another entity, {@code false} otherwise.
      */
     public static boolean isInteracting() {
-        return Optional.of(Microbot.getClient().getLocalPlayer().isInteracting()).orElse(false);
+        return Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getLocalPlayer().isInteracting())
+                .orElse(false);
     }
 
     /**

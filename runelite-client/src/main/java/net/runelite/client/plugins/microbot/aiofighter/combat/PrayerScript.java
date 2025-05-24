@@ -23,7 +23,6 @@ public class PrayerScript extends Script {
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!Microbot.isLoggedIn()) return;
-				if (!super.run()) return;
 
                 handlePrayer(config);
             } catch (Exception ex) {
@@ -40,7 +39,8 @@ public class PrayerScript extends Script {
             boolean underAttack = Rs2Npc.getNpcsForPlayer().findAny().isPresent() || Rs2Combat.inCombat();
             Rs2Prayer.toggleQuickPrayer(underAttack);
         } else {
-			Rs2Prayer.toggleQuickPrayer(config.prayerStyle() == PrayerStyle.ALWAYS_ON);
+            if (super.run())
+                Rs2Prayer.toggleQuickPrayer(config.prayerStyle() == PrayerStyle.ALWAYS_ON);
         }
     }
 

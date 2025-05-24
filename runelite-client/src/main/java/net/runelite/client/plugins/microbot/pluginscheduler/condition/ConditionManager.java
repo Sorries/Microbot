@@ -32,6 +32,7 @@ import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.Skill;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.microbot.Microbot;
@@ -45,35 +46,19 @@ import net.runelite.client.plugins.microbot.pluginscheduler.condition.time.Singl
 import net.runelite.client.plugins.microbot.pluginscheduler.condition.time.TimeCondition;
 
 /**
- * Manages hierarchical logical conditions for plugins, handling both user-defined and plugin-defined conditions.
+ * Manages a hierarchical structure of logical conditions for plugin scheduling.
  * <p>
- * The ConditionManager provides a framework for defining, evaluating, and monitoring complex logical structures
- * of conditions, supporting both AND and OR logical operators. It maintains two separate condition hierarchies:
+ * The ConditionManager maintains two primary logical condition structures:
  * <ul>
- *   <li>Plugin conditions: Defined by the plugin itself, immutable by users</li>
- *   <li>User conditions: User-configurable conditions that can be modified at runtime</li>
+ *   <li>Plugin conditions: Defined and managed by the plugin itself</li>
+ *   <li>User conditions: Defined and managed by the user of the plugin</li>
  * </ul>
  * <p>
- * When evaluating the full condition set, plugin and user conditions are combined with AND logic
- * (both must be satisfied). Within each hierarchy, conditions can be organized with custom logical structures.
+ * These structures can contain nested AND/OR logical conditions with various condition types
+ * including time-based conditions, resource conditions, game event conditions, etc.
  * <p>
- * Features include:
- * <ul>
- *   <li>Complex logical condition hierarchies with AND/OR operations</li>
- *   <li>Time-based condition scheduling and monitoring</li>
- *   <li>Event-based condition updates via RuneLite event bus integration</li>
- *   <li>Watchdog system for periodic condition structure updates</li>
- *   <li>Progress tracking toward condition satisfaction</li>
- *   <li>Single-trigger time conditions for one-time events</li>
- * </ul>
- * <p>
- * This class implements AutoCloseable to ensure proper resource cleanup. Be sure to call close()
- * when the condition manager is no longer needed to prevent memory leaks and resource exhaustion.
- *
- * @see LogicalCondition
- * @see Condition
- * @see TimeCondition
- * @see SingleTriggerTimeCondition
+ * The manager processes RuneLite events and updates condition states accordingly,
+ * allowing plugins to execute based on complex condition combinations.
  */
 @Slf4j
 public class ConditionManager implements AutoCloseable {
@@ -196,77 +181,44 @@ public class ConditionManager implements AutoCloseable {
      * 
      * @return A list of all TimeCondition instances managed by this ConditionManager
      */
-    public List<TimeCondition> getAllTimeConditions() {
+    public List<TimeCondition> getTimeConditions() {
         List<TimeCondition> timeConditions = new ArrayList<>();
         
-        // Add time conditions from user logical structure
-        timeConditions.addAll(getUserTimeConditions());
-        
-        // Add time conditions from plugin logical structure
-        timeConditions.addAll(getPluginTimeConditions());
-        
-        return timeConditions;
-    }
-    
-    /**
-     * Retrieves time-based conditions from user condition structure only.
-     * Uses the LogicalCondition.findTimeConditions method to recursively find all TimeCondition
-     * instances throughout the nested user logical structure.
-     * 
-     * @return A list of TimeCondition instances from user conditions
-     */
-    public List<TimeCondition> getUserTimeConditions() {
-        List<TimeCondition> timeConditions = new ArrayList<>();
+        //log.info("Searching for TimeConditions in logical structures");
         
         // Get time conditions from user logical structure
         if (userLogicalCondition != null) {
             List<Condition> userTimeConditions = userLogicalCondition.findTimeConditions();
+            //log.info("Found {} time conditions in user logical structure", userTimeConditions.size());
             
             for (Condition condition : userTimeConditions) {
                 if (condition instanceof TimeCondition) {
-                    timeConditions.add((TimeCondition) condition);
+                    TimeCondition timeCondition = (TimeCondition) condition;
+          //          log.info("Found TimeCondition in user structure: {} (implementation: {})", 
+                     //       timeCondition, timeCondition.getClass().getSimpleName());
+                    timeConditions.add(timeCondition);
                 }
             }
         }
-        
-        return timeConditions;
-    }
-    
-    /**
-     * Retrieves time-based conditions from plugin condition structure only.
-     * Uses the LogicalCondition.findTimeConditions method to recursively find all TimeCondition
-     * instances throughout the nested plugin logical structure.
-     * 
-     * @return A list of TimeCondition instances from plugin conditions
-     */
-    public List<TimeCondition> getPluginTimeConditions() {
-        List<TimeCondition> timeConditions = new ArrayList<>();
         
         // Get time conditions from plugin logical structure
         if (pluginCondition != null) {
             List<Condition> pluginTimeConditions = pluginCondition.findTimeConditions();
+            //log.info("Found {} time conditions in plugin logical structure", pluginTimeConditions.size());
             
             for (Condition condition : pluginTimeConditions) {
                 if (condition instanceof TimeCondition) {
-                    timeConditions.add((TimeCondition) condition);
+                    TimeCondition timeCondition = (TimeCondition) condition;
+                    //log.info("Found TimeCondition in plugin structure: {} (implementation: {})", 
+                            //timeCondition, timeCondition.getClass().getSimpleName());
+                    timeConditions.add(timeCondition);
                 }
             }
         }
         
+        //log.info("Total TimeConditions found in all logical structures: {}", timeConditions.size());
         return timeConditions;
     }
-    
-    /**
-     * Retrieves all time-based conditions from both plugin and user condition structures.
-     * This is an alias for getAllTimeConditions() for backward compatibility.
-     * 
-     * @return A list of all TimeCondition instances managed by this ConditionManager
-     * @deprecated Use getAllTimeConditions() instead
-     */
-    public List<TimeCondition> getTimeConditions() {
-        return getAllTimeConditions();
-    }
-    
 
     /**
      * Retrieves all non-time-based conditions from both plugin and user condition structures.
@@ -309,7 +261,6 @@ public class ConditionManager implements AutoCloseable {
     public LogicalCondition getUserCondition() {
         return userLogicalCondition;
     }
-    
     /**
      * Removes all user-defined conditions while preserving the logical structure.
      * This clears the user condition list without changing the logical operator (AND/OR).
@@ -326,22 +277,22 @@ public class ConditionManager implements AutoCloseable {
      * 
      * @return true if all required conditions are satisfied based on the logical structure
      */
-    public boolean areAllConditionsMet() {
+    public boolean areConditionsMet() {
+        boolean userConditionsMet = false;
         
-        return areUserConditionsMet() && arePluginConditionsMet();                                              
-    }
-    public boolean arePluginConditionsMet() {
+        userConditionsMet = userLogicalCondition.isSatisfied();                            
+        log.debug("User conditions met: {} (using {} logic)", 
+            userConditionsMet, 
+            (userLogicalCondition instanceof AndCondition) ? "AND" : "OR");
         if (pluginCondition != null && !pluginCondition.getConditions().isEmpty()) {          
-            return pluginCondition.isSatisfied();            
+            boolean pluginConditionsMet = pluginCondition.isSatisfied();
+            log.debug("Plugin conditions met: {}", pluginConditionsMet);
+            return userConditionsMet && pluginConditionsMet;            
         }
-        return true;
-    }
-   
-    public boolean areUserConditionsMet() {
-        if (userLogicalCondition != null && !userLogicalCondition.getConditions().isEmpty()) {          
-            return userLogicalCondition.isSatisfied();            
+        if (userLogicalCondition.getConditions().isEmpty()  && pluginCondition.getConditions().isEmpty() ){
+            return false;
         }
-        return true;
+        return userConditionsMet;                                                
     }
    /**
      * Returns a list of conditions that were defined by the user (not plugin-defined).
@@ -357,13 +308,6 @@ public class ConditionManager implements AutoCloseable {
                 
         return userLogicalCondition.getConditions();
     }
-    public List<Condition> getPluginConditions() {
-        if (pluginCondition == null) {
-            return new ArrayList<>();
-        }
-                
-        return pluginCondition.getConditions();
-    }
     /**
      * Registers this condition manager to receive RuneLite events.
      * Event listeners are registered with the event bus to allow conditions
@@ -373,7 +317,7 @@ public class ConditionManager implements AutoCloseable {
     public void registerEvents() {
         if (eventsRegistered) {
             return;
-        }           
+        }                
         eventBus.register(this);
         eventsRegistered = true;
     }
@@ -386,7 +330,7 @@ public class ConditionManager implements AutoCloseable {
     public void unregisterEvents() {
         if (!eventsRegistered) {
             return;
-        }
+        }        
         eventBus.unregister(this);
         eventsRegistered = false;
     }
@@ -488,61 +432,19 @@ public class ConditionManager implements AutoCloseable {
      * This method calls the reset() method on all conditions.
      */
     public void reset() {
-        resetUserConditions();
-        resetPluginConditions();
+        userLogicalCondition.reset();
+        if (pluginCondition != null) {
+            pluginCondition.reset();
+        }
+        
     }
-
     /**
      * Resets all conditions in both user and plugin logical structures with an option to randomize.
      * 
      * @param randomize If true, conditions will be reset with randomized initial values where applicable
      */
     public void reset(boolean randomize) {
-        resetUserConditions(randomize);
-        resetPluginConditions(randomize);
-    }
-    
-    /**
-     * Resets only user conditions to their initial state.
-     */
-    public void resetUserConditions() {
-        if (userLogicalCondition != null) {
-            userLogicalCondition.reset();
-        }
-    }
-    
-    /**
-     * Resets only user conditions with an option to randomize.
-     * 
-     * @param randomize If true, conditions will be reset with randomized initial values where applicable
-     */
-    public void resetUserConditions(boolean randomize) {
-        if (userLogicalCondition != null) {
-            userLogicalCondition.reset(randomize);
-        }
-    
-    }
-    public void hardResetUserConditions() {
-        if (userLogicalCondition != null) {
-            userLogicalCondition.hardReset();
-        }
-    }
-    
-    /**
-     * Resets only plugin conditions to their initial state.
-     */
-    public void resetPluginConditions() {
-        if (pluginCondition != null) {
-            pluginCondition.reset();
-        }
-    }
-    
-    /**
-     * Resets only plugin conditions with an option to randomize.
-     * 
-     * @param randomize If true, conditions will be reset with randomized initial values where applicable
-     */
-    public void resetPluginConditions(boolean randomize) {
+        userLogicalCondition.reset(randomize);
         if (pluginCondition != null) {
             pluginCondition.reset(randomize);
         }
@@ -1065,9 +967,9 @@ public class ConditionManager implements AutoCloseable {
      */
     public Optional<ZonedDateTime> getCurrentTriggerTime() {
         // Check if conditions are already met
-        boolean conditionsMet = areAllConditionsMet();
+        boolean conditionsMet = areConditionsMet();
         if (conditionsMet) {
-
+            log.debug("Conditions already met, searching for most recent trigger time in the past");
             
             // Find the most recent trigger time in the past from all satisfied conditions
             ZonedDateTime mostRecentTriggerTime = null;
@@ -1084,7 +986,8 @@ public class ConditionManager implements AutoCloseable {
                         if (triggerTime.isBefore(now) || triggerTime.isEqual(now)) {
                             // Keep the most recent time in the past
                             if (mostRecentTriggerTime == null || triggerTime.isAfter(mostRecentTriggerTime)) {
-                                mostRecentTriggerTime = triggerTime;                                
+                                mostRecentTriggerTime = triggerTime;
+                                log.debug("Found more recent past trigger time: {}", mostRecentTriggerTime);
                             }
                         }
                     }
@@ -1092,12 +995,14 @@ public class ConditionManager implements AutoCloseable {
             }
             
             // If we found a trigger time from satisfied conditions, return it
-            if (mostRecentTriggerTime != null) {                
+            if (mostRecentTriggerTime != null) {
+                log.debug("Selected most recent past trigger time: {}", mostRecentTriggerTime);
                 return Optional.of(mostRecentTriggerTime);
             }
             
             // If no trigger times found from satisfied conditions, default to immediate past
-            ZonedDateTime immediateTime = now.minusSeconds(1);            
+            ZonedDateTime immediateTime = now.minusSeconds(1);
+            log.debug("No past trigger times found from satisfied conditions, returning immediate past time: {}", immediateTime);
             return Optional.of(immediateTime);
         }
         
@@ -1249,7 +1154,7 @@ public class ConditionManager implements AutoCloseable {
      */
     public Optional<Duration> getDurationUntilNextTrigger() {
         // If conditions are already met, return zero duration
-        if (areAllConditionsMet()) {
+        if (areConditionsMet()) {
             return Optional.of(Duration.ZERO);
         }
         
@@ -1341,8 +1246,8 @@ public class ConditionManager implements AutoCloseable {
         }        
     }
 
-    @Subscribe(priority = -1)
-    public void onStatChanged(StatChanged event) {
+@Subscribe(priority = -1)
+public void onStatChanged(StatChanged event) {
              
         for (Condition condition : getConditions( )) {
             try {
@@ -1358,6 +1263,7 @@ public class ConditionManager implements AutoCloseable {
     @Subscribe(priority = -1)
     public void onItemContainerChanged(ItemContainerChanged event) {
          // Propagate event to all conditions
+         
          for (Condition condition : getConditions( )) {
             try {
                 condition.onItemContainerChanged(event);
@@ -1369,7 +1275,8 @@ public class ConditionManager implements AutoCloseable {
     }
     @Subscribe(priority = -1)
     public void onGameTick(GameTick gameTick) {
-        // Propagate event to all conditions        
+        // Propagate event to all conditions
+        
         for (Condition condition : getConditions( )) {
             try {
                 condition.onGameTick(gameTick);
@@ -1788,7 +1695,7 @@ public class ConditionManager implements AutoCloseable {
             sb.append("newPluginCondition: \n\n\t").append(optimizedNewCondition.getDescription()).append("\n\n");
             sb.append("pluginCondition: \n\n\t").append(pluginCondition.getDescription()).append("\n\n");
             sb.append("Differences: \n\t").append(pluginCondition.getStructureDifferences(optimizedNewCondition));
-            log.debug(sb.toString());
+            log.info(sb.toString());
             
         }
         
@@ -1809,7 +1716,7 @@ public class ConditionManager implements AutoCloseable {
                 return true;
             } else if (updateOption == UpdateOption.SYNC) {
                 // For SYNC with type mismatch, log a warning but try to merge anyway
-                log.debug("\nAttempting to synchronize plugin conditions with different logical types: {} ({})-> {} ({})", 
+                log.warn("\nAttempting to synchronize plugin conditions with different logical types: {} ({})-> {} ({})", 
                         pluginCondition.getClass().getSimpleName(),pluginCondition.getConditions().size(),
                         newPluginCondition.getClass().getSimpleName(),newPluginCondition.getConditions().size());
                 // Continue with sync by creating a new condition of the correct type
@@ -2152,338 +2059,4 @@ public class ConditionManager implements AutoCloseable {
         return anyRemoved;
     }
 
-    /**
-     * Gets a list of all plugin-defined conditions that are currently blocking the plugin from running.
-     * 
-     * @return List of all plugin-defined conditions preventing activation
-     */
-    public List<Condition> getPluginBlockingConditions() {
-        List<Condition> blockingConditions = new ArrayList<>();
-        
-        if (pluginCondition != null && !pluginCondition.isSatisfied() && pluginCondition instanceof LogicalCondition) {
-            blockingConditions.addAll(((LogicalCondition) pluginCondition).getBlockingConditions());
-        }
-        
-        return blockingConditions;
-    }
-    
-    /**
-     * Gets a list of all user-defined conditions that are currently blocking the plugin from running.
-     * 
-     * @return List of all user-defined conditions preventing activation
-     */
-    public List<Condition> getUserBlockingConditions() {
-        List<Condition> blockingConditions = new ArrayList<>();
-        
-        if (userLogicalCondition != null && !userLogicalCondition.isSatisfied() && userLogicalCondition instanceof LogicalCondition) {
-            blockingConditions.addAll(((LogicalCondition) userLogicalCondition).getBlockingConditions());
-        }
-        
-        return blockingConditions;
-    }
-    
-    /**
-     * Gets a list of all conditions that are currently blocking the plugin from running.
-     * This is useful for diagnosing why a plugin is not activating.
-     * 
-     * @return List of all conditions preventing plugin activation
-     */
-    public List<Condition> getBlockingConditions() {
-        List<Condition> blockingConditions = new ArrayList<>();
-        
-        blockingConditions.addAll(getPluginBlockingConditions());
-        blockingConditions.addAll(getUserBlockingConditions());
-        
-        return blockingConditions;
-    }
-    
-    /**
-     * Gets a list of all plugin-defined "leaf" conditions that are preventing the plugin from running.
-     * Leaf conditions are the non-logical conditions that represent the actual root causes
-     * for why the plugin can't run.
-     * 
-     * @return List of all plugin-defined leaf conditions preventing activation
-     */
-    public List<Condition> getPluginLeafBlockingConditions() {
-        List<Condition> leafBlockingConditions = new ArrayList<>();
-        
-        if (pluginCondition != null && !pluginCondition.isSatisfied()) {
-            if (pluginCondition instanceof LogicalCondition) {
-                leafBlockingConditions.addAll(((LogicalCondition) pluginCondition).getLeafBlockingConditions());
-            } else {
-                // If condition is not a LogicalCondition but is not satisfied, add it directly
-                leafBlockingConditions.add(pluginCondition);
-            }
-        }
-        
-        return leafBlockingConditions;
-    }
-    
-    /**
-     * Gets a list of all user-defined "leaf" conditions that are preventing the plugin from running.
-     * Leaf conditions are the non-logical conditions that represent the actual root causes
-     * for why the plugin can't run.
-     * 
-     * @return List of all user-defined leaf conditions preventing activation
-     */
-    public List<Condition> getUserLeafBlockingConditions() {
-        List<Condition> leafBlockingConditions = new ArrayList<>();
-        
-        if (userLogicalCondition != null && !userLogicalCondition.isSatisfied()) {
-            if (userLogicalCondition instanceof LogicalCondition) {
-                leafBlockingConditions.addAll(((LogicalCondition) userLogicalCondition).getLeafBlockingConditions());
-            } else {
-                // If condition is not a LogicalCondition but is not satisfied, add it directly
-                leafBlockingConditions.add(userLogicalCondition);
-            }
-        }
-        
-        return leafBlockingConditions;
-    }
-    
-    /**
-     * Gets a list of all "leaf" conditions that are preventing the plugin from running.
-     * Leaf conditions are the non-logical conditions that represent the actual root causes
-     * for why the plugin can't run.
-     * 
-     * @return List of all leaf conditions preventing plugin activation
-     */
-    public List<Condition> getLeafBlockingConditions() {
-        List<Condition> leafBlockingConditions = new ArrayList<>();
-        
-        leafBlockingConditions.addAll(getPluginLeafBlockingConditions());
-        leafBlockingConditions.addAll(getUserLeafBlockingConditions());
-        
-        return leafBlockingConditions;
-    }
-    
-    /**
-     * Gets a human-readable explanation of why the plugin-defined conditions are not satisfied,
-     * detailing the specific blocking conditions.
-     * 
-     * @return A string explaining why the plugin-defined conditions are not satisfied
-     */
-    public String getPluginBlockingExplanation() {
-        if (pluginCondition == null || pluginCondition.isSatisfied()) {
-            return "Plugin conditions are all satisfied.";
-        }
-        
-        StringBuilder explanation = new StringBuilder();
-        explanation.append("Plugin conditions not satisfied because:\n");
-        
-        if (pluginCondition instanceof LogicalCondition) {
-            explanation.append(((LogicalCondition) pluginCondition).getBlockingExplanation()
-                    .replace("\n", "\n  ")).append("\n");
-        } else {
-            explanation.append("  ").append(pluginCondition.getDescription())
-                      .append(" (").append(pluginCondition.getClass().getSimpleName()).append(")\n");
-        }
-        
-        // Add root causes summary
-        explanation.append("\nPlugin Root Causes:\n");
-        List<Condition> leafBlockingConditions = getPluginLeafBlockingConditions();
-        for (int i = 0; i < leafBlockingConditions.size(); i++) {
-            Condition condition = leafBlockingConditions.get(i);
-            explanation.append(i + 1).append(") ").append(condition.getDescription())
-                      .append(" (").append(condition.getClass().getSimpleName()).append(")\n");
-        }
-        
-        return explanation.toString();
-    }
-    
-    /**
-     * Gets a human-readable explanation of why the user-defined conditions are not satisfied,
-     * detailing the specific blocking conditions.
-     * 
-     * @return A string explaining why the user-defined conditions are not satisfied
-     */
-    public String getUserBlockingExplanation() {
-        if (userLogicalCondition == null || userLogicalCondition.isSatisfied()) {
-            return "User conditions are all satisfied.";
-        }
-        
-        StringBuilder explanation = new StringBuilder();
-        explanation.append("User conditions not satisfied because:\n");
-        
-        if (userLogicalCondition instanceof LogicalCondition) {
-            explanation.append(((LogicalCondition) userLogicalCondition).getBlockingExplanation()
-                    .replace("\n", "\n  ")).append("\n");
-        } else {
-            explanation.append("  ").append(userLogicalCondition.getDescription())
-                      .append(" (").append(userLogicalCondition.getClass().getSimpleName()).append(")\n");
-        }
-        
-        // Add root causes summary
-        explanation.append("\nUser Root Causes:\n");
-        List<Condition> leafBlockingConditions = getUserLeafBlockingConditions();
-        for (int i = 0; i < leafBlockingConditions.size(); i++) {
-            Condition condition = leafBlockingConditions.get(i);
-            explanation.append(i + 1).append(") ").append(condition.getDescription())
-                      .append(" (").append(condition.getClass().getSimpleName()).append(")\n");
-        }
-        
-        return explanation.toString();
-    }
-    
-    /**
-     * Gets a human-readable explanation of why the plugin cannot run,
-     * detailing the specific blocking conditions from both plugin and user sources.
-     * 
-     * @return A string explaining why the plugin cannot run
-     */
-    public String getBlockingExplanation() {
-        if (areAllConditionsMet()) {
-            return "All conditions are satisfied. The plugin should be running.";
-        }
-        
-        StringBuilder explanation = new StringBuilder();
-        explanation.append("Plugin cannot run because:\n\n");
-        
-        // Check plugin conditions
-        if (pluginCondition != null && !pluginCondition.isSatisfied()) {
-            explanation.append("Plugin Conditions:\n");
-            if (pluginCondition instanceof LogicalCondition) {
-                explanation.append(((LogicalCondition) pluginCondition).getBlockingExplanation()
-                        .replace("\n", "\n  ")).append("\n");
-            } else {
-                explanation.append("  ").append(pluginCondition.getDescription())
-                          .append(" (").append(pluginCondition.getClass().getSimpleName()).append(")\n");
-            }
-        }
-        
-        // Check user conditions
-        if (userLogicalCondition != null && !userLogicalCondition.isSatisfied()) {
-            explanation.append("User Conditions:\n");
-            if (userLogicalCondition instanceof LogicalCondition) {
-                explanation.append(((LogicalCondition) userLogicalCondition).getBlockingExplanation()
-                        .replace("\n", "\n  ")).append("\n");
-            } else {
-                explanation.append("  ").append(userLogicalCondition.getDescription())
-                          .append(" (").append(userLogicalCondition.getClass().getSimpleName()).append(")\n");
-            }
-        }
-        
-        // Add root causes summary
-        explanation.append("\nRoot Causes Summary:\n");
-        List<Condition> leafBlockingConditions = getLeafBlockingConditions();
-        for (int i = 0; i < leafBlockingConditions.size(); i++) {
-            Condition condition = leafBlockingConditions.get(i);
-            explanation.append(i + 1).append(") ").append(condition.getDescription())
-                      .append(" (").append(condition.getClass().getSimpleName()).append(")\n");
-        }
-        
-        return explanation.toString();
-    }
-    
-    /**
-     * Gets a concise summary of the plugin-defined root causes why the plugin cannot run.
-     * 
-     * @return A string summarizing the plugin-defined root causes
-     */
-    public String getPluginRootCausesSummary() {
-        if (pluginCondition == null || pluginCondition.isSatisfied()) {
-            return "All plugin conditions are satisfied";
-        }
-        
-        List<Condition> leafBlockingConditions = getPluginLeafBlockingConditions();
-        
-        if (leafBlockingConditions.isEmpty()) {
-            return "No specific plugin blocking conditions found";
-        }
-        
-        StringBuilder summary = new StringBuilder();
-        summary.append("Plugin root causes preventing activation (").append(leafBlockingConditions.size()).append("):\n");
-        
-        for (int i = 0; i < leafBlockingConditions.size(); i++) {
-            Condition condition = leafBlockingConditions.get(i);
-            summary.append(i + 1).append(") ").append(condition.getDescription());
-            
-            // Add progress information if available
-            double progress = condition.getProgressPercentage();
-            if (progress > 0 && progress < 100) {
-                summary.append(" - ").append(String.format("%.1f%%", progress)).append(" complete");
-            }
-            
-            if (i < leafBlockingConditions.size() - 1) {
-                summary.append("\n");
-            }
-        }
-        
-        return summary.toString();
-    }
-    
-    /**
-     * Gets a concise summary of the user-defined root causes why the plugin cannot run.
-     * 
-     * @return A string summarizing the user-defined root causes
-     */
-    public String getUserRootCausesSummary() {
-        if (userLogicalCondition == null || userLogicalCondition.isSatisfied()) {
-            return "All user conditions are satisfied";
-        }
-        
-        List<Condition> leafBlockingConditions = getUserLeafBlockingConditions();
-        
-        if (leafBlockingConditions.isEmpty()) {
-            return "No specific user blocking conditions found";
-        }
-        
-        StringBuilder summary = new StringBuilder();
-        summary.append("User root causes preventing activation (").append(leafBlockingConditions.size()).append("):\n");
-        
-        for (int i = 0; i < leafBlockingConditions.size(); i++) {
-            Condition condition = leafBlockingConditions.get(i);
-            summary.append(i + 1).append(") ").append(condition.getDescription());
-            
-            // Add progress information if available
-            double progress = condition.getProgressPercentage();
-            if (progress > 0 && progress < 100) {
-                summary.append(" - ").append(String.format("%.1f%%", progress)).append(" complete");
-            }
-            
-            if (i < leafBlockingConditions.size() - 1) {
-                summary.append("\n");
-            }
-        }
-        
-        return summary.toString();
-    }
-    
-    /**
-     * Gets a concise summary of all root causes why the plugin cannot run,
-     * combining both plugin-defined and user-defined causes.
-     * 
-     * @return A string summarizing the root causes preventing plugin activation
-     */
-    public String getRootCausesSummary() {
-        if (areAllConditionsMet()) {
-            return "All conditions are satisfied";
-        }
-        
-        List<Condition> leafBlockingConditions = getLeafBlockingConditions();
-        
-        if (leafBlockingConditions.isEmpty()) {
-            return "No specific blocking conditions found";
-        }
-        
-        StringBuilder summary = new StringBuilder();
-        summary.append("Root causes preventing plugin activation (").append(leafBlockingConditions.size()).append("):\n");
-        
-        for (int i = 0; i < leafBlockingConditions.size(); i++) {
-            Condition condition = leafBlockingConditions.get(i);
-            summary.append(i + 1).append(") ").append(condition.getDescription());
-            
-            // Add progress information if available
-            double progress = condition.getProgressPercentage();
-            if (progress > 0 && progress < 100) {
-                summary.append(" - ").append(String.format("%.1f%%", progress)).append(" complete");
-            }
-            
-            if (i < leafBlockingConditions.size() - 1) {
-                summary.append("\n");
-            }
-        }
-        
-        return summary.toString();
-    }
 }

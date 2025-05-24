@@ -376,7 +376,21 @@ public class MahoganyHomesScript extends Script {
                             sleep(Rs2Random.randomGaussian(800, 200));
                             Rs2ItemModel plankSack = Rs2Inventory.get(ItemID.PLANK_SACK);
                             if (plankSack != null) {
-                                Rs2Inventory.interact(plankSack, "Use");
+                                // Custom menuEntry as Rs2Inventory.interact seem to set the wrong menuAction type
+                                NewMenuEntry plankSackEntry = new NewMenuEntry();
+                                plankSackEntry.setOption("Use");
+                                plankSackEntry.setTarget("<col=ff9040>Plank sack</col>");
+                                plankSackEntry.setIdentifier(9);
+                                plankSackEntry.setType(MenuAction.CC_OP);
+                                plankSackEntry.setParam0(plankSack.getSlot());
+                                plankSackEntry.setParam1(983043);
+                                plankSackEntry.setItemId(plankSack.getId());
+                                plankSackEntry.setWorldViewId(-1);
+                                plankSackEntry.setForceLeftClick(false);
+                                plankSackEntry.setDeprioritized(false);
+
+                                Microbot.doInvoke(plankSackEntry, Rs2Inventory.itemBounds(plankSack));
+                                //Rs2Inventory.interact(plankSack, "Use");
                                 sleep(Rs2Random.randomGaussian(800, 200));
                             }
                         }, 20000, 1000);
@@ -411,7 +425,7 @@ public class MahoganyHomesScript extends Script {
     }
 
     private boolean isMissingItems() {
-        return (planksInInventory() + planksInPlankSack()) < planksNeeded()
+        return planksInInventory() < planksNeeded()
                 || steelBarsInInventory() < steelBarsNeeded();
     }
 

@@ -56,13 +56,14 @@ public interface MicroAgilityConfig extends Config {
     }
 
     @ConfigItem(
-            keyName = "itemsToAlch",
-            name = "Items to Alch",
-            description = "Enter items to alch, separated by commas (e.g., Rune sword, Dragon dagger, Mithril platebody)",
+            keyName = "item",
+            name = "Item To Alch",
+            description = "Item to alch",
             position = 3,
             section = generalSection
     )
-    default String itemsToAlch() {
+    default String item()
+    {
         return "";
     }
 }

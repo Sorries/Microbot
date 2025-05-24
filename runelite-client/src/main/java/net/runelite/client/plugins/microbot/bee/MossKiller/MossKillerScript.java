@@ -46,7 +46,6 @@ import static net.runelite.api.Skill.MAGIC;
 import static net.runelite.client.plugins.microbot.util.antiban.enums.ActivityIntensity.HIGH;
 import static net.runelite.client.plugins.microbot.util.antiban.enums.ActivityIntensity.LOW;
 import static net.runelite.client.plugins.microbot.util.player.Rs2Player.eatAt;
-import static net.runelite.client.plugins.microbot.util.player.Rs2Player.getWorldLocation;
 import static net.runelite.client.plugins.skillcalculator.skills.MagicAction.HIGH_LEVEL_ALCHEMY;
 
 
@@ -151,15 +150,8 @@ public class MossKillerScript extends Script {
         Rs2Antiban.setActivityIntensity(LOW);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
-                if (!Microbot.isLoggedIn()) {
-                    Microbot.log("Not logged in, skipping tick.");
-                    return;}
-                if (!super.run()) {Microbot.log("super.run() returned false, skipping tick.");
-                    return;}
-                if (Microbot.getClient() == null || Microbot.getClient().getLocalPlayer() == null) {
-                    Microbot.log("Client or local player not ready. Skipping tick.");
-                    return;
-                }
+                if (!Microbot.isLoggedIn()) return;
+                if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
 
                 if(!isStarted){
@@ -307,7 +299,7 @@ public class MossKillerScript extends Script {
                 sleep(1000, 3000);
             }
             Rs2Bank.walkToBank(BankLocation.VARROCK_EAST);
-        } else if (getWorldLocation().getY() > 3520) {
+        } else if (Rs2Player.getWorldLocation().getY() > 3520) {
             Rs2Bank.walkToBank(BankLocation.FEROX_ENCLAVE);
         }
 
@@ -419,7 +411,7 @@ public class MossKillerScript extends Script {
 
     public void handleMossGiants() {
 
-        WorldPoint playerLocation = getWorldLocation();
+        WorldPoint playerLocation = Rs2Player.getWorldLocation();
 
         if (!Rs2Inventory.contains(FOOD) || BreakHandlerScript.breakIn <= 30){
             Microbot.log("Inventory does not contains FOOD or break in less than 30");
@@ -542,7 +534,7 @@ public class MossKillerScript extends Script {
     }
 
     public List<Rs2PlayerModel> getNearbyPlayers(int distance) {
-        WorldPoint playerLocation = getWorldLocation();
+        WorldPoint playerLocation = Rs2Player.getWorldLocation();
 
         // Use the predicate-based getPlayers method directly
         return Rs2Player.getPlayers(p -> p != null &&
@@ -662,7 +654,7 @@ public class MossKillerScript extends Script {
             return;
         }
 
-        if (Rs2Walker.getDistanceBetween(getWorldLocation(), VARROCK_SQUARE) < 10 && getWorldLocation().getPlane() == 0) {
+        if (Rs2Walker.getDistanceBetween(Rs2Player.getWorldLocation(), VARROCK_SQUARE) < 10 && Rs2Player.getWorldLocation().getPlane() == 0) {
             if (!Rs2Inventory.hasItemAmount(SWORDFISH, 15)) {
                 Microbot.log("you're at varrock square and could restock food, let's do that");
                 state = MossKillerState.BANK;
@@ -688,7 +680,7 @@ public class MossKillerScript extends Script {
             bossMode = true;
         }
 
-        WorldPoint playerLocation = getWorldLocation();
+        WorldPoint playerLocation = Rs2Player.getWorldLocation();
 
         if(!Rs2Inventory.contains(FOOD)) {
             state = MossKillerState.WALK_TO_BANK;
@@ -777,7 +769,7 @@ public class MossKillerScript extends Script {
 
 
     public void handleBanking(){
-        if(bossMode && !Rs2Inventory.contains(MOSSY_KEY) && Rs2Walker.getDistanceBetween(getWorldLocation(), VARROCK_WEST_BANK) > 6) {
+        if(bossMode && !Rs2Inventory.contains(MOSSY_KEY) && Rs2Walker.getDistanceBetween(Rs2Player.getWorldLocation(), VARROCK_WEST_BANK) > 6) {
             state = MossKillerState.WALK_TO_BANK;
             return;
         }
@@ -904,7 +896,7 @@ public class MossKillerScript extends Script {
     public void walkToVarrockWestBank(){
         BreakHandlerScript.setLockState(false);
         plugin.lockCondition.unlock();
-        WorldPoint playerLocation = getWorldLocation();
+        WorldPoint playerLocation = Rs2Player.getWorldLocation();
         toggleRunEnergy();
         if(!bossMode && Rs2Inventory.containsAll(new int[]{AIR_RUNE, FIRE_RUNE, LAW_RUNE, FOOD})){
             state = MossKillerState.WALK_TO_MOSS_GIANTS;
@@ -920,7 +912,7 @@ public class MossKillerScript extends Script {
     }
 
     public void varrockTeleport(){
-        WorldPoint playerLocation = getWorldLocation();
+        WorldPoint playerLocation = Rs2Player.getWorldLocation();
         Microbot.log(String.valueOf(Rs2Walker.getDistanceBetween(playerLocation, VARROCK_SQUARE)));
         sleep(1000, 2000);
         if(Rs2Walker.getDistanceBetween(playerLocation, VARROCK_SQUARE) <= 10 && playerLocation.getY() < 5000){
@@ -947,7 +939,7 @@ public class MossKillerScript extends Script {
 
 
     public void getInitiailState(){
-        WorldPoint playerLocation = getWorldLocation();
+        WorldPoint playerLocation = Rs2Player.getWorldLocation();
         if(Rs2Walker.getDistanceBetween(playerLocation, VARROCK_SQUARE) < 10 || Rs2Walker.getDistanceBetween(playerLocation, VARROCK_WEST_BANK) < 10){
             state = MossKillerState.WALK_TO_BANK;
             return;

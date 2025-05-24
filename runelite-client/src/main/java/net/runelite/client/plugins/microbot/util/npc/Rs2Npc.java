@@ -101,10 +101,16 @@ public class Rs2Npc {
     /**
      * Retrieves a list of NPCs currently interacting with the local player.
      *
-     * @return A sorted list of {@link Rs2NpcModel} objects interacting with the local player.
+     * @return A sorted list of {@link NPC} objects interacting with the local player.
      */
     public static Stream<Rs2NpcModel> getNpcsForPlayer() {
-        return getNpcsForPlayer(npc -> true);
+        List<Rs2NpcModel> npcs = getNpcs(x -> x.getInteracting() == Microbot.getClient().getLocalPlayer())
+                .sorted(Comparator.comparingInt(value ->
+                        value.getLocalLocation().distanceTo(
+                                Microbot.getClient().getLocalPlayer().getLocalLocation())))
+                .collect(Collectors.toList());
+
+        return npcs.stream();
     }
 
     /**
@@ -117,7 +123,7 @@ public class Rs2Npc {
      * @return A sorted list of {@link Rs2NpcModel} objects matching the given criteria.
      */
     public static Stream<Rs2NpcModel> getNpcsForPlayer(Predicate<Rs2NpcModel> predicate) {
-        List<Rs2NpcModel> npcs = getNpcs(x -> Objects.equals(x.getInteracting(), Microbot.getClient().getLocalPlayer()))
+        List<Rs2NpcModel> npcs = getNpcs(x -> x.getInteracting() == Microbot.getClient().getLocalPlayer())
                 .filter(predicate)
                 .sorted(Comparator.comparingInt(value ->
                         value.getLocalLocation().distanceTo(
@@ -148,7 +154,7 @@ public class Rs2Npc {
         return getNpcsForPlayer(x -> {
             String npcName = x.getName();
             if (npcName == null || npcName.isEmpty()) return false;
-            return (exact ? npcName.equalsIgnoreCase(name) : npcName.toLowerCase().contains(name.toLowerCase()));
+            return (exact ? npcName.equalsIgnoreCase(name) : npcName.toLowerCase().contains(name.toLowerCase())) && x.getInteracting() == Microbot.getClient().getLocalPlayer();
         }).sorted(Comparator.comparingInt(value -> value.getLocalLocation().distanceTo(Microbot.getClient().getLocalPlayer().getLocalLocation())))
           .collect(Collectors.toList());
     }
@@ -199,8 +205,8 @@ public class Rs2Npc {
         List<Rs2NpcModel> npcList = Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getTopLevelWorldView().npcs().stream()
                 .filter(Objects::nonNull)
                 .map(Rs2NpcModel::new)
-                .filter(x -> x.getName() != null)
                 .filter(predicate)
+                .filter(x -> x.getName() != null)
                 .sorted(Comparator.comparingInt(value -> value.getLocalLocation().distanceTo(Microbot.getClient().getLocalPlayer().getLocalLocation())))
                 .collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
@@ -312,7 +318,7 @@ public class Rs2Npc {
         return getNpcs(npc -> npc.getCombatLevel() > 0
                 && !npc.isDead()
                 && (!reachable || playerLocation.distanceToPath(npc.getWorldLocation()) < Integer.MAX_VALUE)
-                && (!npc.isInteracting() || Objects.equals(npc.getInteracting(), Microbot.getClient().getLocalPlayer())))
+                && (!npc.isInteracting() || npc.getInteracting() == Microbot.getClient().getLocalPlayer()))
                 .sorted(Comparator.comparingInt(value ->
                         value.getLocalLocation().distanceTo(
                                 Microbot.getClient().getLocalPlayer().getLocalLocation())));
@@ -452,7 +458,7 @@ public class Rs2Npc {
             if (npcComposition == null) return false;
             List<String> npcActions = Arrays.asList(npcComposition.getActions());
             if (npcActions.isEmpty()) return false;
-            return npcActions.contains("Dismiss") && Objects.equals(npc.getInteracting(), Microbot.getClient().getLocalPlayer());
+            return npcActions.contains("Dismiss") && npc.getInteracting() == Microbot.getClient().getLocalPlayer();
         }).findFirst().orElse(null);
     }
 
@@ -735,7 +741,7 @@ public class Rs2Npc {
         if (npc == null) return false;
         if (!hasLineOfSight(new Rs2NpcModel(npc))) return false;
         if (Rs2Combat.inCombat()) return false;
-        if (npc.isInteracting() && !Objects.equals(npc.getInteracting(), Microbot.getClient().getLocalPlayer()) && !Rs2Player.isInMulti())
+        if (npc.isInteracting() && npc.getInteracting() != Microbot.getClient().getLocalPlayer() && !Rs2Player.isInMulti())
             return false;
 
         return interact(new Rs2NpcModel(npc), "attack");
@@ -760,7 +766,7 @@ public class Rs2Npc {
         if (npc == null) return false;
         if (!hasLineOfSight(npc)) return false;
         if (Rs2Combat.inCombat()) return false;
-        if (npc.isInteracting() && !Objects.equals(npc.getInteracting(), Microbot.getClient().getLocalPlayer()) && !Rs2Player.isInMulti())
+        if (npc.isInteracting() && npc.getInteracting() != Microbot.getClient().getLocalPlayer() && !Rs2Player.isInMulti())
             return false;
 
         return interact(npc, "attack");
@@ -813,7 +819,7 @@ public class Rs2Npc {
             if (npc == null) continue;
             if (!hasLineOfSight(npc)) continue;
             if (Rs2Combat.inCombat()) continue;
-            if (npc.isInteracting() && !Objects.equals(npc.getInteracting(), Microbot.getClient().getLocalPlayer()) && !Rs2Player.isInMulti())
+            if (npc.isInteracting() && npc.getInteracting() != Microbot.getClient().getLocalPlayer() && !Rs2Player.isInMulti())
                 continue;
             if (npc.isDead()) continue;
 
@@ -996,7 +1002,7 @@ public class Rs2Npc {
      */
     @Deprecated(since = "1.7.2", forRemoval = true)
     public static List<Rs2NpcModel> getNpcsAttackingPlayer(Player player) {
-        return getNpcs(x -> x.getInteracting() != null && Objects.equals(x.getInteracting(), player) && x.isDead())
+        return getNpcs(x -> x.getInteracting() != null && x.getInteracting() == player && x.isDead())
                 .collect(Collectors.toList());
     }
 

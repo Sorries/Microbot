@@ -54,7 +54,7 @@ public class ChaosAltarScript extends Script {
 
                 // Determine current state
                 currentState = determineState();
-                Microbot.log("Current state: " + currentState);
+                System.out.println("Current state: " + currentState);
 
                 // Execute state action
                 switch (currentState) {
@@ -68,8 +68,9 @@ public class ChaosAltarScript extends Script {
                         if (config.giveBonesFast()) {offerBonesFast();} else offerBones();
                         break;
                     case WALK_TO_ALTAR:
+                        walkTo(3027, 3820,0); //immedietly 10+ south of lava maze entrance to avoid chaos fanatic aggro
                         walkTo(CHAOS_ALTAR_POINT_SOUTH);
-                        if (config.giveBonesFast()) {offerBonesFast();} else offerBones();
+                        offerBones();
                         break;
                     case DIE_TO_NPC:
                         dieToNpc();
@@ -111,14 +112,14 @@ public class ChaosAltarScript extends Script {
 
 
     private void dieToNpc() {
-        Microbot.log("Walking to dangerous NPC to die");
+        System.out.println("Walking to dangerous NPC to die");
         Rs2Walker.walkTo(2978, 3854,0);
-        sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 60000);
+        sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 15000);
         // Attack chaos fanatic to die
         Rs2Npc.attack("Chaos Fanatic");
         // Wait until player dies
-        sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
-        sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
+        sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 15000);
+        sleepUntil(() -> !Rs2Pvp.isInWilderness(), 5000);
         sleep(1000,2000);
     }
 
@@ -133,19 +134,22 @@ public class ChaosAltarScript extends Script {
         }
 
         if (hasBurningAmulet()) {
-            walkTo(CHAOS_ALTAR_POINT_SOUTH);
+            walkTo(CHAOS_ALTAR_POINT);
         }
     }
 
     private void offerBones() {
         System.out.println("Offering bones at altar- IN OFFERBONES1");
+        if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
+
+        if (Rs2Inventory.isFull()){
+            walkTo(CHAOS_ALTAR_POINT);
+        }
 
         if (!CHAOS_ALTAR_AREA.contains(Rs2Player.getWorldLocation())) {
             if (Rs2Player.getWorldLocation().getY() > 3650)
             {walkTo(CHAOS_ALTAR_POINT);}
         }
-
-        if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
 
         if (Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
             Rs2Inventory.slotInteract(2, "use");
@@ -161,15 +165,16 @@ public class ChaosAltarScript extends Script {
     private void offerBonesFast() {
         Microbot.log("Offering bones at altar - IN OFFERBONES");
 
+        if (Rs2Inventory.isFull()){
+            walkTo(CHAOS_ALTAR_POINT);
+        }
+
         if (!CHAOS_ALTAR_AREA.contains(Rs2Player.getWorldLocation())) {
             if (Rs2Player.getWorldLocation().getY() > 3650)
             {walkTo(CHAOS_ALTAR_POINT);}
         }
 
-        while (Rs2Inventory.contains(DRAGON_BONES)
-                && isRunning()
-                && !Rs2Player.isInCombat()
-                && Rs2GameObject.exists(411)) {
+        while (Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
             Rs2Inventory.slotInteract(2, "use");
             sleep(100, 300);
             Rs2GameObject.interact(411);

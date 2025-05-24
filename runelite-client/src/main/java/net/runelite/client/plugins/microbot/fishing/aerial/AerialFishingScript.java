@@ -24,7 +24,7 @@ import static net.runelite.client.plugins.microbot.util.npc.Rs2Npc.validateInter
 public class AerialFishingScript extends Script {
     public static final String version = "1.1.0";
     public static int timeout = 0;
-    public static final WorldPoint FISHING_SPOT = new WorldPoint(1376, 3629, 0);
+    public static final WorldPoint FISHING_SPOT = new WorldPoint(1361, 3630, 0);
     public boolean run(AerialFishingConfig config) {
         Rs2Antiban.resetAntibanSettings();
         Rs2Antiban.antibanSetupTemplates.applyFishingSetup();

@@ -1325,7 +1325,9 @@ public class Rs2Inventory {
      */
     public static boolean interact(int id, String action) {
         Rs2ItemModel rs2Item = items().stream().filter(x -> x.id == id).findFirst().orElse(null);
-        return interact(rs2Item, action);
+        if (rs2Item == null) return false;
+        invokeMenu(rs2Item, action);
+        return true;
     }
     /**
      * Interacts with an item with the specified ID in the inventory using the specified action.

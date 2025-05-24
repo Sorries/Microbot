@@ -1,10 +1,12 @@
 package net.runelite.client.plugins.microbot.agility;
+
 import com.google.common.collect.ImmutableSet;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.agility.AgilityPlugin;
 import net.runelite.client.plugins.agility.Obstacle;
+import net.runelite.client.plugins.agility.Obstacles;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.agility.models.AgilityObstacleModel;
@@ -17,13 +19,17 @@ import net.runelite.client.plugins.microbot.util.models.RS2Item;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
-import java.util.*;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static net.runelite.api.NullObjectID.*;
 import static net.runelite.api.ObjectID.LADDER_36231;
-
 import static net.runelite.client.plugins.microbot.agility.enums.AgilityCourseName.GNOME_STRONGHOLD_AGILITY_COURSE;
 import static net.runelite.client.plugins.microbot.agility.enums.AgilityCourseName.PRIFDDINAS_AGILITY_COURSE;
 
@@ -137,10 +143,14 @@ public class AgilityScript extends Script {
                 startCourse = new WorldPoint(2754, 2742, 0);
                 break;
             case COLOSSAL_WYRM_BASIC_COURSE:
+                startCourse = new WorldPoint(1652, 2931, 0);
+                break;
             case COLOSSAL_WYRM_ADVANCED_COURSE:
                 startCourse = new WorldPoint(1652, 2931, 0);
                 break;
             case SHAYZIEN_BASIC_COURSE:
+                startCourse = new WorldPoint(1551, 3632, 0);
+                break;
             case SHAYZIEN_ADVANCED_COURSE:
                 startCourse = new WorldPoint(1551, 3632, 0);
                 break;
@@ -180,8 +190,9 @@ public class AgilityScript extends Script {
                 }
 
                 if (config.agilityCourse() == PRIFDDINAS_AGILITY_COURSE) {
-                    TileObject portal = Rs2GameObject.findObject(PORTAL_OBSTACLE_IDS.toArray(new Integer[0]));
-                    if (portal != null && Microbot.getClientThread().runOnClientThreadOptional(portal::getClickbox).isPresent()) {
+                    TileObject portal = Rs2GameObject.findObject(PORTAL_OBSTACLE_IDS.stream().collect(Collectors.toList()));
+
+                    if (portal != null && Microbot.getClientThread().runOnClientThreadOptional(() -> portal.getClickbox()) != null) {
                         if (Rs2GameObject.interact(portal, "travel")) {
                             sleep(2000, 3000);
                             return;
@@ -193,7 +204,9 @@ public class AgilityScript extends Script {
                     currentObstacle = 0;
                     LocalPoint startCourseLocal = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), startCourse);
                     if (startCourseLocal == null || playerLocation.distanceTo(startCourseLocal) >= MAX_DISTANCE) {
-                        tryAlchingItem(config);
+                        if (config.alchemy()) {
+                            Rs2Magic.alch(config.item(), 50, 100);
+                        }
                         if (Rs2Player.getWorldLocation().distanceTo(startCourse) < 100) {//extra check for prif course
                             Rs2Walker.walkTo(startCourse, 8);
                             Microbot.log("Going back to course's starting point");
@@ -216,29 +229,40 @@ public class AgilityScript extends Script {
                 }
 
                 for (Map.Entry<TileObject, Obstacle> entry : AgilityPlugin.getObstacles().entrySet()) {
+
+
                     TileObject object = entry.getKey();
                     Obstacle obstacle = entry.getValue();
 
                     Tile tile = obstacle.getTile();
-                    if (tile.getPlane() == Microbot.getClient().getTopLevelWorldView().getPlane() && object.getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE) {
+                    if (tile.getPlane() == Microbot.getClient().getTopLevelWorldView().getPlane()
+                            && object.getLocalLocation().distanceTo(playerLocation) < MAX_DISTANCE) {
+                        // This assumes that the obstacle is not clickable.
+                        if (Obstacles.TRAP_OBSTACLE_IDS.contains(object.getId())) {
+                            Polygon polygon = object.getCanvasTilePoly();
+                            if (polygon != null) {
+                                //empty for now
+                            }
+                            return;
+                        }
 
                         final int agilityExp = Microbot.getClient().getSkillExperience(Skill.AGILITY);
 
                         List<AgilityObstacleModel> courses = getCurrentCourse(config);
 
-                        List<Integer> objectIds = courses.stream()
-                                .filter(x -> x.getOperationX().check(Rs2Player.getWorldLocation().getX(), x.getRequiredX()) && x.getOperationY().check(Rs2Player.getWorldLocation().getY(), x.getRequiredY()))
-                                .map(AgilityObstacleModel::getObjectID)
-                                .collect(Collectors.toList());
 
-                        TileObject gameObject = Rs2GameObject.findObject(objectIds);
+                        TileObject gameObject = Rs2GameObject.findObject(courses.stream()
+                                .filter(x -> x.getOperationX().check(Rs2Player.getWorldLocation().getX(), x.getRequiredX()) && x.getOperationY().check(Rs2Player.getWorldLocation().getY(), x.getRequiredY()))
+                                .map(AgilityObstacleModel::getObjectID).collect(Collectors.toList()));
 
                         if (gameObject == null) {
-                            Microbot.log("No agility obstacle found. Report this as a bug if this keeps happening.");
+                            Microbot.log("NO agility obstacle found. Please report this as a bug if this keeps happening.");
                             return;
                         }
 
-                        tryAlchingItem(config);
+                        if (config.alchemy()) {
+                            Rs2Magic.alch(config.item(), 50, 100);
+                        }
 
                         if (!Rs2Camera.isTileOnScreen(gameObject)) {
                             Rs2Walker.walkMiniMap(gameObject.getWorldLocation());
@@ -246,49 +270,19 @@ public class AgilityScript extends Script {
 
                         if (Rs2GameObject.interact(gameObject)) {
                             isWalkingToStart = false;
-                            if (gameObject.getId() != LADDER_36231 && waitForAgilityObstacleToFinish(agilityExp))
+                            //LADDER_36231 in prifddinas does not give experience
+                            if (gameObject.getId() != LADDER_36231 && waitForAgilityObstabcleToFinish(agilityExp))
                                 break;
                         }
 
                     }
                 }
             } catch (Exception ex) {
-                Microbot.log("An error occurred: " + ex.getMessage(), ex);
+                Microbot.log(ex.getMessage());
+                ex.printStackTrace();
             }
         }, 0, 100, TimeUnit.MILLISECONDS);
         return true;
-    }
-
-    private void tryAlchingItem(MicroAgilityConfig config) {
-        if (!config.alchemy()) return;
-
-        String itemForAlching = getItemForAlching(config);
-
-        if (itemForAlching == null) {
-            Microbot.log("No items specified for alching or none available.");
-        } else {
-            Rs2Magic.alch(itemForAlching, 50, 75);
-        }
-    }
-
-    private String getItemForAlching(MicroAgilityConfig config) {
-        String itemsInput = config.itemsToAlch().trim();
-        if (itemsInput.isEmpty()) {
-            return null;
-        }
-
-        List<String> items = Arrays.stream(itemsInput.split(","))
-                .map(String::trim)
-                .filter(item -> !item.isEmpty())
-                .filter(Rs2Inventory::hasNotedItem)
-                .collect(Collectors.toList());
-
-        if (items.isEmpty()) {
-            return null;
-        }
-
-        // Return the first available item in the list
-        return items.get(0);
     }
 
     @Override
@@ -296,11 +290,11 @@ public class AgilityScript extends Script {
         super.shutdown();
     }
 
-    private boolean waitForAgilityObstacleToFinish(final int agilityExp) {
+    private boolean waitForAgilityObstabcleToFinish(final int agilityExp) {
         double healthPlaceholder= Rs2Player.getHealthPercentage();
-        sleepUntilOnClientThread(
-                () -> agilityExp != Microbot.getClient().getSkillExperience(Skill.AGILITY) ||healthPlaceholder>
-                        Rs2Player.getHealthPercentage(), 10000);
+        sleepUntilOnClientThread(() -> agilityExp != Microbot.getClient().getSkillExperience(Skill.AGILITY)||healthPlaceholder>Rs2Player.getHealthPercentage(), 15000);
+
+
         if (agilityExp != Microbot.getClient().getSkillExperience(Skill.AGILITY) || Microbot.getClient().getTopLevelWorldView().getPlane() == 0) {
             currentObstacle++;
             return true;
@@ -308,5 +302,3 @@ public class AgilityScript extends Script {
         return false;
     }
 }
-
-
