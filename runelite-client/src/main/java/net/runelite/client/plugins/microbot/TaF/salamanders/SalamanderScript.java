@@ -25,7 +25,7 @@ public class SalamanderScript extends Script {
     public boolean hasDied = false;
 
     public boolean run(SalamanderConfig config, SalamanderPlugin plugin) {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         applyAntiBanSettings();
         Rs2Antiban.setActivity(Activity.GENERAL_HUNTER);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {

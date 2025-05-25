@@ -454,7 +454,7 @@ public class MotherloadMineScript extends Script
     @Override
     public void shutdown()
     {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         resetMiningState();
         Rs2Walker.setTarget(null);
         super.shutdown();

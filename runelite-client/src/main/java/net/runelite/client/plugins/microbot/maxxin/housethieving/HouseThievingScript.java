@@ -51,7 +51,7 @@ public class HouseThievingScript extends Script {
         Microbot.pauseAllScripts = false;
         Microbot.enableAutoRunOn = false;
         initialPlayerLocation = null;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2AntibanSettings.naturalMouse = true;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -321,7 +321,7 @@ public class HouseThievingScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 

@@ -51,7 +51,7 @@ public class AstralRunesScript extends Script {
     public boolean run(AstralRunesConfig config) {
         Microbot.pauseAllScripts = false;
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2AntibanSettings.naturalMouse = true;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -302,7 +302,7 @@ public class AstralRunesScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 }

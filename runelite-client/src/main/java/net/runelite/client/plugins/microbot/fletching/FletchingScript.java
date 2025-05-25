@@ -41,7 +41,7 @@ public class FletchingScript extends Script {
 
     public void run(FletchingConfig config) {
         fletchingMode = config.fletchingMode();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2Antiban.antibanSetupTemplates.applyFletchingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -280,7 +280,7 @@ public class FletchingScript extends Script {
     @Override
     public void shutdown() {
 
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 }

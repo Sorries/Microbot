@@ -47,7 +47,7 @@ public class CannonballSmelterScript extends Script {
     private boolean required() {return (Rs2Inventory.hasItem(ItemID.AMMO_MOULD) || Rs2Inventory.hasItem(ItemID.DOUBLE_AMMO_MOULD));}
 
     public boolean run(CannonballSmelterConfig config) {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         cannonballAntiBan();
         Rs2AntibanSettings.actionCooldownChance = 0.1;
         Microbot.enableAutoRunOn = true;
@@ -211,6 +211,6 @@ public class CannonballSmelterScript extends Script {
     @Override
     public void shutdown() {
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 }

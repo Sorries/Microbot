@@ -32,7 +32,7 @@ public class DefaultScript extends Script {
     public boolean run(AutoLooterConfig config) {
         Microbot.enableAutoRunOn = false;
         initialPlayerLocation = null;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         applyAntiBanSettings();
         Rs2Antiban.setActivity(Activity.GENERAL_COLLECTING);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -137,7 +137,7 @@ public class DefaultScript extends Script {
     @Override
     public void shutdown(){
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
     
     public boolean handleWalk(AutoLooterConfig config) {

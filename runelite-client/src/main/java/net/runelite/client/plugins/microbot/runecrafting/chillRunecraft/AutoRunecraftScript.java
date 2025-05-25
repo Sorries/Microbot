@@ -32,7 +32,7 @@ public class AutoRunecraftScript extends Script
     public boolean run(AutoRunecraftConfig config)
     {
         Microbot.enableAutoRunOn = true;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
         Rs2Antiban.setActivity(Activity.GENERAL_RUNECRAFT);
 
@@ -187,7 +187,7 @@ public class AutoRunecraftScript extends Script
     public void shutdown()
     {
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 
     public void updateLevelXp()

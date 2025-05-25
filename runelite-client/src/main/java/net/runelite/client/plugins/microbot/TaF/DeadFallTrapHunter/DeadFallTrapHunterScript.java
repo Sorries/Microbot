@@ -45,7 +45,7 @@ public class DeadFallTrapHunterScript extends Script {
     }
 
     public boolean run(DeadFallTrapHunterConfig config, DeadFallTrapHunterPlugin plugin) {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         applyAntiBanSettings();
         Rs2Antiban.setActivity(Activity.GENERAL_HUNTER);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {

@@ -93,7 +93,7 @@ public class FarmTreeRunScript extends Script {
 
     public boolean run(FarmTreeRunConfig config) {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2AntibanSettings.naturalMouse = true;
         Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
 
