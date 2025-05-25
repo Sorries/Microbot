@@ -262,7 +262,7 @@ public class RoguesDenScript extends Script {
                 sleepGaussian(1200, 400);
                 return true;
             }
-            sleep(1000); // Wait before retrying
+            sleep(1000);
         }
         return false;
     }
