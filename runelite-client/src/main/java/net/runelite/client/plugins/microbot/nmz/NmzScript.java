@@ -192,8 +192,10 @@ public class NmzScript extends Script {
 
             if (Rs2Inventory.hasItem(ItemID.LOCATOR_ORB)) {
                 Rs2Inventory.interact(ItemID.LOCATOR_ORB, "feel");
+                sleep(100,300);
             } else if (Rs2Inventory.hasItem(ItemID.DWARVEN_ROCK_CAKE_7510)) {
                 Rs2Inventory.interact(ItemID.DWARVEN_ROCK_CAKE_7510, "guzzle");
+                sleep(100,300);
             }
 
             if (currentHP == 1) {
