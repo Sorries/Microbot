@@ -343,7 +343,7 @@ public class GotrScript extends Script {
     }
 
     private boolean depositRunesIntoPool() {
-        if (Rs2Inventory.hasItem(runeIds.toArray(Integer[]::new)) && !isInLargeMine() && !isInHugeMine() && !Rs2Inventory.isFull()) {
+        if (config.shouldDepositRunes() && Rs2Inventory.hasItem(runeIds.toArray(Integer[]::new)) && !isInLargeMine() && !isInHugeMine() && !Rs2Inventory.isFull()) {
             if (Rs2Player.isMoving()) return true;
             if (Rs2GameObject.interact(ObjectID.DEPOSIT_POOL)) {
                 log("Deposit runes into pool...");
@@ -399,7 +399,7 @@ public class GotrScript extends Script {
     }
 
     private boolean isOutOfFragments() {
-        if ((!Rs2Inventory.hasItem(GUARDIAN_FRAGMENTS) && !Rs2Inventory.isFull()) || (getTimeSincePortal() > 75 && !Rs2Inventory.hasItem(GUARDIAN_ESSENCE))) {
+        if ((!Rs2Inventory.hasItem(GUARDIAN_FRAGMENTS) && !Rs2Inventory.isFull()) || (getTimeSincePortal() > 85 && !Rs2Inventory.hasItem(GUARDIAN_ESSENCE))) {
             shouldMineGuardianRemains = true;
             if(!Rs2Inventory.hasItem(GUARDIAN_FRAGMENTS))
                 log("Memorize that we no longer have guardian fragments...");
@@ -517,7 +517,7 @@ public class GotrScript extends Script {
             leaveHugeMine();
             return;
         }
-        if (Rs2Player.getSkillRequirement(Skill.AGILITY, 56) && getTimeSincePortal() < 75) {
+        if (Rs2Player.getSkillRequirement(Skill.AGILITY, 56) && getTimeSincePortal() < 85) {
             if (!isInLargeMine() && !isInHugeMine() && (!Rs2Inventory.hasItem(GUARDIAN_FRAGMENTS) || getStartTimer() == -1)) {
                 if (Rs2Walker.walkTo(new WorldPoint(3632, 9503, 0), 20)) {
                     log("Traveling to large mine...");
@@ -551,9 +551,9 @@ public class GotrScript extends Script {
                 if(isInLargeMine()) {
                     leaveLargeMine();
                 }
-//                if (Rs2Equipment.isWearing("dragon pickaxe")) {
-//                    Rs2Combat.setSpecState(true, 1000);
-//                }
+                if (Rs2Equipment.isWearing("dragon pickaxe")) {
+                    Rs2Combat.setSpecState(true, 1000);
+                }
                 repairPouches();
                 Rs2GameObject.interact(ObjectID.GUARDIAN_PARTS_43716);
                 sleepGaussian(1200, 150);

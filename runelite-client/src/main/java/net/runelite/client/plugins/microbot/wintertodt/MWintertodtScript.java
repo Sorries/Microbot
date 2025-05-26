@@ -114,7 +114,7 @@ public class MWintertodtScript extends Script {
                     Microbot.log("Script starting...");
                     MWintertodtScript.config = config;
                     MWintertodtScript.plugin = plugin;
-                    //Rs2Antiban.resetAntibanSettings();
+                    Rs2Antiban.resetAntibanSettings();
                     Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
                     Rs2Antiban.setActivity(Activity.GENERAL_WOODCUTTING);
                     Rs2Antiban.setPlayStyle(PlayStyle.EXTREME_AGGRESSIVE);
@@ -396,7 +396,7 @@ public class MWintertodtScript extends Script {
 
     @Override
     public void shutdown() {
-        //Rs2Antiban.resetAntibanSettings();
+        Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 
@@ -457,10 +457,10 @@ public class MWintertodtScript extends Script {
                 if (roots != null) {
                     Rs2GameObject.interact(roots, "Pick");
                     Rs2Inventory.waitForInventoryChanges(5000);
-                    sleepUntil(() -> Rs2Inventory.count(ItemID.REJUVENATION_POTION_UNF) <= Rs2Inventory.count(ItemID.BRUMA_HERB), 8000);
+                    sleepUntil(() -> Rs2Inventory.count(ItemID.REJUVENATION_POTION_UNF) <= Rs2Inventory.count(ItemID.BRUMA_HERB), 10000);
                     Rs2Inventory.combineClosest(ItemID.REJUVENATION_POTION_UNF, ItemID.BRUMA_HERB);
                     Rs2Inventory.waitForInventoryChanges(3000);
-                    sleepUntil(() -> !Rs2Inventory.hasItem(ItemID.REJUVENATION_POTION_UNF), 5000);
+                    sleepUntil(() -> !Rs2Inventory.hasItem(ItemID.REJUVENATION_POTION_UNF), 8000);
                     return true;
                 }
             }

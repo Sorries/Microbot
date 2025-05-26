@@ -39,8 +39,8 @@ public class NmzScript extends Script {
 
     public static PrayerPotionScript prayerPotionScript;
 
-    public static int maxHealth = Random.random(2, 8);
-    public static int minAbsorption = Random.random(100, 500);
+    public static int maxHealth = Rs2Random.between(2, 8);
+    public static int minAbsorption = Rs2Random.between(100, 300);
 
     private boolean hasWalkedToCenter = false;
 

@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.thieving;
 
+import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.NPC;
 import net.runelite.api.Skill;
 import net.runelite.api.Varbits;
@@ -25,6 +26,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment.isEquipped;
 
 public class ThievingScript extends Script {
 
@@ -259,22 +262,52 @@ public class ThievingScript extends Script {
         if (!isBankOpen || !Rs2Bank.isOpen()) return;
         Rs2Bank.depositAll();
 
+        Map<String, EquipmentInventorySlot> rogueEquipment = new HashMap<>();
+        rogueEquipment.put("Rogue mask", EquipmentInventorySlot.HEAD);
+        rogueEquipment.put("Rogue top", EquipmentInventorySlot.BODY);
+        rogueEquipment.put("Rogue trousers", EquipmentInventorySlot.LEGS);
+        rogueEquipment.put("Rogue boots", EquipmentInventorySlot.BOOTS);
+        rogueEquipment.put("Rogue gloves", EquipmentInventorySlot.GLOVES);
+        rogueEquipment.put("Thieving cape(t)",EquipmentInventorySlot.CAPE);
+
+        for (Map.Entry<String, EquipmentInventorySlot> entry : rogueEquipment.entrySet()) {
+            String itemName = entry.getKey();
+            EquipmentInventorySlot slot = entry.getValue();
+            if (!isEquipped(itemName, slot) && Rs2Bank.hasBankItem(itemName)) {
+                Rs2Bank.withdrawAndEquip(itemName);
+                Rs2Inventory.waitForInventoryChanges(1200);
+            }
+        }
+
+        if (config.shadowVeil()) {
+            if (!isEquipped("Lava battlestaff", EquipmentInventorySlot.WEAPON)) {
+                if (Rs2Bank.hasBankItem("Lava battlestaff")) {
+                    Rs2Bank.withdrawItem("Lava battlestaff");
+                    Rs2Inventory.waitForInventoryChanges(3000);
+                    if (Rs2Inventory.contains("Lava battlestaff")) {
+                        Rs2Inventory.wear("Lava battlestaff");
+                        Rs2Inventory.waitForInventoryChanges(3000);
+                    } else {
+                        Rs2Bank.withdrawAll(true, "Fire rune", true);
+                        Rs2Inventory.waitForInventoryChanges(3000);
+                        Rs2Bank.withdrawAll(true, "Earth rune", true);
+                        Rs2Inventory.waitForInventoryChanges(3000);
+                    }
+                }
+            }
+            Rs2Bank.withdrawAll(true, "Cosmic rune", true);
+            Rs2Inventory.waitForInventoryChanges(3000);
+        }
+
         boolean successfullyWithdrawFood = Rs2Bank.withdrawX(true, config.food().getName(), config.foodAmount(), true);
         if (!successfullyWithdrawFood) {
             Microbot.showMessage(config.food().getName() + " not found in bank");
-            sleep(5000);
-            return;
+            shutdown();
         }
 
+        Rs2Inventory.waitForInventoryChanges(3000);
         Rs2Bank.withdrawDeficit("dodgy necklace", config.dodgyNecklaceAmount());
-        if (config.shadowVeil()) {
-            Rs2Bank.withdrawAll(true, "Fire rune", true);
-            Rs2Inventory.waitForInventoryChanges(5000);
-            Rs2Bank.withdrawAll(true, "Earth rune", true);
-            Rs2Inventory.waitForInventoryChanges(5000);
-            Rs2Bank.withdrawAll(true, "Cosmic rune", true);
-            Rs2Inventory.waitForInventoryChanges(5000);
-        }
+
         Rs2Bank.closeBank();
         sleepUntil(() -> !Rs2Bank.isOpen());
     }

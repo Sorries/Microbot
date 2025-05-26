@@ -150,7 +150,7 @@ public class AntibanPlugin extends Plugin {
 
     @Override
     protected void startUp() throws AWTException {
-        Rs2Antiban.setActivityIntensity(ActivityIntensity.EXTREME);
+        Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
         final MasterPanel panel = injector.getInstance(MasterPanel.class);
         final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "antiban.png");
         navButton = NavigationButton.builder()
@@ -159,7 +159,7 @@ public class AntibanPlugin extends Plugin {
                 .priority(1)
                 .panel(panel)
                 .build();
-        
+        Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
         validateAndSetBreakDurations();
 
         Timer timer = new Timer();
@@ -189,7 +189,7 @@ public class AntibanPlugin extends Plugin {
 
     @Subscribe
     public void onProfileChanged(ProfileChanged event) {
-        //Rs2Antiban.resetAntibanSettings();
+        Rs2Antiban.resetAntibanSettings();
     }
 
     @Subscribe
@@ -197,6 +197,11 @@ public class AntibanPlugin extends Plugin {
         GameState state = event.getGameState();
 
         switch (state) {
+            case LOGIN_SCREEN:
+                if(Rs2AntibanSettings.actionCooldownActive) {
+                    Rs2Antiban.TIMEOUT = 0;
+                    Rs2AntibanSettings.actionCooldownActive = false;
+                }
             case LOGGING_IN:
             case HOPPING:
                 ready = true;
