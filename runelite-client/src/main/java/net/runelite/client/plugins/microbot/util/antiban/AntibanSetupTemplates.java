@@ -683,6 +683,7 @@ public class AntibanSetupTemplates {
         Rs2AntibanSettings.actionCooldownChance = 0.00;
         Rs2AntibanSettings.microBreakChance = 0.05;
         Rs2AntibanSettings.moveMouseRandomly = false;
+        Rs2AntibanSettings.moveMouseOffScreen = false;
         Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
     }
 
