@@ -31,3 +31,8 @@ public class WelcomeScreenEvent implements BlockingEvent {
         return BlockingEventPriority.HIGHEST;
     }
 }
+
+//if (Rs2Widget.isWidgetVisible(24772680)){
+//
+//sleepUntil(() -> !Rs2Widget.isWidgetVisible(24772680), 10000);
+//        }

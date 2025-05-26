@@ -54,7 +54,7 @@ public class TearsOfGuthixScript extends Script {
 
     {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2AntibanSettings.usePlayStyle = false;
         Rs2AntibanSettings.simulateFatigue = false;
         Rs2AntibanSettings.simulateAttentionSpan = false;

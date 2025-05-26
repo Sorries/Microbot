@@ -148,7 +148,7 @@ public class WildyKillerScript extends Script {
         WildyKillerScript.config = config;
         Microbot.enableAutoRunOn = false;
         Rs2Walker.disableTeleports = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2AntibanSettings.usePlayStyle = true;
         Rs2AntibanSettings.simulateFatigue = true;
         Rs2AntibanSettings.simulateAttentionSpan = true;

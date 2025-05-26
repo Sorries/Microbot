@@ -63,7 +63,7 @@ public class AutoWoodcuttingScript extends Script {
         if (config.hopWhenPlayerDetected()) {
             Microbot.showMessage("Make sure autologin plugin is enabled and randomWorld checkbox is checked!");
         }
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2Antiban.antibanSetupTemplates.applyWoodcuttingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2AntibanSettings.dynamicIntensity = true;
@@ -114,7 +114,7 @@ public class AutoWoodcuttingScript extends Script {
                                 return;
                         }
 
-                        if (Rs2Woodcutting.isWearingAxeWithSpecialAttack())
+                        if (Rs2Woodcutting.isWearingAxeWithSpecialAttack() && Rs2Inventory.getEmptySlots()>Rs2Random.between(5,27))
                             Rs2Combat.setSpecState(true, 1000);
 
                         if (Rs2Inventory.isFull()) {
@@ -300,6 +300,6 @@ public class AutoWoodcuttingScript extends Script {
         super.shutdown();
         returnPoint = null;
         initialPlayerLocation = null;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 }

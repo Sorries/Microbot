@@ -63,14 +63,14 @@ public class OuraniaScript extends Script
 	@Override
 	public void shutdown()
 	{
-		Rs2Antiban.resetAntibanSettings();
+		//Rs2Antiban.resetAntibanSettings();
 		super.shutdown();
 	}
 
 	public boolean run()
 	{
 		Microbot.enableAutoRunOn = false;
-		Rs2Antiban.resetAntibanSettings();
+		//Rs2Antiban.resetAntibanSettings();
 		Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
 		Rs2Antiban.setActivity(Activity.CRAFTING_RUNES_AT_OURANIA_ALTAR);
 		mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {

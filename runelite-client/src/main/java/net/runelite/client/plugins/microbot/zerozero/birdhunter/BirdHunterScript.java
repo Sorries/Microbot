@@ -61,7 +61,7 @@ public class BirdHunterScript extends Script {
         updateHuntingArea(config);
 
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
-            Rs2Antiban.resetAntibanSettings();
+            //Rs2Antiban.resetAntibanSettings();
             Rs2Antiban.antibanSetupTemplates.applyHunterSetup();
             Rs2AntibanSettings.actionCooldownChance = 0.1;
 
