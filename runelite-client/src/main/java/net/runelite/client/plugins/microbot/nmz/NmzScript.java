@@ -322,6 +322,7 @@ public class NmzScript extends Script {
             if (nmzRewardShop == null) break;
             Widget overload = nmzRewardShop.getChild(6);
             Rs2Widget.clickWidgetFast(overload, 6, 4);
+            sleep(600, 1200);
             Widget absorption = nmzRewardShop.getChild(9);
             Rs2Widget.clickWidgetFast(absorption, 9, 4);
             sleep(600, 1200);
