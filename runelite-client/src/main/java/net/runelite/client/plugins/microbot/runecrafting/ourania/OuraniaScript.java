@@ -22,6 +22,7 @@ import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.MicrobotOverlay;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerScript;
+import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.pouch.Pouch;
 import net.runelite.client.plugins.microbot.runecrafting.ourania.enums.OuraniaState;
 import net.runelite.client.plugins.microbot.runecrafting.ourania.enums.Path;
@@ -40,6 +41,7 @@ import net.runelite.client.plugins.microbot.util.misc.Rs2Potion;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 
@@ -134,13 +136,16 @@ public class OuraniaScript extends Script
 						Rs2Inventory.waitForInventoryChanges(5000);
 						if (Rs2Inventory.hasAnyPouch() && !Rs2Inventory.allPouchesEmpty())
 						{
+							sleep(200,400);
 							Rs2Inventory.emptyPouches();
+							sleep(200,400);
 							return;
 						}
 						break;
 					case RESETTING:
 						if (Rs2Player.getWorldLocation().distanceTo(new WorldPoint(2468, 3246, 0)) > 24)
 						{
+							sleep(200,400);
 							Rs2Magic.cast(MagicAction.OURANIA_TELEPORT);
 						}
 						sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(new WorldPoint(2468, 3246, 0)) < 24);
@@ -152,12 +157,18 @@ public class OuraniaScript extends Script
 
 						if (Rs2Inventory.hasDegradedPouch() && Rs2Magic.hasRequiredRunes(Rs2Spells.NPC_CONTACT))
 						{
+							sleep(1000,1500);
 							Rs2Magic.repairPouchesWithLunar();
 							return;
 						}
 
 						if (config.directInteract() && Microbot.isPluginEnabled(GpuPlugin.class))
 						{
+							if (Rs2Tab.getCurrentTab() != InterfaceTab.INVENTORY){
+								sleep(1000,1500);
+								Rs2Tab.switchToInventoryTab();
+								sleep(300,600);
+							}
 							GameObject ladder = Rs2GameObject.getGameObject(ObjectID.LADDER_29635);
 							Rs2GameObject.interact(ladder, "Climb");
 							sleepUntil(this::isNearEniola, 20000);
@@ -304,6 +315,7 @@ public class OuraniaScript extends Script
 							while (!Rs2Inventory.allPouchesFull() && isRunning())
 							{
 								Rs2Bank.withdrawAll(config.essence().getItemId());
+								sleep(300,600);
 								Rs2Inventory.fillPouches();
 								Rs2Inventory.waitForInventoryChanges(1800);
 							}
@@ -311,9 +323,10 @@ public class OuraniaScript extends Script
 
 						Rs2Bank.withdrawAll(config.essence().getItemId());
 						Rs2Inventory.waitForInventoryChanges(1800);
-
+						sleep(500,1000);
 						Rs2Bank.closeBank();
 						sleepUntil(() -> !Rs2Bank.isOpen());
+						sleep(500,1000);
 						break;
 					case RUNNING_TO_ALTAR:
 						if (plugin.isBreakHandlerEnabled())
