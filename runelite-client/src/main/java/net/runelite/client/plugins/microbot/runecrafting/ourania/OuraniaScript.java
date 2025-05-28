@@ -9,11 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.inject.Inject;
-import net.runelite.api.GameObject;
-import net.runelite.api.GameState;
-import net.runelite.api.ItemID;
-import net.runelite.api.NpcID;
-import net.runelite.api.ObjectID;
+
+import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
@@ -369,6 +366,18 @@ public class OuraniaScript extends Script
 
 								Rs2Walker.walkCanvas(randomWorldPoint);
 								sleepUntil(this::isNearAltar, 30000);
+
+//								TileObject altar = Rs2GameObject.getGameObject(ObjectID.ALTAR_29631);
+//								if (altar != null) {
+//									if (!Rs2Camera.isTileOnScreen(altar.getLocalLocation())) {
+//										Rs2Camera.turnTo(altar.getLocalLocation());
+//									}
+//								}
+//								if(Rs2GameObject.interact(ObjectID.ALTAR_29631, "craft-rune")){
+//									sleepUntil(this::isNearAltar, 30000);
+//								}else{
+//									Rs2Walker.walkTo(config.path().getWorldPoint());
+//								}
 							}
 							else
 							{
