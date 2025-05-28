@@ -20,6 +20,7 @@ import net.runelite.client.plugins.microbot.util.dialogues.Rs2Dialogue;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
+import static net.runelite.client.plugins.microbot.Microbot.*;
 import static net.runelite.client.plugins.microbot.farmTreeRun.enums.FarmTreeRunState.*;
 
 
@@ -106,7 +108,10 @@ public class FarmTreeRunScript extends Script {
 
                 long startTime = System.currentTimeMillis();
                 if (Rs2AntibanSettings.actionCooldownActive) return;
-
+                if(!Rs2Magic.isModern()){
+                    log("Not on modern spellbook");
+                    shutdown();
+                }
                 calculatePatches(config);
                 checkSaplingLevelRequirement(config);
 
@@ -344,7 +349,7 @@ public class FarmTreeRunScript extends Script {
                     compostItemId = ItemID.BOTTOMLESS_COMPOST_BUCKET_22997;
                     items.add(new FarmingItem(compostItemId, 1));
                 } else {
-                    Microbot.log("Only bottomless compost is supported. Skipping composting.");
+                    log("Only bottomless compost is supported. Skipping composting.");
                 }
             }
 
@@ -805,7 +810,7 @@ public class FarmTreeRunScript extends Script {
         // Rosie and Nikkie are close together.
         // We need to check their distance to make sure we got the correct gardener.
         if (rosie == null && nikkie == null) {
-            Microbot.log("Gardeners in farming guild not found. Report this bug.");
+            log("Gardeners in farming guild not found. Report this bug.");
             shutdown();
         } else if (nikkie != null && Rs2Player.distanceTo(nikkie.getWorldLocation()) <= 10) {
             npcToInteract = nikkie;
