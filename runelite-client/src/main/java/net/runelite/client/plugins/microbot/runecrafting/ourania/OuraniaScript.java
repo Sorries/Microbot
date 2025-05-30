@@ -166,7 +166,7 @@ public class OuraniaScript extends Script
 								Rs2Tab.switchToInventoryTab();
 								sleep(300,600);
 							}
-							GameObject ladder = Rs2GameObject.getGameObject(ObjectID.LADDER_29635);
+							TileObject ladder = Rs2GameObject.getGameObject(ObjectID.LADDER_29635);
 							Rs2GameObject.interact(ladder, "Climb");
 							sleepUntil(this::isNearEniola, 20000);
 						}
@@ -335,49 +335,60 @@ public class OuraniaScript extends Script
 						{
 							if (config.directInteract() && Microbot.isPluginEnabled(GpuPlugin.class))
 							{
-								List<WorldPoint> nearestTiles = List.of(
-									new WorldPoint(3060, 5581, 0),
-									new WorldPoint(3059, 5581, 0),
-									new WorldPoint(3058, 5581, 0),
-									new WorldPoint(3058, 5580, 0),
-									new WorldPoint(3058, 5579, 0),
-									new WorldPoint(3058, 5578, 0),
-									new WorldPoint(3058, 5577, 0),
-									new WorldPoint(3059, 5577, 0),
-									new WorldPoint(3060, 5577, 0)
-								);
-
-								WorldPoint randomWorldPoint = nearestTiles.get(Rs2Random.nextInt(0, nearestTiles.size(), 1, false));
-								LocalPoint randomLocalPoint = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), randomWorldPoint);
-								if (Rs2Camera.getPitch() < 210 || Rs2Camera.getPitch() > 280)
-								{
-									int randomPitch = Rs2Random.nextInt(220, 260, 1, false);
-									Rs2Camera.setPitch(randomPitch);
-								}
-								if (Rs2Camera.getZoom() != 128)
-								{
-									Rs2Camera.setZoom(128);
-								}
-
-								if (!Rs2Camera.isTileOnScreen(randomLocalPoint))
-								{
-									Rs2Camera.turnTo(randomLocalPoint);
-								}
-
-								Rs2Walker.walkCanvas(randomWorldPoint);
-								sleepUntil(this::isNearAltar, 30000);
-
-//								TileObject altar = Rs2GameObject.getGameObject(ObjectID.ALTAR_29631);
-//								if (altar != null) {
-//									if (!Rs2Camera.isTileOnScreen(altar.getLocalLocation())) {
-//										Rs2Camera.turnTo(altar.getLocalLocation());
-//									}
+//								List<WorldPoint> nearestTiles = List.of(
+//									new WorldPoint(3060, 5581, 0),
+//									new WorldPoint(3059, 5581, 0),
+//									new WorldPoint(3058, 5581, 0),
+//									new WorldPoint(3058, 5580, 0),
+//									new WorldPoint(3058, 5579, 0),
+//									new WorldPoint(3058, 5578, 0),
+//									new WorldPoint(3058, 5577, 0),
+//									new WorldPoint(3059, 5577, 0),
+//									new WorldPoint(3060, 5577, 0)
+//								);
+//
+//								WorldPoint randomWorldPoint = nearestTiles.get(Rs2Random.nextInt(0, nearestTiles.size(), 1, false));
+//								LocalPoint randomLocalPoint = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), randomWorldPoint);
+//								if (Rs2Camera.getPitch() < 210 || Rs2Camera.getPitch() > 280)
+//								{
+//									int randomPitch = Rs2Random.nextInt(220, 260, 1, false);
+//									Rs2Camera.setPitch(randomPitch);
 //								}
-//								if(Rs2GameObject.interact(ObjectID.ALTAR_29631, "craft-rune")){
-//									sleepUntil(this::isNearAltar, 30000);
-//								}else{
-//									Rs2Walker.walkTo(config.path().getWorldPoint());
+//								if (Rs2Camera.getZoom() != 128)
+//								{
+//									Rs2Camera.setZoom(128);
 //								}
+//
+//								if (!Rs2Camera.isTileOnScreen(randomLocalPoint))
+//								{
+//									Rs2Camera.turnTo(randomLocalPoint);
+//								}
+//
+//								Rs2Walker.walkCanvas(randomWorldPoint);
+//								sleepUntil(this::isNearAltar, 30000);
+
+								TileObject altar = Rs2GameObject.getGameObject(ObjectID.ALTAR_29631,Constants.SCENE_SIZE);
+								if (altar != null) {
+									if (Rs2Camera.getPitch() < 210 || Rs2Camera.getPitch() > 280)
+									{
+										int randomPitch = Rs2Random.nextInt(220, 260, 1, false);
+										Rs2Camera.setPitch(randomPitch);
+									}
+									if (Rs2Camera.getZoom() != 128)
+									{
+										Rs2Camera.setZoom(128);
+									}
+									if (!Rs2Camera.isTileOnScreen(altar.getLocalLocation()))
+									{
+										Rs2Camera.turnTo(altar.getLocalLocation());
+										sleep(500,750);
+									}
+									if(Rs2GameObject.interact(altar, "craft-rune")){
+										sleepUntil(this::isNearAltar, 30000);
+									}
+								}else{
+									Rs2Walker.walkTo(config.path().getWorldPoint());
+								}
 							}
 							else
 							{
