@@ -27,6 +27,7 @@ import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
+import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
@@ -95,6 +96,13 @@ public class OuraniaScript extends Script
 				if (Rs2Inventory.anyPouchUnknown())
 				{
 					Rs2Inventory.checkPouches();
+					return;
+				}
+
+				if (!Rs2Combat.disableAutoRetaliate())
+				{
+					sleep(500,750);
+					Rs2Tab.switchToInventoryTab();
 					return;
 				}
 
@@ -373,10 +381,12 @@ public class OuraniaScript extends Script
 									{
 										int randomPitch = Rs2Random.nextInt(220, 260, 1, false);
 										Rs2Camera.setPitch(randomPitch);
+										sleep(500,750);
 									}
-									if (Rs2Camera.getZoom() != 128)
+									if (Rs2Camera.getZoom() != 3)
 									{
-										Rs2Camera.setZoom(128);
+										Rs2Camera.setZoom(3);
+										sleep(500,750);
 									}
 									if (!Rs2Camera.isTileOnScreen(altar.getLocalLocation()))
 									{
