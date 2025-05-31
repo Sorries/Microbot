@@ -173,7 +173,13 @@ public class OuraniaScript extends Script
 								Rs2Tab.switchToInventoryTab();
 								sleep(300,600);
 							}
+
 							TileObject ladder = Rs2GameObject.getGameObject(ObjectID.LADDER_29635);
+							if (!Rs2Camera.isTileOnScreen(ladder.getLocalLocation()))
+							{
+								Rs2Camera.turnTo(ladder.getLocalLocation());
+								sleep(500,750);
+							}
 							Rs2GameObject.interact(ladder, "Climb");
 							sleepUntil(this::isNearEniola, 20000);
 						}
