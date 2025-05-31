@@ -98,12 +98,11 @@ public class OuraniaScript extends Script
 					Rs2Inventory.checkPouches();
 					return;
 				}
-
-				if (!Rs2Combat.disableAutoRetaliate())
-				{
-					sleep(500,750);
-					Rs2Tab.switchToInventoryTab();
-					return;
+				if (!Rs2Combat.isAutoRetaliateDisabled()) {
+					if (Rs2Combat.disableAutoRetaliate()) {
+						sleep(500, 750);
+						Rs2Tab.switchToInventoryTab();
+					}
 				}
 
 				if (config.useMassWorld() && !isOnMassWorld())
