@@ -34,7 +34,7 @@ public class MotherloadMineScript extends Script
 {
     public static final String VERSION = "1.7.2";
 
-    private static final WorldArea WEST_UPPER_AREA = new WorldArea(3748, 5676, 7, 9, 0);
+    private static final WorldArea WEST_UPPER_AREA = new WorldArea(3748, 5676, 7, 9, 0); //3755,5685
     private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 8, 8, 0);
     // Static areas for lower floor to avoid getting stuck behind rockfall
     private static final WorldArea WEST_LOWER_AREA = new WorldArea(3729, 5653, 10, 22, 0);
@@ -112,7 +112,6 @@ public class MotherloadMineScript extends Script
                 handleMining();
                 break;
             case EMPTY_SACK:
-                Rs2Antiban.setActivityIntensity(ActivityIntensity.EXTREME);
                 emptySack();
                 break;
             case FIXING_WATERWHEEL:
@@ -159,8 +158,8 @@ public class MotherloadMineScript extends Script
         }
         else // Inventory is full
         {
-            resetMiningState();
-            if (Rs2Inventory.hasItem(ItemID.PAYDIRT))
+            //
+            if (Rs2Inventory.isFull() && Rs2Inventory.hasItem(ItemID.PAYDIRT))
             {
                 if (Rs2GameObject.getGameObjects(o -> o.getId() == ObjectID.BROKEN_STRUT).size() > 1 && (Rs2Inventory.hasItem("hammer") || Rs2Equipment.isWearing("hammer")))
                 {
@@ -284,6 +283,7 @@ public class MotherloadMineScript extends Script
             {
                 shouldEmptySack = true;
             }
+            resetMiningState();
         }
         else
         {
@@ -327,7 +327,7 @@ public class MotherloadMineScript extends Script
     {
         // Randomly decide which spot to go to
         // More variety can be added if needed
-        miningSpot = (Rs2Random.between(1, 5) == 2)
+        miningSpot = (Rs2Random.between(1, 3) == 2)
                 ? (config.mineUpstairs() ? MLMMiningSpot.WEST_UPPER : MLMMiningSpot.SOUTH)
                 : (config.mineUpstairs() ? MLMMiningSpot.EAST_UPPER : MLMMiningSpot.WEST_LOWER);
         Collections.shuffle(miningSpot.getWorldPoint());
