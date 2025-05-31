@@ -8,6 +8,7 @@ import net.runelite.client.plugins.agility.Obstacle;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.agility.models.AgilityObstacleModel;
+import net.runelite.client.plugins.microbot.util.antiban.Rs2AntibanSettings;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 
 import static net.runelite.api.NullObjectID.*;
 import static net.runelite.api.ObjectID.LADDER_36231;
-
+import static net.runelite.api.ObjectID.LADDER_36232;
 import static net.runelite.client.plugins.microbot.agility.enums.AgilityCourseName.GNOME_STRONGHOLD_AGILITY_COURSE;
 import static net.runelite.client.plugins.microbot.agility.enums.AgilityCourseName.PRIFDDINAS_AGILITY_COURSE;
 
@@ -152,7 +153,9 @@ public class AgilityScript extends Script {
         currentObstacle = 0;
 
         //Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyAgilitySetup();
+        Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+        Rs2AntibanSettings.actionCooldownChance = 0.10;
+        Rs2AntibanSettings.dynamicActivity = false;
         init(config);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -236,6 +239,8 @@ public class AgilityScript extends Script {
                         if (gameObject == null) {
                             Microbot.log("No agility obstacle found. Report this as a bug if this keeps happening.");
                             return;
+                        }else if (gameObject != null){
+                            //Microbot.log("ID" + gameObject.getId());
                         }
 
                         tryAlchingItem(config);
@@ -244,9 +249,17 @@ public class AgilityScript extends Script {
                             Rs2Walker.walkMiniMap(gameObject.getWorldLocation());
                         }
 
+                        if (config.agilityCourse() == PRIFDDINAS_AGILITY_COURSE){
+                            sleep(200,500);
+                        }
                         if (Rs2GameObject.interact(gameObject)) {
                             isWalkingToStart = false;
-                            if (gameObject.getId() != LADDER_36231 && waitForAgilityObstacleToFinish(agilityExp))
+//                            if (gameObject.getId() == LADDER_36231 || gameObject.getId() == LADDER_36232){ // for priff ladder
+//                                Microbot.log("Ladder");
+//                                sleepUntilTrue(()-> Rs2Player.isNearArea(new WorldPoint(2269,3393)) || Rs2Player.isNearArea(new WorldPoint()));
+//                                Microbot.log("La");
+//                            }
+                            if (gameObject.getId() != LADDER_36231 && gameObject.getId() != LADDER_36232 && waitForAgilityObstacleToFinish(agilityExp,config))
                                 break;
                         }
 
@@ -296,11 +309,18 @@ public class AgilityScript extends Script {
         super.shutdown();
     }
 
-    private boolean waitForAgilityObstacleToFinish(final int agilityExp) {
+    private boolean waitForAgilityObstacleToFinish(final int agilityExp,MicroAgilityConfig config) {
         double healthPlaceholder= Rs2Player.getHealthPercentage();
+        int timeout;
+        if(config.agilityCourse() == PRIFDDINAS_AGILITY_COURSE){
+            timeout = 15000; // would try to click previous obstacle if not long enough timeout
+        }else{
+            timeout = 10000;
+        }
         sleepUntilOnClientThread(
                 () -> agilityExp != Microbot.getClient().getSkillExperience(Skill.AGILITY) ||healthPlaceholder>
-                        Rs2Player.getHealthPercentage(), 10000);
+                        Rs2Player.getHealthPercentage(), timeout);
+        Microbot.log("P2");
         if (agilityExp != Microbot.getClient().getSkillExperience(Skill.AGILITY) || Microbot.getClient().getTopLevelWorldView().getPlane() == 0) {
             currentObstacle++;
             return true;
