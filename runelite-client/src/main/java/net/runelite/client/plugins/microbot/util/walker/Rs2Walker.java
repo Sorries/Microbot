@@ -350,6 +350,9 @@ public class Rs2Walker {
                 }
             }
             if (Rs2Player.getWorldLocation().distanceTo(target) < distance) {
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
                 setTarget(null);
                 return WalkerState.ARRIVED;
             } else {
