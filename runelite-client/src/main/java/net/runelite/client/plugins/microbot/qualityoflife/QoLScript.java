@@ -1,20 +1,29 @@
 package net.runelite.client.plugins.microbot.qualityoflife;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
+import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.dialogues.Rs2Dialogue;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
+import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcManager;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.poh.PohTeleports;
+import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
+import net.runelite.client.plugins.microbot.util.slayer.Rs2Slayer;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +33,9 @@ public class QoLScript extends Script {
     private final boolean bankOpen = false;
     private boolean runOnce = false;
     private int randomPoints = 0;
+    @Getter
+    @Setter
+    private static boolean completedSlayerTask = false;
 
     public boolean run(QoLConfig config) {
         Microbot.enableAutoRunOn = false;
@@ -69,6 +81,9 @@ public class QoLScript extends Script {
                 if (config.useQuestDialogueOptions() && Rs2Dialogue.isInDialogue()) {
                     Rs2Dialogue.handleQuestOptionDialogueSelection();
                 }
+                if (config.smartSlayer()){
+                    handleSlayer();
+                }
 
 
             } catch (Exception ex) {
@@ -113,6 +128,41 @@ public class QoLScript extends Script {
             Microbot.log("Failed to load inventory setup");
         }
 
+    }
+    // handle slayer
+    private void handleSlayer(){
+        if (completedSlayerTask){
+//            //if(!Rs2Bank.walkToBankAndUseBank()) return;
+            Microbot.log("Slayer completed");
+            sleep(5000,10000);
+            Rs2Inventory.interact(8013,"break");
+            sleepUntil(PohTeleports::isInHouse);
+            sleep(1000,3000);
+            Rs2Prayer.disableAllPrayers();
+            completedSlayerTask = false;
+        }
+        if(Rs2Slayer.hasSlayerTask()){
+            Rs2Combat.enableAutoRetialiate();
+            if(!Rs2Combat.inCombat()){
+                int waited = 0;
+                int timeout = Rs2Random.between(3000,8000);
+                while (waited < timeout) {
+                    if (Rs2Combat.inCombat()) {
+                        break;
+                    }
+                    sleep(250);
+                    waited += 250;
+                }
+                if(!Rs2Combat.inCombat()){
+                    List<String> monsters = Rs2Slayer.getSlayerMonsters();
+                    if (monsters != null && !monsters.isEmpty()) {
+                        Rs2Npc.attack(monsters);
+                    } else {
+                        Microbot.log("No slayer monsters found.");
+                    }
+                }
+            }
+        }
     }
 
     // handle auto eat
