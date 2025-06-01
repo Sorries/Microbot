@@ -89,11 +89,6 @@ public class AutoChinScript extends Script {
 
     private void handleIdleState() {
         try {
-            // If there are box traps on the floor, interact with them first
-            if (Rs2GroundItem.interact(ItemID.BOX_TRAP, "lay", 4)) {
-                currentState = State.LAYING;
-                return;
-            }
 
             // If our inventory is full of ferrets
             if(Rs2Inventory.getEmptySlots() <= 1 && Rs2Inventory.contains(ItemID.FERRET)){
@@ -125,10 +120,17 @@ public class AutoChinScript extends Script {
                 return;
             }
 
+            // If there are box traps on the floor, interact with them first
+            if (Rs2GroundItem.interact(ItemID.BOX_TRAP, "lay", 4)) {
+                currentState = State.LAYING;
+                return;
+            }
+
             // Interact with traps that have not caught anything
             if (Rs2GameObject.interact(ObjectID.BOX_TRAP_9385, "reset", 4)) {
                 currentState = State.CATCHING;
             }
+
         } catch (Exception ex) {
             Microbot.log(ex.getMessage());
             ex.printStackTrace();
