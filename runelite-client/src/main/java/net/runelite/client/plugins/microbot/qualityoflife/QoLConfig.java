@@ -391,13 +391,24 @@ public interface QoLConfig extends Config {
     }
 
     @ConfigItem(
-            keyName = "refillCannopn",
+            keyName = "refillCannon",
             name = "Refill cannon",
             description = "Refill & Repair cannon",
             position = 10,
             section = upkeepSection
     )
     default boolean refillCannon() {
+        return false;
+    }
+
+    @ConfigItem(
+            keyName = "smartSlayer",
+            name = "Smart Slayer",
+            description = "If not in combat for amount of time, will attack slayer monster",
+            position = 11,
+            section = upkeepSection
+    )
+    default boolean smartSlayer() {
         return false;
     }
 
