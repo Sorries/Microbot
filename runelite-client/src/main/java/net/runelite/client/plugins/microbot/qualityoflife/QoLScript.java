@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Skill;
-import net.runelite.api.gameval.ItemID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
@@ -26,6 +25,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class QoLScript extends Script {
@@ -131,6 +131,19 @@ public class QoLScript extends Script {
     }
     // handle slayer
     private void handleSlayer(){
+        List<String> monsters = Rs2Slayer.getSlayerMonsters();
+        AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
+        if (monsters != null) {
+            for (String monster : monsters) {
+                Rs2Npc.getNpcs(monster).forEach(npc -> {
+                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
+                        isNearSlayerMonster.set(true);
+                        //int distance = Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation());
+                        //Microbot.log("Nearby " + distance);
+                    }
+                });
+            }
+        }
         if (completedSlayerTask){
 //            //if(!Rs2Bank.walkToBankAndUseBank()) return;
             Microbot.log("Slayer completed");
@@ -141,7 +154,7 @@ public class QoLScript extends Script {
             Rs2Prayer.disableAllPrayers();
             completedSlayerTask = false;
         }
-        if(Rs2Slayer.hasSlayerTask()){
+        if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
             Rs2Combat.enableAutoRetialiate();
             if(!Rs2Combat.inCombat()){
                 int waited = 0;
@@ -154,7 +167,6 @@ public class QoLScript extends Script {
                     waited += 250;
                 }
                 if(!Rs2Combat.inCombat()){
-                    List<String> monsters = Rs2Slayer.getSlayerMonsters();
                     if (monsters != null && !monsters.isEmpty()) {
                         Rs2Npc.attack(monsters);
                     } else {
