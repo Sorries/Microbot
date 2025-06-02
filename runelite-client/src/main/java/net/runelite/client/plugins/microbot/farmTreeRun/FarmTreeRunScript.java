@@ -339,7 +339,7 @@ public class FarmTreeRunScript extends Script {
 
 
             // Add must have items
-            items.add(new FarmingItem(ItemID.COINS_995, 10000));
+            items.add(new FarmingItem(ItemID.COINS_995, 100000));
             items.add(new FarmingItem(ItemID.SPADE, 1));
             items.add(new FarmingItem(ItemID.RAKE, 1));
             items.add(new FarmingItem(ItemID.SEED_DIBBER, 1));
