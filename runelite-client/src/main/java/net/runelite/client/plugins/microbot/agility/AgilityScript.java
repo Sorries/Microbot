@@ -2,6 +2,7 @@ package net.runelite.client.plugins.microbot.agility;
 import com.google.common.collect.ImmutableSet;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.agility.AgilityPlugin;
 import net.runelite.client.plugins.agility.Obstacle;
@@ -10,6 +11,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.agility.models.AgilityObstacleModel;
 import net.runelite.client.plugins.microbot.util.antiban.Rs2AntibanSettings;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
+import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
@@ -31,7 +33,7 @@ import static net.runelite.client.plugins.microbot.agility.enums.AgilityCourseNa
 public class AgilityScript extends Script {
 
     public static String version = "1.1.1";
-    final int MAX_DISTANCE = 2300;
+    int MAX_DISTANCE = 2300;
 
     public List<AgilityObstacleModel> draynorCourse = new ArrayList<>();
     public List<AgilityObstacleModel> alkharidCourse = new ArrayList<>();
@@ -59,6 +61,7 @@ public class AgilityScript extends Script {
             // Prifddinas portals
             NULL_36241, NULL_36242, NULL_36243, NULL_36244, NULL_36245, NULL_36246
     );
+    public static final WorldArea prifFallArea = new WorldArea(3260,6103,15,8,0); // Priff first 2 fall area
 
     private List<AgilityObstacleModel> getCurrentCourse(MicroAgilityConfig config) {
         switch (config.agilityCourse()) {
@@ -195,9 +198,16 @@ public class AgilityScript extends Script {
                 if (Microbot.getClient().getTopLevelWorldView().getPlane() == 0 && playerWorldLocation.distanceTo(startCourse) > 6 && config.agilityCourse() != GNOME_STRONGHOLD_AGILITY_COURSE) {
                     currentObstacle = 0;
                     LocalPoint startCourseLocal = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), startCourse);
-                    if (startCourseLocal == null || playerLocation.distanceTo(startCourseLocal) >= MAX_DISTANCE) {
+                    if (config.agilityCourse() == PRIFDDINAS_AGILITY_COURSE && prifFallArea.contains(Rs2Player.getWorldLocation())){ // Check if fell from first tightrope and chimney ( handles walking to start for prif)
+                        Rs2Walker.walkTo(startCourse, 8);
+                        Microbot.log("Going back to course's starting point");
+                        isWalkingToStart = true;
+                        return;
+                    };
+                    if (startCourseLocal == null || playerLocation.distanceTo(startCourseLocal) >= MAX_DISTANCE) { // This max_distance check does not capture prif course so used above
                         tryAlchingItem(config);
-                        if (Rs2Player.getWorldLocation().distanceTo(startCourse) < 100) {//extra check for prif course
+                        if (config.agilityCourse() != PRIFDDINAS_AGILITY_COURSE && Rs2Player.getWorldLocation().distanceTo(startCourse) < 100) {
+                          // when stuck on third failure point on prif, it will try to walk back use walker instead of clicking the ladder back up as distanceTo start course is 38 and max distance is 5095
                             Rs2Walker.walkTo(startCourse, 8);
                             Microbot.log("Going back to course's starting point");
                             isWalkingToStart = true;
@@ -240,7 +250,7 @@ public class AgilityScript extends Script {
                             Microbot.log("No agility obstacle found. Report this as a bug if this keeps happening.");
                             return;
                         }else if (gameObject != null){
-                            //Microbot.log("ID" + gameObject.getId());
+                            //Microbot.log(String.valueOf(gameObject.getId()));
                         }
 
                         tryAlchingItem(config);
@@ -254,11 +264,10 @@ public class AgilityScript extends Script {
                         }
                         if (Rs2GameObject.interact(gameObject)) {
                             isWalkingToStart = false;
-//                            if (gameObject.getId() == LADDER_36231 || gameObject.getId() == LADDER_36232){ // for priff ladder
-//                                Microbot.log("Ladder");
-//                                sleepUntilTrue(()-> Rs2Player.isNearArea(new WorldPoint(2269,3393)) || Rs2Player.isNearArea(new WorldPoint()));
-//                                Microbot.log("La");
-//                            }
+                            if (gameObject.getId() == LADDER_36231 || gameObject.getId() == LADDER_36232){ // for priff ladder, so it does not double click it
+                                sleepUntil(()-> Rs2Player.isNearArea(new WorldPoint(2269,3393,2),1)|| Rs2Player.isNearArea(new WorldPoint(2243,3394,2),1));
+                                sleep(300,500);
+                            }
                             if (gameObject.getId() != LADDER_36231 && gameObject.getId() != LADDER_36232 && waitForAgilityObstacleToFinish(agilityExp,config))
                                 break;
                         }
@@ -320,7 +329,6 @@ public class AgilityScript extends Script {
         sleepUntilOnClientThread(
                 () -> agilityExp != Microbot.getClient().getSkillExperience(Skill.AGILITY) ||healthPlaceholder>
                         Rs2Player.getHealthPercentage(), timeout);
-        Microbot.log("P2");
         if (agilityExp != Microbot.getClient().getSkillExperience(Skill.AGILITY) || Microbot.getClient().getTopLevelWorldView().getPlane() == 0) {
             currentObstacle++;
             return true;
