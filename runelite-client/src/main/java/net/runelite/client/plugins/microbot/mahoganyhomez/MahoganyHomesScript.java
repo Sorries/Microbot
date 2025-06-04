@@ -397,9 +397,9 @@ public class MahoganyHomesScript extends Script {
                             }
                         }, 20000, 1000);
                         if (Rs2Inventory.getEmptySlots() > 0)
+                            Rs2Bank.openBank();
                             Rs2Bank.withdrawAll(plugin.getConfig().currentTier().getPlankSelection().getPlankId());
-
-
+                            Rs2Bank.closeBank();
                     } else {
                         if (Rs2Inventory.getEmptySlots() - steelBarsNeeded() > 0)
                             Rs2Bank.withdrawX(plugin.getConfig().currentTier().getPlankSelection().getPlankId(), Rs2Inventory.getEmptySlots() - steelBarsNeeded());
