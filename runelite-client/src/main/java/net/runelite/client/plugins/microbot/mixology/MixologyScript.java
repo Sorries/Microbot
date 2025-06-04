@@ -285,7 +285,11 @@ public class MixologyScript extends Script {
                         }
 
                         processPotion(nonFulfilledPotion);
-                        sleepUntil(Rs2Player::isAnimating);
+                        sleepUntil(()-> Rs2Player.isAnimating());
+                        sleepUntil(()->!Rs2Player.isAnimating(),10000);
+                        int t = Rs2Random.skewedRandAuto(750);
+                        System.out.println("t " + t);
+                        sleep(t);
                         break;
                     case CONVEYER_BELT:
                         if (potionOrders.stream().noneMatch(x -> Rs2Inventory.hasItem(x.potionType().getFulfilledItemId()))) {
@@ -294,6 +298,9 @@ public class MixologyScript extends Script {
                         }
                         if (Rs2GameObject.interact(AlchemyObject.CONVEYOR_BELT.objectId())) {
                             Rs2Inventory.waitForInventoryChanges(5000);
+                            int t2 = Rs2Random.skewedRandAuto(1250);
+                            System.out.println("t2 " + t2);
+                            sleep(t2);
                             currentAgaPoints = getAgaPoints();
                             currentLyePoints = getLyePoints();
                             currentMoxPoints = getMoxPoints();
@@ -387,14 +394,12 @@ public class MixologyScript extends Script {
     private void createPotion(PotionOrder potionOrder, MixologyConfig config) {
         for (PotionComponent component : potionOrder.potionType().components()) {
             if (canCreatePotion(potionOrder)) break;
+            sleep(Rs2Random.randomGaussian(Rs2Random.between(750, 1000), Rs2Random.between(100, 250)));
             if (component.character() == 'A') {
-                sleep(Rs2Random.randomGaussian(Rs2Random.between(750, 1000), Rs2Random.between(100, 250)));
                 Rs2GameObject.interact(AlchemyObject.AGA_LEVER.objectId());
             } else if (component.character() == 'L') {
-                sleep(Rs2Random.randomGaussian(Rs2Random.between(750, 1000), Rs2Random.between(100, 250)));
                 Rs2GameObject.interact(AlchemyObject.LYE_LEVER.objectId());
             } else if (component.character() == 'M') {
-                sleep(Rs2Random.randomGaussian(Rs2Random.between(750, 1000), Rs2Random.between(100, 250)));
                 Rs2GameObject.interact(AlchemyObject.MOX_LEVER.objectId());
             }
             if (config.useQuickActionLever()) {
