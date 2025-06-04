@@ -52,7 +52,7 @@ public class FornBirdhouseRunsScript extends Script {
                                 Rs2Bank.depositEquipment();
                                 equipGraceful();
                             }
-                            withdrawDigsitePendant();
+                            Rs2Bank.withdrawItem("Digsite Pendant");
                             if (config.TELEPORT()) {
                                 Rs2Bank.withdrawOne(ItemID.LAW_RUNE);
                                 Rs2Bank.withdrawOne(ItemID.FIRE_RUNE);
@@ -67,8 +67,8 @@ public class FornBirdhouseRunsScript extends Script {
                         }
                         break;
                     case TELEPORTING:
-                        Microbot.doInvoke(new NewMenuEntry(-1, 25362449, MenuAction.CC_OP.getId(), 3, -1, "Equip"),
-                                new Rectangle(1, 1, Microbot.getClient().getCanvasWidth(), Microbot.getClient().getCanvasHeight()));
+                        int digsite = Rs2Inventory.get("Digsite Pendant").getId();
+                        Rs2Inventory.interact(digsite,"rub",131078);
                         sleep(3000, 4000);
                         botStatus = states.VERDANT_TELEPORT;
                         break;

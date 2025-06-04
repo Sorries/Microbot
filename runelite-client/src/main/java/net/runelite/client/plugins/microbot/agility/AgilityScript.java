@@ -61,7 +61,7 @@ public class AgilityScript extends Script {
             // Prifddinas portals
             NULL_36241, NULL_36242, NULL_36243, NULL_36244, NULL_36245, NULL_36246
     );
-    public static final WorldArea prifFallArea = new WorldArea(3260,6103,15,8,0); // Priff first 2 fall area
+    public static final WorldArea prifFallArea = new WorldArea(3260,6103,15,9,0); // Priff first 2 fall area
 
     private List<AgilityObstacleModel> getCurrentCourse(MicroAgilityConfig config) {
         switch (config.agilityCourse()) {

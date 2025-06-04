@@ -72,10 +72,11 @@ public class ExampleScript extends Script {
 
  //               Rs2GameObject.interact(new WorldPoint(3762,3755,0),"Build");
  //               Rs2GameObject.interact(30568,"Build");
-                TileObject t = Rs2GameObject.findObjectByLocation(new WorldPoint(3677, 3882, 0));
-                System.out.println(t);
-                System.out.println(t.getId());
+//                TileObject t = Rs2GameObject.findObjectByLocation(new WorldPoint(3677, 3882, 0));
+//                System.out.println(t);
+//                System.out.println(t.getId());
 //                Rs2GameObject.interact(new WorldPoint(3768, 3761, 0),"Build");
+                Rs2Inventory.hasItem(23946);
 
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;

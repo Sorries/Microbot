@@ -10,7 +10,10 @@ import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.dialogues.Rs2Dialogue;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
+import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
@@ -148,7 +151,17 @@ public class QoLScript extends Script {
 //            //if(!Rs2Bank.walkToBankAndUseBank()) return;
             Microbot.log("Slayer completed");
             sleep(5000,10000);
-            Rs2Inventory.interact(8013,"break");
+            if(Rs2GameObject.exists(6)){
+                Rs2GameObject.interact(6,"Pick-up");
+            }
+            sleep(1000,2000);
+            if(Rs2Inventory.contains(8013)) {
+                Rs2Inventory.interact(8013, "break");
+            }else if (Rs2Inventory.contains(13393)) {
+                Rs2Inventory.interact(13393,"teleport",131076);
+                Rs2Bank.walkToBank();
+                sleepUntil(() ->Rs2Bank.isNearBank(5));
+            }
             sleepUntil(PohTeleports::isInHouse);
             sleep(1000,3000);
             Rs2Prayer.disableAllPrayers();
@@ -159,6 +172,7 @@ public class QoLScript extends Script {
             if(!Rs2Combat.inCombat()){
                 int waited = 0;
                 int timeout = Rs2Random.between(3000,8000);
+                System.out.println(timeout);
                 while (waited < timeout) {
                     if (Rs2Combat.inCombat()) {
                         break;

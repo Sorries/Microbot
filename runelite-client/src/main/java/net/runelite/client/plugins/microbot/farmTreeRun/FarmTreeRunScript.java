@@ -389,7 +389,9 @@ public class FarmTreeRunScript extends Script {
                 items.add(new FarmingItem(ItemID.TAVERLEY_TELEPORT, 1, false, true));
 
             if (config.lletyaFruitTreePatch()) {
-                if (Rs2Bank.hasItem(ItemID.TELEPORT_CRYSTAL_1)) {
+                if (Rs2Bank.hasItem(ItemID.ETERNAL_TELEPORT_CRYSTAL)) {
+                    items.add(new FarmingItem(ItemID.ETERNAL_TELEPORT_CRYSTAL, 1));
+                } else if (Rs2Bank.hasItem(ItemID.TELEPORT_CRYSTAL_1)) {
                     items.add(new FarmingItem(ItemID.TELEPORT_CRYSTAL_1, 1));
                 } else if (Rs2Bank.hasItem(ItemID.TELEPORT_CRYSTAL_2)) {
                     items.add(new FarmingItem(ItemID.TELEPORT_CRYSTAL_2, 1));
@@ -397,8 +399,11 @@ public class FarmTreeRunScript extends Script {
                     items.add(new FarmingItem(ItemID.TELEPORT_CRYSTAL_3, 1));
                 } else if (Rs2Bank.hasItem(ItemID.TELEPORT_CRYSTAL_4)) {
                     items.add(new FarmingItem(ItemID.TELEPORT_CRYSTAL_4, 1));
-                } else {
+                } else if (Rs2Bank.hasItem(ItemID.TELEPORT_CRYSTAL_5)) {
                     items.add(new FarmingItem(ItemID.TELEPORT_CRYSTAL_5, 1));
+                } else {
+                    Microbot.showMessage("Would not be able to teleport to Lleyta");
+                    shutdown();
                 }
             }
 
