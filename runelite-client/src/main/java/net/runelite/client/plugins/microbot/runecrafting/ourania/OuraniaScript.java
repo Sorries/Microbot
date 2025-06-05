@@ -136,9 +136,11 @@ public class OuraniaScript extends Script
 				switch (state)
 				{
 					case CRAFTING:
-						Rs2GameObject.interact(ObjectID.ALTAR_29631, "craft-rune");
+						if(!Rs2Player.isInteracting() && Rs2Inventory.hasItem(config.essence().getItemId())){
+							Rs2GameObject.interact(ObjectID.ALTAR_29631, "craft-rune");
+						}
 						Rs2Inventory.waitForInventoryChanges(5000);
-						if (Rs2Inventory.hasAnyPouch() && !Rs2Inventory.allPouchesEmpty())
+						if (!Rs2Inventory.hasItem(config.essence().getItemId()) && Rs2Inventory.hasAnyPouch() && !Rs2Inventory.allPouchesEmpty())
 						{
 							sleep(200,400);
 							Rs2Inventory.emptyPouches();
