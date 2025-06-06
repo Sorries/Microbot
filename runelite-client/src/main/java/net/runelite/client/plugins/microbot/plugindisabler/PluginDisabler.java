@@ -35,7 +35,7 @@ public class PluginDisabler implements BlockingEvent {
             if ((now - lastXpTime) > (config.minutes() * 60 * 1000)) {
                 return true;
             } else {
-                minutesSinceXpGained = (now - lastXpTime) / 1000.0;
+                minutesSinceXpGained = (now - lastXpTime) / (60 *1000.0);
                 //System.out.printf("No exp for %.2f seconds%n", (now - lastXpTime) / 1000.0);
             }
         }

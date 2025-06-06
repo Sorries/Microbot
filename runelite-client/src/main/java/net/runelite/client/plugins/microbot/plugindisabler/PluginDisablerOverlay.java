@@ -32,7 +32,11 @@ public class PluginDisablerOverlay extends OverlayPanel {
             panelComponent.getChildren().add(LineComponent.builder().build());
 
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Minutes since no exp: " + PluginDisabler.minutesSinceXpGained)
+                    .left("Minutes since no exp: " + Math.round(PluginDisabler.minutesSinceXpGained))
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Maximum minutes defined: " + config.minutes())
                     .build());
 
         } catch(Exception ex) {
