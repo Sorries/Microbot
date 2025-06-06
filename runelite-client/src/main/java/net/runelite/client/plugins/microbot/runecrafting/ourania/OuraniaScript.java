@@ -136,10 +136,6 @@ public class OuraniaScript extends Script
 				switch (state)
 				{
 					case CRAFTING:
-						if(!Rs2Player.isInteracting() && Rs2Inventory.hasItem(config.essence().getItemId())){
-							Rs2GameObject.interact(ObjectID.ALTAR_29631, "craft-rune");
-						}
-						Rs2Inventory.waitForInventoryChanges(5000);
 						if (!Rs2Inventory.hasItem(config.essence().getItemId()) && Rs2Inventory.hasAnyPouch() && !Rs2Inventory.allPouchesEmpty())
 						{
 							sleep(200,400);
@@ -147,6 +143,10 @@ public class OuraniaScript extends Script
 							sleep(200,400);
 							return;
 						}
+						if(!Rs2Player.isInteracting() && Rs2Inventory.hasItem(config.essence().getItemId())){
+							Rs2GameObject.interact(ObjectID.ALTAR_29631, "craft-rune");
+						}
+						Rs2Inventory.waitForInventoryChanges(5000);
 						break;
 					case RESETTING:
 						if (Rs2Player.getWorldLocation().distanceTo(new WorldPoint(2468, 3246, 0)) > 24)
