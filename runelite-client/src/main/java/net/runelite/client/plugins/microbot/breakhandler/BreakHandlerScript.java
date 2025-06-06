@@ -9,6 +9,7 @@ import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.security.Login;
 import net.runelite.client.ui.ClientUI;
+import net.runelite.client.plugins.microbot.plugindisabler.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -84,7 +85,7 @@ public class BreakHandlerScript extends Script {
                     }
                 }
 
-                if (breakDuration <= 0 && Microbot.pauseAllScripts) {
+                if (breakDuration <= 0 && Microbot.pauseAllScripts && !Microbot.isPluginEnabled(PluginDisablerPlugin.class)) {
                     if (Rs2AntibanSettings.universalAntiban && Rs2AntibanSettings.actionCooldownActive)
                         return;                    
                     Microbot.pauseAllScripts = false;
