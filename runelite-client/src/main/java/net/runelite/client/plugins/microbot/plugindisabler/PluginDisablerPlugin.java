@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import java.awt.*;
 
 @PluginDescriptor(
-        name = PluginDescriptor.Default + "Plugin Disabler</html>",
+        name = PluginDescriptor.Default + "Plugin Disabler",
         description = "Plugin Disabler",
         tags = {"plugin","disable","random", "events", "microbot"},
         enabledByDefault = false
