@@ -690,7 +690,9 @@ public class Microbot {
                          && !x.getClass().getSimpleName().equalsIgnoreCase("MicrobotConfigPlugin")
                          && !x.getClass().getSimpleName().equalsIgnoreCase("ShortestPathPlugin")
                          && !x.getClass().getSimpleName().equalsIgnoreCase("AntibanPlugin")
-                         && !x.getClass().getSimpleName().equalsIgnoreCase("ExamplePlugin"))
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("ExamplePlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("PluginDisablerPlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("QoLPlugin"))
                  .collect(Collectors.toList());
      }
 
