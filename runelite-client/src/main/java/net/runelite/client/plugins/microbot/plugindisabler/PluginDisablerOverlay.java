@@ -36,7 +36,17 @@ public class PluginDisablerOverlay extends OverlayPanel {
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Maximum minutes defined: " + config.minutes())
+                    .left("Maximum minutes allow: " + config.minutes())
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder().build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Number of duplicate clicks : " + PluginDisabler.sameObjectClickCount)
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Maximum duplicate clicks allow: " + config.clicks())
                     .build());
 
         } catch(Exception ex) {

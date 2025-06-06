@@ -2,11 +2,13 @@ package net.runelite.client.plugins.microbot.plugindisabler;
 
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.MenuAction;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
-import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerOverlay;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 import javax.inject.Inject;
@@ -27,7 +29,7 @@ public class PluginDisablerPlugin extends Plugin {
     @Inject
     private OverlayManager overlayManager;
     @Inject
-    private PluginDisablerOverlay PluginDisablerOverlay;
+    private PluginDisablerOverlay pluginDisablerOverlay;
 
     private PluginDisabler pluginDisabler;
 
@@ -36,21 +38,26 @@ public class PluginDisablerPlugin extends Plugin {
         return configManager.getConfig(PluginDisablerConfig.class);
     }
 
+    @Subscribe
+    private void onMenuOptionClicked(MenuOptionClicked event) {
+        if (event.getMenuAction()!= MenuAction.CANCEL) {
+            PluginDisabler.setLastClickedObjectId(event.getId());
+        }
+    }
+
     @Override
     protected void startUp() throws AWTException {
         pluginDisabler = new PluginDisabler(config);
         Microbot.getBlockingEventManager().add(pluginDisabler);
         if (overlayManager != null) {
-            overlayManager.add(PluginDisablerOverlay);
+            overlayManager.add(pluginDisablerOverlay);
         }
-        Microbot.log("St");
     }
 
     protected void shutDown() {
         Microbot.getBlockingEventManager().remove(pluginDisabler);
         pluginDisabler = null;
         Microbot.pauseAllScripts = false;
-        overlayManager.remove(PluginDisablerOverlay);
-        Microbot.log("Sh");
+        overlayManager.remove(pluginDisablerOverlay);
     }
 }
