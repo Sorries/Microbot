@@ -139,7 +139,7 @@ public class QoLScript extends Script {
         if (monsters != null) {
             for (String monster : monsters) {
                 Rs2Npc.getNpcs(monster).forEach(npc -> {
-                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
+                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
                         isNearSlayerMonster.set(true);
                         //int distance = Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation());
                         //Microbot.log("Nearby " + distance);

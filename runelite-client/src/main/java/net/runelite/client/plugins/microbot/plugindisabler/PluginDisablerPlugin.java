@@ -6,6 +6,8 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerOverlay;
+import net.runelite.client.ui.overlay.OverlayManager;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -22,6 +24,10 @@ public class PluginDisablerPlugin extends Plugin {
     private ConfigManager configManager;
     @Inject
     private PluginDisablerConfig config;
+    @Inject
+    private OverlayManager overlayManager;
+    @Inject
+    private PluginDisablerOverlay PluginDisablerOverlay;
 
     private PluginDisabler pluginDisabler;
 
@@ -34,6 +40,9 @@ public class PluginDisablerPlugin extends Plugin {
     protected void startUp() throws AWTException {
         pluginDisabler = new PluginDisabler(config);
         Microbot.getBlockingEventManager().add(pluginDisabler);
+        if (overlayManager != null) {
+            overlayManager.add(PluginDisablerOverlay);
+        }
         Microbot.log("St");
     }
 
@@ -41,6 +50,7 @@ public class PluginDisablerPlugin extends Plugin {
         Microbot.getBlockingEventManager().remove(pluginDisabler);
         pluginDisabler = null;
         Microbot.pauseAllScripts = false;
+        overlayManager.remove(PluginDisablerOverlay);
         Microbot.log("Sh");
     }
 }

@@ -85,9 +85,12 @@ public class BreakHandlerScript extends Script {
                     }
                 }
 
-                if (breakDuration <= 0 && Microbot.pauseAllScripts && !Microbot.isPluginEnabled(PluginDisablerPlugin.class)) {
+                if (breakDuration <= 0 && Microbot.pauseAllScripts) {
                     if (Rs2AntibanSettings.universalAntiban && Rs2AntibanSettings.actionCooldownActive)
-                        return;                    
+                        return;
+                    if (!Microbot.isPluginEnabled(PluginDisablerPlugin.class)){
+                        Microbot.startPlugin(Microbot.getPlugin(PluginDisablerPlugin.class.getName()));
+                    }
                     Microbot.pauseAllScripts = false;
                     if (breakIn <= 0 && !isLockState())
                         breakIn = Rs2Random.between(config.timeUntilBreakStart() * 60, config.timeUntilBreakEnd() * 60);
@@ -122,7 +125,9 @@ public class BreakHandlerScript extends Script {
     private void startBreak() {
         // Log before processing the break
         Microbot.log("Starting break. breakNow setting: " + config.breakNow());
-        
+        if (Microbot.isPluginEnabled(PluginDisablerPlugin.class)){
+            Microbot.stopPlugin(Microbot.getPlugin(PluginDisablerPlugin.class.getName()));
+        }
         Microbot.pauseAllScripts = true;
 
         if (Rs2AntibanSettings.microBreakActive)
