@@ -66,6 +66,13 @@ public class PluginDisablerPlugin extends Plugin {
                 pluginDisabler.setStartTime2(System.currentTimeMillis());
             }
         }
+        if (event.getKey().equals("breakHandler")) {
+            if (config.useBreaks()) {
+                pluginDisabler.setBreakIn(0);
+                pluginDisabler.setBreakDuration(0);
+                pluginDisabler.scheduleNextBreak();
+            }
+        }
     }
 
     @Override

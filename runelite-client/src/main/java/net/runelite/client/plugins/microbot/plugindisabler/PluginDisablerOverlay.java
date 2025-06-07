@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.plugindisabler;
 
+import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
@@ -10,6 +11,7 @@ import java.awt.*;
 
 public class PluginDisablerOverlay extends OverlayPanel {
     private final PluginDisablerConfig config;
+
 
     @Inject
     PluginDisablerOverlay(PluginDisablerPlugin plugin, PluginDisablerConfig config)
@@ -56,6 +58,16 @@ public class PluginDisablerOverlay extends OverlayPanel {
 
             panelComponent.getChildren().add(LineComponent.builder()
                     .left("Maximum minutes before shutoff: " + config.time())
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder().build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Break in: " + (PluginDisablerScript.getInstance().getBreakIn()/60) +" min")
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Break duration: " + (PluginDisablerScript.getInstance().getBreakDuration()/60) + " min")
                     .build());
 
         } catch(Exception ex) {

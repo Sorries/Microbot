@@ -48,7 +48,7 @@ public interface PluginDisablerConfig extends Config {
     }
 
     @ConfigItem(
-            name = "Pause all plugins after X amount of time",
+            name = "Stop all plugins after X amount of time",
             keyName = "noTime",
             position = 4,
             description = "Pause all plugins after X amount of time"
@@ -66,4 +66,55 @@ public interface PluginDisablerConfig extends Config {
     default int time() {
         return 120;
     }
+
+    @ConfigItem(
+            name = "Break Handler",
+            keyName = "breakHandler",
+            position = 6,
+            description = "Break handle"
+    )
+    default boolean useBreaks() {
+        return true;
+    }
+
+    @ConfigItem(
+            name = "Min Playtime",
+            keyName = "minPlaytime",
+            position = 7,
+            description = ""
+    )
+    default int minPlaytime() {
+        return 20;
+    }
+
+    @ConfigItem(
+            name = "Max Playtime",
+            keyName = "maxPlaytime",
+            position = 8,
+            description = ""
+    )
+    default int maxPlaytime() {
+        return 40;
+    }
+
+    @ConfigItem(
+            name = "Min Breaktime",
+            keyName = "minBreaktime",
+            position = 9,
+            description = ""
+    )
+    default int minBreaktime() {
+        return 3;
+    }
+
+    @ConfigItem(
+            name = "Max Breaktime",
+            keyName = "maxBreaktime",
+            position = 10,
+            description = ""
+    )
+    default int maxBreaktime() {
+        return 8;
+    }
+
 }

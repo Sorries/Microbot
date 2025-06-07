@@ -10,6 +10,7 @@ import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 
 import javax.inject.Inject;
 
+import java.sql.SQLOutput;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -21,7 +22,7 @@ public class PluginDisablerScript extends Script {
     public static long currentTime = System.currentTimeMillis();
     public static double minutesLeft;
 
-
+    private SimpleBreakHandler breakHandler;
     private final PluginDisablerConfig config;
 
     private int lastObjectId = -1;
@@ -34,6 +35,9 @@ public class PluginDisablerScript extends Script {
     @Setter
     private long startTime2;
 
+    @Getter
+    private static PluginDisablerScript instance;
+
     @Inject
     public PluginDisablerScript(PluginDisablerConfig config) {
         this.config = config;
@@ -41,13 +45,31 @@ public class PluginDisablerScript extends Script {
 
 
     public boolean run() {
+        instance = this;
         startTime2 = System.currentTimeMillis();
+        if (config.useBreaks()) {
+            breakHandler = new SimpleBreakHandler(
+                    config.minPlaytime(),
+                    config.maxPlaytime(),
+                    config.minBreaktime(),
+                    config.maxBreaktime()
+            );
+        }
+        //Microbot.log("breakIn after initialization: " + breakHandler.getBreakIn());
 
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!Microbot.isLoggedIn()) return;
+                if (breakHandler != null) {
+                    breakHandler.tick();
+                    if (breakHandler.isBreaking()) {
+                        return;
+                    }
+                }
                 if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
+
+
 
                 checkExpGained();
                 if (config.noExp() && config.minutes() > 0) {
@@ -105,6 +127,8 @@ public class PluginDisablerScript extends Script {
         sameObjectClickCount = 0;
         lastObjectId = -1;
         lastClickedObjectId = -1;
+        setBreakIn(0);
+        setBreakDuration(0);
         super.shutdown();
     }
 
@@ -120,6 +144,90 @@ public class PluginDisablerScript extends Script {
             lastXpTime = System.currentTimeMillis();
         }
     }
+
+    public int getBreakIn() {
+        return breakHandler != null ? breakHandler.getBreakIn() : -1;
+    }
+
+    public int getBreakDuration() {
+        return breakHandler != null ? breakHandler.getBreakDuration() : -1;
+    }
+    public void setBreakIn(int value) {
+        if (breakHandler != null) {
+            breakHandler.setBreakIn(value);
+        }
+    }
+
+    public void setBreakDuration(int value) {
+        if (breakHandler != null) {
+            breakHandler.setBreakDuration(value);
+        }
+    }
+    public void scheduleNextBreak() {
+        if (breakHandler != null) {
+            breakHandler.scheduleNextBreak();
+        }
+    }
+
+
+
+    public class SimpleBreakHandler {
+        private final int minPlaytime;
+        private final int maxPlaytime;
+        private final int minBreaktime;
+        private final int maxBreaktime;
+        @Getter
+        @Setter
+        private int breakIn;
+        @Getter
+        @Setter
+        private int breakDuration;
+
+        public SimpleBreakHandler(int minPlaytime, int maxPlaytime, int minBreaktime, int maxBreaktime) {
+            this.minPlaytime = minPlaytime;
+            this.maxPlaytime = maxPlaytime;
+            this.minBreaktime = minBreaktime;
+            this.maxBreaktime = maxBreaktime;
+            scheduleNextBreak();
+        }
+
+        private void scheduleNextBreak() {
+            breakIn = Rs2Random.between(minPlaytime * 60, maxPlaytime * 60);
+            Microbot.log("Next break scheduled in " + breakIn + " seconds.");
+        }
+
+        public void tick() {
+            if (breakIn > 0 && breakDuration <= 0) {
+                breakIn--;
+            }
+
+            if (breakIn <= 0 && breakDuration <= 0) {
+                startBreak();
+            }
+
+            if (breakDuration > 0) {
+                breakDuration--;
+            }
+
+            if (breakDuration <= 0 && breakIn <= 0) {
+                lastXpTime = System.currentTimeMillis();
+                Microbot.pauseAllScripts = false;
+                System.out.println("Break Ended");
+                scheduleNextBreak();
+            }
+        }
+
+        private void startBreak() {
+            breakDuration = Rs2Random.between(minBreaktime * 60, maxBreaktime * 60);
+            Microbot.log("Taking a break for: " + breakDuration + " seconds.");
+            Microbot.pauseAllScripts = true;
+        }
+
+        public boolean isBreaking() {
+            return breakDuration > 0;
+        }
+    }
+
 }
 
 
