@@ -43,7 +43,7 @@ public class PluginDisablerScript extends Script {
                     double minutesSinceXpGained = (now - lastXpTime) / (60 * 1000.0);
                     System.out.printf("No exp for %.2f seconds%n", (now - lastXpTime) / 1000.0);
                     if ((now - lastXpTime) > ((long) config.minutes() * 60 * 1000)) {
-                        Microbot.log("Disabling plugin due to no experience gained for " + minutesSinceXpGained + " minutes.");
+                        Microbot.log("Disabling plugin due to no experience gained for " + Math.round(minutesSinceXpGained) + " minutes.");
                         disablePlugins();
                     }
                 }
