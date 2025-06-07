@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
+
+import javax.inject.Inject;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,31 +17,40 @@ public class PluginDisablerScript extends Script {
     public static String version = "1.0.0";
     public static Double minutesSinceXpGained = 0.0;
     public static int sameObjectClickCount = 0;
+    public static long lastXpTime = System.currentTimeMillis();
+    public static long currentTime = System.currentTimeMillis();
+    public static double minutesLeft;
+
 
     private final PluginDisablerConfig config;
 
-    private long lastXpTime = System.currentTimeMillis();
     private int lastObjectId = -1;
+    private long timeThresholdMinutes;
 
     @Getter
     @Setter
-    private static int LastClickedObjectId = -1;
+    private static int lastClickedObjectId = -1;
+    @Getter
+    @Setter
+    private long startTime2;
 
+    @Inject
     public PluginDisablerScript(PluginDisablerConfig config) {
         this.config = config;
     }
 
 
     public boolean run() {
+        startTime2 = System.currentTimeMillis();
+
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
 
-
+                checkExpGained();
                 if (config.noExp() && config.minutes() > 0) {
-                    checkExpGained();
                     long now = System.currentTimeMillis();
                     double minutesSinceXpGained = (now - lastXpTime) / (60 * 1000.0);
                     System.out.printf("No exp for %.2f seconds%n", (now - lastXpTime) / 1000.0);
@@ -48,22 +60,32 @@ public class PluginDisablerScript extends Script {
                     }
                 }
 
-
                 if (config.noClick() && config.clicks() > 0) {
-                    if (LastClickedObjectId != -1) {
-                        int currentId = LastClickedObjectId;
+                    if (lastClickedObjectId != -1) {
+                        int currentId = lastClickedObjectId;
                         if (currentId == lastObjectId) {
                             sameObjectClickCount++;
                         } else {
                             lastObjectId = currentId;
                             sameObjectClickCount = 1;
                         }
-                        LastClickedObjectId = -1;
-                        System.out.println("Item interacted " + LastClickedObjectId +", Last Object ID " + lastObjectId + ", Same Object Count " + sameObjectClickCount);
+                        lastClickedObjectId = -1;
+                        System.out.println("Item interacted " + lastClickedObjectId +", Last Object ID " + lastObjectId + ", Same Object Count " + sameObjectClickCount);
                         if (sameObjectClickCount > config.clicks()) {
                             Microbot.log("Disabling plugin due to repeated clicks on object ID: " + currentId);
                             disablePlugins();
                         }
+                    }
+                }
+
+                if (config.noTime() && config.time() > 0) {
+                    long now = System.currentTimeMillis();
+                    timeThresholdMinutes = config.time(); //+ Rs2Random.betweenInclusive(-5, 5);
+                    System.out.println("now: " + now + " startTime2: " + startTime2 + " Difference: "+ (now-startTime2) + " Threshold: " + (timeThresholdMinutes * 60 * 1000) );
+                    minutesLeft = Math.max(0, ((timeThresholdMinutes * 60 * 1000L) - (now - startTime2)) / (1000 * 60));
+                    if ((now - startTime2) > (timeThresholdMinutes * 60 * 1000L)) {
+                        Microbot.log("Disabling plugin due to time limit reached");
+                        disablePlugins();
                     }
                 }
 
@@ -82,7 +104,7 @@ public class PluginDisablerScript extends Script {
     public void shutdown() {
         sameObjectClickCount = 0;
         lastObjectId = -1;
-        LastClickedObjectId = -1;
+        lastClickedObjectId = -1;
         super.shutdown();
     }
 

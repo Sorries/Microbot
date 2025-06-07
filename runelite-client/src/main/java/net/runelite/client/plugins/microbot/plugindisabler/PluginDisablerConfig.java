@@ -9,7 +9,7 @@ public interface PluginDisablerConfig extends Config {
 
     @ConfigItem(
             name = "Pause all plugins after X min of no exp",
-            keyName = "Pause all plugins after X min of no exp",
+            keyName = "noExp",
             position = 0,
             description = "Pause all plugins after X min of no exp"
     )
@@ -19,16 +19,17 @@ public interface PluginDisablerConfig extends Config {
 
     @ConfigItem(
             name = "How many X minutes to check",
-            keyName = "How many minutes to check",
+            keyName = "minutes",
             position = 1,
             description = "How many minutes to check before shutting off"
     )
     default int minutes() {
         return 5;
     }
+
     @ConfigItem(
             name = "Pause all plugins after X amount of clicks",
-            keyName = "Pause all plugins after X amount of click",
+            keyName = "noClick",
             position = 2,
             description = "Pause all plugins after X amount of clicks"
     )
@@ -38,11 +39,31 @@ public interface PluginDisablerConfig extends Config {
 
     @ConfigItem(
             name = "How many X clicks to check",
-            keyName = "How many clicks to check",
+            keyName = "clicks",
             position = 3,
             description = "How many clicks to check before shutting off"
     )
     default int clicks() {
         return 30;
+    }
+
+    @ConfigItem(
+            name = "Pause all plugins after X amount of time",
+            keyName = "noTime",
+            position = 4,
+            description = "Pause all plugins after X amount of time"
+    )
+    default boolean noTime() {
+        return true;
+    }
+
+    @ConfigItem(
+            name = "How many X minutes to check",
+            keyName = "time",
+            position = 5,
+            description = "How many X minutes to check before shutting off"
+    )
+    default int time() {
+        return 120;
     }
 }

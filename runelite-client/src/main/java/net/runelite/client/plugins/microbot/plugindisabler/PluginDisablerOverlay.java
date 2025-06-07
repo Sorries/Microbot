@@ -41,11 +41,21 @@ public class PluginDisablerOverlay extends OverlayPanel {
             panelComponent.getChildren().add(LineComponent.builder().build());
 
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Number of duplicate clicks : " + PluginDisablerScript.sameObjectClickCount)
+                    .left("Number of duplicate clicks: " + PluginDisablerScript.sameObjectClickCount)
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder()
                     .left("Maximum duplicate clicks allow: " + config.clicks())
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder().build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Number of minutes before shutoff: " + PluginDisablerScript.minutesLeft)
+                    .build());
+
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Maximum minutes before shutoff: " + config.time())
                     .build());
 
         } catch(Exception ex) {

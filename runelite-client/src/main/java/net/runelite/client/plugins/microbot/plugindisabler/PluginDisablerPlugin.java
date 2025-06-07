@@ -10,6 +10,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.events.ConfigChanged;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -30,7 +31,7 @@ public class PluginDisablerPlugin extends Plugin {
     private OverlayManager overlayManager;
     @Inject
     private PluginDisablerOverlay pluginDisablerOverlay;
-
+    @Inject
     private PluginDisablerScript pluginDisabler;
 
     @Provides
@@ -45,12 +46,35 @@ public class PluginDisablerPlugin extends Plugin {
         }
     }
 
+    @Subscribe
+    public void onConfigChanged(ConfigChanged event) {
+        if (!event.getGroup().equalsIgnoreCase("PluginDisabler")) {
+            return;
+        }
+        if (event.getKey().equals("noExp")) {
+            if (config.noExp()) {
+                PluginDisablerScript.lastXpTime = System.currentTimeMillis();
+            }
+        }
+        if (event.getKey().equals("noClick")) {
+            if (config.noClick()) {
+                PluginDisablerScript.sameObjectClickCount = 0;
+            }
+        }
+        if (event.getKey().equals("noTime")) {
+            if (config.noTime()) {
+                pluginDisabler.setStartTime2(System.currentTimeMillis());
+            }
+        }
+    }
+
     @Override
     protected void startUp() throws AWTException {
         if (overlayManager != null) {
             overlayManager.add(pluginDisablerOverlay);
         }
-        pluginDisabler = new PluginDisablerScript(config);
+        //pluginDisabler = new PluginDisablerScript(config);
+        PluginDisablerScript.lastXpTime = System.currentTimeMillis();
         pluginDisabler.run();
     }
     @Override
