@@ -88,7 +88,7 @@ public class BreakHandlerScript extends Script {
                 if (breakDuration <= 0 && Microbot.pauseAllScripts) {
                     if (Rs2AntibanSettings.universalAntiban && Rs2AntibanSettings.actionCooldownActive)
                         return;
-                    if (!Microbot.isPluginEnabled(PluginDisablerPlugin.class)){
+                    if (!Microbot.isPluginEnabled(PluginDisablerPlugin.class) && config.disabler()){
                         Microbot.startPlugin(Microbot.getPlugin(PluginDisablerPlugin.class.getName()));
                     }
                     Microbot.pauseAllScripts = false;
@@ -125,7 +125,7 @@ public class BreakHandlerScript extends Script {
     private void startBreak() {
         // Log before processing the break
         Microbot.log("Starting break. breakNow setting: " + config.breakNow());
-        if (Microbot.isPluginEnabled(PluginDisablerPlugin.class)){
+        if (Microbot.isPluginEnabled(PluginDisablerPlugin.class) && config.disabler()){
             Microbot.stopPlugin(Microbot.getPlugin(PluginDisablerPlugin.class.getName()));
         }
         Microbot.pauseAllScripts = true;

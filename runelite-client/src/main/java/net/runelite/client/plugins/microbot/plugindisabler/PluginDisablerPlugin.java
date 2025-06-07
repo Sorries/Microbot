@@ -31,7 +31,7 @@ public class PluginDisablerPlugin extends Plugin {
     @Inject
     private PluginDisablerOverlay pluginDisablerOverlay;
 
-    private PluginDisabler pluginDisabler;
+    private PluginDisablerScript pluginDisabler;
 
     @Provides
     PluginDisablerConfig provideConfig(ConfigManager configManager) {
@@ -41,23 +41,22 @@ public class PluginDisablerPlugin extends Plugin {
     @Subscribe
     private void onMenuOptionClicked(MenuOptionClicked event) {
         if (event.getMenuAction()!= MenuAction.CANCEL) {
-            PluginDisabler.setLastClickedObjectId(event.getId());
+            PluginDisablerScript.setLastClickedObjectId(event.getId());
         }
     }
 
     @Override
     protected void startUp() throws AWTException {
-        pluginDisabler = new PluginDisabler(config);
-        Microbot.getBlockingEventManager().add(pluginDisabler);
         if (overlayManager != null) {
             overlayManager.add(pluginDisablerOverlay);
         }
+        pluginDisabler = new PluginDisablerScript(config);
+        pluginDisabler.run();
     }
-
+    @Override
     protected void shutDown() {
-        Microbot.getBlockingEventManager().remove(pluginDisabler);
-        pluginDisabler = null;
         Microbot.pauseAllScripts = false;
         overlayManager.remove(pluginDisablerOverlay);
+        pluginDisabler.shutdown();
     }
 }

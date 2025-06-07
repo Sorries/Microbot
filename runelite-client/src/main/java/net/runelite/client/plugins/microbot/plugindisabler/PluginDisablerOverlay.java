@@ -1,6 +1,5 @@
 package net.runelite.client.plugins.microbot.plugindisabler;
 
-import net.runelite.client.plugins.microbot.util.antiban.Rs2AntibanSettings;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
@@ -25,14 +24,14 @@ public class PluginDisablerOverlay extends OverlayPanel {
         try {
             panelComponent.setPreferredSize(new Dimension(200, 300));
             panelComponent.getChildren().add(TitleComponent.builder()
-                    .text("Plugin Disabler" + PluginDisabler.version)
+                    .text("Plugin Disabler" + PluginDisablerScript.version)
                     .color(Color.GREEN)
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder().build());
 
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Minutes since no exp: " + Math.round(PluginDisabler.minutesSinceXpGained))
+                    .left("Minutes since no exp: " + Math.round(PluginDisablerScript.minutesSinceXpGained))
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder()
@@ -42,7 +41,7 @@ public class PluginDisablerOverlay extends OverlayPanel {
             panelComponent.getChildren().add(LineComponent.builder().build());
 
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Number of duplicate clicks : " + PluginDisabler.sameObjectClickCount)
+                    .left("Number of duplicate clicks : " + PluginDisablerScript.sameObjectClickCount)
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder()
