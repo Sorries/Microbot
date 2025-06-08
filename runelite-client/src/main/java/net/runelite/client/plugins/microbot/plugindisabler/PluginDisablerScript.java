@@ -27,6 +27,8 @@ public class PluginDisablerScript extends Script {
 
     private int lastObjectId = -1;
     private long timeThresholdMinutes;
+    @Setter
+    private long lastTimeConfigValue = -1;
 
     @Getter
     @Setter
@@ -102,7 +104,12 @@ public class PluginDisablerScript extends Script {
 
                 if (config.noTime() && config.time() > 0) {
                     long now = System.currentTimeMillis();
-                    timeThresholdMinutes = config.time(); //+ Rs2Random.betweenInclusive(-5, 5);
+                    long currentTimeConfigValue = config.time();
+                    if (currentTimeConfigValue != lastTimeConfigValue) {
+                        timeThresholdMinutes = currentTimeConfigValue + Rs2Random.betweenInclusive(-5, 5);
+                        lastTimeConfigValue = currentTimeConfigValue;
+                    }
+//                    timeThresholdMinutes = config.time();// + Rs2Random.betweenInclusive(-5, 5);
                     System.out.println("now: " + now + " startTime2: " + startTime2 + " Difference: "+ (now-startTime2) + " Threshold: " + (timeThresholdMinutes * 60 * 1000) );
                     minutesLeft = Math.max(0, ((timeThresholdMinutes * 60 * 1000L) - (now - startTime2)) / (1000 * 60));
                     if ((now - startTime2) > (timeThresholdMinutes * 60 * 1000L)) {
@@ -129,6 +136,7 @@ public class PluginDisablerScript extends Script {
         lastClickedObjectId = -1;
         setBreakIn(0);
         setBreakDuration(0);
+        lastTimeConfigValue = -1;
         super.shutdown();
     }
 

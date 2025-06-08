@@ -64,6 +64,7 @@ public class PluginDisablerPlugin extends Plugin {
         if (event.getKey().equals("noTime")) {
             if (config.noTime()) {
                 pluginDisabler.setStartTime2(System.currentTimeMillis());
+                pluginDisabler.setLastTimeConfigValue(-1);
             }
         }
         if (event.getKey().equals("breakHandler")) {
