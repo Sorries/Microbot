@@ -57,7 +57,7 @@ public class PluginDisablerOverlay extends OverlayPanel {
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Maximum minutes before shutoff: " + config.time())
+                    .left("Maximum minutes before shutoff: " + PluginDisablerScript.timeThresholdMinutes)
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder().build());
@@ -69,6 +69,20 @@ public class PluginDisablerOverlay extends OverlayPanel {
             panelComponent.getChildren().add(LineComponent.builder()
                     .left("Break duration: " + (PluginDisablerScript.getInstance().getBreakDuration()/60) + " min")
                     .build());
+
+            panelComponent.getChildren().add(LineComponent.builder().build());
+
+            if (PluginDisablerScript.disablePluginsFlag){
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Enabled")
+                    .leftColor(Color.GREEN)
+                    .build());
+            }else{
+                panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Disabled")
+                    .leftColor(Color.RED)
+                    .build());
+            }
 
         } catch(Exception ex) {
             System.out.println(ex.getMessage());

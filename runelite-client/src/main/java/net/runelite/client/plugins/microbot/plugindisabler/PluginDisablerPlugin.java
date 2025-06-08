@@ -54,17 +54,23 @@ public class PluginDisablerPlugin extends Plugin {
         if (event.getKey().equals("noExp")) {
             if (config.noExp()) {
                 PluginDisablerScript.lastXpTime = System.currentTimeMillis();
+                Microbot.pauseAllScripts=false;
+                PluginDisablerScript.disablePluginsFlag = true;
             }
         }
         if (event.getKey().equals("noClick")) {
             if (config.noClick()) {
                 PluginDisablerScript.sameObjectClickCount = 0;
+                Microbot.pauseAllScripts=false;
+                PluginDisablerScript.disablePluginsFlag = true;
             }
         }
         if (event.getKey().equals("noTime")) {
             if (config.noTime()) {
                 pluginDisabler.setStartTime2(System.currentTimeMillis());
                 pluginDisabler.setLastTimeConfigValue(-1);
+                Microbot.pauseAllScripts=false;
+                PluginDisablerScript.disablePluginsFlag = true;
             }
         }
         if (event.getKey().equals("breakHandler")) {
@@ -72,6 +78,8 @@ public class PluginDisablerPlugin extends Plugin {
                 pluginDisabler.setBreakIn(0);
                 pluginDisabler.setBreakDuration(0);
                 pluginDisabler.scheduleNextBreak();
+                Microbot.pauseAllScripts=false;
+                PluginDisablerScript.disablePluginsFlag = true;
             }
         }
     }
@@ -83,6 +91,7 @@ public class PluginDisablerPlugin extends Plugin {
         }
         //pluginDisabler = new PluginDisablerScript(config);
         PluginDisablerScript.lastXpTime = System.currentTimeMillis();
+        PluginDisablerScript.disablePluginsFlag = true;
         pluginDisabler.run();
     }
     @Override

@@ -3,10 +3,13 @@ package net.runelite.client.plugins.microbot.plugindisabler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.client.Notifier;
+import net.runelite.client.config.Notification;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
+
 
 import javax.inject.Inject;
 
@@ -21,12 +24,14 @@ public class PluginDisablerScript extends Script {
     public static long lastXpTime = System.currentTimeMillis();
     public static long currentTime = System.currentTimeMillis();
     public static double minutesLeft;
+    public static boolean disablePluginsFlag = true;
+    public static long timeThresholdMinutes;
 
     private SimpleBreakHandler breakHandler;
     private final PluginDisablerConfig config;
 
     private int lastObjectId = -1;
-    private long timeThresholdMinutes;
+
     @Setter
     private long lastTimeConfigValue = -1;
 
@@ -44,6 +49,9 @@ public class PluginDisablerScript extends Script {
     public PluginDisablerScript(PluginDisablerConfig config) {
         this.config = config;
     }
+
+    @Inject
+    private Notifier notifier;
 
 
     public boolean run() {
@@ -76,7 +84,7 @@ public class PluginDisablerScript extends Script {
                 checkExpGained();
                 if (config.noExp() && config.minutes() > 0) {
                     long now = System.currentTimeMillis();
-                    double minutesSinceXpGained = (now - lastXpTime) / (60 * 1000.0);
+                    PluginDisablerScript.minutesSinceXpGained = (now - lastXpTime) / (60 * 1000.0);
                     System.out.printf("No exp for %.2f seconds%n", (now - lastXpTime) / 1000.0);
                     if ((now - lastXpTime) > ((long) config.minutes() * 60 * 1000)) {
                         Microbot.log("Disabling plugin due to no experience gained for " + Math.round(minutesSinceXpGained) + " minutes.");
@@ -109,8 +117,8 @@ public class PluginDisablerScript extends Script {
                         timeThresholdMinutes = currentTimeConfigValue + Rs2Random.betweenInclusive(-5, 5);
                         lastTimeConfigValue = currentTimeConfigValue;
                     }
-//                    timeThresholdMinutes = config.time();// + Rs2Random.betweenInclusive(-5, 5);
-                    System.out.println("now: " + now + " startTime2: " + startTime2 + " Difference: "+ (now-startTime2) + " Threshold: " + (timeThresholdMinutes * 60 * 1000) );
+                    System.out.println("now: " + now + " startTime2: " + startTime2 + " Difference: " + String.format("%.2f", (now-startTime2)/(60*1000.0)) +
+                            " Threshold: " + String.format("%.2f", (double) timeThresholdMinutes));
                     minutesLeft = Math.max(0, ((timeThresholdMinutes * 60 * 1000L) - (now - startTime2)) / (1000 * 60));
                     if ((now - startTime2) > (timeThresholdMinutes * 60 * 1000L)) {
                         Microbot.log("Disabling plugin due to time limit reached");
@@ -145,6 +153,8 @@ public class PluginDisablerScript extends Script {
             Microbot.stopPlugin(plugin);
         }
         Microbot.pauseAllScripts = true;
+        disablePluginsFlag = false;
+        notifier.notify(Notification.ON, "Plugin Disabled.");
     }
 
     private void checkExpGained() {
@@ -201,7 +211,7 @@ public class PluginDisablerScript extends Script {
 
         private void scheduleNextBreak() {
             breakIn = Rs2Random.between(minPlaytime * 60, maxPlaytime * 60);
-            Microbot.log("Next break scheduled in " + breakIn + " seconds.");
+            Microbot.log("Next break scheduled in " + breakIn/60 + " minutes.");
         }
 
         public void tick() {
@@ -227,7 +237,7 @@ public class PluginDisablerScript extends Script {
 
         private void startBreak() {
             breakDuration = Rs2Random.between(minBreaktime * 60, maxBreaktime * 60);
-            Microbot.log("Taking a break for: " + breakDuration + " seconds.");
+            Microbot.log("Taking a break for: " + breakDuration/60 + " minutes.");
             Microbot.pauseAllScripts = true;
         }
 
