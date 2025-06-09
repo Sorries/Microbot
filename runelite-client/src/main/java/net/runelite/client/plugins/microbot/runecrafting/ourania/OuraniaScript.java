@@ -19,6 +19,8 @@ import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.MicrobotOverlay;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerScript;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerScript;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
 import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.pouch.Pouch;
 import net.runelite.client.plugins.microbot.runecrafting.ourania.enums.OuraniaState;
@@ -49,7 +51,7 @@ public class OuraniaScript extends Script
 	public static OuraniaState state;
 	private final OuraniaConfig config;
 	private final WorldArea ouraniaAltarArea = new WorldArea(new WorldPoint(3054, 5574, 0), 12, 12);
-	private final List<Integer> massWorlds = List.of(327, 480);
+	private final List<Integer> massWorlds = List.of(480);
 	private final OuraniaPlugin plugin;
 	private int selectedWorld = 0;
 
@@ -158,7 +160,7 @@ public class OuraniaScript extends Script
 
 						if (plugin.isBreakHandlerEnabled())
 						{
-							BreakHandlerScript.setLockState(false);
+							PluginDisablerScript.setLockState(false);
 						}
 
 						if (Rs2Inventory.hasDegradedPouch() && Rs2Magic.hasRequiredRunes(Rs2Spells.NPC_CONTACT))
@@ -343,7 +345,7 @@ public class OuraniaScript extends Script
 					case RUNNING_TO_ALTAR:
 						if (plugin.isBreakHandlerEnabled())
 						{
-							BreakHandlerScript.setLockState(true);
+							PluginDisablerScript.setLockState(true);
 						}
 
 						if (config.path().equals(Path.SHORT))

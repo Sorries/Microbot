@@ -15,6 +15,8 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerPlugin;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerScript;
 import net.runelite.client.plugins.microbot.util.grandexchange.Rs2GrandExchange;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -101,8 +103,9 @@ public class OuraniaPlugin extends Plugin
 
 	public boolean isBreakHandlerEnabled()
 	{
-		return Microbot.isPluginEnabled(BreakHandlerPlugin.class);
+		return Microbot.isPluginEnabled(PluginDisablerPlugin.class);
 	}
+
 
 	public void calcuateProfit()
 	{
