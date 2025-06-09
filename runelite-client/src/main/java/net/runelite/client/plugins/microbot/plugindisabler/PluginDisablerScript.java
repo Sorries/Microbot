@@ -41,7 +41,9 @@ public class PluginDisablerScript extends Script {
     @Getter
     @Setter
     private long startTime2;
-
+    @Setter
+    @Getter
+    public static boolean lockState = false;
     @Getter
     private static PluginDisablerScript instance;
 
@@ -101,8 +103,9 @@ public class PluginDisablerScript extends Script {
                             lastObjectId = currentId;
                             sameObjectClickCount = 1;
                         }
-                        lastClickedObjectId = -1;
                         System.out.println("Item interacted " + lastClickedObjectId +", Last Object ID " + lastObjectId + ", Same Object Count " + sameObjectClickCount);
+                        lastClickedObjectId = -1; // reset it once to prevent spam of interacted
+
                         if (sameObjectClickCount > config.clicks()) {
                             Microbot.log("Disabling plugin due to repeated clicks on object ID: " + currentId);
                             disablePlugins();
@@ -209,30 +212,31 @@ public class PluginDisablerScript extends Script {
             scheduleNextBreak();
         }
 
-        private void scheduleNextBreak() {
-            breakIn = Rs2Random.between(minPlaytime * 60, maxPlaytime * 60);
-            Microbot.log("Next break scheduled in " + breakIn/60 + " minutes.");
-        }
-
         public void tick() {
             if (breakIn > 0 && breakDuration <= 0) {
                 breakIn--;
             }
-
-            if (breakIn <= 0 && breakDuration <= 0) {
-                startBreak();
+            if (!isLockState()) {
+                if (breakIn <= 0 && breakDuration <= 0) {
+                    startBreak();
+                }
             }
-
             if (breakDuration > 0) {
                 breakDuration--;
             }
-
-            if (breakDuration <= 0 && breakIn <= 0) {
-                lastXpTime = System.currentTimeMillis();
-                Microbot.pauseAllScripts = false;
-                System.out.println("Break Ended");
-                scheduleNextBreak();
+            if (!isLockState()) {
+                if (breakDuration <= 0 && breakIn <= 0) {
+                    lastXpTime = System.currentTimeMillis();
+                    Microbot.pauseAllScripts = false;
+                    System.out.println("Break Ended");
+                    scheduleNextBreak();
+                }
             }
+        }
+
+        private void scheduleNextBreak() {
+            breakIn = Rs2Random.between(minPlaytime * 60, maxPlaytime * 60);
+            Microbot.log("Next break scheduled in " + breakIn / 60 + " minutes.");
         }
 
         private void startBreak() {
