@@ -3,6 +3,7 @@ package net.runelite.client.plugins.microbot.example;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
@@ -76,7 +77,10 @@ public class ExampleScript extends Script {
 //                System.out.println(t);
 //                System.out.println(t.getId());
 //                Rs2GameObject.interact(new WorldPoint(3768, 3761, 0),"Build");
-                Rs2Inventory.hasItem(23946);
+//                Rs2Inventory.hasItem(23946);
+
+
+                Microbot.isPluginEnabled(PluginDisablerPlugin.class);
 
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;
