@@ -145,7 +145,7 @@ public class OuraniaScript extends Script
 							sleep(200,400);
 							return;
 						}
-						if(!Rs2Player.isInteracting() && Rs2Inventory.hasItem(config.essence().getItemId())){
+						if(!Rs2Player.isMoving() && Rs2Inventory.hasItem(config.essence().getItemId())){
 							Rs2GameObject.interact(ObjectID.ALTAR_29631, "craft-rune");
 						}
 						Rs2Inventory.waitForInventoryChanges(5000);
