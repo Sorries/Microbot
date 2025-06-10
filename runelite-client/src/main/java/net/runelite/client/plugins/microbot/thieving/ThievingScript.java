@@ -2,6 +2,8 @@ package net.runelite.client.plugins.microbot.thieving;
 
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.NPC;
+import net.runelite.api.Skill;
+import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.client.game.npcoverlay.HighlightedNpc;
 import net.runelite.client.plugins.microbot.Microbot;
@@ -16,6 +18,7 @@ import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 
@@ -63,9 +66,11 @@ public class ThievingScript extends Script {
                     handleShadowVeil();
                 }
 
+                // Randomize coinpouch threshold +-3 between 1 & 28
+                int initial = config.coinPouchTreshHold();
                 int threshold = config.coinPouchTreshHold();
                 threshold += (int) (Math.random() * 7 - 3);
-                threshold = Math.max(1, Math.min(28, threshold));
+                threshold = Math.max(1, Math.min(56, threshold));
 
                 openCoinPouches(threshold);
                 wearDodgyNecklace();
@@ -139,7 +144,7 @@ public class ThievingScript extends Script {
     }
 
     private void pickpocket() {
-        WorldArea ardougneArea = new WorldArea(2649, 3280, 7, 8, 0);
+        WorldArea ardougneArea = new WorldArea(2654, 3286, 2, 2, 0);
         Map<NPC, HighlightedNpc> highlightedNpcs = new HashMap<>();
 
         try {
@@ -235,12 +240,18 @@ public class ThievingScript extends Script {
         }
 
     private void handleShadowVeil() {
-        if (!Rs2Magic.isShadowVeilActive() && config.shadowVeil()) {
-            if (Rs2Magic.canCast(MagicAction.SHADOW_VEIL)) {
-                Rs2Magic.cast(MagicAction.SHADOW_VEIL);
-            } else {
-                Microbot.showMessage("Please check, unable to cast Shadow Veil");
+        if (!Rs2Magic.isShadowVeilActive() && Rs2Magic.isArceeus() &&
+            Rs2Player.getBoostedSkillLevel(Skill.MAGIC) >= MagicAction.SHADOW_VEIL.getLevel() &&
+            Microbot.getVarbitValue(Varbits.SHADOW_VEIL_COOLDOWN) == 0) {
+                sleep(1000, 1500);
+                    if (!Rs2Magic.cast(MagicAction.SHADOW_VEIL)) {
+                        Microbot.log("Do not have enough runes to cast shadow veil");
+                        shutdown();
+                        return;
             }
+                sleep(750, 1250);
+                Rs2Tab.switchToInventoryTab();
+                sleep(1000, 1500);
         }
     }
 

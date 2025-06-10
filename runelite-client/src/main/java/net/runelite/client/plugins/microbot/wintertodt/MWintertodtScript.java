@@ -114,7 +114,7 @@ public class MWintertodtScript extends Script {
                     Microbot.log("Script starting...");
                     MWintertodtScript.config = config;
                     MWintertodtScript.plugin = plugin;
-                    Rs2Antiban.resetAntibanSettings();
+                    //Rs2Antiban.resetAntibanSettings();
                     Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
                     Rs2Antiban.setActivity(Activity.GENERAL_WOODCUTTING);
                     Rs2Antiban.setPlayStyle(PlayStyle.EXTREME_AGGRESSIVE);
@@ -396,7 +396,7 @@ public class MWintertodtScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 

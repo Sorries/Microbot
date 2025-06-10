@@ -9,6 +9,7 @@ import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.security.Login;
 import net.runelite.client.ui.ClientUI;
+import net.runelite.client.plugins.microbot.plugindisabler.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -87,6 +88,9 @@ public class BreakHandlerScript extends Script {
                 if (breakDuration <= 0 && Microbot.pauseAllScripts) {
                     if (Rs2AntibanSettings.universalAntiban && Rs2AntibanSettings.actionCooldownActive)
                         return;                    
+                    if (!Microbot.isPluginEnabled(PluginDisablerPlugin.class) && config.disabler()){
+                        Microbot.startPlugin(Microbot.getPlugin(PluginDisablerPlugin.class.getName()));
+                    }
                     Microbot.pauseAllScripts = false;
                     if (breakIn <= 0 && !isLockState())
                         breakIn = Rs2Random.between(config.timeUntilBreakStart() * 60, config.timeUntilBreakEnd() * 60);
@@ -121,7 +125,9 @@ public class BreakHandlerScript extends Script {
     private void startBreak() {
         // Log before processing the break
         Microbot.log("Starting break. breakNow setting: " + config.breakNow());
-        
+        if (Microbot.isPluginEnabled(PluginDisablerPlugin.class) && config.disabler()){
+            Microbot.stopPlugin(Microbot.getPlugin(PluginDisablerPlugin.class.getName()));
+        }
         Microbot.pauseAllScripts = true;
 
         if (Rs2AntibanSettings.microBreakActive)

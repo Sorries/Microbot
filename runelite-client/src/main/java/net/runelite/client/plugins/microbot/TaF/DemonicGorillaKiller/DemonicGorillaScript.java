@@ -82,7 +82,7 @@ public class DemonicGorillaScript extends Script {
 
     {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2AntibanSettings.usePlayStyle = true;
         Rs2AntibanSettings.simulateFatigue = false;
         Rs2AntibanSettings.simulateAttentionSpan = true;

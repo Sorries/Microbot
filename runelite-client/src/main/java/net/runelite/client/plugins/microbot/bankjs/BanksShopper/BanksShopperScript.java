@@ -34,7 +34,7 @@ public class BanksShopperScript extends Script {
         Microbot.pauseAllScripts = false;
         Microbot.enableAutoRunOn = false;
         initialPlayerLocation = null;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2AntibanSettings.naturalMouse = true;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -126,7 +126,7 @@ public class BanksShopperScript extends Script {
             Rs2Player.logout();
         }
 
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 

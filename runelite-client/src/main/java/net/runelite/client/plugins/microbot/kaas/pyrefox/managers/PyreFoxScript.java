@@ -351,7 +351,7 @@ public class PyreFoxScript extends Script
     @Override
     public void shutdown() {
         Microbot.pauseAllScripts = true;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 }

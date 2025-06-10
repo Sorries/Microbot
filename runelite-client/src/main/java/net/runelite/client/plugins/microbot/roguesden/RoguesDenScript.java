@@ -146,7 +146,7 @@ public class RoguesDenScript extends Script {
                         return;
                     }
 
-                    Rs2Camera.setPitch(Rs2Random.between(300, 383));
+                    //Rs2Camera.setPitch(Rs2Random.between(300, 383));
                     initObstacles();
                     Microbot.enableAutoRunOn = false;
                     Rs2Walker.disableTeleports = true;

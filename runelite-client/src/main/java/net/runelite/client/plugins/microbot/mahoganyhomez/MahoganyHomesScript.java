@@ -40,6 +40,12 @@ public class MahoganyHomesScript extends Script {
             try {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
+                if (plugin.getConfig().pause()) {
+                    while (this.isRunning() && plugin.getConfig().pause()) {
+                        if (!plugin.getConfig().pause() || !this.isRunning()) { break; }
+                        sleep(100, 1000);
+                    }
+                }
                 checkPlankSack();
                 fix();
                 finish();
@@ -188,7 +194,7 @@ public class MahoganyHomesScript extends Script {
                 String newAction = Objects.requireNonNull(Hotspot.getByObjectId(object.getId())).getRequiredAction();
                 return !newAction.equals(action);
             }, 5000);
-            sleep(200, 600);
+            sleep(Rs2Random.skewedRandAuto(750));
         }
 
     }

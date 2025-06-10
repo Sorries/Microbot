@@ -44,7 +44,7 @@ public class HunterKabbitsScript extends Script {
      * Main method to start the script with given config and plugin context.
      */
     public void run(HunterKebbitsConfig config, HunterKebbitsPlugin plugin) {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         applyAntiBanSettings();
         Rs2Antiban.setActivity(Activity.GENERAL_HUNTER);
 

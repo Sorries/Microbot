@@ -31,7 +31,7 @@ public class MinnowsScript extends Script {
     private int timeout;
 
     public boolean run() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
         Rs2AntibanSettings.profileSwitching = false;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -85,7 +85,7 @@ public class MinnowsScript extends Script {
     @Override
     public void shutdown() {
 
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 }

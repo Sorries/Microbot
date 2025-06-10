@@ -47,7 +47,7 @@ public class AgilityScript extends Script
 	public boolean run()
 	{
 		Microbot.enableAutoRunOn = true;
-		Rs2Antiban.resetAntibanSettings();
+		//Rs2Antiban.resetAntibanSettings();
 		Rs2Antiban.antibanSetupTemplates.applyAgilitySetup();
 		startPoint = plugin.getCourseHandler().getStartPoint();
 		mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -138,6 +138,7 @@ public class AgilityScript extends Script
 					plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
 					Rs2Antiban.actionCooldown();
 					Rs2Antiban.takeMicroBreakByChance();
+					sleep(200,500);
 				}
 			}
 			catch (Exception ex)

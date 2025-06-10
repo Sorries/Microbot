@@ -77,6 +77,17 @@ public interface BreakHandlerConfig extends Config {
         return false;
     }
 
+    @ConfigItem(
+            keyName = "pluginDisabler",
+            name = "Plugin Disabler",
+            description = "toggle on plugin disabler",
+            position = 5,
+            section = breakTimingSettings
+    )
+    default boolean disabler() {
+        return true;
+    }
+
     // ============================================================
     // Break Behavior Options
     // ============================================================
