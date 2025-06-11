@@ -24,6 +24,7 @@ import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.models.RS2Item;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
@@ -122,6 +123,7 @@ public class AgilityScript extends Script
 				final int agilityExp = Microbot.getClient().getSkillExperience(Skill.AGILITY);
 
 				TileObject gameObject = plugin.getCourseHandler().getCurrentObstacle();
+				sleepUntil(()->gameObject != null);
 
 				if (gameObject == null)
 				{
@@ -135,14 +137,13 @@ public class AgilityScript extends Script
 				{
 					Rs2Walker.walkMiniMap(gameObject.getWorldLocation());
 				}
-				if (gameObject != null){
-					sleep(300,600);
-					if (Rs2GameObject.interact(gameObject))
-					{
-						plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
-						sleep(300,600);
-					}
+
+				if (Rs2GameObject.interact(gameObject))
+				{
+					plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
+					sleep(Rs2Random.skewedRandAuto(800));
 				}
+
 			}
 			catch (Exception ex)
 			{
