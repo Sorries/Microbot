@@ -13,7 +13,6 @@ import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 
 import javax.inject.Inject;
 
-import java.sql.SQLOutput;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
