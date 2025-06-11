@@ -135,11 +135,13 @@ public class AgilityScript extends Script
 				{
 					Rs2Walker.walkMiniMap(gameObject.getWorldLocation());
 				}
-
-				if (Rs2GameObject.interact(gameObject))
-				{
-					plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
+				if (gameObject != null){
 					sleep(300,600);
+					if (Rs2GameObject.interact(gameObject))
+					{
+						plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
+						sleep(300,600);
+					}
 				}
 			}
 			catch (Exception ex)
