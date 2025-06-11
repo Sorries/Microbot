@@ -49,7 +49,7 @@ public class VarrockAnvilScript extends Script {
         Microbot.enableAutoRunOn = false;
 
         //Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applySmithingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applySmithingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2AntibanSettings.dynamicIntensity = true;
         Rs2AntibanSettings.actionCooldownChance = 0.1;

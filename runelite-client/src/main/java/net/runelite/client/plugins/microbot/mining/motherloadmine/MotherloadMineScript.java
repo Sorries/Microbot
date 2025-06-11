@@ -69,7 +69,7 @@ public class MotherloadMineScript extends Script
 
     private void initialize()
     {
-        Rs2Antiban.antibanSetupTemplates.applyMiningSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyMiningSetup();
         miningSpot = MLMMiningSpot.IDLE;
         status = MLMStatus.IDLE;
         shouldEmptySack = false;

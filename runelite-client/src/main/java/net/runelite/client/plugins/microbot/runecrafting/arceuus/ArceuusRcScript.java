@@ -25,7 +25,7 @@ public class ArceuusRcScript extends Script {
     public static final WorldPoint DENSE_RUNESTONE = new WorldPoint(1760, 3853, 0);
 
     public boolean run(ArceuusRcConfig config) {
-        Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
         if(Microbot.isLoggedIn()) {
             if(Rs2Inventory.hasItem(ItemID.DARK_ESSENCE_FRAGMENTS)) {
                 darkAltarTripCount++;

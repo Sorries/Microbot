@@ -115,7 +115,7 @@ public class MWintertodtScript extends Script {
                     MWintertodtScript.config = config;
                     MWintertodtScript.plugin = plugin;
                     //Rs2Antiban.resetAntibanSettings();
-                    Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
+                    //Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
                     Rs2Antiban.setActivity(Activity.GENERAL_WOODCUTTING);
                     Rs2Antiban.setPlayStyle(PlayStyle.EXTREME_AGGRESSIVE);
                     state = State.BANKING;

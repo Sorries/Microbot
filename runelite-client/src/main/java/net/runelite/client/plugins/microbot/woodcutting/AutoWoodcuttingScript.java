@@ -62,7 +62,7 @@ public class AutoWoodcuttingScript extends Script {
 
     public boolean run(AutoWoodcuttingConfig config) {
         //Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyWoodcuttingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyWoodcuttingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2AntibanSettings.dynamicIntensity = true;
         initialPlayerLocation = null;

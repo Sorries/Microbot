@@ -29,7 +29,7 @@ public class AutoSmeltingScript extends Script {
         initialPlayerLocation = null;
         Rs2Walker.disableTeleports = true;
         //Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applySmithingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applySmithingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!super.run()) return;

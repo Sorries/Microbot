@@ -65,7 +65,7 @@ public class PyreFoxPlugin extends Plugin {
     {
         this.scriptStartTime = Instant.now();
 
-        Rs2Antiban.antibanSetupTemplates.applyHunterSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyHunterSetup();
 
         if (overlayManager != null) {
             overlayManager.add(overlay);

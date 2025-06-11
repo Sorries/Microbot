@@ -53,7 +53,7 @@ public class GEFiremakerScript extends Script {
         Microbot.enableAutoRunOn = false;
 
         //Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyFiremakingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyFiremakingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2AntibanSettings.dynamicIntensity = true;
         Rs2AntibanSettings.actionCooldownChance = 0.1;

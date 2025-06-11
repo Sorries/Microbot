@@ -47,7 +47,7 @@ public class FletchingScript extends Script {
     public void run(FletchingConfig config) {
         fletchingMode = config.fletchingMode();
         //Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyFletchingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyFletchingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!Microbot.isLoggedIn())

@@ -48,7 +48,7 @@ public class AgilityScript extends Script
 	{
 		Microbot.enableAutoRunOn = true;
 		//Rs2Antiban.resetAntibanSettings();
-		Rs2Antiban.antibanSetupTemplates.applyAgilitySetup();
+		//Rs2Antiban.antibanSetupTemplates.applyAgilitySetup();
 		startPoint = plugin.getCourseHandler().getStartPoint();
 		mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
 			try

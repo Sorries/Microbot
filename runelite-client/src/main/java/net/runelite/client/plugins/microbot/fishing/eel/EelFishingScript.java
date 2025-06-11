@@ -30,7 +30,7 @@ public class EelFishingScript extends Script {
     public boolean run(EelFishingConfig config) {
         this.config = config;
         //Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             if (!super.run() || !Microbot.isLoggedIn() || !Rs2Inventory.hasItem("bait") || !Rs2Inventory.hasItem("rod")) {
                 return;
