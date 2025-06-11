@@ -194,7 +194,7 @@ public class MahoganyHomesScript extends Script {
                 String newAction = Objects.requireNonNull(Hotspot.getByObjectId(object.getId())).getRequiredAction();
                 return !newAction.equals(action);
             }, 5000);
-            sleep(Rs2Random.skewedRandAuto(750));
+            sleep(Rs2Random.skewedRandAuto(1000));
         }
 
     }
