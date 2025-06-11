@@ -58,6 +58,7 @@ public class BarbarianFishingScript extends Script {
                 return;
 
             if (Rs2Inventory.isFull()) {
+                sleep(Rs2Random.skewedRandAuto(1000));
                 dropInventoryItems(config);
                 return;
             }
