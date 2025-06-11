@@ -150,7 +150,6 @@ public class AntibanPlugin extends Plugin {
 
     @Override
     protected void startUp() throws AWTException {
-        Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
         final MasterPanel panel = injector.getInstance(MasterPanel.class);
         final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "antiban.png");
         navButton = NavigationButton.builder()
@@ -160,6 +159,7 @@ public class AntibanPlugin extends Plugin {
                 .panel(panel)
                 .build();
         Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+        //Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
         validateAndSetBreakDurations();
 
         Timer timer = new Timer();
@@ -189,7 +189,7 @@ public class AntibanPlugin extends Plugin {
 
     @Subscribe
     public void onProfileChanged(ProfileChanged event) {
-        //Rs2Antiban.resetAntibanSettings();
+        Rs2Antiban.resetAntibanSettings();
     }
 
     @Subscribe
@@ -286,9 +286,9 @@ public class AntibanPlugin extends Plugin {
                 Rs2Antiban.actionCooldown();
                 Rs2Antiban.takeMicroBreakByChance();
             }
-            if (Rs2Antiban.getActivity() == null)
+            if (Rs2Antiban.getActivity() == null) {
                 updateAntibanSettings(skill);
-
+            }
             return;
         }
 
@@ -297,14 +297,12 @@ public class AntibanPlugin extends Plugin {
         if (previous == null || previous >= exp) {
             return;
         }
-
         updateAntibanSettings(skill);
     }
 
     private void updateAntibanSettings(Skill skill) {
         final ActivityIntensity activityIntensity = ActivityIntensity.fromSkill(skill);
         final Activity activity = Activity.fromSkill(skill);
-
         if (activity != null && Rs2AntibanSettings.dynamicActivity) {
             Rs2Antiban.setActivity(activity);
             if (Rs2AntibanSettings.devDebug) {
