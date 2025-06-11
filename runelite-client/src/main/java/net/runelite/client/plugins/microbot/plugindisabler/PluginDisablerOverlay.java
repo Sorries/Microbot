@@ -73,14 +73,14 @@ public class PluginDisablerOverlay extends OverlayPanel {
             panelComponent.getChildren().add(LineComponent.builder().build());
 
             if (PluginDisablerScript.disablePluginsFlag){
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Enabled")
-                    .leftColor(Color.GREEN)
+            panelComponent.getChildren().add(TitleComponent.builder()
+                    .text("Enabled")
+                    .color(Color.GREEN)
                     .build());
             }else{
-                panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Disabled")
-                    .leftColor(Color.RED)
+                panelComponent.getChildren().add(TitleComponent.builder()
+                    .text("Disabled")
+                    .color(Color.RED)
                     .build());
             }
 

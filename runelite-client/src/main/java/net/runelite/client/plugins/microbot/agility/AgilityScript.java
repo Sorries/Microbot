@@ -47,8 +47,9 @@ public class AgilityScript extends Script
 	public boolean run()
 	{
 		Microbot.enableAutoRunOn = true;
-		//Rs2Antiban.resetAntibanSettings();
-		//Rs2Antiban.antibanSetupTemplates.applyAgilitySetup();
+		Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+		Rs2AntibanSettings.actionCooldownChance = 0.10;
+		Rs2AntibanSettings.dynamicActivity = false;
 		startPoint = plugin.getCourseHandler().getStartPoint();
 		mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
 			try
@@ -126,6 +127,8 @@ public class AgilityScript extends Script
 				{
 					Microbot.log("No agility obstacle found. Report this as a bug if this keeps happening.");
 					return;
+				}else{
+					//Microbot.log("" + gameObject.getId());
 				}
 
 				if (!Rs2Camera.isTileOnScreen(gameObject))
@@ -136,9 +139,7 @@ public class AgilityScript extends Script
 				if (Rs2GameObject.interact(gameObject))
 				{
 					plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
-					Rs2Antiban.actionCooldown();
-					Rs2Antiban.takeMicroBreakByChance();
-					sleep(200,500);
+					sleep(300,600);
 				}
 			}
 			catch (Exception ex)
