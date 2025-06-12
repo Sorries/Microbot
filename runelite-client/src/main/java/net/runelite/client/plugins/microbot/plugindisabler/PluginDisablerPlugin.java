@@ -80,6 +80,14 @@ public class PluginDisablerPlugin extends Plugin {
                 pluginDisabler.scheduleNextBreak();
                 Microbot.pauseAllScripts=false;
                 PluginDisablerScript.disablePluginsFlag = true;
+                PluginDisablerScript.setLockState(false);
+            }
+            if (!config.useBreaks()) {
+
+                pluginDisabler.setBreakIn(0);
+                pluginDisabler.setBreakDuration(0);
+                Microbot.pauseAllScripts=false;
+                PluginDisablerScript.setLockState(true);
             }
         }
     }
@@ -93,6 +101,12 @@ public class PluginDisablerPlugin extends Plugin {
         PluginDisablerScript.lastXpTime = System.currentTimeMillis();
         PluginDisablerScript.disablePluginsFlag = true;
         pluginDisabler.run();
+        if (config.useBreaks()) {
+            PluginDisablerScript.setLockState(false);
+        } else if (!config.useBreaks()) {
+            PluginDisablerScript.setLockState(true);
+        }
+
     }
     @Override
     protected void shutDown() {

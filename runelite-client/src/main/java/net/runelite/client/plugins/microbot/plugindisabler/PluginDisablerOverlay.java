@@ -29,47 +29,50 @@ public class PluginDisablerOverlay extends OverlayPanel {
                     .text("Plugin Disabler" + PluginDisablerScript.version)
                     .color(Color.GREEN)
                     .build());
+            if (config.noExp()) {
+                panelComponent.getChildren().add(LineComponent.builder().build());
 
-            panelComponent.getChildren().add(LineComponent.builder().build());
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Minutes since no exp: " + Math.round(PluginDisablerScript.minutesSinceXpGained))
+                        .build());
 
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Minutes since no exp: " + Math.round(PluginDisablerScript.minutesSinceXpGained))
-                    .build());
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Maximum minutes allow: " + config.minutes())
+                        .build());
+            }
+            if (config.noClick()){
+                panelComponent.getChildren().add(LineComponent.builder().build());
 
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Maximum minutes allow: " + config.minutes())
-                    .build());
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Number of duplicate clicks: " + PluginDisablerScript.sameObjectClickCount)
+                        .build());
 
-            panelComponent.getChildren().add(LineComponent.builder().build());
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Maximum duplicate clicks allow: " + config.clicks())
+                        .build());
+            }
+            if (config.noTime()) {
+                panelComponent.getChildren().add(LineComponent.builder().build());
 
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Number of duplicate clicks: " + PluginDisablerScript.sameObjectClickCount)
-                    .build());
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Number of minutes before shutoff: " + PluginDisablerScript.minutesLeft)
+                        .build());
 
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Maximum duplicate clicks allow: " + config.clicks())
-                    .build());
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Maximum minutes before shutoff: " + PluginDisablerScript.timeThresholdMinutes)
+                        .build());
+            }
+            if(config.useBreaks()) {
+                panelComponent.getChildren().add(LineComponent.builder().build());
 
-            panelComponent.getChildren().add(LineComponent.builder().build());
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Break in: " + (PluginDisablerScript.getInstance().getBreakIn() / 60) + " min")
+                        .build());
 
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Number of minutes before shutoff: " + PluginDisablerScript.minutesLeft)
-                    .build());
-
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Maximum minutes before shutoff: " + PluginDisablerScript.timeThresholdMinutes)
-                    .build());
-
-            panelComponent.getChildren().add(LineComponent.builder().build());
-
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Break in: " + (PluginDisablerScript.getInstance().getBreakIn()/60) +" min")
-                    .build());
-
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Break duration: " + (PluginDisablerScript.getInstance().getBreakDuration()/60) + " min")
-                    .build());
-
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Break duration: " + (PluginDisablerScript.getInstance().getBreakDuration() / 60) + " min")
+                        .build());
+            }
             panelComponent.getChildren().add(LineComponent.builder().build());
 
             if (PluginDisablerScript.disablePluginsFlag){
