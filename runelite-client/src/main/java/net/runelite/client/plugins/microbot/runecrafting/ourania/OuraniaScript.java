@@ -330,6 +330,7 @@ public class OuraniaScript extends Script
 						{
 							while (!Rs2Inventory.allPouchesFull() && isRunning())
 							{
+								if(!Rs2Bank.isOpen()) Rs2Bank.openBank();
 								Rs2Bank.withdrawAll(config.essence().getItemId());
 								sleep(300,600);
 								Rs2Inventory.fillPouches();
@@ -362,10 +363,13 @@ public class OuraniaScript extends Script
 									sleepUntil(() -> Rs2Camera.getPitch() == randomPitch);
 									sleep(500,750);
 								}
-								if (Rs2Camera.getZoom() != 3)
+								if (Rs2Camera.getZoom() < -50 || Rs2Camera.getZoom() > 20)
 								{
-									Rs2Camera.setZoom(3);
-									sleepUntil(() -> Rs2Camera.getZoom() == 3);
+									int randomZoom = Rs2Random.nextInt(-50, 20, 1, false);
+									Rs2Camera.setZoom(randomZoom);
+									System.out.println("zoom is " + randomZoom);
+									sleepUntil(() -> Rs2Camera.getZoom() == randomZoom);
+									System.out.println("Current Zoom is " + Rs2Camera.getZoom());
 									sleep(500,750);
 								}
 								if (!Rs2Camera.isTileOnScreen(altarObject.getLocalLocation()))
