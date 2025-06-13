@@ -58,7 +58,7 @@ public class BarbarianFishingScript extends Script {
                 return;
 
             if (Rs2Inventory.isFull()) {
-                sleep(2000,10000);
+                sleep(1000,8000);
                 dropInventoryItems(config);
                 return;
             }
