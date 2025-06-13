@@ -8,6 +8,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.mining.motherloadmine.enums.MLMStatus;
 import net.runelite.client.ui.overlay.OverlayManager;
 
@@ -51,6 +52,7 @@ public class MotherloadMinePlugin extends Plugin {
             if (MotherloadMineScript.status == MLMStatus.MINING && (wallObject.getId() == ObjectID.DEPLETED_VEIN_26665 || wallObject.getId() == ObjectID.DEPLETED_VEIN_26666 || wallObject.getId() == ObjectID.DEPLETED_VEIN_26667 || wallObject.getId() == ObjectID.DEPLETED_VEIN_26668)) {
                 if (wallObject.getWorldLocation().equals(MotherloadMineScript.oreVein.getWorldLocation())) {
                     MotherloadMineScript.oreVein = null;
+                    Microbot.log("4");
                 }
             }
         } catch (Exception e) {

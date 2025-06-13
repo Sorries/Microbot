@@ -23,6 +23,7 @@ import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tile.Rs2Tile;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
+import net.runelite.client.plugins.microbot.Microbot;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -150,6 +151,7 @@ public class MotherloadMineScript extends Script
         if (sackCount > maxSackSize || (shouldEmptySack && !Rs2Inventory.contains("pay-dirt")))
         {
             resetMiningState();
+            Microbot.log("1");
             status = MLMStatus.EMPTY_SACK;
         }
         else if (!Rs2Inventory.isFull())
@@ -284,6 +286,7 @@ public class MotherloadMineScript extends Script
                 shouldEmptySack = true;
             }
             resetMiningState();
+            Microbot.log("2");
         }
         else
         {
@@ -449,6 +452,7 @@ public class MotherloadMineScript extends Script
     {
         oreVein = null;
         miningSpot = MLMMiningSpot.IDLE;
+        Microbot.log("3");
     }
 
     @Override
