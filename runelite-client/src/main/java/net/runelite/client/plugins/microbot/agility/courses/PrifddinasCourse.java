@@ -13,6 +13,7 @@ import net.runelite.client.plugins.microbot.agility.models.AgilityObstacleModel;
 import net.runelite.client.plugins.microbot.util.Global;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.misc.Operation;
+import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
 public class PrifddinasCourse implements AgilityCourseHandler
@@ -61,6 +62,8 @@ public class PrifddinasCourse implements AgilityCourseHandler
 		{
 			if (Rs2GameObject.interact(portal, "travel"))
 			{
+				Global.sleepUntil(()-> Rs2Player.isMoving());
+				Global.sleepUntil(()-> !Rs2Player.isMoving());
 				Global.sleep(2000, 3000);
 				return true;
 			}
