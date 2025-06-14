@@ -39,6 +39,14 @@ public class PluginDisablerOverlay extends OverlayPanel {
                 panelComponent.getChildren().add(LineComponent.builder()
                         .left("Break duration: " + (PluginDisablerScript.getInstance().getBreakDuration() / 60) + " min")
                         .build());
+
+                if (PluginDisablerScript.getInstance().getBreakDuration()>0){
+                    panelComponent.getChildren().add(LineComponent.builder().build());
+                    panelComponent.getChildren().add(TitleComponent.builder()
+                            .text("Currently Breaking")
+                            .color(Color.GREEN)
+                            .build());
+                }
             }
             if (config.noExp()) {
                 panelComponent.getChildren().add(LineComponent.builder().build());
