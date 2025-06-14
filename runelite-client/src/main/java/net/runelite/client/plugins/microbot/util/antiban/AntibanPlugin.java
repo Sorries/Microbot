@@ -13,6 +13,8 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerPlugin;
+import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerScript;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerScript;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.antiban.enums.ActivityIntensity;
 import net.runelite.client.plugins.microbot.util.antiban.enums.CombatSkills;
@@ -142,8 +144,10 @@ public class AntibanPlugin extends Plugin {
                 }
             } else {
                 Rs2AntibanSettings.actionCooldownActive = false;
-                if (Rs2AntibanSettings.universalAntiban && !Rs2AntibanSettings.microBreakActive)
-                    Microbot.pauseAllScripts = false;
+                // (Rs2AntibanSettings.universalAntiban && !Rs2AntibanSettings.microBreakActive && !BreakHandlerScript.isBreakActive()){
+                if (Rs2AntibanSettings.universalAntiban && !Rs2AntibanSettings.microBreakActive && PluginDisablerScript.getInstance().getBreakDuration()<=0) {
+                    Microbot.pauseAllScripts = false; // will continue the script
+                }
             }
         }
     }

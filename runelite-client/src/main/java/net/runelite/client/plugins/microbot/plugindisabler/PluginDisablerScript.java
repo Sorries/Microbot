@@ -214,6 +214,7 @@ public class PluginDisablerScript extends Script {
         public void tick() {
             if (breakIn > 0 && breakDuration <= 0) {
                 breakIn--;
+                //System.out.println("breakIn: " + breakIn);
             }
             if (!isLockState()) {
                 if (breakIn <= 0 && breakDuration <= 0) {
@@ -222,6 +223,7 @@ public class PluginDisablerScript extends Script {
             }
             if (breakDuration > 0) {
                 breakDuration--;
+                //System.out.println("breakDuration: " + breakDuration);
             }
             if (!isLockState()) {
                 if (breakDuration <= 0 && breakIn <= 0) {

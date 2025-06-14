@@ -288,8 +288,9 @@ public class Rs2Antiban {
     }
 
     private static void performActionCooldown() {
-        if (Rs2AntibanSettings.universalAntiban)
+        if (Rs2AntibanSettings.universalAntiban) {
             Microbot.pauseAllScripts = true;
+        }
 
         if (Rs2AntibanSettings.nonLinearIntervals)
             playStyle.evolvePlayStyle();

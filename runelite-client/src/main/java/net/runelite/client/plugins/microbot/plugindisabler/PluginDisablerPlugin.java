@@ -83,7 +83,6 @@ public class PluginDisablerPlugin extends Plugin {
                 PluginDisablerScript.setLockState(false);
             }
             if (!config.useBreaks()) {
-
                 pluginDisabler.setBreakIn(0);
                 pluginDisabler.setBreakDuration(0);
                 Microbot.pauseAllScripts=false;
@@ -100,6 +99,7 @@ public class PluginDisablerPlugin extends Plugin {
         //pluginDisabler = new PluginDisablerScript(config);
         PluginDisablerScript.lastXpTime = System.currentTimeMillis();
         PluginDisablerScript.disablePluginsFlag = true;
+        Microbot.pauseAllScripts = false;
         pluginDisabler.run();
         if (config.useBreaks()) {
             PluginDisablerScript.setLockState(false);
