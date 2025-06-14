@@ -29,6 +29,17 @@ public class PluginDisablerOverlay extends OverlayPanel {
                     .text("Plugin Disabler" + PluginDisablerScript.version)
                     .color(Color.GREEN)
                     .build());
+            if(config.useBreaks()) {
+                panelComponent.getChildren().add(LineComponent.builder().build());
+
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Break in: " + (PluginDisablerScript.getInstance().getBreakIn() / 60) + " min")
+                        .build());
+
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Break duration: " + (PluginDisablerScript.getInstance().getBreakDuration() / 60) + " min")
+                        .build());
+            }
             if (config.noExp()) {
                 panelComponent.getChildren().add(LineComponent.builder().build());
 
@@ -62,17 +73,7 @@ public class PluginDisablerOverlay extends OverlayPanel {
                         .left("Maximum minutes before shutoff: " + PluginDisablerScript.timeThresholdMinutes)
                         .build());
             }
-            if(config.useBreaks()) {
-                panelComponent.getChildren().add(LineComponent.builder().build());
 
-                panelComponent.getChildren().add(LineComponent.builder()
-                        .left("Break in: " + (PluginDisablerScript.getInstance().getBreakIn() / 60) + " min")
-                        .build());
-
-                panelComponent.getChildren().add(LineComponent.builder()
-                        .left("Break duration: " + (PluginDisablerScript.getInstance().getBreakDuration() / 60) + " min")
-                        .build());
-            }
             panelComponent.getChildren().add(LineComponent.builder().build());
 
             if (PluginDisablerScript.disablePluginsFlag){
