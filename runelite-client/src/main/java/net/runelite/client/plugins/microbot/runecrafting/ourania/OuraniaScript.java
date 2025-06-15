@@ -328,13 +328,18 @@ public class OuraniaScript extends Script
 
 						if (Rs2Inventory.hasAnyPouch())
 						{
-							while (!Rs2Inventory.allPouchesFull() && isRunning())
-							{
-								if(!Rs2Bank.isOpen()) Rs2Bank.openBank();
-								Rs2Bank.withdrawAll(config.essence().getItemId());
-								sleep(300,600);
-								Rs2Inventory.fillPouches();
-								Rs2Inventory.waitForInventoryChanges(1800);
+							while (!Rs2Inventory.allPouchesFull() && isRunning()) {
+								if (!Rs2Bank.isOpen()) {
+									Rs2Bank.openBank();
+								}
+								if(!Rs2Inventory.contains(config.essence().getItemId())) {
+									Rs2Bank.withdrawAll(config.essence().getItemId());
+									sleep(300, 600);
+								}
+								if(Rs2Inventory.contains(config.essence().getItemId())) {
+									Rs2Inventory.fillPouches();
+									Rs2Inventory.waitForInventoryChanges(1800);
+								}
 							}
 						}
 

@@ -138,7 +138,6 @@ public class ChaosAltarScript extends Script {
     }
 
     private void offerBones() {
-        System.out.println("Offering bones at altar- IN OFFERBONES1");
 
         if (!CHAOS_ALTAR_AREA.contains(Rs2Player.getWorldLocation())) {
             if (Rs2Player.getWorldLocation().getY() > 3650)
@@ -148,11 +147,12 @@ public class ChaosAltarScript extends Script {
         if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
 
         if (Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
-            Rs2Inventory.slotInteract(2, "use");
-            sleep(300, 500);
-            Rs2GameObject.interact(411);
-            sleep(300, 500);
-
+            if (Rs2Inventory.slotContains(27,DRAGON_BONES)) {
+                Rs2Inventory.slotInteract(27, "use");
+                sleep(300, 500);
+                Rs2GameObject.interact(411);
+                sleep(300, 500);
+            }
             int randomWait = Rs2Random.between(500,2000);
             Rs2Inventory.waitForInventoryChanges(randomWait);
         }
