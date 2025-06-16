@@ -59,26 +59,6 @@ public static boolean getCompletedSlayerTask() {
                         });
                     }
                 }
-                if (completedSlayerTask){
-//            //if(!Rs2Bank.walkToBankAndUseBank()) return;
-                    Microbot.log("Slayer completed");
-                    sleep(5000,10000);
-                    if(Rs2GameObject.exists(6)){
-                        Rs2GameObject.interact(6,"Pick-up");
-                    }
-                    sleep(1000,2000);
-                    if(Rs2Inventory.contains(8013)) {
-                        Rs2Inventory.interact(8013, "break");
-                    }else if (Rs2Inventory.contains(13393)) {
-                        Rs2Inventory.interact(13393,"teleport",131076);
-                        Rs2Bank.walkToBank();
-                        sleepUntil(() ->Rs2Bank.isNearBank(5));
-                    }
-                    sleepUntil(PohTeleports::isInHouse);
-                    sleep(1000,3000);
-                    Rs2Prayer.disableAllPrayers();
-                    completedSlayerTask = false;
-                }
                 if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
                     Rs2Combat.enableAutoRetialiate();
                     if(!Rs2Combat.inCombat()){
@@ -100,6 +80,26 @@ public static boolean getCompletedSlayerTask() {
                             }
                         }
                     }
+                }
+                if (completedSlayerTask){
+//            //if(!Rs2Bank.walkToBankAndUseBank()) return;
+                    Microbot.log("Slayer completed");
+                    sleep(5000,10000);
+                    if(Rs2GameObject.exists(6)){
+                        Rs2GameObject.interact(6,"Pick-up");
+                        sleep(1000,2000);
+                    }
+                    if(Rs2Inventory.contains(8013)) {
+                        Rs2Inventory.interact(8013, "break");
+                    }else if (Rs2Inventory.contains(13393)) {
+                        Rs2Inventory.interact(13393,"teleport",131076);
+                        Rs2Bank.walkToBank();
+                        sleepUntil(() ->Rs2Bank.isNearBank(5));
+                    }
+                    sleepUntil(PohTeleports::isInHouse);
+                    sleep(1000,3000);
+                    Rs2Prayer.disableAllPrayers();
+                    completedSlayerTask = false;
                 }
             } catch(Exception ex) {
                 Microbot.logStackTrace(this.getClass().getSimpleName(), ex);
