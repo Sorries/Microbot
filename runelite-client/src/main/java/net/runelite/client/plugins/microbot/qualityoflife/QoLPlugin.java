@@ -122,6 +122,8 @@ public class QoLPlugin extends Plugin {
     @Inject
     private QolCannonScript cannonScript;
     @Inject
+    private SmartSlayer smartSlayer;
+    @Inject
     @Getter
     private PvpScript pvpScript;
     @Inject
@@ -190,6 +192,7 @@ public class QoLPlugin extends Plugin {
         qoLScript.run(config);
         wintertodtScript.run(config);
         cannonScript.run(config);
+        smartSlayer.run(config);
         autoItemDropperScript.run(config);
         eventBus.register(fletchingManager);
         eventBus.register(firemakingManager);
@@ -207,6 +210,7 @@ public class QoLPlugin extends Plugin {
         autoRunScript.shutdown();
         specialAttackScript.shutdown();
         cannonScript.shutdown();
+        smartSlayer.shutdown();
         autoItemDropperScript.shutdown();
         overlayManager.remove(qoLOverlay);
         overlayManager.remove(wintertodtOverlay);
@@ -245,7 +249,7 @@ public class QoLPlugin extends Plugin {
         if (chatMessage.getType() == ChatMessageType.CONSOLE) {
             String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
             if (cleanText.toLowerCase().contains("you have completed your task")) {
-                QoLScript.setCompletedSlayerTask(true);
+                SmartSlayer.setCompletedSlayerTask(true);
             }
 //            if (chatMessage.getMessage().toLowerCase().contains("you received")) {
 //                QoLScript.setCompletedSlayerTask(true);

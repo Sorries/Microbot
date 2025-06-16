@@ -3,6 +3,7 @@ package net.runelite.client.plugins.microbot.eventdismiss;
 import net.runelite.api.NPC;
 import net.runelite.client.plugins.microbot.BlockingEvent;
 import net.runelite.client.plugins.microbot.BlockingEventPriority;
+import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.util.Global;
 import net.runelite.client.plugins.microbot.util.dialogues.Rs2Dialogue;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
@@ -26,6 +27,7 @@ public class DismissNpcEvent implements BlockingEvent {
     @Override
     public boolean execute() {
         Rs2NpcModel randomEventNPC = Rs2Npc.getRandomEventNPC();
+        Microbot.log("Random Event: " + randomEventNPC.getName());
         boolean shouldDismiss = shouldDismissNpc(randomEventNPC);
         if (shouldDismiss) {
             Global.sleep(800,1250);

@@ -36,9 +36,9 @@ public class QoLScript extends Script {
     private final boolean bankOpen = false;
     private boolean runOnce = false;
     private int randomPoints = 0;
-    @Getter
-    @Setter
-    private static boolean completedSlayerTask = false;
+//    @Getter
+//    @Setter
+//    private static boolean completedSlayerTask = false;
 
     public boolean run(QoLConfig config) {
         Microbot.enableAutoRunOn = false;
@@ -85,9 +85,9 @@ public class QoLScript extends Script {
                 if (config.useQuestDialogueOptions() && Rs2Dialogue.isInDialogue()) {
                     Rs2Dialogue.handleQuestOptionDialogueSelection();
                 }
-                if (config.smartSlayer()){
-                    handleSlayer();
-                }
+//                if (config.smartSlayer()){
+//                    handleSlayer();
+//                }
 
 
             } catch (Exception ex) {
@@ -134,63 +134,63 @@ public class QoLScript extends Script {
 
     }
     // handle slayer
-    private void handleSlayer(){
-        List<String> monsters = Rs2Slayer.getSlayerMonsters();
-        AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
-        if (monsters != null) {
-            for (String monster : monsters) {
-                Rs2Npc.getNpcs(monster).forEach(npc -> {
-                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
-                        isNearSlayerMonster.set(true);
-                        //int distance = Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation());
-                        //Microbot.log("Nearby " + distance);
-                    }
-                });
-            }
-        }
-        if (completedSlayerTask){
-//            //if(!Rs2Bank.walkToBankAndUseBank()) return;
-            Microbot.log("Slayer completed");
-            sleep(5000,10000);
-            if(Rs2GameObject.exists(6)){
-                Rs2GameObject.interact(6,"Pick-up");
-            }
-            sleep(1000,2000);
-            if(Rs2Inventory.contains(8013)) {
-                Rs2Inventory.interact(8013, "break");
-            }else if (Rs2Inventory.contains(13393)) {
-                Rs2Inventory.interact(13393,"teleport",131076);
-                Rs2Bank.walkToBank();
-                sleepUntil(() ->Rs2Bank.isNearBank(5));
-            }
-            sleepUntil(PohTeleports::isInHouse);
-            sleep(1000,3000);
-            Rs2Prayer.disableAllPrayers();
-            completedSlayerTask = false;
-        }
-        if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
-            Rs2Combat.enableAutoRetialiate();
-            if(!Rs2Combat.inCombat()){
-                int waited = 0;
-                int timeout = Rs2Random.between(3000,8000);
-                System.out.println(timeout);
-                while (waited < timeout) {
-                    if (Rs2Combat.inCombat()) {
-                        break;
-                    }
-                    sleep(250);
-                    waited += 250;
-                }
-                if(!Rs2Combat.inCombat()){
-                    if (monsters != null && !monsters.isEmpty()) {
-                        Rs2Npc.attack(monsters);
-                    } else {
-                        Microbot.log("No slayer monsters found.");
-                    }
-                }
-            }
-        }
-    }
+//    private void handleSlayer(){
+//        List<String> monsters = Rs2Slayer.getSlayerMonsters();
+//        AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
+//        if (monsters != null) {
+//            for (String monster : monsters) {
+//                Rs2Npc.getNpcs(monster).forEach(npc -> {
+//                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
+//                        isNearSlayerMonster.set(true);
+//                        //int distance = Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation());
+//                        //Microbot.log("Nearby " + distance);
+//                    }
+//                });
+//            }
+//        }
+//        if (completedSlayerTask){
+////            //if(!Rs2Bank.walkToBankAndUseBank()) return;
+//            Microbot.log("Slayer completed");
+//            sleep(5000,10000);
+//            if(Rs2GameObject.exists(6)){
+//                Rs2GameObject.interact(6,"Pick-up");
+//            }
+//            sleep(1000,2000);
+//            if(Rs2Inventory.contains(8013)) {
+//                Rs2Inventory.interact(8013, "break");
+//            }else if (Rs2Inventory.contains(13393)) {
+//                Rs2Inventory.interact(13393,"teleport",131076);
+//                Rs2Bank.walkToBank();
+//                sleepUntil(() ->Rs2Bank.isNearBank(5));
+//            }
+//            sleepUntil(PohTeleports::isInHouse);
+//            sleep(1000,3000);
+//            Rs2Prayer.disableAllPrayers();
+//            completedSlayerTask = false;
+//        }
+//        if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
+//            Rs2Combat.enableAutoRetialiate();
+//            if(!Rs2Combat.inCombat()){
+//                int waited = 0;
+//                int timeout = Rs2Random.between(3000,8000);
+//                System.out.println(timeout);
+//                while (waited < timeout) {
+//                    if (Rs2Combat.inCombat()) {
+//                        break;
+//                    }
+//                    sleep(250);
+//                    waited += 250;
+//                }
+//                if(!Rs2Combat.inCombat()){
+//                    if (monsters != null && !monsters.isEmpty()) {
+//                        Rs2Npc.attack(monsters);
+//                    } else {
+//                        Microbot.log("No slayer monsters found.");
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     // handle auto eat
     private void handleAutoEat(int percent) {
@@ -211,6 +211,7 @@ public class QoLScript extends Script {
                 sleep(400);
             }
         }
+        Rs2Inventory.dropEmptyVials();
     }
 
     // handle dialogue continue

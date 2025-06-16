@@ -112,7 +112,7 @@ public class ChaosAltarScript extends Script {
 
     private void dieToNpc() {
         Microbot.log("Walking to dangerous NPC to die");
-        Rs2Walker.walkTo(2978, 3854,0);
+        Rs2Walker.walkTo(2979, 3845,0);
         sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 60000);
         // Attack chaos fanatic to die
         Rs2Npc.attack("Chaos Fanatic");
@@ -170,7 +170,7 @@ public class ChaosAltarScript extends Script {
                 && isRunning()
                 && !Rs2Player.isInCombat()
                 && Rs2GameObject.exists(411)) {
-            Rs2Inventory.slotInteract(2, "use");
+            Rs2Inventory.slotInteract(27, "use");
             sleep(100, 300);
             Rs2GameObject.interact(411);
             Rs2Player.waitForXpDrop(Skill.PRAYER);

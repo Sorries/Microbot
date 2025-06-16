@@ -3,6 +3,7 @@ package net.runelite.client.plugins.microbot.example;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.qualityoflife.scripts.SmartSlayer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,9 +19,13 @@ public class ExampleScript extends Script {
                 if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
 
-                if(Rs2Inventory.slotContains(27,6332)){
-                    System.out.println("logs");
-                }
+                String result = String.valueOf(SmartSlayer.getCompletedSlayerTask());
+                System.out.println(result);
+//                if (SmartSlayer.getCompletedSlayerTask()) {
+//                    Microbot.log("Slayer task is complete!");
+//                }else{
+//                    Microbot.log("Slayer task is not complete!");
+//                }
 
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;
