@@ -47,7 +47,7 @@ public class FornBirdhouseRunsScript extends Script {
                 switch (botStatus) {
                     case GEARING:
                         if (Rs2Bank.openBank()) {
-                            if(Rs2Inventory.getEmptySlots()<=24) {
+                            if (Rs2Inventory.getEmptySlots() <= 24 ){
                                 Rs2Bank.depositAll();
                             }
                             if (config.GRACEFUL()) {

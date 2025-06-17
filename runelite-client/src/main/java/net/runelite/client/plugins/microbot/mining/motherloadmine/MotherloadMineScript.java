@@ -151,7 +151,7 @@ public class MotherloadMineScript extends Script
         if (sackCount > maxSackSize || (shouldEmptySack && !Rs2Inventory.contains("pay-dirt")))
         {
             resetMiningState();
-            Microbot.log("1");
+            //Microbot.log("1");
             status = MLMStatus.EMPTY_SACK;
         }
         else if (!Rs2Inventory.isFull())
@@ -286,7 +286,7 @@ public class MotherloadMineScript extends Script
                 shouldEmptySack = true;
             }
             resetMiningState();
-            Microbot.log("2");
+            //Microbot.log("2");
         }
         else
         {
@@ -452,7 +452,7 @@ public class MotherloadMineScript extends Script
     {
         oreVein = null;
         miningSpot = MLMMiningSpot.IDLE;
-        Microbot.log("3");
+        //Microbot.log("3");
     }
 
     @Override
