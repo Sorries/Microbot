@@ -87,16 +87,17 @@ public static boolean getCompletedSlayerTask() {
                     sleep(5000,10000);
                     if(Rs2GameObject.exists(6)){
                         Rs2GameObject.interact(6,"Pick-up");
-                        sleep(1000,2000);
+                        sleepUntil(()-> !Rs2GameObject.exists(6));
+                        sleep(500,1000);
                     }
                     if(Rs2Inventory.contains(8013)) {
                         Rs2Inventory.interact(8013, "break");
+                        sleepUntil(PohTeleports::isInHouse);
                     }else if (Rs2Inventory.contains(13393)) {
                         Rs2Inventory.interact(13393,"teleport",131076);
                         Rs2Bank.walkToBank();
                         sleepUntil(() ->Rs2Bank.isNearBank(5));
                     }
-                    sleepUntil(PohTeleports::isInHouse);
                     sleep(1000,3000);
                     Rs2Prayer.disableAllPrayers();
                     completedSlayerTask = false;
