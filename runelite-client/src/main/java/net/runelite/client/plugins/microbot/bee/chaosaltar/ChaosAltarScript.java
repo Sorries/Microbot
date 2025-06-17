@@ -9,6 +9,7 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
+import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
@@ -64,7 +65,7 @@ public class ChaosAltarScript extends Script {
                         teleportToWilderness();
                         break;
                     case WALK_TO_ALTAR:
-                        walkTo(CHAOS_ALTAR_POINT,2);
+                        walkTo(CHAOS_ALTAR_POINT,1);
                         break;
                     case OFFER_BONES:
                         if (config.giveBonesFast()) {
@@ -94,7 +95,7 @@ public class ChaosAltarScript extends Script {
 
     private State determineState() {
         boolean inWilderness = Rs2Pvp.isInWilderness();
-        boolean hasBones = Rs2Inventory.count(DRAGON_BONES) > 1;
+        boolean hasBones = Rs2Inventory.count(DRAGON_BONES) > 0;
         boolean hasAnyBones = Rs2Inventory.contains(DRAGON_BONES);
         boolean atAltar = isAtChaosAltar();
 
@@ -165,15 +166,15 @@ public class ChaosAltarScript extends Script {
         Microbot.log("Offering bones s");
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
-            walkTo(CHAOS_ALTAR_POINT,2);
+            walkTo(CHAOS_ALTAR_POINT,1);
             sleepUntil(()->CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()),10000);
         }
 
-        if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
+        //if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
 
         if (Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
-            if (Rs2Inventory.slotContains(27,DRAGON_BONES)) {
-                Rs2Inventory.slotInteract(27, "use");
+            if (Rs2Inventory.slotContains(0,DRAGON_BONES)) {
+                Rs2Inventory.slotInteract(0, "use");
                 sleep(200, 400);
                 Rs2GameObject.interact(411);
                 sleep(200, 400);
@@ -187,10 +188,9 @@ public class ChaosAltarScript extends Script {
         Microbot.log("Offering bones f");
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
-            walkTo(CHAOS_ALTAR_POINT,2);
+            walkTo(CHAOS_ALTAR_POINT,1);
             sleepUntil(()->CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()),10000);
         }
-
         while (Rs2Inventory.contains(DRAGON_BONES)
                 && isRunning()
                 && Rs2GameObject.exists(411)) {
@@ -207,9 +207,7 @@ public class ChaosAltarScript extends Script {
         if(Rs2Inventory.contains(x-> x != null && x.getName().contains("Burning amulet"))){
             Rs2Inventory.wear("Burning amulet");
         }
-
         if (!Rs2Bank.isOpen()) {
-            System.out.println("Opening bank");
             Rs2Bank.walkToBankAndUseBank();
             Rs2Bank.openBank();
         } else {
@@ -221,7 +219,7 @@ public class ChaosAltarScript extends Script {
             }
 
             if(!Rs2Bank.hasBankItem("Burning Amulet")) {
-                Microbot.log("NO FULL BURNING AMULET, SHUTTING DOWN");
+                Microbot.log("NO BURNING AMULET, SHUTTING DOWN");
                 shutdown();
             }
 
@@ -232,7 +230,6 @@ public class ChaosAltarScript extends Script {
                 Rs2Bank.withdrawAndEquip("burning amulet");
                 Rs2Inventory.waitForInventoryChanges(2000);
             }
-            //Rs2Inventory.contains(x->x != null && x.getName().contains("burning"));
             // If no bones in inventory, withdraw 28
             if (!Rs2Inventory.contains(DRAGON_BONES)) {
                 System.out.println("Withdrawing bones");
