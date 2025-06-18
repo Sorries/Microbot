@@ -193,13 +193,12 @@ public class ChaosAltarScript extends Script {
         if (CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
             if (Rs2Inventory.slotContains(0,DRAGON_BONES)) {
                 Rs2Inventory.slotInteract(Rs2Random.betweenInclusive(1,3), "use");
-                sleep((int)Rs2Random.skewedRand(300,200,400,2));
+                sleep((int)Rs2Random.skewedRand(300,200,450,2));
                 Rs2GameObject.interact(411);
                 if (Rs2Random.dicePercentage(75)){
-                    sleep((int)Rs2Random.skewedRand(300,200,400,2));
+                    sleep((int)Rs2Random.skewedRand(300,200,450,2));
                 }else{
-                    int randomWait = Rs2Random.between(500,2000);
-                    Rs2Inventory.waitForInventoryChanges(randomWait);
+                    Rs2Inventory.waitForInventoryChanges(2000);
                 }
             }
         }
