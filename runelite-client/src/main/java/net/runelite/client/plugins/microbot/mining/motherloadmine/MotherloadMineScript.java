@@ -87,7 +87,7 @@ public class MotherloadMineScript extends Script
     {
         if (!super.run() || !Microbot.isLoggedIn())
         {
-            resetMiningState();
+            //resetMiningState();
             return;
         }
 

@@ -209,6 +209,7 @@ public class PluginDisablerScript extends Script {
             this.minBreaktime = minBreaktime;
             this.maxBreaktime = maxBreaktime;
             scheduleNextBreak();
+            //System.out.println("starting");
         }
 
         public void tick() {
@@ -216,7 +217,7 @@ public class PluginDisablerScript extends Script {
                 breakIn--;
                 //System.out.println("breakIn: " + breakIn);
             }
-            if (!isLockState()) {
+            if (!isLockState() && config.useBreaks()) {
                 if (breakIn <= 0 && breakDuration <= 0) {
                     startBreak();
                 }
@@ -225,7 +226,7 @@ public class PluginDisablerScript extends Script {
                 breakDuration--;
                 //System.out.println("breakDuration: " + breakDuration);
             }
-            if (!isLockState()) {
+            if (!isLockState() && config.useBreaks()) {
                 if (breakDuration <= 0 && breakIn <= 0) {
                     lastXpTime = System.currentTimeMillis();
                     Microbot.pauseAllScripts = false;

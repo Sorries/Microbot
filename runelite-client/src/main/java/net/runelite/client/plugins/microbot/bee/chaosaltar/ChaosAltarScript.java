@@ -11,6 +11,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
+import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
@@ -22,6 +23,7 @@ import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static net.runelite.api.ItemID.BURNING_AMULET5;
@@ -132,20 +134,38 @@ public class ChaosAltarScript extends Script {
                 }
             }
         }
+        TileObject gameObject = Rs2GameObject.getAll()
+                .stream()
+                .findFirst()
+                .orElse(null);
+//        if(Rs2GameObject.exists(411)){
+//            GameObject gameObject = Rs2GameObject.getAll(o->o.getId() == 411)
+//                    .stream()
+//                    .filter(o -> o instanceof GameObject)
+//                    .map(o -> (GameObject) o)
+//                    .findFirst()
+//                    .orElse(null);
+//
+//            if (Rs2GameObject.isReachable(gameObject)) {
+//                Microbot.log("Chaos Altar");
+//                return true;
+//            }
+//        }
         return false;
     }
 
 
     private void dieToNpc() {
         Microbot.log("Walking");
-        Rs2Walker.walkTo(2979, 3845,0);
-        sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 60000);
+        //sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 2000);
         // Attack chaos fanatic to die
-        Rs2Npc.attack("Chaos Fanatic");
-        // Wait until player dies
-        sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
-        sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
-        sleep(1000,3000);
+        if (Rs2Npc.attack("Chaos Fanatic") || Rs2Combat.inCombat()) {
+            sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
+            sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
+            sleep(1000,3000);
+        }else{
+            Rs2Walker.walkTo(2979, 3845,0);
+        }
     }
 
 
@@ -157,7 +177,7 @@ public class ChaosAltarScript extends Script {
 //            Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_ITEM, true);
 //            sleep(500, 800);
 //        }
-        if (hasBurningAmulet()) {
+        if (hasBurningAmulet() && !Rs2Pvp.isInWilderness()){
             walkTo(CHAOS_ALTAR_POINT);
         }
     }
@@ -174,7 +194,7 @@ public class ChaosAltarScript extends Script {
 
         if (Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
             if (Rs2Inventory.slotContains(0,DRAGON_BONES)) {
-                Rs2Inventory.slotInteract(0, "use");
+                Rs2Inventory.slotInteract(3, "use");
                 sleep(200, 400);
                 Rs2GameObject.interact(411);
                 sleep(200, 400);
