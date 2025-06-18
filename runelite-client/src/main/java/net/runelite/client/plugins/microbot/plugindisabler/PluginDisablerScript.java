@@ -156,6 +156,7 @@ public class PluginDisablerScript extends Script {
         }
         Microbot.pauseAllScripts = true;
         disablePluginsFlag = false;
+        setLockState(true);
         notifier.notify(Notification.ON, "Plugin Disabled.");
     }
 
