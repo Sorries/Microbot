@@ -56,7 +56,7 @@ public class ChaosAltarScript extends Script {
 
                 // Determine current state
                 currentState = determineState();
-                //Microbot.log("Current state: " + currentState);
+                Microbot.log("Current state: " + currentState);
 
                 // Execute state action
                 switch (currentState) {
@@ -69,7 +69,7 @@ public class ChaosAltarScript extends Script {
                     case WALK_TO_ALTAR:
                         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
                             Microbot.log("Cur 1 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
-                            walkTo(CHAOS_ALTAR_POINT, 1);
+                            walkTo(CHAOS_ALTAR_POINT, 2);
                             Microbot.log("Cur 2 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                         }
                         break;
@@ -189,7 +189,7 @@ public class ChaosAltarScript extends Script {
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
             Microbot.log("Cur 3 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
-            walkTo(CHAOS_ALTAR_POINT,1);
+            walkTo(CHAOS_ALTAR_POINT,2);
             Microbot.log("Cur 4 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
         }
 
