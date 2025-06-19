@@ -210,8 +210,11 @@ public class QoLScript extends Script {
                 runOnce = false;
                 sleep(400);
             }
+            if (Rs2Inventory.contains(229)){
+                Rs2Inventory.dropAll(229);
+            }
         }
-        Rs2Inventory.dropEmptyVials();
+
     }
 
     // handle dialogue continue

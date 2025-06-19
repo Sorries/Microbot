@@ -35,7 +35,7 @@ import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.*;
 public class ChaosAltarScript extends Script {
 
     public static final WorldArea CHAOS_ALTAR_AREA = new WorldArea(2947, 3818, 11, 6, 0);
-    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3819, 3, 4, 0);
+    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3819, 5, 4, 0);
     public static final WorldPoint CHAOS_ALTAR_POINT = new WorldPoint(2949, 3820,0);
     public static final WorldPoint CHAOS_ALTAR_POINT_SOUTH = new WorldPoint(3014, 3820,0);
 
@@ -68,7 +68,9 @@ public class ChaosAltarScript extends Script {
                         break;
                     case WALK_TO_ALTAR:
                         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
+                            Microbot.log("Cur 1 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                             walkTo(CHAOS_ALTAR_POINT, 1);
+                            Microbot.log("Cur 2 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                         }
                         break;
                     case OFFER_BONES:
@@ -128,7 +130,7 @@ public class ChaosAltarScript extends Script {
                     GameObject gameObject = (GameObject) obj;
                     System.out.println("Found Chaos Altar GameObject at: " + gameObject.getWorldLocation());
                     if (Rs2GameObject.isReachable(gameObject)) {
-                        Microbot.log("Chaos Altar f");
+                        //Microbot.log("Chaos Altar f");
                         return true;
                     } else {
                         System.out.println("Chaos Altar found but not reachable.");
@@ -157,12 +159,13 @@ public class ChaosAltarScript extends Script {
         //Microbot.log("Walking");
         //sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 2000);
         // Attack chaos fanatic to die
-        if (Rs2Npc.attack("Chaos Fanatic") || Rs2Combat.inCombat()) {
+        if (Rs2Combat.inCombat() || Rs2Npc.attack("Chaos Fanatic")) {
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
             sleep(1000,3000);
         }else{
             Rs2Walker.walkTo(2979, 3845,0);
+            sleep(1500,3000);
         }
     }
 
@@ -182,23 +185,30 @@ public class ChaosAltarScript extends Script {
     }
 
     private void offerBones() {
-        Microbot.log("Offering bones s");
+        //Microbot.log("Offering bones s");
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
+            Microbot.log("Cur 3 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
             walkTo(CHAOS_ALTAR_POINT,1);
+            Microbot.log("Cur 4 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
         }
 
         //if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
 
         if (CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
             if (Rs2Inventory.slotContains(0,DRAGON_BONES)) {
-                Rs2Inventory.slotInteract(Rs2Random.betweenInclusive(1,3), "use");
+                int randomSlot = 0;
+                if (Rs2Inventory.count(DRAGON_BONES)>3){
+                    randomSlot = Rs2Random.betweenInclusive(1,3);
+                }
+                Rs2Inventory.slotInteract(randomSlot, "use");
                 sleep((int)Rs2Random.skewedRand(300,200,450,2));
                 Rs2GameObject.interact(411);
                 if (Rs2Random.dicePercentage(75)){
                     sleep((int)Rs2Random.skewedRand(300,200,450,2));
                 }else{
                     Rs2Inventory.waitForInventoryChanges(2000);
+                    //Microbot.log("cha");
                 }
             }
         }
@@ -208,7 +218,7 @@ public class ChaosAltarScript extends Script {
         Microbot.log("Offering bones f");
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
-            walkTo(CHAOS_ALTAR_POINT,0);
+            walkTo(CHAOS_ALTAR_POINT,1);
         }
         if (Rs2Camera.getYaw() != 0){
             Rs2Camera.setYaw(0);
