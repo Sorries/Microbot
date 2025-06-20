@@ -35,7 +35,7 @@ import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.*;
 public class ChaosAltarScript extends Script {
 
     public static final WorldArea CHAOS_ALTAR_AREA = new WorldArea(2947, 3818, 11, 6, 0);
-    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3819, 5, 4, 0);
+    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 5, 0);
     public static final WorldPoint CHAOS_ALTAR_POINT = new WorldPoint(2949, 3820,0);
     public static final WorldPoint CHAOS_ALTAR_POINT_SOUTH = new WorldPoint(3014, 3820,0);
 
@@ -69,7 +69,7 @@ public class ChaosAltarScript extends Script {
                     case WALK_TO_ALTAR:
                         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
                             Microbot.log("Cur 1 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
-                            walkTo(CHAOS_ALTAR_POINT, 2);
+                            walkTo(CHAOS_ALTAR_POINT, 3);
                             Microbot.log("Cur 2 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                         }
                         break;
@@ -164,7 +164,7 @@ public class ChaosAltarScript extends Script {
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
             sleep(1000,3000);
         }else{
-            Rs2Walker.walkTo(2979, 3845,0);
+            Rs2Walker.walkTo(2979, 3845,0,10);
             sleep(1500,3000);
         }
     }
@@ -189,7 +189,7 @@ public class ChaosAltarScript extends Script {
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
             Microbot.log("Cur 3 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
-            walkTo(CHAOS_ALTAR_POINT,2);
+            walkTo(CHAOS_ALTAR_POINT,3);
             Microbot.log("Cur 4 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
         }
 
@@ -218,7 +218,7 @@ public class ChaosAltarScript extends Script {
         Microbot.log("Offering bones f");
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
-            walkTo(CHAOS_ALTAR_POINT,1);
+            walkTo(CHAOS_ALTAR_POINT,3);
         }
         if (Rs2Camera.getYaw() != 0){
             Rs2Camera.setYaw(0);
