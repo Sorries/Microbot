@@ -2,6 +2,8 @@ package net.runelite.client.plugins.microbot.example;
 
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
+import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.SmartSlayer;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
@@ -19,8 +21,8 @@ public class ExampleScript extends Script {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
                 long startTime = System.currentTimeMillis();
-
-                Rs2Widget.clickWidget(10747935);
+                Microbot.stopPlugin(Microbot.getPlugin(PluginDisablerPlugin.class.getName()));
+                System.out.println(""+ Microbot.getPlugin(PluginDisablerPlugin.class.getName()));
 //                String result = String.valueOf(SmartSlayer.isCompletedSlayerTask());
 //                System.out.println(result);
 //                if (SmartSlayer.getCompletedSlayerTask()) {

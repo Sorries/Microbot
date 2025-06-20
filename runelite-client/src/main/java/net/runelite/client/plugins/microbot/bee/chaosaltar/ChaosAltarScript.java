@@ -6,8 +6,12 @@ import net.runelite.api.Skill;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
+import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
+import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorScript;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
@@ -106,10 +110,14 @@ public class ChaosAltarScript extends Script {
         boolean hasAnyBones = Rs2Inventory.contains(DRAGON_BONES);
         boolean atAltar = isAtChaosAltar();
 
+
         if (!inWilderness && !hasBones) {
             return State.BANK;
         }
         if (!inWilderness && hasBones) {
+            if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
+                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class.getName()));
+            }
             return State.TELEPORT_TO_WILDERNESS;
         }
         if (inWilderness && hasAnyBones && !atAltar) {
@@ -119,6 +127,9 @@ public class ChaosAltarScript extends Script {
             return State.OFFER_BONES;
         }
         if (inWilderness && !hasAnyBones) {
+            if (Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
+                Microbot.stopPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class.getName()));
+            }
             return State.DIE_TO_NPC;
         }
 
