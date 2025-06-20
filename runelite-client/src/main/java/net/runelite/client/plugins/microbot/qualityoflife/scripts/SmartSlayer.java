@@ -37,9 +37,9 @@ public class SmartSlayer extends Script {
 @Setter
 private static boolean completedSlayerTask = false;
 
-public static boolean getCompletedSlayerTask() {
-    return completedSlayerTask;
-}
+//public static boolean getCompletedSlayerTask() {
+//    return completedSlayerTask;
+//}
 
     public boolean run(QoLConfig config) {
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {

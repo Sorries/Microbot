@@ -22,6 +22,7 @@ import net.runelite.client.plugins.microbot.util.player.Rs2Pvp;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
+import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +57,7 @@ public class ChaosAltarScript extends Script {
 
                 // Determine current state
                 currentState = determineState();
-                Microbot.log("Current state: " + currentState);
+                //Microbot.log("Current state: " + currentState);
 
                 // Execute state action
                 switch (currentState) {
@@ -192,6 +193,9 @@ public class ChaosAltarScript extends Script {
             walkTo(CHAOS_ALTAR_POINT,3);
             Microbot.log("Cur 4 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
         }
+        if (Rs2Camera.getYaw() != 0){
+            Rs2Widget.clickWidget(10747935);
+        }
 
         //if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
 
@@ -221,8 +225,9 @@ public class ChaosAltarScript extends Script {
             walkTo(CHAOS_ALTAR_POINT,3);
         }
         if (Rs2Camera.getYaw() != 0){
-            Rs2Camera.setYaw(0);
+            Rs2Widget.clickWidget(10747935);
         }
+
         while (Rs2Inventory.contains(DRAGON_BONES)
                 && CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())
                 && isRunning()
