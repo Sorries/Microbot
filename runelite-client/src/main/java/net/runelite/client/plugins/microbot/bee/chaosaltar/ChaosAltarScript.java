@@ -22,6 +22,7 @@ import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
+import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.player.Rs2Pvp;
@@ -248,13 +249,14 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10747935);
         }
 
-        if (Rs2Inventory.contains(DRAGON_BONES)
+        while (Rs2Inventory.contains(DRAGON_BONES)
+                && isRunning()
                 && CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())
                 && Rs2GameObject.exists(411)) {
             Rs2Inventory.useLast(DRAGON_BONES);
-            sleep((int)Rs2Random.skewedRand(250,150,350,2));
+            sleep((int)Rs2Random.skewedRand(150,100,250,2));
             Rs2GameObject.interact(411);
-            sleep((int)Rs2Random.skewedRand(250,150,350,2));
+            sleep((int)Rs2Random.skewedRand(150,100,250,2));
         }
     }
 
