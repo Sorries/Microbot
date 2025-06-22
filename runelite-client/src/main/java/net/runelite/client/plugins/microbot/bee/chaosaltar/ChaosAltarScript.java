@@ -3,6 +3,7 @@ package net.runelite.client.plugins.microbot.bee.chaosaltar;
 import net.runelite.api.GameObject;
 import net.runelite.api.ItemID;
 import net.runelite.api.Skill;
+import java.time.Duration;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
@@ -19,6 +20,7 @@ import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -28,8 +30,11 @@ import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
+import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static net.runelite.api.ItemID.BURNING_AMULET5;
 import static net.runelite.api.ItemID.DRAGON_BONES;
@@ -40,7 +45,7 @@ import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.*;
 public class ChaosAltarScript extends Script {
 
     public static final WorldArea CHAOS_ALTAR_AREA = new WorldArea(2947, 3818, 11, 6, 0);
-    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 5, 0);
+    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 5, 0); //2953,3823
     public static final WorldPoint CHAOS_ALTAR_POINT = new WorldPoint(2949, 3820,0);
     public static final WorldPoint CHAOS_ALTAR_POINT_SOUTH = new WorldPoint(3014, 3820,0);
 
@@ -76,7 +81,7 @@ public class ChaosAltarScript extends Script {
                             Microbot.log("Cur 1 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                             walkTo(CHAOS_ALTAR_POINT, 3);
                             Microbot.log("Cur 2 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
-                        }
+                        }//2949,3822
                         break;
                     case OFFER_BONES:
                         if (config.giveBonesFast()) {
@@ -136,33 +141,33 @@ public class ChaosAltarScript extends Script {
         return State.UNKNOWN;
     }
     public boolean isAtChaosAltar() {
-        for (TileObject obj : Rs2GameObject.getAll()) {
-            if (obj.getId() == 411) {
-                if (obj instanceof GameObject) {
-                    GameObject gameObject = (GameObject) obj;
-                    System.out.println("Found Chaos Altar GameObject at: " + gameObject.getWorldLocation());
-                    if (Rs2GameObject.isReachable(gameObject)) {
-                        //Microbot.log("Chaos Altar f");
-                        return true;
-                    } else {
-                        System.out.println("Chaos Altar found but not reachable.");
-                    }
-                }
-            }
-        }
-//        if(Rs2GameObject.exists(411)){
-//            GameObject gameObject = Rs2GameObject.getAll(o->o.getId() == 411)
-//                    .stream()
-//                    .filter(o -> o instanceof GameObject)
-//                    .map(o -> (GameObject) o)
-//                    .findFirst()
-//                    .orElse(null);
-//
-//            if (Rs2GameObject.isReachable(gameObject)) {
-//                Microbot.log("Chaos Altar");
-//                return true;
+//        for (TileObject obj : Rs2GameObject.getAll()) {
+//            if (obj.getId() == 411) {
+//                if (obj instanceof GameObject) {
+//                    GameObject gameObject = (GameObject) obj;
+//                    System.out.println("Found Chaos Altar GameObject at: " + gameObject.getWorldLocation());
+//                    if (Rs2GameObject.isReachable(gameObject)) {
+//                        //Microbot.log("Chaos Altar f");
+//                        return true;
+//                    } else {
+//                        System.out.println("Chaos Altar found but not reachable.");
+//                    }
+//                }
 //            }
 //        }
+        if(Rs2GameObject.exists(411)){
+            GameObject gameObject = Rs2GameObject.getAll(o->o.getId() == 411)
+                    .stream()
+                    .filter(o -> o instanceof GameObject)
+                    .map(o -> (GameObject) o)
+                    .findFirst()
+                    .orElse(null);
+
+            if (Rs2GameObject.isReachable(gameObject)) {
+                //Microbot.log("Chaos Altar");
+                return true;
+            }
+        }
         return false;
     }
 
@@ -206,7 +211,11 @@ public class ChaosAltarScript extends Script {
         }
         if (Rs2Camera.getYaw() != 0){
             Rs2Widget.clickWidget(10747935);
+            sleep(500,750);
         }
+
+        boolean underAttack = Rs2Combat.inCombat();
+        Rs2Prayer.toggleQuickPrayer(underAttack);
 
         //if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
 
@@ -230,7 +239,7 @@ public class ChaosAltarScript extends Script {
     }
     // Experimental, need to drag the inventory ( last slot ) next to the altar
     private void offerBonesFast() {
-        Microbot.log("Offering bones f");
+        //Microbot.log("Offering bones f");
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
             walkTo(CHAOS_ALTAR_POINT,3);
@@ -239,16 +248,12 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10747935);
         }
 
-        while (Rs2Inventory.contains(DRAGON_BONES)
+        if (Rs2Inventory.contains(DRAGON_BONES)
                 && CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())
-                && isRunning()
                 && Rs2GameObject.exists(411)) {
             Rs2Inventory.useLast(DRAGON_BONES);
-            //sleep(150, 350);
             sleep((int)Rs2Random.skewedRand(250,150,350,2));
             Rs2GameObject.interact(411);
-            //Rs2Player.waitForXpDrop(Skill.PRAYER);
-            //sleep(150, 350);
             sleep((int)Rs2Random.skewedRand(250,150,350,2));
         }
     }
@@ -257,6 +262,22 @@ public class ChaosAltarScript extends Script {
     private void handleBanking() {
         if(Rs2Inventory.contains(x-> x != null && x.getName().contains("Burning amulet"))){
             Rs2Inventory.wear("Burning amulet");
+        }
+        for (Rs2ItemModel item : Rs2Inventory.items().stream()
+                .filter(x -> {
+                    String[] actions = x.getInventoryActions();
+                    return actions != null && (Arrays.asList(actions).contains("Wield") || Arrays.asList(actions).contains("Wear"));
+                })
+                .collect(Collectors.toList())) {
+
+            if (Arrays.asList(item.getInventoryActions()).contains("Wield")) {
+                Rs2Inventory.interact(item, "Wield");
+            } else if (Arrays.asList(item.getInventoryActions()).contains("Wear")) {
+                Rs2Inventory.interact(item, "Wear");
+            }
+
+            // Debug (optional)
+            System.out.println("Equipped: " + item.getName()+ " Item Actions: " + Arrays.toString(item.getInventoryActions()));
         }
         if (!Rs2Bank.isOpen()) {
             Rs2Bank.walkToBankAndUseBank();
