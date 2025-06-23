@@ -2,14 +2,17 @@ package net.runelite.client.plugins.microbot.qualityoflife.scripts;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2Cannon;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -24,22 +27,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SmartSlayer extends Script {
 
 
-//    private static boolean completedSlayerTask = false;
-//
-//    public static boolean getCompletedSlayerTask() {
-//        return completedSlayerTask;
-//    }
-//
-//    public static void setCompletedSlayerTask(boolean value) {
-//        completedSlayerTask = value;
-//    }
 @Getter
 @Setter
 private static boolean completedSlayerTask = false;
 
-//public static boolean getCompletedSlayerTask() {
-//    return completedSlayerTask;
-//}
 
     public boolean run(QoLConfig config) {
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -61,6 +52,16 @@ private static boolean completedSlayerTask = false;
                 }
                 if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
                     Rs2Combat.enableAutoRetialiate();
+                    Rs2ItemModel currentGlove = Rs2Equipment.get(EquipmentInventorySlot.GLOVES);
+                    if(currentGlove == null){
+                        if(Rs2Inventory.contains(21183)) {
+                            Rs2Inventory.interact(21183, "Wear");
+                        }
+                        if(Rs2Inventory.contains(21177)) {
+                            Rs2Inventory.interact(21177, "Wear");
+                        }
+                    }
+
                     if(!Rs2Combat.inCombat()){
                         int waited = 0;
                         int timeout = Rs2Random.between(3000,8000);
