@@ -54,14 +54,14 @@ public class PluginDisablerPlugin extends Plugin {
         if (event.getKey().equals("noExp")) {
             if (config.noExp()) {
                 PluginDisablerScript.lastXpTime = System.currentTimeMillis();
-                Microbot.pauseAllScripts=false;
+                Microbot.pauseAllScripts.set(false);
                 PluginDisablerScript.disablePluginsFlag = true;
             }
         }
         if (event.getKey().equals("noClick")) {
             if (config.noClick()) {
                 PluginDisablerScript.sameObjectClickCount = 0;
-                Microbot.pauseAllScripts=false;
+                Microbot.pauseAllScripts.set(false);
                 PluginDisablerScript.disablePluginsFlag = true;
             }
         }
@@ -69,7 +69,7 @@ public class PluginDisablerPlugin extends Plugin {
             if (config.noTime()) {
                 pluginDisabler.setStartTime2(System.currentTimeMillis());
                 pluginDisabler.setLastTimeConfigValue(-1);
-                Microbot.pauseAllScripts=false;
+                Microbot.pauseAllScripts.set(false);
                 PluginDisablerScript.disablePluginsFlag = true;
             }
         }
@@ -78,14 +78,14 @@ public class PluginDisablerPlugin extends Plugin {
                 pluginDisabler.setBreakIn(0);
                 pluginDisabler.setBreakDuration(0);
                 pluginDisabler.scheduleNextBreak();
-                Microbot.pauseAllScripts=false;
+                Microbot.pauseAllScripts.set(false);
                 PluginDisablerScript.disablePluginsFlag = true;
                 PluginDisablerScript.setLockState(false);
             }
             if (!config.useBreaks()) {
                 pluginDisabler.setBreakIn(0);
                 pluginDisabler.setBreakDuration(0);
-                Microbot.pauseAllScripts=false;
+                Microbot.pauseAllScripts.set(false);
                 PluginDisablerScript.setLockState(true);
             }
         }
@@ -99,7 +99,7 @@ public class PluginDisablerPlugin extends Plugin {
         //pluginDisabler = new PluginDisablerScript(config);
         PluginDisablerScript.lastXpTime = System.currentTimeMillis();
         PluginDisablerScript.disablePluginsFlag = true;
-        Microbot.pauseAllScripts = false;
+        Microbot.pauseAllScripts.set(false);
         pluginDisabler.run();
         if (config.useBreaks()) {
             PluginDisablerScript.setLockState(false);
@@ -110,7 +110,7 @@ public class PluginDisablerPlugin extends Plugin {
     }
     @Override
     protected void shutDown() {
-        Microbot.pauseAllScripts = false;
+        Microbot.pauseAllScripts.set(false);
         overlayManager.remove(pluginDisablerOverlay);
         pluginDisabler.shutdown();
     }

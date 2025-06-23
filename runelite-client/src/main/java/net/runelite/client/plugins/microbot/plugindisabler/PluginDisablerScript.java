@@ -154,7 +154,7 @@ public class PluginDisablerScript extends Script {
         for (Plugin plugin : Microbot.getActiveMicrobotPlugins()) {
             Microbot.stopPlugin(plugin);
         }
-        Microbot.pauseAllScripts = true;
+        Microbot.pauseAllScripts.set(true);
         disablePluginsFlag = false;
         setLockState(true);
         notifier.notify(Notification.ON, "Plugin Disabled.");
@@ -230,7 +230,7 @@ public class PluginDisablerScript extends Script {
             if (!isLockState() && config.useBreaks()) {
                 if (breakDuration <= 0 && breakIn <= 0) {
                     lastXpTime = System.currentTimeMillis();
-                    Microbot.pauseAllScripts = false;
+                    Microbot.pauseAllScripts.set(false);
                     System.out.println("Break Ended");
                     scheduleNextBreak();
                 }
@@ -245,7 +245,7 @@ public class PluginDisablerScript extends Script {
         private void startBreak() {
             breakDuration = Rs2Random.between(minBreaktime * 60, maxBreaktime * 60);
             Microbot.log("Taking a break for: " + breakDuration/60 + " minutes.");
-            Microbot.pauseAllScripts = true;
+            Microbot.pauseAllScripts.set(true);
         }
 
         public boolean isBreaking() {
