@@ -171,7 +171,7 @@ public class AgilityScript extends Script
 		String itemsInput = config.itemsToAlch().trim();
 		if (itemsInput.isEmpty())
 		{
-			Microbot.log("No items specified for alching or none available.");
+			//Microbot.log("No items specified for alching or none available.");
 			return Optional.empty();
 		}
 
