@@ -354,7 +354,7 @@ public class MotherloadMineScript extends Script
             repositionCameraAndMove();
             return;
         }
-        if (Rs2Inventory.getEmptySlots()>Rs2Random.between(5,27))
+        if (Rs2Inventory.getEmptySlots()<Rs2Random.between(5,27))
         {
             handleDragonPickaxeSpec();
         }
