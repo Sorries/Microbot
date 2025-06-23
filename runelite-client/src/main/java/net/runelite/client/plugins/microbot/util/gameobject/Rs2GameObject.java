@@ -1545,7 +1545,7 @@ public class Rs2GameObject {
                 : Optional.of(Rs2UiHelper.stripColTags(name));
     }
 
-    private static <T extends TileObject> Predicate<T> nameMatches(String objectName, boolean exact) {
+    public static <T extends TileObject> Predicate<T> nameMatches(String objectName, boolean exact) {
         String normalizedForIds = objectName.toLowerCase().replace(" ", "_");
         Set<Integer> ids = new HashSet<>(getObjectIdsByName(normalizedForIds));
 

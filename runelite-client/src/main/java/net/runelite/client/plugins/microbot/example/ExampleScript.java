@@ -1,6 +1,7 @@
 package net.runelite.client.plugins.microbot.example;
 
 import net.runelite.api.GameObject;
+import net.runelite.api.TileObject;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
@@ -10,10 +11,14 @@ import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.SmartSlayer;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject.nameMatches;
 
 public class ExampleScript extends Script {
 
@@ -60,8 +65,14 @@ public class ExampleScript extends Script {
 //                    // System.out.println("Wearing: " + item.getName());
 //                }
 
-                System.out.println("Object"+ Rs2GameObject.getAll());
-                Rs2GameObject.getGameObject("Altar",true).getId();
+//                System.out.println("Object"+ Rs2GameObject.getAll());
+//                Rs2GameObject.getGameObject("Altar",true).getId();
+                List<Integer> altar = Rs2GameObject.getAll()
+                        .stream()
+                        .filter(nameMatches("Altar", false))
+                        .map(x->x.getId())
+                        .collect(Collectors.toList());
+                System.out.println("Altar: " + altar);
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;
                 System.out.println("Total time for loop " + totalTime);
