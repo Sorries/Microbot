@@ -61,8 +61,8 @@ public class AutoWoodcuttingScript extends Script {
     );
 
     public boolean run(AutoWoodcuttingConfig config) {
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyWoodcuttingSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyWoodcuttingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2AntibanSettings.dynamicIntensity = true;
         initialPlayerLocation = null;
@@ -117,7 +117,7 @@ public class AutoWoodcuttingScript extends Script {
                                 return;
                         }
 
-                        if (Rs2Woodcutting.isWearingAxeWithSpecialAttack())
+                        if (Rs2Woodcutting.isWearingAxeWithSpecialAttack() && Rs2Inventory.getEmptySlots()>Rs2Random.between(5,27))
                             Rs2Combat.setSpecState(true, 1000);
 
                         if (Rs2Inventory.isFull()) {
@@ -304,6 +304,6 @@ public class AutoWoodcuttingScript extends Script {
         returnPoint = null;
         initialPlayerLocation = null;
 		hasAutoHopMessageShown = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 }

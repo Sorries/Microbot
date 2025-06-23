@@ -35,8 +35,8 @@ public class GlassblowingScript extends Script {
 
         if (config.glassType() == Glass.PROGRESSIVE) calculateItemToCraft();
 
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyCraftingSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyCraftingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!Microbot.isLoggedIn()) return;
@@ -128,7 +128,7 @@ public class GlassblowingScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 }

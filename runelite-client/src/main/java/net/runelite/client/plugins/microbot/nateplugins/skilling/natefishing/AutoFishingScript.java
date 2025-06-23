@@ -40,8 +40,8 @@ public class AutoFishingScript extends Script {
 
         fishAction = "";
         state = State.FISHING;
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!super.run()) return;
@@ -196,6 +196,6 @@ public class AutoFishingScript extends Script {
     @Override
     public void shutdown() {
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 }

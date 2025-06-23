@@ -42,8 +42,8 @@ public class BurnBakingScript extends Script {
     public boolean run(AutoCookingConfig config) {
         Microbot.enableAutoRunOn = false;
         int targetCookingLevel = config.cookingLevel(); // Retrieve user-configured cooking level
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
         Rs2Antiban.setActivity(Activity.GENERAL_COOKING);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {

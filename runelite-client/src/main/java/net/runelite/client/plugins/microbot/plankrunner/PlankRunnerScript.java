@@ -34,8 +34,8 @@ public class PlankRunnerScript extends Script {
 
     public boolean run() {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
         Rs2Antiban.setActivityIntensity(ActivityIntensity.HIGH);
         Rs2Walker.disableTeleports = true;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -160,7 +160,7 @@ public class PlankRunnerScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 

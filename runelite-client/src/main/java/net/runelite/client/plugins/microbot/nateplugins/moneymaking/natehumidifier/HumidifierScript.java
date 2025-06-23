@@ -24,7 +24,7 @@ public class HumidifierScript extends Script {
     private long timeBegan;
 
     public boolean run(HumidifierConfig config) {
-        Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
         Rs2Antiban.setActivity(Activity.HUMIDIFYING_CLAY);
 
         timeBegan = System.currentTimeMillis();
@@ -95,7 +95,7 @@ public class HumidifierScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
         itemsProcessed = 0;
     }

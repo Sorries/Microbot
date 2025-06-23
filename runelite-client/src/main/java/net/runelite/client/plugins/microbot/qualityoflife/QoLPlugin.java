@@ -15,6 +15,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.inventorysetups.InventorySetup;
+import net.runelite.client.plugins.microbot.nmz.NmzScript;
 import net.runelite.client.plugins.microbot.qualityoflife.enums.WintertodtActions;
 import net.runelite.client.plugins.microbot.qualityoflife.managers.CraftingManager;
 import net.runelite.client.plugins.microbot.qualityoflife.managers.FiremakingManager;
@@ -38,6 +39,7 @@ import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Spells;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
+import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
@@ -120,6 +122,8 @@ public class QoLPlugin extends Plugin {
     @Inject
     private QolCannonScript cannonScript;
     @Inject
+    private SmartSlayer smartSlayer;
+    @Inject
     @Getter
     private PvpScript pvpScript;
     @Inject
@@ -188,6 +192,7 @@ public class QoLPlugin extends Plugin {
         qoLScript.run(config);
         wintertodtScript.run(config);
         cannonScript.run(config);
+        smartSlayer.run(config);
         autoItemDropperScript.run(config);
         eventBus.register(fletchingManager);
         eventBus.register(firemakingManager);
@@ -205,6 +210,7 @@ public class QoLPlugin extends Plugin {
         autoRunScript.shutdown();
         specialAttackScript.shutdown();
         cannonScript.shutdown();
+        smartSlayer.shutdown();
         autoItemDropperScript.shutdown();
         overlayManager.remove(qoLOverlay);
         overlayManager.remove(wintertodtOverlay);
@@ -236,8 +242,19 @@ public class QoLPlugin extends Plugin {
                 && (chatMessageType == ChatMessageType.GAMEMESSAGE || chatMessageType == ChatMessageType.SPAM)) {
             wintertodtScript.onChatMessage(chatMessage);
         }
-
-
+//        if (chatMessage.getMessage().toLowerCase().contains("you received")) {
+//            Microbot.log(""+ chatMessage.getType());
+//            QoLScript.setCompletedSlayerTask(true);
+//        }
+        if (chatMessage.getType() == ChatMessageType.CONSOLE) {
+            String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
+            if (cleanText.toLowerCase().contains("you have completed your task")) {
+                SmartSlayer.setCompletedSlayerTask(true);
+            }
+//            if (chatMessage.getMessage().toLowerCase().contains("you received")) {
+//                QoLScript.setCompletedSlayerTask(true);
+//            }
+        }
     }
 
 

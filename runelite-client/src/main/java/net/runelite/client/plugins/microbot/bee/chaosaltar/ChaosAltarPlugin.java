@@ -8,6 +8,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 import javax.inject.Inject;
+import java.time.Duration;
 
 @PluginDescriptor(
         name = PluginDescriptor.Bee + "Chaos Altar",
@@ -34,10 +35,10 @@ public class ChaosAltarPlugin extends Plugin {
 
     @Override
     protected void startUp() {
+        chaosAltarScript.run(config);
         if (overlayManager != null) {
             overlayManager.add(chaosAltarOverlay);
         }
-        chaosAltarScript.run(config);
     }
 
     protected void shutDown() {
@@ -45,5 +46,9 @@ public class ChaosAltarPlugin extends Plugin {
         overlayManager.remove(chaosAltarOverlay);
     }
 
+    public Duration getStartTime()
+    {
+        return chaosAltarScript.getRunTime();
+    }
 
 }

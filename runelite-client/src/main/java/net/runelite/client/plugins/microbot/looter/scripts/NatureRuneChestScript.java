@@ -30,7 +30,7 @@ public class NatureRuneChestScript extends Script {
         if (config.worldHop()) {
             Microbot.showMessage("Make sure autologin plugin is enabled and randomWorld checkbox is checked!");
         }
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         applyAntiBanSettings();
         Rs2Antiban.setActivity(Activity.GENERAL_COLLECTING);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -86,7 +86,7 @@ public class NatureRuneChestScript extends Script {
     @Override
     public void shutdown(){
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 
     private void getState(AutoLooterConfig config) {

@@ -50,7 +50,7 @@ public class CannonballSmelterScript extends Script {
     public boolean run(CannonballSmelterConfig config) {
         Rs2Camera.setZoom(260);
         Rs2Camera.adjustPitch(383);
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         cannonballAntiBan();
         Rs2AntibanSettings.actionCooldownChance = 0.1;
         Microbot.enableAutoRunOn = true;
@@ -214,6 +214,6 @@ public class CannonballSmelterScript extends Script {
     @Override
     public void shutdown() {
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 }

@@ -40,8 +40,8 @@ public class AutoMiningScript extends Script {
 
     public boolean run(AutoMiningConfig config) {
         initialPlayerLocation = null;
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyMiningSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyMiningSetup();
         Rs2AntibanSettings.actionCooldownChance = 0.1;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -154,6 +154,6 @@ public class AutoMiningScript extends Script {
     @Override
     public void shutdown(){
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 }

@@ -55,8 +55,8 @@ public class GECookerScript extends Script {
 
         Microbot.enableAutoRunOn = false;
 
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2AntibanSettings.dynamicIntensity = true;
         Rs2AntibanSettings.actionCooldownChance = 0.1;
@@ -287,6 +287,6 @@ public class GECookerScript extends Script {
     @Override
     public void shutdown() {
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 }

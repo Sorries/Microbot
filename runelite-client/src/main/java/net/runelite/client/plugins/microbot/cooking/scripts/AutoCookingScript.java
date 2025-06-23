@@ -46,8 +46,8 @@ public class AutoCookingScript extends Script {
     public boolean run(AutoCookingConfig config) {
         Microbot.enableAutoRunOn = false;
         CookingItem cookingItem = config.cookingItem();
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
         Rs2Antiban.setActivity(Activity.GENERAL_COOKING);
         init = true;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -180,7 +180,7 @@ public class AutoCookingScript extends Script {
     @Override
     public void shutdown(){
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 
     private void getState(AutoCookingConfig config, CookingLocation location) {

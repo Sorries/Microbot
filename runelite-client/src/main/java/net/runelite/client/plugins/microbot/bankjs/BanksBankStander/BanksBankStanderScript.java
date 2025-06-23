@@ -168,6 +168,7 @@ public class BanksBankStanderScript extends Script {
 
             // Checking that we have our items, and tallying a summary for the overlay.
             if (hasItems()) {
+                sleep(Rs2Random.skewedRandAuto(750));
                 Rs2Bank.closeBank();
                 sleepUntil(() -> !Rs2Bank.isOpen());
                 currentStatus = CurrentStatus.COMBINE_ITEMS;
@@ -182,6 +183,7 @@ public class BanksBankStanderScript extends Script {
             if (!missingItem.isBlank()) {
                 Microbot.log("Insufficient " + missingItem);
                 sleep(2500, 5000);
+                shutdown();
                 return false;
             }
         }

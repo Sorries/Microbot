@@ -276,7 +276,9 @@ public class Rs2Walker {
 
                 System.out.println("start loop " + i);
 
-				// add breakpoint here
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
 
                 if (ShortestPathPlugin.getMarker() == null) {
                     System.out.println("marker is null");
@@ -336,7 +338,6 @@ public class Rs2Walker {
                 }
             }
 
-
             if (!doorOrTransportResult) {
                 if (!path.isEmpty()) {
                     var moveableTiles = Rs2Tile.getReachableTilesFromTile(path.get(path.size() - 1), Math.min(3, distance)).keySet().toArray(new WorldPoint[0]);
@@ -345,12 +346,17 @@ public class Rs2Walker {
                     if (Rs2Tile.isTileReachable(finalTile)) {
                         if (Rs2Walker.walkFastCanvas(finalTile)) {
                             sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(finalTile) < 2, 3000);
+                            //Microbot.log("final T: " + finalTile + " Location: " + Rs2Player.getWorldLocation().distanceTo(finalTile));
                         }
                     }
 
                 }
             }
+            //Microbot.log("Dis T: "+Rs2Player.getWorldLocation().distanceTo(target) + " Dis: "+ distance);
             if (Rs2Player.getWorldLocation().distanceTo(target) < distance) {
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
                 setTarget(null);
                 return WalkerState.ARRIVED;
             } else {

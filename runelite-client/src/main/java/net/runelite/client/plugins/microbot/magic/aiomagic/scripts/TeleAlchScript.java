@@ -29,8 +29,8 @@ public class TeleAlchScript extends Script {
 
     public boolean run() {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
         Rs2AntibanSettings.simulateAttentionSpan = true;
         Rs2AntibanSettings.nonLinearIntervals = true;
         Rs2AntibanSettings.contextualVariability = true;
@@ -96,7 +96,7 @@ public class TeleAlchScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 }

@@ -3,6 +3,7 @@ package net.runelite.client.plugins.microbot.runecrafting.ourania;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,8 +18,12 @@ import net.runelite.api.gameval.NpcID;
 import net.runelite.api.gameval.ObjectID;
 import net.runelite.client.plugins.gpu.GpuPlugin;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.MicrobotOverlay;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerScript;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerScript;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
+import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.pouch.Pouch;
 import net.runelite.client.plugins.microbot.runecrafting.ourania.enums.OuraniaState;
 import net.runelite.client.plugins.microbot.runecrafting.ourania.enums.Path;
@@ -26,6 +31,7 @@ import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
+import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
@@ -37,6 +43,7 @@ import net.runelite.client.plugins.microbot.util.misc.Rs2Potion;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 
@@ -45,7 +52,7 @@ public class OuraniaScript extends Script
 
 	public static OuraniaState state;
 	private final OuraniaConfig config;
-	private final List<Integer> massWorlds = List.of(327, 480);
+	private final List<Integer> massWorlds = List.of(480);
 	private final OuraniaPlugin plugin;
 	private int selectedWorld = 0;
 
@@ -59,16 +66,16 @@ public class OuraniaScript extends Script
 	@Override
 	public void shutdown()
 	{
-		Rs2Antiban.resetAntibanSettings();
+		//Rs2Antiban.resetAntibanSettings();
 		super.shutdown();
 	}
 
 	public boolean run()
 	{
 		Microbot.enableAutoRunOn = false;
-		Rs2Antiban.resetAntibanSettings();
-		Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
-		Rs2Antiban.setActivity(Activity.CRAFTING_RUNES_AT_OURANIA_ALTAR);
+		//Rs2Antiban.resetAntibanSettings();
+		//Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
+		//Rs2Antiban.setActivity(Activity.CRAFTING_RUNES_AT_OURANIA_ALTAR);
 		mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
 			try
 			{
@@ -93,6 +100,12 @@ public class OuraniaScript extends Script
 				{
 					Rs2Inventory.checkPouches();
 					return;
+				}
+				if (!Rs2Combat.isAutoRetaliateDisabled()) {
+					if (Rs2Combat.disableAutoRetaliate()) {
+						sleep(500, 750);
+						Rs2Tab.switchToInventoryTab();
+					}
 				}
 
 				if (config.useMassWorld() && !isOnMassWorld())
@@ -128,33 +141,49 @@ public class OuraniaScript extends Script
 					case CRAFTING:
 						if (!Rs2Inventory.hasItem(config.essence().getItemId()) && Rs2Inventory.hasAnyPouch() && !Rs2Inventory.allPouchesEmpty())
 						{
+							sleep(200,400);
 							Rs2Inventory.emptyPouches();
+							sleep(200,400);
 							return;
 						}
-						Rs2GameObject.interact(ObjectID.RC_ZMI_DUNGEON_CRACKED_CENTER_ALTAR, "craft-rune");
+						if(!Rs2Player.isMoving() && Rs2Inventory.hasItem(config.essence().getItemId())) {
+							Rs2GameObject.interact(ObjectID.RC_ZMI_DUNGEON_CRACKED_CENTER_ALTAR, "craft-rune");
+						}
 						Rs2Inventory.waitForInventoryChanges(5000);
 						break;
 					case RESETTING:
 						if (Rs2Player.getWorldLocation().distanceTo(new WorldPoint(2468, 3246, 0)) > 24)
 						{
+							sleep(200,400);
 							Rs2Magic.cast(MagicAction.OURANIA_TELEPORT);
 						}
 						sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(new WorldPoint(2468, 3246, 0)) < 24);
 
 						if (plugin.isBreakHandlerEnabled())
 						{
-							BreakHandlerScript.setLockState(false);
+							PluginDisablerScript.setLockState(false);
 						}
 
 						if (Rs2Inventory.hasDegradedPouch() && Rs2Magic.hasRequiredRunes(Rs2Spells.NPC_CONTACT))
 						{
+							sleep(1000,1500);
 							Rs2Magic.repairPouchesWithLunar();
 							return;
 						}
 
 						if (config.directInteract() && Microbot.isPluginEnabled(GpuPlugin.class))
 						{
+							if (Rs2Tab.getCurrentTab() != InterfaceTab.INVENTORY){
+								sleep(1000,1500);
+								Rs2Tab.switchToInventoryTab();
+								sleep(300,600);
+							}
 							GameObject ladder = Rs2GameObject.getGameObject(ObjectID.RC_ZMI_DUNGEON_ENTRANCE);
+							if (!Rs2Camera.isTileOnScreen(ladder.getLocalLocation()))
+							{
+								Rs2Camera.turnTo(ladder.getLocalLocation());
+								sleep(500,750);
+							}
 							Rs2GameObject.interact(ladder, "Climb");
 							sleepUntil(this::isNearEniola, 20000);
 						}
@@ -299,24 +328,32 @@ public class OuraniaScript extends Script
 
 						if (Rs2Inventory.hasAnyPouch())
 						{
-							while (!Rs2Inventory.allPouchesFull() && isRunning())
-							{
-								Rs2Bank.withdrawAll(config.essence().getItemId());
-								Rs2Inventory.fillPouches();
-								Rs2Inventory.waitForInventoryChanges(1800);
+							while (!Rs2Inventory.allPouchesFull() && isRunning()) {
+								if (!Rs2Bank.isOpen()) {
+									Rs2Bank.openBank();
+								}
+								if(!Rs2Inventory.contains(config.essence().getItemId())) {
+									Rs2Bank.withdrawAll(config.essence().getItemId());
+									sleep(300, 600);
+								}
+								if(Rs2Inventory.contains(config.essence().getItemId())) {
+									Rs2Inventory.fillPouches();
+									Rs2Inventory.waitForInventoryChanges(1800);
+								}
 							}
 						}
 
 						Rs2Bank.withdrawAll(config.essence().getItemId());
 						Rs2Inventory.waitForInventoryChanges(1800);
-
+						sleep(500,1000);
 						Rs2Bank.closeBank();
 						sleepUntil(() -> !Rs2Bank.isOpen());
+						sleep(500,1000);
 						break;
 					case RUNNING_TO_ALTAR:
 						if (plugin.isBreakHandlerEnabled())
 						{
-							BreakHandlerScript.setLockState(true);
+							PluginDisablerScript.setLockState(true);
 						}
 
 						if (config.path().equals(Path.SHORT))
@@ -329,11 +366,21 @@ public class OuraniaScript extends Script
 									int randomPitch = Rs2Random.nextInt(220, 260, 1, false);
 									Rs2Camera.setPitch(randomPitch);
 									sleepUntil(() -> Rs2Camera.getPitch() == randomPitch);
+									sleep(500,750);
 								}
-								if (Rs2Camera.getZoom() != 128)
+								if (Rs2Camera.getZoom() < -50 || Rs2Camera.getZoom() > 20)
 								{
-									Rs2Camera.setZoom(128);
-									sleepUntil(() -> Rs2Camera.getZoom() == 128);
+									int randomZoom = Rs2Random.nextInt(-50, 20, 1, false);
+									Rs2Camera.setZoom(randomZoom);
+									System.out.println("zoom is " + randomZoom);
+									sleepUntil(() -> Rs2Camera.getZoom() == randomZoom);
+									System.out.println("Current Zoom is " + Rs2Camera.getZoom());
+									sleep(500,750);
+								}
+								if (!Rs2Camera.isTileOnScreen(altarObject.getLocalLocation()))
+								{
+									Rs2Camera.turnTo(altarObject.getLocalLocation());
+									sleep(500,750);
 								}
 
 								Rs2GameObject.interact(altarObject, "craft-rune");

@@ -140,6 +140,8 @@ public class MicrobotPlugin extends Plugin {
         overlayManager.add(pouchOverlay);
         Microbot.setRs2ItemManager(new Rs2ItemManager());
 
+
+
         new InputSelector(clientToolbar);
     }
 

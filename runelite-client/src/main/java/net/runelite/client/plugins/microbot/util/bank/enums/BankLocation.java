@@ -104,6 +104,7 @@ public enum BankLocation {
     ZANARIS(new WorldPoint(2383, 4458, 0), true),
     ZEAH_SAND_BANK(new WorldPoint(1719, 3465, 0), true);
 
+
     private final WorldPoint worldPoint;
     private final boolean members;
 
