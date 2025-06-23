@@ -21,8 +21,10 @@ import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.slayer.Rs2Slayer;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 public class SmartSlayer extends Script {
 
@@ -41,13 +43,20 @@ private static boolean completedSlayerTask = false;
                 AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
                 if (monsters != null) {
                     for (String monster : monsters) {
-                        Rs2Npc.getNpcs(monster).forEach(npc -> {
-                            if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
-                                isNearSlayerMonster.set(true);
-                                //int distance = Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation());
-                                //Microbot.log("Nearby " + distance);
-                            }
-                        });
+//                        Rs2Npc.getNpcs(monster).forEach(npc -> {
+//                            if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
+//                                isNearSlayerMonster.set(true);
+//                                //int distance = Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation());
+//                                //Microbot.log("Nearby " + distance);
+//                            }
+//                        });
+                        Optional.ofNullable(Rs2Npc.getNpcs(monster))
+                                .orElse(Stream.empty())
+                                .forEach(npc -> {
+                                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
+                                        isNearSlayerMonster.set(true);
+                                    }
+                                });
                     }
                 }
                 if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
