@@ -145,7 +145,13 @@ public class AntibanPlugin extends Plugin {
             } else {
                 Rs2AntibanSettings.actionCooldownActive = false;
                 // (Rs2AntibanSettings.universalAntiban && !Rs2AntibanSettings.microBreakActive && !BreakHandlerScript.isBreakActive()){
-                if (Rs2AntibanSettings.universalAntiban && !Rs2AntibanSettings.microBreakActive && PluginDisablerScript.getInstance().getBreakDuration()<=0) {
+                PluginDisablerScript script = PluginDisablerScript.getInstance();
+                Integer breakDuration = script != null ? script.getBreakDuration() : null;
+
+                if (Rs2AntibanSettings.universalAntiban
+                        && !Rs2AntibanSettings.microBreakActive
+                        && (breakDuration == null || breakDuration <= 0)) {
+
                     Microbot.pauseAllScripts.compareAndSet(true, false);
                 }
             }
