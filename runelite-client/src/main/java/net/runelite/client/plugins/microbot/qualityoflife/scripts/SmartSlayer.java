@@ -50,10 +50,26 @@ private static boolean completedSlayerTask = false;
 //                                //Microbot.log("Nearby " + distance);
 //                            }
 //                        });
+//                        Optional.ofNullable(Rs2Npc.getNpcs(monster))
+//                            .orElse(Stream.empty())
+//                            .forEach(npc -> {
+//                                if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
+//                                    isNearSlayerMonster.set(true);
+//                                }
+//                            });
                         Optional.ofNullable(Rs2Npc.getNpcs(monster))
                                 .orElse(Stream.empty())
                                 .forEach(npc -> {
-                                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
+                                    if (npc == null) {
+                                        Microbot.log("Npc is null for monster: " + monster);
+                                        return;
+                                    }
+                                    if (npc.getWorldLocation() == null || Rs2Player.getWorldLocation() == null) {
+                                        Microbot.log("Null location: NPC=" + npc.getName());
+                                        return;
+                                    }
+
+                                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
                                         isNearSlayerMonster.set(true);
                                     }
                                 });

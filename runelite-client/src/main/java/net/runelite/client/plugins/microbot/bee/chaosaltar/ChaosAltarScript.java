@@ -46,7 +46,7 @@ import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.*;
 public class ChaosAltarScript extends Script {
 
     public static final WorldArea CHAOS_ALTAR_AREA = new WorldArea(2947, 3818, 11, 6, 0);
-    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 5, 0); //2953,3823
+    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 6, 0); //2953,3824
     public static final WorldPoint CHAOS_ALTAR_POINT = new WorldPoint(2949, 3820,0);
     public static final WorldPoint CHAOS_ALTAR_POINT_SOUTH = new WorldPoint(3014, 3820,0);
 
@@ -278,9 +278,10 @@ public class ChaosAltarScript extends Script {
                 Rs2Inventory.interact(item, "Wear");
             }
 
-            // Debug (optional)
+            // Debug
             System.out.println("Equipped: " + item.getName()+ " Item Actions: " + Arrays.toString(item.getInventoryActions()));
         }
+
         if (!Rs2Bank.isOpen()) {
             Rs2Bank.walkToBankAndUseBank();
             Rs2Bank.openBank();
