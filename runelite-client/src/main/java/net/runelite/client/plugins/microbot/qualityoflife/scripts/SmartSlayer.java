@@ -80,9 +80,11 @@ private static boolean completedSlayerTask = false;
                     Rs2ItemModel currentGlove = Rs2Equipment.get(EquipmentInventorySlot.GLOVES);
                     if(currentGlove == null){
                         if(Rs2Inventory.contains(21183)) {
+                            sleep(Rs2Random.skewedRandAuto(700));
                             Rs2Inventory.interact(21183, "Wear");
                         }
                         if(Rs2Inventory.contains(21177)) {
+                            sleep(Rs2Random.skewedRandAuto(700));
                             Rs2Inventory.interact(21177, "Wear");
                         }
                     }
