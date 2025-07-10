@@ -21,6 +21,7 @@ import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.magic.Rs2Spellbook;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -93,7 +94,7 @@ public class FarmTreeRunScript extends Script {
 
     public boolean run(FarmTreeRunConfig config) {
         Microbot.enableAutoRunOn = false;
-        //Rs2Antiban.resetAntibanSettings();
+        ////Rs2antiban.resetantibansettings();
         Rs2AntibanSettings.naturalMouse = true;
         Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
 
@@ -106,7 +107,7 @@ public class FarmTreeRunScript extends Script {
 
                 long startTime = System.currentTimeMillis();
                 if (Rs2AntibanSettings.actionCooldownActive) return;
-                if(!Rs2Magic.isModern()){
+                if(!Rs2Magic.isSpellbook(Rs2Spellbook.MODERN)){
                     log("Not on modern spellbook");
                     shutdown();
                 }
