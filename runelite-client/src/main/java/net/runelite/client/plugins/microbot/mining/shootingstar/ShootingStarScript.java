@@ -51,7 +51,7 @@ public class ShootingStarScript extends Script {
         initialPlayerLocation = null;
         hasEquipment = false;
         hasInventory = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         applyAntiBanSettings();
         Rs2Antiban.setActivity(Activity.GENERAL_MINING);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -235,7 +235,7 @@ public class ShootingStarScript extends Script {
         state = null;
         star = null;
         pickaxe = null;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
     }
 
     private boolean isUsingInventorySetup() {

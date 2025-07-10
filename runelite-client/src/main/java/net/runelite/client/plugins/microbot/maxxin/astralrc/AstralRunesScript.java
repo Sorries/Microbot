@@ -71,7 +71,7 @@ public class AstralRunesScript extends Script {
     public boolean run(AstralRunesConfig config) {
 		Microbot.pauseAllScripts.compareAndSet(true, false);;
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2AntibanSettings.naturalMouse = true;
         this.foodItemId = config.foodType().getId();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -479,7 +479,7 @@ public class AstralRunesScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         super.shutdown();
     }
 }

@@ -57,7 +57,7 @@ public class TutorialIslandScript extends Script {
 
     public boolean run(TutorialIslandConfig config) {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2AntibanSettings.naturalMouse = true;
         Rs2AntibanSettings.moveMouseRandomly = true;
         Rs2AntibanSettings.simulateMistakes = true;
@@ -165,7 +165,7 @@ public class TutorialIslandScript extends Script {
     @Override
     public void shutdown() {
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
     }
 
     private boolean isNameCreationVisible() {
