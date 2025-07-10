@@ -350,7 +350,7 @@ public class PyreFoxScript extends Script
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         super.shutdown();
     }
 }
