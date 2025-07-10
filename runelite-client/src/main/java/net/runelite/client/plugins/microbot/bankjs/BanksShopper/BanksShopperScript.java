@@ -125,7 +125,7 @@ public class BanksShopperScript extends Script {
             Rs2Player.logout();
         }
 
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         super.shutdown();
     }
 
