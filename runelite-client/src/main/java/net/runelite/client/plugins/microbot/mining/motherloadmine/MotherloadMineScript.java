@@ -19,7 +19,6 @@ import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
-import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tile.Rs2Tile;
@@ -56,7 +55,7 @@ public class MotherloadMineScript extends Script
     private int maxSackSize;
     private MotherloadMineConfig config;
 
-    private String pickaxeName = null;
+    private String pickaxeName = "";
     private boolean shouldEmptySack = false;
 
 
@@ -71,7 +70,7 @@ public class MotherloadMineScript extends Script
 
     private void initialize()
     {
-        ////Rs2Antiban.antibanSetupTemplates.applyMiningSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyMiningSetup();
         miningSpot = MLMMiningSpot.IDLE;
         status = MLMStatus.IDLE;
         shouldEmptySack = false;
@@ -79,7 +78,7 @@ public class MotherloadMineScript extends Script
         if (config.pickAxeInInventory())
         {
             pickaxeName = Optional.ofNullable(Rs2Inventory.get("pickaxe"))
-                    .map(Rs2ItemModel::getName)
+                    .map(i -> i.getName())
                     .orElse("");
         }
     }
@@ -222,9 +221,9 @@ public class MotherloadMineScript extends Script
     {
         ensureLowerFloor();
 
-        while (Microbot.getVarbitValue(Varbits.SACK_NUMBER) > 0 && isRunning()) //5558
+        while (Microbot.getVarbitValue(Varbits.SACK_NUMBER) > 0)
         {
-            if (Rs2Inventory.count() <= 2)
+            if (Rs2Inventory.size() <= 2)
             {
                 Rs2GameObject.interact(SACK_ID);
                 sleepUntil(this::hasOreInInventory);
@@ -260,7 +259,7 @@ public class MotherloadMineScript extends Script
     private void fixWaterwheel()
     {
         ensureLowerFloor();
-        if (Rs2Walker.walkTo(new WorldPoint(3741, 5665, 0), 15))
+        if (Rs2Walker.walkTo(new WorldPoint(3741, 5666, 0), 15))
         {
             Microbot.isGainingExp = false;
             if (Rs2GameObject.interact(ObjectID.BROKEN_STRUT))
@@ -303,7 +302,7 @@ public class MotherloadMineScript extends Script
             Rs2Bank.depositAllExcept("hammer", pickaxeName);
             sleep(100, 300);
 
-            if (!Rs2Inventory.hasItem("hammer") && !Rs2Equipment.isWearing("hammer"))
+            if (!Rs2Inventory.hasItem("hammer") || Rs2Equipment.isWearing("hammer"))
             {
                 if (!Rs2Bank.hasItem("hammer"))
                 {
