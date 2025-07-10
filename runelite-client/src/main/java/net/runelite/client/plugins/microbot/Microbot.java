@@ -455,7 +455,56 @@ public class Microbot {
 		}
 		return null;
 	}
-
+//    public static void startPlugin(Plugin plugin) {
+//        if (plugin == null) return;
+//        SwingUtilities.invokeAndWait(() ->
+//        {
+//            try {
+//                getPluginManager().setPluginEnabled(plugin, true);
+//                getPluginManager().startPlugin(plugin);
+//                getPluginManager().startPlugins();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
+//    }
+//
+//    /**
+//     * Retrieves a plugin by its class name from the plugin manager.
+//     * This method searches through the available plugins and returns the one matching the specified class name.
+//     *
+//     * @param className the fully qualified class name of the plugin to retrieve.
+//     *                  For example: {@code BreakHandlerPlugin.getClass().getName()}.
+//     * @return the plugin instance matching the specified class name, or {@code null} if no such plugin is found.
+//     */
+//    public static Plugin getPlugin(String className) {
+//        return getPluginManager().getPlugins().stream()
+//                .filter(plugin -> plugin.getClass().getName().equals(className))
+//                .findFirst()
+//                .orElse(null);
+//    }
+//
+//    /**
+//     * Stops the specified plugin using the plugin manager.
+//     * If the plugin is non-null, this method attempts to stop it and handles any instantiation exceptions.
+//     *
+//     * @param plugin the plugin to be stopped.
+//     */
+//    @SneakyThrows
+//    public static void stopPlugin(Plugin plugin) {
+//        if (plugin == null) return;
+//        SwingUtilities.invokeAndWait(() ->
+//        {
+//        try {
+//            getPluginManager().setPluginEnabled(plugin, false);
+//            getPluginManager().stopPlugin(plugin);
+//            //getPluginManager().startPlugins();
+//        } catch (PluginInstantiationException e) {
+//            e.printStackTrace();
+//        }
+//        });
+//    }
+ 	//
 	@SneakyThrows
 	@SuppressWarnings("SpellCheckingInspection")
 	private static boolean togglePlugin(Plugin plugin, boolean enable) {
@@ -466,9 +515,11 @@ public class Microbot {
 				getPluginManager().setPluginEnabled(plugin, enable);
 				if (enable) {
 					success.set(getPluginManager().startPlugin(plugin));
-					getPluginManager().startPlugins();
+                	//getPluginManager().startPlugin(plugin);
+                	getPluginManager().startPlugins();
 				} else {
 					success.set(getPluginManager().stopPlugin(plugin));
+					//getPluginManager().stopPlugin(plugin);
 				}
 			} catch (PluginInstantiationException ex) {
 				log.error("Error {}abling plugin ({}):", enable ? "en" : "dis", plugin.getClass().getSimpleName(), ex);
@@ -876,10 +927,10 @@ public class Microbot {
 				&& !x.getClass().getSimpleName().equalsIgnoreCase("MicrobotPlugin")
 				&& !x.getClass().getSimpleName().equalsIgnoreCase("ShortestPathPlugin")
 				&& !x.getClass().getSimpleName().equalsIgnoreCase("AntibanPlugin")
-                         && !x.getClass().getSimpleName().equalsIgnoreCase("ExamplePlugin")
-                         && !x.getClass().getSimpleName().equalsIgnoreCase("PluginDisablerPlugin")
-                         && !x.getClass().getSimpleName().equalsIgnoreCase("QoLPlugin")
-                         && !x.getClass().getSimpleName().equalsIgnoreCase("EventDismissPlugin")
+				 && !x.getClass().getSimpleName().equalsIgnoreCase("ExamplePlugin")
+				 && !x.getClass().getSimpleName().equalsIgnoreCase("PluginDisablerPlugin")
+				 && !x.getClass().getSimpleName().equalsIgnoreCase("QoLPlugin")
+				 && !x.getClass().getSimpleName().equalsIgnoreCase("EventDismissPlugin")
                  )
 			.collect(Collectors.toList());
 	}
