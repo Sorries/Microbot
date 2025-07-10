@@ -183,6 +183,7 @@ public class BanksBankStanderScript extends Script {
             if (!missingItem.isBlank()) {
                 Microbot.log("Insufficient " + missingItem);
                 sleep(2500, 5000);
+                shutdown();
                 return false;
             }
         }
