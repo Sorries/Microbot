@@ -396,6 +396,8 @@ public class Rs2Widget {
         return isWidgetVisible(475, 11);
     }
 
+    public static boolean isWorldMapInterfaceOpen() {return isWidgetVisible(595, 38);}
+
     public static boolean enterWilderness() {
         if (!isWildernessInterfaceOpen()) return false;
 
@@ -404,31 +406,37 @@ public class Rs2Widget {
 
         return true;
     }
+    public static boolean worldMapInterfaceClose() {
+        if (!isWorldMapInterfaceOpen()) return false;
+        Microbot.log("Detected WorldMap opened, interacting...");
+        Rs2Widget.clickWidget(595, 38);
+        return true;
+    }
 
 
 
-    
+
     public static boolean checkBoundsOverlapWidgetInMainModal( Rectangle overlayBoundsCanvas, int viewportXOffset, int viewportYOffset) {
         final int MAIN_MODAL_TOPLEVEL_CHILD_ID = 40; // Main modal child ID
         final int MAIN_MODAL_STRECH_CHILD_ID = 16; // Main modal child ID
         Widget mainModalWidget = getWidget(net.runelite.api.gameval.InterfaceID.TOPLEVEL, MAIN_MODAL_TOPLEVEL_CHILD_ID);
         if (mainModalWidget == null || mainModalWidget.isHidden()) {
             mainModalWidget  = getWidget(net.runelite.api.gameval.InterfaceID.TOPLEVEL_OSRS_STRETCH, MAIN_MODAL_STRECH_CHILD_ID);
-            
+
         }
-        if (mainModalWidget == null ) {            
+        if (mainModalWidget == null ) {
             mainModalWidget  = getWidget(net.runelite.api.gameval.InterfaceID.TOPLEVEL_PRE_EOC, MAIN_MODAL_STRECH_CHILD_ID);
         }
         return checkWidgetAndDescendantsForOverlapCanvas(mainModalWidget, overlayBoundsCanvas, viewportXOffset, viewportYOffset);
     }
     /**
-	* Recursively iterates all descendants, but only checks bounds for nested containers 
+	* Recursively iterates all descendants, but only checks bounds for nested containers
 	* This matches the requirement: only nested containers within the static container are checked for overlap.
-	*/    
+	*/
     private static boolean checkWidgetAndDescendantsForOverlapCanvas(Widget widget, Rectangle overlayBoundsCanvas, int viewportXOffset, int viewportYOffset) {
 	    if (widget == null || widget.isHidden()) {
 		   return false;
-	    }       	   
+	    }
 	    List<Widget[]> nestedAndDynamicWidgets = new java.util.ArrayList<>();
 	    if (widget.getDynamicChildren() != null) nestedAndDynamicWidgets.add(widget.getDynamicChildren());
 		if (widget.getNestedChildren() != null) nestedAndDynamicWidgets.add(widget.getNestedChildren());
@@ -438,7 +446,7 @@ public class Rs2Widget {
 				   continue;
 			   }
                int groupId = nestedOrDynamic.getId() >>> 16; // upper 16 bits
-			   if(  nestedOrDynamic.getCanvasLocation() == null) {				   
+			   if(  nestedOrDynamic.getCanvasLocation() == null) {
 				   continue;
 			   }
 			   Rectangle widgetBounds = nestedOrDynamic.getBounds();
@@ -463,23 +471,23 @@ public class Rs2Widget {
 			   }
 		   }
 	   }
-	   
+
 
 	   // Recursively check all children for nested containers
 	   List<Widget[]> childGroups = new java.util.ArrayList<>();
-	   
+
 	   if (widget.getStaticChildren() != null) childGroups.add(widget.getStaticChildren());
-	   
+
 
 	   for (Widget[] childGroup : childGroups) {
 		   for (Widget child : childGroup) {
-			   if (child != null && !child.isHidden()) {					
+			   if (child != null && !child.isHidden()) {
 					int widgetId = child.getId();
 					int groupId = widgetId >>> 16; // upper 16 bits
-					int childId = widgetId & 0xFFFF; // lower 16 bits	
+					int childId = widgetId & 0xFFFF; // lower 16 bits
                     if (child.getCanvasLocation() == null || (child.getCanvasLocation().getX() == 0 && child.getCanvasLocation().getY() == 0)) {
                         continue;
-                    }				
+                    }
 				   if (checkWidgetAndDescendantsForOverlapCanvas(child, overlayBoundsCanvas, viewportXOffset, viewportYOffset)) {
                         Widget parentWidget = child.getParent();
                         String title = parentWidget != null ? parentWidget.getName() : "Unknown";

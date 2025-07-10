@@ -26,6 +26,7 @@ import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.models.RS2Item;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
@@ -55,8 +56,9 @@ public class AgilityScript extends Script
 	public boolean run()
 	{
 		Microbot.enableAutoRunOn = true;
-		Rs2Antiban.resetAntibanSettings();
-		Rs2Antiban.antibanSetupTemplates.applyAgilitySetup();
+		Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+		Rs2AntibanSettings.actionCooldownChance = 0.10;
+		Rs2AntibanSettings.dynamicActivity = false;
 		startPoint = plugin.getCourseHandler().getStartPoint();
 		mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
 			try
@@ -174,8 +176,7 @@ public class AgilityScript extends Script
 				if (Rs2GameObject.interact(gameObject))
 				{
 					plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
-					Rs2Antiban.actionCooldown();
-					Rs2Antiban.takeMicroBreakByChance();
+					sleep(Rs2Random.skewedRandAuto(800));
 				}
 			}
 			catch (Exception ex)
