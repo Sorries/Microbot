@@ -68,7 +68,8 @@ public class HerbrunScript extends Script {
                 if (!inventorySetup.doesInventoryMatch() || !inventorySetup.doesEquipmentMatch()) {
                     Rs2Walker.walkTo(Rs2Bank.getNearestBank().getWorldPoint(), 20);
                     if (!inventorySetup.loadEquipment() || !inventorySetup.loadInventory()) {                        
-                        plugin.reportFinished("Failed to load inventory setup",false);
+//                        plugin.reportFinished("Failed to load inventory setup",false);
+                        Microbot.log("Failed to load equipment");
                         return;
                     }
                     if (Rs2Inventory.hasItem("open herb sack")) {
@@ -76,6 +77,7 @@ public class HerbrunScript extends Script {
                         sleep(Rs2Random.between(500,800));
                     }
                     Rs2Bank.closeBank();
+                    sleepUntil(()->!Rs2Bank.isOpen());
                 }
 
                 log("Will visit " + herbPatches.size() + " herb patches");
