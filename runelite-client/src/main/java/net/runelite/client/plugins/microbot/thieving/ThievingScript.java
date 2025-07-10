@@ -15,7 +15,6 @@ import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
-import net.runelite.client.plugins.microbot.util.magic.Rs2Spellbook;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -279,7 +278,7 @@ public class ThievingScript extends Script {
     }
 
     private void handleShadowVeil() {
-        if (!Rs2Magic.isShadowVeilActive() && Rs2Magic.isSpellbook(Rs2Spellbook.ARCEUUS) &&
+        if (!Rs2Magic.isShadowVeilActive() && Rs2Magic.isArceeus() &&
             Rs2Player.getBoostedSkillLevel(Skill.MAGIC) >= MagicAction.SHADOW_VEIL.getLevel() &&
             Microbot.getVarbitValue(Varbits.SHADOW_VEIL_COOLDOWN) == 0) {
                 sleep(1000, 1500);
