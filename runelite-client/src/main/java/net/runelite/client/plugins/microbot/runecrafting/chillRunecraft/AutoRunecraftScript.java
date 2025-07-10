@@ -33,7 +33,7 @@ public class AutoRunecraftScript extends Script
     {
         Microbot.enableAutoRunOn = true;
         //Rs2antiban.resetantibansettings();
-        //Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
+        Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
         Rs2Antiban.setActivity(Activity.GENERAL_RUNECRAFT);
 
         altar = config.ALTAR();
