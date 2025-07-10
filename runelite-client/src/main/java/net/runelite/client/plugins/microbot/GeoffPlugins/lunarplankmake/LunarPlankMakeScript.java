@@ -8,7 +8,6 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
-import net.runelite.client.plugins.microbot.util.magic.Rs2Spellbook;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Spells;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -122,7 +121,7 @@ public class LunarPlankMakeScript extends Script {
     private void plankItems(LunarPlankMakeConfig config) {
         //Microbot.log("P");
         // check if lunar spell book and have plank make runes
-        if (!Rs2Magic.isSpellbook(Rs2Spellbook.LUNAR) || !Rs2Magic.hasRequiredRunes(Rs2Spells.PLANK_MAKE)){
+        if (!Rs2Magic.isLunar() || !Rs2Magic.hasRequiredRunes(Rs2Spells.PLANK_MAKE)){
             Microbot.showMessage("Not on lunar spell book or able to cast plank make");
             shutdown();
             return;
