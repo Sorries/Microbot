@@ -44,14 +44,14 @@ public class npcTannerPlugin extends Plugin {
             overlayManager.add(TanOverlay);
         }
         Rs2Antiban.activateAntiban();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
         Rs2Antiban.setActivity(Activity.TANNING_COWHIDE);
         TannerScript.run(config);
     }
 
     protected void shutDown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2Antiban.deactivateAntiban();
         TannerScript.shutdown();
         overlayManager.remove(TanOverlay);
