@@ -43,7 +43,7 @@ public class JewelryScript extends Script {
 
     public boolean run() {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2Antiban.antibanSetupTemplates.applyCraftingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2Walker.disableTeleports = true;
@@ -386,7 +386,7 @@ public class JewelryScript extends Script {
     @Override
     public void shutdown() {
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         state = null;
     }
     

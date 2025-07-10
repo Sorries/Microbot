@@ -329,7 +329,7 @@ public class SchedulableExampleScript extends Script {
         Rs2AntibanSettings.moveMouseOffScreen = antibanOriginalMoveMouseOffScreen;
         
         // Reset antiban activity
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         
         antibanInitialized = false;
         Microbot.log("Antiban settings restored");
