@@ -28,6 +28,7 @@ import net.runelite.client.plugins.microbot.qualityoflife.scripts.pouch.Pouch;
 import net.runelite.client.plugins.microbot.runecrafting.ourania.enums.OuraniaState;
 import net.runelite.client.plugins.microbot.runecrafting.ourania.enums.Path;
 import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
+import net.runelite.client.plugins.microbot.util.antiban.Rs2AntibanSettings;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
@@ -76,7 +77,8 @@ public class OuraniaScript extends Script
 		Microbot.enableAutoRunOn = false;
 		//Rs2Antiban.resetAntibanSettings();
 		//Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
-		//Rs2Antiban.setActivity(Activity.CRAFTING_RUNES_AT_OURANIA_ALTAR);
+		//Rs2Antiban.setActivity(Activity.CRAFTING_RUNES_AT_OURANIA_ALTAR);'
+		Rs2AntibanSettings.dynamicActivity = false;
 		mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
 			try
 			{
