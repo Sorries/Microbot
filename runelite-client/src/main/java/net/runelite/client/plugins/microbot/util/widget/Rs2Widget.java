@@ -399,6 +399,8 @@ public class Rs2Widget {
         return isWidgetVisible(475, 11);
     }
 
+    public static boolean isWorldMapInterfaceOpen() {return isWidgetVisible(595, 38);}
+
     public static boolean enterWilderness() {
         if (!isWildernessInterfaceOpen()) return false;
 
@@ -407,9 +409,15 @@ public class Rs2Widget {
 
         return true;
     }
+    public static boolean worldMapInterfaceClose() {
+        if (!isWorldMapInterfaceOpen()) return false;
+        Microbot.log("Detected WorldMap opened, interacting...");
+        Rs2Widget.clickWidget(595, 38);
+        return true;
+    }
 
     // === WIDGET KEY MAPPING AND PROCESSING INTERFACE METHODS ===
-    
+
     /**
      * gets keyboard shortcut keys for widgets in processing interfaces
      * @param widgetGroupId the widget group id (usually 270)
@@ -419,15 +427,15 @@ public class Rs2Widget {
     public static Map<Integer,Integer> getWidgetsKeyMap(int widgetGroupId, int widgetSubGroupId) {
         Widget widgetWithKeyInfo = getWidget(widgetGroupId, widgetSubGroupId);
         if (widgetWithKeyInfo == null) return new HashMap<>();
-        
+
         Widget[] dynamicChildren = widgetWithKeyInfo.getDynamicChildren();
         if (dynamicChildren == null) return new HashMap<>();
-        
+
         Map<Integer, Integer> keyMap = new HashMap<>();
         for (int i = 0; i < dynamicChildren.length; i++) {
             Widget child = dynamicChildren[i];
             if (child == null) continue;
-            
+
             String keyText = Rs2UiHelper.stripColTags(child.getText());
             switch (keyText) {
                 case "1":
@@ -452,7 +460,7 @@ public class Rs2Widget {
                     keyMap.put(i, KeyEvent.VK_7);
                     break;
                 case "Space":
-                    
+
                     keyMap.put(i, KeyEvent.VK_SPACE);
                     break;
                 default:
@@ -473,24 +481,24 @@ public class Rs2Widget {
 
      private static Integer getProcessingWidgetKeyCode(String actionText) {
         log.debug("Searching for processing widget with action text: {}", actionText);
-        Widget optionWidget = findWidget(actionText, List.of(getWidget(InterfaceID.SKILLMULTI, 0)), false);    
+        Widget optionWidget = findWidget(actionText, List.of(getWidget(InterfaceID.SKILLMULTI, 0)), false);
         if (optionWidget == null) return null;
         return getProcessingWidgetKeyCode(optionWidget);
      }
     private static Integer getProcessingWidgetKeyCode(Widget optionWidget) {
         if (optionWidget == null) return null;
-        
+
         Widget keyParent = getWidget(InterfaceID.SKILLMULTI, 13);
         if (keyParent == null) return null;
 
         Widget[] staticChildren = keyParent.getStaticChildren();
         if (staticChildren == null) return null;
-            
+
         Map<Integer, Integer> keyMap = getWidgetsKeyMap(InterfaceID.SKILLMULTI, 13);
         if (keyMap.isEmpty()) return null;
         // find index of widget in static children
         for (int i = 0; i < staticChildren.length; i++) {
-            Widget child = staticChildren[i];            
+            Widget child = staticChildren[i];
             if (child == optionWidget || (child != null && child.getName() != null &&
                 child.getName().equals(optionWidget.getName()))) {
 
@@ -502,7 +510,7 @@ public class Rs2Widget {
                 return keyMap.get(i);
             }
         }
-        
+
         return null;
     }
 
@@ -518,12 +526,12 @@ public class Rs2Widget {
         Map<Widget, String> widgetActions = new HashMap<>();
         Widget child = getWidget(widgetGroupId, widgetSubGroupId);
         if (child == null) return widgetActions;
-        
-        List<Widget[]> childGroups = Stream.of(child.getChildren(), child.getNestedChildren(), 
+
+        List<Widget[]> childGroups = Stream.of(child.getChildren(), child.getNestedChildren(),
                                              child.getDynamicChildren(), child.getStaticChildren())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        
+
         for (Widget[] childGroup : childGroups) {
             if (childGroup != null) {
                 for (Widget nestedChild : Arrays.stream(childGroup)
@@ -565,14 +573,14 @@ public class Rs2Widget {
             return false;
         }
         Widget mainWidget = getWidget(InterfaceID.SKILLMULTI, 0);
-     
+
 
         // enable quantity option if available
         //enableQuantityOption(widgetGroupId);
         log.debug("Searching for processing widget with action text: {}", actionText);
-        Widget optionWidget = findWidget(actionText, new ArrayList<Widget>(List.of(mainWidget)), false);        
-        
-        
+        Widget optionWidget = findWidget(actionText, new ArrayList<Widget>(List.of(mainWidget)), false);
+
+
         int widgetId = optionWidget != null ? optionWidget.getId() : -1;
         int groupId = widgetId >>> 16; // upper 16 bits
         int childId = widgetId & 0xFFFF; // lower 16 bits
@@ -587,7 +595,7 @@ public class Rs2Widget {
         if (optionWidget == null) {
             return false;
         }
-        
+
         // try keyboard shortcut first for faster interaction
 
         Integer shortcutKey = getProcessingWidgetKeyCode(optionWidget);
@@ -603,7 +611,7 @@ public class Rs2Widget {
                 sleepUntil(() -> !Rs2Dialogue.hasContinue(), 2000);
                 return false; // we should not see it, only when we have not the req. for porcessing
             }
-            if(isProductionWidgetOpen() == false){                
+            if(isProductionWidgetOpen() == false){
                 return true;
             }
         }
@@ -624,14 +632,14 @@ public class Rs2Widget {
                     return false;
                 }
                 Widget child = searchChildren(quantity, mainWidget,false );
-              
+
                 if (child != null && !child.isHidden() && child.getText() != null){
                     String[] actions = child.getActions();
                     if (actions != null && Arrays.asList(actions).contains(quantity)) {
                         log.info("Enabling quantity option: {}", quantity);
                         clickWidget(child);
                         return true;
-                    }                                    
+                    }
                 }
                 log.info("Could not find quantity option: {}", quantity);
                 return false;
@@ -647,12 +655,12 @@ public class Rs2Widget {
         if (!isWidgetVisible(widgetGroupId, 0)) {
             return false;
         }
-        
+
         if (Rs2Dialogue.hasContinue()) {
             Rs2Dialogue.clickContinue();
             sleep(400, 600);
         }
-        
+
         return sleepUntil(() -> !Rs2Dialogue.hasContinue(), 2000);
     }
 
@@ -685,22 +693,22 @@ public class Rs2Widget {
     public static Widget findBestMatchingWidget(int widgetId, String targetText) {
         Widget parent = getWidget(widgetId);
         if (parent == null) return null;
-        
+
         Widget[] dynamicChildren = parent.getDynamicChildren();
         if (dynamicChildren == null) return null;
-        
+
         List<Widget> children = Arrays.stream(dynamicChildren)
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
-        
+
         // try exact match first
         Widget exactMatch = findExactMatch(children, targetText);
         if (exactMatch != null) return exactMatch;
-        
+
         // try contains match second
         Widget containsMatch = findContainsMatch(children, targetText);
         if (containsMatch != null) return containsMatch;
-        
+
         // finally try word similarity matching
         return findBestWordSimilarityMatch(children, targetText);
     }
@@ -730,21 +738,21 @@ public class Rs2Widget {
      */
     private static Widget findBestWordSimilarityMatch(List<Widget> widgets, String targetText) {
         String[] targetWords = targetText.toLowerCase().split("\\s+");
-        
+
         Map<Widget, Integer> matchScores = new HashMap<>();
-        
+
         for (Widget widget : widgets) {
             if (widget.getText() == null) continue;
-            
+
             String widgetText = widget.getText().toLowerCase();
             String[] widgetWords = widgetText.split("\\s+");
-            
+
             int matchCount = countMatchingWords(targetWords, widgetWords);
             if (matchCount > 0) {
                 matchScores.put(widget, matchCount);
             }
         }
-        
+
         return matchScores.entrySet().stream()
             .max(Map.Entry.comparingByValue())
             .map(Map.Entry::getKey)
@@ -756,9 +764,9 @@ public class Rs2Widget {
      */
     private static int countMatchingWords(String[] sourceWords, String[] targetWords) {
         return (int) Arrays.stream(sourceWords)
-            .filter(sourceWord -> 
+            .filter(sourceWord ->
                 Arrays.stream(targetWords)
-                    .anyMatch(targetWord -> 
+                    .anyMatch(targetWord ->
                         targetWord.contains(sourceWord) || sourceWord.contains(targetWord)
                     )
             )
@@ -768,20 +776,20 @@ public class Rs2Widget {
     /**
      * calculates text similarity score between two strings
      * @param source source text
-     * @param target target text 
+     * @param target target text
      * @return similarity score 0-1
      */
     public static double calculateTextSimilarity(String source, String target) {
         if (source == null || target == null) {
             return 0.0;
         }
-        
+
         String[] sourceWords = source.toLowerCase().split("\\s+");
         String[] targetWords = target.toLowerCase().split("\\s+");
-        
+
         int matchingWords = countMatchingWords(sourceWords, targetWords);
         int totalWords = Math.max(sourceWords.length, targetWords.length);
-        
+
         return totalWords > 0 ? (double) matchingWords / totalWords : 0.0;
     }
 
@@ -807,27 +815,27 @@ public class Rs2Widget {
      */
     private static boolean matchesWildCardText(Widget widget, String text, boolean exact, boolean onlyAction) {
         if (widget == null) return false;
-        
+
         String cleanText = Rs2UiHelper.stripColTags(widget.getText());
         String cleanName = Rs2UiHelper.stripColTags(widget.getName());
-        
+
         if (!onlyAction) {
             if (exact) {
-                if ((cleanText != null && cleanText.equalsIgnoreCase(text)) || 
+                if ((cleanText != null && cleanText.equalsIgnoreCase(text)) ||
                     (cleanName != null && cleanName.equalsIgnoreCase(text))) return true;
             } else {
-                if ((cleanText != null && cleanText.toLowerCase().contains(text.toLowerCase())) || 
+                if ((cleanText != null && cleanText.toLowerCase().contains(text.toLowerCase())) ||
                     (cleanName != null && cleanName.toLowerCase().contains(text.toLowerCase()))) return true;
             }
         }
-        
+
         if (widget.getActions() != null) {
             String[] actions = widget.getActions();
 
             for (String action : widget.getActions()) {
                 if (action != null) {
                     String cleanAction = Rs2UiHelper.stripColTags(action);
-                    if (exact ? cleanAction.equalsIgnoreCase(text) : 
+                    if (exact ? cleanAction.equalsIgnoreCase(text) :
                         cleanAction.toLowerCase().contains(text.toLowerCase())) {
                         return true;
                     }
@@ -852,13 +860,13 @@ public class Rs2Widget {
         return checkWidgetAndDescendantsForOverlapCanvas(mainModalWidget, overlayBoundsCanvas, viewportXOffset, viewportYOffset);
     }
     /**
-	* Recursively iterates all descendants, but only checks bounds for nested containers 
+	* Recursively iterates all descendants, but only checks bounds for nested containers
 	* This matches the requirement: only nested containers within the static container are checked for overlap.
-	*/    
+	*/
     private static boolean checkWidgetAndDescendantsForOverlapCanvas(Widget widget, Rectangle overlayBoundsCanvas, int viewportXOffset, int viewportYOffset) {
 	    if (widget == null || widget.isHidden()) {
 		   return false;
-	    }       	   
+	    }
 	    List<Widget[]> nestedAndDynamicWidgets = new java.util.ArrayList<>();
 	    if (widget.getDynamicChildren() != null) nestedAndDynamicWidgets.add(widget.getDynamicChildren());
 		if (widget.getNestedChildren() != null) nestedAndDynamicWidgets.add(widget.getNestedChildren());
@@ -868,7 +876,7 @@ public class Rs2Widget {
 				   continue;
 			   }
                int groupId = nestedOrDynamic.getId() >>> 16; // upper 16 bits
-			   if(  nestedOrDynamic.getCanvasLocation() == null) {				   
+			   if(  nestedOrDynamic.getCanvasLocation() == null) {
 				   continue;
 			   }
 			   Rectangle widgetBounds = nestedOrDynamic.getBounds();
@@ -893,23 +901,23 @@ public class Rs2Widget {
 			   }
 		   }
 	   }
-	   
+
 
 	   // Recursively check all children for nested containers
 	   List<Widget[]> childGroups = new java.util.ArrayList<>();
-	   
+
 	   if (widget.getStaticChildren() != null) childGroups.add(widget.getStaticChildren());
-	   
+
 
 	   for (Widget[] childGroup : childGroups) {
 		   for (Widget child : childGroup) {
-			   if (child != null && !child.isHidden()) {					
+			   if (child != null && !child.isHidden()) {
 					int widgetId = child.getId();
 					int groupId = widgetId >>> 16; // upper 16 bits
-					int childId = widgetId & 0xFFFF; // lower 16 bits	
+					int childId = widgetId & 0xFFFF; // lower 16 bits
                     if (child.getCanvasLocation() == null || (child.getCanvasLocation().getX() == 0 && child.getCanvasLocation().getY() == 0)) {
                         continue;
-                    }				
+                    }
 				   if (checkWidgetAndDescendantsForOverlapCanvas(child, overlayBoundsCanvas, viewportXOffset, viewportYOffset)) {
                         Widget parentWidget = child.getParent();
                         String title = parentWidget != null ? parentWidget.getName() : "Unknown";
