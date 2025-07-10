@@ -169,7 +169,7 @@ public class AntibanPlugin extends Plugin {
                 .panel(panel)
                 .build();
         Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
-        Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
+        //Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
         validateAndSetBreakDurations();
 
         Timer timer = new Timer();
