@@ -45,7 +45,7 @@ public class LunarTabletsPlugin extends Plugin {
         }
         Rs2Antiban.activateAntiban(); // Enable Anti Ban
         //Rs2antiban.resetantibansettings();
-        //Rs2Antiban.antibanSetupTemplates.applyCraftingSetup();
+        Rs2Antiban.antibanSetupTemplates.applyCraftingSetup();
         Rs2Antiban.setActivity(Activity.CREATING_TELEPORT_TABLETS_AT_LECTERN_LUNAR);
         lunartabletscript.run(config);
     }

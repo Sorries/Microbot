@@ -45,7 +45,7 @@ public class npcTannerPlugin extends Plugin {
         }
         Rs2Antiban.activateAntiban();
         //Rs2antiban.resetantibansettings();
-        //Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+        Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
         Rs2Antiban.setActivity(Activity.TANNING_COWHIDE);
         TannerScript.run(config);
     }

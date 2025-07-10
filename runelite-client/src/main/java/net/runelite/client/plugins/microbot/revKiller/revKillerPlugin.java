@@ -66,7 +66,7 @@ public class revKillerPlugin extends Plugin implements SchedulablePlugin {
         revKillerScript.selectedRev = config.selectedRev().getName();
         Rs2Antiban.activateAntiban();
         //Rs2antiban.resetantibansettings();
-        //Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
+        Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
         Rs2Antiban.setActivity(Activity.KILLING_REVENANTS_MAGIC_SHORTBOW);
     }
 
