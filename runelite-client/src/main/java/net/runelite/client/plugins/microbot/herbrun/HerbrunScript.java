@@ -7,14 +7,11 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
-import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingHandler;
 import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingPatch;
 import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingWorld;
 import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
-import net.runelite.client.plugins.microbot.util.bank.enums.BankLocation;
-import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
@@ -22,16 +19,13 @@ import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
-import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
-import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 import net.runelite.client.plugins.timetracking.Tab;
 import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.CropState;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import java.util.Collections;
 
 import static net.runelite.client.plugins.microbot.Microbot.log;
 
@@ -57,7 +51,7 @@ public class HerbrunScript extends Script {
 
     private final List<HerbPatch> herbPatches = new ArrayList<>();
 
-    public boolean run() {
+    public boolean run() {        
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             if (!Microbot.isLoggedIn()) return;
             if (!super.run()) return;
@@ -65,44 +59,28 @@ public class HerbrunScript extends Script {
                 initialized = true;
                 HerbrunPlugin.status = "Gearing up";
                 populateHerbPatches();
-                if (herbPatches.isEmpty()) {
-                    //plugin.reportFinished("No herb patches ready to farm",true);
-                    Microbot.log("No herb patches ready to farm");
+                if (herbPatches.isEmpty()) {                                        
+                    plugin.reportFinished("No herb patches ready to farm",true);
                     this.shutdown();
                     return;
-                } else {
-                    Collections.shuffle(herbPatches);
-                    System.out.println(herbPatches);
-                }
-                if (Rs2Combat.isAutoRetaliateDisabled()) {
-                    if (Rs2Combat.enableAutoRetialiate()) {
-                        sleep(500, 750);
-                        Rs2Tab.switchTo(InterfaceTab.INVENTORY);
-                        sleep(1500,3000);
-                    }
                 }
                 var inventorySetup = new Rs2InventorySetup(config.inventorySetup(), mainScheduledFuture);
                 if (!inventorySetup.doesInventoryMatch() || !inventorySetup.doesEquipmentMatch()) {
                     Rs2Walker.walkTo(Rs2Bank.getNearestBank().getWorldPoint(), 20);
                     if (!inventorySetup.loadEquipment() || !inventorySetup.loadInventory()) {                        
-                        //plugin.reportFinished("Failed to load inventory setup",false);
-                        Microbot.log("Failed to load equipment");
-                        shutdown();
+                        plugin.reportFinished("Failed to load inventory setup",false);
                         return;
                     }
                     if (Rs2Inventory.hasItem("open herb sack")) {
                         Rs2Inventory.interact(24478,"Empty to bank",9);
                         sleep(Rs2Random.between(500,800));
                     }
-                    while(Rs2Bank.isOpen() && isRunning()){
-                        Rs2Bank.closeBank();
-                        sleepUntil(()->!Rs2Bank.isOpen());
-                    }
+                    Rs2Bank.closeBank();
                 }
 
                 log("Will visit " + herbPatches.size() + " herb patches");
             }
-            if (!super.run()) return;
+            
 
             if (Rs2Inventory.hasItem("Weeds")) {
                 Rs2Inventory.drop("Weeds");
@@ -116,14 +94,14 @@ public class HerbrunScript extends Script {
 //                    Rs2Bank.depositAll();
                 }
                 HerbrunPlugin.status = "Finished";
-                //plugin.reportFinished("Herb run finished",true);
+                plugin.reportFinished("Herb run finished",true);
                 this.shutdown();
                 
             }
 
-            if (!currentPatch.isInRange(9)) {
+            if (!currentPatch.isInRange(10)) {
                 HerbrunPlugin.status = "Walking to " + currentPatch.getRegionName();
-                Rs2Walker.walkTo(currentPatch.getLocation(), 8);
+                Rs2Walker.walkTo(currentPatch.getLocation(), 9);
                 sleep(Rs2Random.skewedRandAuto(500));
             }
 
@@ -155,16 +133,12 @@ public class HerbrunScript extends Script {
             }
 
             // Start with weiss, getNearestBank doesn't like that area!
-//            currentPatch = herbPatches.stream()
-//                    .filter(patch -> Objects.equals(patch.getRegionName(), "Weiss"))
-//                    .findFirst()
-//                    .orElseGet(() -> herbPatches.stream()
-//                            .findFirst()
-//                            .orElse(null));
-//            herbPatches.remove(currentPatch);
             currentPatch = herbPatches.stream()
+                    .filter(patch -> Objects.equals(patch.getRegionName(), "Weiss"))
+                    .findFirst()
+                    .orElseGet(() -> herbPatches.stream()
                             .findFirst()
-                            .orElse(null);
+                            .orElse(null));
             herbPatches.remove(currentPatch);
         }
     }
