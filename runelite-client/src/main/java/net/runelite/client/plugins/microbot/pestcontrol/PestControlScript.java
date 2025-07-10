@@ -139,9 +139,11 @@ public class PestControlScript extends Script {
                         }
                     }
                     if (!walkToCenter) {
-                        WorldPoint worldPoint = WorldPoint.fromRegion(Rs2Player.getWorldLocation().getRegionID(), 32, 17, Microbot.getClient().getPlane());
-                        Rs2Walker.walkTo(worldPoint, 3);
-                        if (worldPoint.distanceTo(Rs2Player.getWorldLocation()) > 4) {
+                        int region_x = Rs2Random.between(29,38);
+                        int region_y = Rs2Random.between(16,20);
+                        WorldPoint worldPoint = WorldPoint.fromRegion(Rs2Player.getWorldLocation().getRegionID(), region_x, region_y, Microbot.getClient().getPlane());
+                        Rs2Walker.walkTo(worldPoint, 2);
+                        if (worldPoint.distanceTo(Rs2Player.getWorldLocation()) > 3) {
                             return;
                         } else {
                             walkToCenter = true;
