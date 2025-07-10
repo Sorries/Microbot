@@ -2,25 +2,18 @@ package net.runelite.client.plugins.microbot.plugindisabler;
 
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.MenuAction;
-import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
-import net.runelite.client.plugins.microbot.qualityoflife.scripts.SmartSlayer;
-import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.events.ConfigChanged;
 
 import javax.inject.Inject;
 import java.awt.*;
-import java.time.Instant;
-
-import static net.runelite.client.plugins.microbot.qualityoflife.scripts.wintertodt.WintertodtScript.isInWintertodtRegion;
 
 @PluginDescriptor(
         name = PluginDescriptor.Default + "Plugin Disabler",
@@ -72,13 +65,6 @@ public class PluginDisablerPlugin extends Plugin {
                 PluginDisablerScript.disablePluginsFlag = true;
             }
         }
-        if (event.getKey().equals("cantReach")) {
-            if (config.cantReach()) {
-                pluginDisabler.cantReachTimestamps.clear();
-                Microbot.pauseAllScripts.set(false);
-                PluginDisablerScript.disablePluginsFlag = true;
-            }
-        }
         if (event.getKey().equals("noTime")) {
             if (config.noTime()) {
                 pluginDisabler.setStartTime2(System.currentTimeMillis());
@@ -101,20 +87,6 @@ public class PluginDisablerPlugin extends Plugin {
                 pluginDisabler.setBreakDuration(0);
                 Microbot.pauseAllScripts.set(false);
                 PluginDisablerScript.setLockState(true);
-            }
-        }
-    }
-    @Subscribe
-    public void onChatMessage(ChatMessage chatMessage) {
-        ChatMessageType chatMessageType = chatMessage.getType();
-        if (!Microbot.isLoggedIn()) return;
-
-        //Microbot.log("Chat message"+ chatMessage.getMessage() +" Chat message type: " + chatMessageType);
-
-        if (chatMessage.getType() == ChatMessageType.ENGINE) {
-            String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
-            if (cleanText.toLowerCase().contains("i can't reach that")) {
-                pluginDisabler.cantReachTimestamps.add(Instant.now());
             }
         }
     }
