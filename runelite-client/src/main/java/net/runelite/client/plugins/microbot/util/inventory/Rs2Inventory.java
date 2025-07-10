@@ -671,6 +671,15 @@ public class Rs2Inventory {
         return dropAllExcept(ignore.or(price));
     }
 
+    // overload for old method
+    public static boolean dropAllExcept(int gpValue, List<String> ignoreItems) {
+        final Predicate<Rs2ItemModel> ignore = item -> ignoreItems.stream().anyMatch(x -> x.equalsIgnoreCase(item.getName()));
+        final Predicate<Rs2ItemModel> price = item -> (long) Microbot.getClientThread().runOnClientThreadOptional(() ->
+                Microbot.getItemManager().getItemPrice(item.getId()) * item.getQuantity()).orElse(0) >= gpValue;
+        return dropAllExcept(ignore.or(price));
+    }
+
+
     /**
      * Returns the count of empty slots in your inventory.
      *
