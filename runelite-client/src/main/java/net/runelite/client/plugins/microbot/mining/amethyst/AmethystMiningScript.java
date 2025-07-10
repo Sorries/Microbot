@@ -260,7 +260,7 @@ public class AmethystMiningScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         super.shutdown();
         status = Status.IDLE;
         miningSpot = MiningSpot.NULL;

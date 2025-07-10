@@ -38,7 +38,7 @@ public class GiantSeaweedFarmerScript extends Script {
 
     {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2AntibanSettings.usePlayStyle = true;
         Rs2AntibanSettings.simulateFatigue = false;
         Rs2AntibanSettings.simulateAttentionSpan = true;
