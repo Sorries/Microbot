@@ -1,10 +1,11 @@
 package net.runelite.client.plugins.microbot.bee.chaosaltar;
 
 import lombok.Setter;
-import net.runelite.api.*;
-
+import net.runelite.api.GameObject;
+import net.runelite.api.ItemID;
+import net.runelite.api.Skill;
 import java.time.Duration;
-
+import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.Plugin;
@@ -25,14 +26,11 @@ import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
-import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Pvp;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
-import net.runelite.client.plugins.microbot.Microbot;
-import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
 
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -52,7 +50,6 @@ public class ChaosAltarScript extends Script {
     public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 6, 0); //2953,3824
     public static final WorldPoint CHAOS_ALTAR_POINT = new WorldPoint(2949, 3820,0);
     public static final WorldPoint CHAOS_ALTAR_POINT_SOUTH = new WorldPoint(3014, 3820,0);
-    public boolean inWilderness = false;
 
     private ChaosAltarConfig config;
     private boolean externalStateOverride = false;
@@ -73,6 +70,7 @@ public class ChaosAltarScript extends Script {
                 long startTime = System.currentTimeMillis();
 
                 Rs2Combat.disableAutoRetaliate();
+
                 // Determine current state
                 if (!externalStateOverride) {
                     currentState = determineState();
@@ -90,6 +88,13 @@ public class ChaosAltarScript extends Script {
                         teleportToWilderness();
                         break;
                     case WALK_TO_ALTAR:
+                        if (!Rs2Pvp.isInWilderness()){
+                            Microbot.log("not wildy");
+                        }
+                        if (Rs2Pvp.isInWilderness()){
+                            Microbot.log("wildy");
+                        }
+                        //Todo: add actor death and sleep
                         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Pvp.isInWilderness()) {
                             Microbot.log("Cur 1 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                             walkTo(CHAOS_ALTAR_POINT, 3);
@@ -124,45 +129,34 @@ public class ChaosAltarScript extends Script {
     }
 
     private State determineState() {
-
-//        boolean inWilderness = Rs2Pvp.isInWilderness();
-        inWilderness = Rs2Pvp.isInWilderness();
-        // 11835
-        boolean inWilderness2 = CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation());
-        boolean inWilderness3 = Rs2Player.getWorldLocation().getRegionID() == 11835;
+        boolean inWilderness = Rs2Pvp.isInWilderness();
         boolean hasBones = Rs2Inventory.count(DRAGON_BONES) > 4;
         boolean hasAnyBones = Rs2Inventory.contains(DRAGON_BONES);
         boolean atAltar = isAtChaosAltar();
-        System.out.println("Wilderness1: "+inWilderness + " Wilderness2: "+ inWilderness2 + " Wilderness 3: "+ inWilderness3);
-//        System.out.println("has any bones: " + Rs2Inventory.contains(DRAGON_BONES));
-//        System.out.println("is at altar: " + isAtChaosAltar());
-        boolean underAttack = Rs2Player.getHealthPercentage() < 95;
-        if (!Rs2Prayer.isQuickPrayerEnabled() && underAttack) {
-            //Rs2Prayer.toggleQuickPrayer(underAttack);
-            Rs2Widget.clickWidget(10485779);
-        }
 
-        if ((inWilderness || inWilderness3) && hasAnyBones && atAltar) {
-            return State.OFFER_BONES;
-        }
-        if (inWilderness && hasAnyBones && !atAltar) {
-            return State.WALK_TO_ALTAR;
-        }
-        if (inWilderness && !hasAnyBones) {
-            if (Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
-                Microbot.stopPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
-            }
-            return State.DIE_TO_NPC;
-        }
+
         if (!inWilderness && !hasBones) {
             return State.BANK;
         }
         if (!inWilderness && hasBones) {
             if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
-                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
+                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class.getName()));
             }
             return State.TELEPORT_TO_WILDERNESS;
         }
+        if (inWilderness && hasAnyBones && !atAltar) {
+            return State.WALK_TO_ALTAR;
+        }
+        if (inWilderness && hasAnyBones && atAltar) {
+            return State.OFFER_BONES;
+        }
+        if (inWilderness && !hasAnyBones) {
+            if (Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
+                Microbot.stopPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class.getName()));
+            }
+            return State.DIE_TO_NPC;
+        }
+
         return State.UNKNOWN;
     }
 
@@ -202,22 +196,13 @@ public class ChaosAltarScript extends Script {
         //Microbot.log("Walking");
         //sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 2000);
         // Attack chaos fanatic to die
-        if (!Rs2Prayer.isQuickPrayerEnabled()) {
-            sleep(1000,2000);
-            Rs2Widget.clickWidget(10485779);
-            sleep(1000,2000);
-        }
-        Rs2Player.hopIfPlayerDetected(1,0,0);
-        if (Rs2Player.isInCombat() || Rs2Npc.attack("Chaos Fanatic")) {
-            Rs2Equipment.unEquip(EquipmentInventorySlot.WEAPON);
+        if (Rs2Combat.inCombat() || Rs2Npc.attack("Chaos Fanatic")) {
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
             sleep(1000,3000);
-        }else if (Rs2Npc.getNpc(CHAOS_FANATIC) == null){
-            Rs2Walker.walkTo(2979, 3845,0,10);
-            sleep(1000,1500);
         }else{
-            Rs2Player.hopIfPlayerDetected(1,Rs2Random.betweenInclusive(100,500),30);
+            Rs2Walker.walkTo(2979, 3845,0,10);
+            sleep(1500,3000);
         }
     }
 
@@ -230,7 +215,6 @@ public class ChaosAltarScript extends Script {
 //            Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_ITEM, true);
 //            sleep(500, 800);
 //        }
-        if (Rs2Pvp.isInWilderness()){return;}
         if (hasBurningAmulet() && !Rs2Pvp.isInWilderness()){
             walkTo(CHAOS_ALTAR_POINT_SOUTH,10);
             //Microbot.log("Fin");
@@ -250,34 +234,25 @@ public class ChaosAltarScript extends Script {
             sleep(500,750);
         }
 
-        boolean underAttack = Rs2Player.getHealthPercentage() < 95;
-        if (underAttack) {
-            offerBonesFast();
-            return;
-        }
-        //System.out.println("11");
+        boolean underAttack = Rs2Combat.inCombat();
+        Rs2Prayer.toggleQuickPrayer(underAttack);
+
+        //if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
+
         if (CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
-            //System.out.println("22");
-            for (int i = 0; i <= 27; i++) {
-                if (Rs2Inventory.slotContains(i, DRAGON_BONES)) {
-                    int randomSlotOffset = 0;
-                    if (Rs2Inventory.count(DRAGON_BONES) > 3) {
-                        randomSlotOffset = Rs2Random.betweenInclusive(1, 3);
-                    }
-
-                    // Make sure we don't go beyond inventory bounds (0-27)
-                    int useSlot = Math.min(i + randomSlotOffset, 27);
-
-                    Rs2Inventory.slotInteract(useSlot, "Use");
-                    sleep((int) Rs2Random.skewedRand(300, 200, 450, 2));
-                    Rs2GameObject.interact(411);
-
-                    if (Rs2Random.dicePercentage(75)) {
-                        sleep((int) Rs2Random.skewedRand(300, 200, 450, 2));
-                    } else {
-                        Rs2Inventory.waitForInventoryChanges(2000);
-                    }
-                    break;
+            if (Rs2Inventory.slotContains(0,DRAGON_BONES)) {
+                int randomSlot = 0;
+                if (Rs2Inventory.count(DRAGON_BONES)>3){
+                    randomSlot = Rs2Random.betweenInclusive(1,3);
+                }
+                Rs2Inventory.slotInteract(randomSlot, "use");
+                sleep((int)Rs2Random.skewedRand(300,200,450,2));
+                Rs2GameObject.interact(411);
+                if (Rs2Random.dicePercentage(75)){
+                    sleep((int)Rs2Random.skewedRand(300,200,450,2));
+                }else{
+                    Rs2Inventory.waitForInventoryChanges(2000);
+                    //Microbot.log("cha");
                 }
             }
         }
@@ -298,9 +273,9 @@ public class ChaosAltarScript extends Script {
                 && CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())
                 && Rs2GameObject.exists(411)) {
             Rs2Inventory.useLast(DRAGON_BONES);
-            sleep((int)Rs2Random.skewedRand(125,75,175,2));
+            sleep((int)Rs2Random.skewedRand(150,100,250,2));
             Rs2GameObject.interact(411);
-            sleep((int)Rs2Random.skewedRand(125,75,175,2));
+            sleep((int)Rs2Random.skewedRand(150,100,250,2));
         }
     }
 
