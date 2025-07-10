@@ -69,6 +69,16 @@ public interface MahoganyHomesConfig extends Config
     }
 
     @ConfigItem(
+            keyName = "pause",
+            name = "Pause",
+            description = "Pause the script? will pause between states",
+            position = 4
+    )
+    default boolean pause() {
+        return false;
+    }
+
+    @ConfigItem(
             keyName = HINT_ARROW_KEY,
             name = "Display Hint Arrows",
             description = "Configures whether or not to display the hint arrows",
