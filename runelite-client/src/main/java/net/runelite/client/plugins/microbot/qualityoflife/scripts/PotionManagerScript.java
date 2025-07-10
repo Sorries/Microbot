@@ -6,11 +6,14 @@ import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 
 import java.util.concurrent.TimeUnit;
 
 public class PotionManagerScript extends Script {
+    private boolean runOnce = false;
+    private int randomPoints = 0;
     public boolean run(QoLConfig config) {
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -29,9 +32,10 @@ public class PotionManagerScript extends Script {
                 }
 
                 // Always attempt to drink prayer potion
-                if (Rs2Player.drinkPrayerPotion()) {
-                    Rs2Player.waitForAnimation();
+                if (config.autoDrinkPrayerPot()){
+                    handleAutoDrinkPrayPot(config.drinkPrayerPotPoints());
                 }
+
 
                 // Always attempt to drink ranging potion
                 if (Rs2Player.drinkCombatPotionAt(Skill.RANGED, false)) {
@@ -71,6 +75,26 @@ public class PotionManagerScript extends Script {
         return true;
     }
 
+    private void handleAutoDrinkPrayPot(int points) {
+        if(!runOnce) {
+            randomPoints = points + Rs2Random.between(-2,3);
+            if (randomPoints <= 0) {return;}
+            runOnce = true;
+//            Microbot.log("Generated prayer drink threshold: " + randomPoints);
+        }
+        if (Rs2Player.getBoostedSkillLevel(Skill.PRAYER) <= randomPoints) {
+            if(Rs2Player.drinkPrayerPotionAt(randomPoints)) {
+//                Microbot.log("Drank at " + randomPoints + " prayer points");
+                runOnce = false;
+                Rs2Player.waitForAnimation();
+                sleep(400);
+            }
+            if (Rs2Inventory.contains(229)){
+                Rs2Inventory.dropAll(229);
+            }
+        }
+
+    }
 
     // shutdown
     @Override
