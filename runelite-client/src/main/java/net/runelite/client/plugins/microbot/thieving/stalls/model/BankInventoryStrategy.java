@@ -39,12 +39,12 @@ public class BankInventoryStrategy implements IInventoryStrategy {
         dropInventoryStrategy.execute(stallThievingSpot);
     }
 
-    private int[] getItemIdsToAlwaysDrop()
+    private Integer[] getItemIdsToAlwaysDrop()
     {
         if (config.alwaysDrop().isEmpty())
         {
-            return new int[0];
+            return new Integer[0];
         }
-        return Arrays.stream(config.alwaysDrop().split("\\s*,\\s*")).mapToInt(Integer::parseInt).toArray();
+        return Arrays.stream(config.alwaysDrop().split("\\s*,\\s*")).map(Integer::parseInt).toArray(Integer[]::new);
     }
 }
