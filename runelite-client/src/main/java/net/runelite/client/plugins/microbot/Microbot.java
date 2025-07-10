@@ -734,27 +734,32 @@ public class Microbot {
         return RuneLite.getInjector();
     }
 
-    /**
-     * Retrieves a list of active plugins that are part of the "microbot" package, excluding specific plugins.
-     * <p>
-     * This method filters the active plugins managed by the `pluginManager` to include only those whose
-     * package name contains "microbot" (case-insensitive). It further excludes certain plugins based on
-     * their class names, such as "QuestHelperPlugin", "MInventorySetupsPlugin", "MicrobotPlugin",
-     * "ShortestPathPlugin", "AntibanPlugin", and "ExamplePlugin".
-     *
-     * @return a list of active plugins belonging to the "microbot" package, excluding the specified plugins.
-     */
-    public static List<Plugin> getActiveMicrobotPlugins() {
-        return pluginManager.getActivePlugins().stream()
-                .filter(x -> x.getClass().getPackage().getName().toLowerCase().contains("microbot"))
-                .filter(x -> !x.getClass().getSimpleName().equalsIgnoreCase("QuestHelperPlugin")
-                        && !x.getClass().getSimpleName().equalsIgnoreCase("MInventorySetupsPlugin")
-                        && !x.getClass().getSimpleName().equalsIgnoreCase("MicrobotPlugin")
-                        && !x.getClass().getSimpleName().equalsIgnoreCase("ShortestPathPlugin")
-                        && !x.getClass().getSimpleName().equalsIgnoreCase("AntibanPlugin")
-                        && !x.getClass().getSimpleName().equalsIgnoreCase("ExamplePlugin"))
-                .collect(Collectors.toList());
-    }
+	/**
+	 * Retrieves a list of active plugins that are part of the "microbot" package, excluding specific plugins.
+	 * <p>
+	 * This method filters the active plugins managed by the `pluginManager` to include only those whose
+	 * package name contains "microbot" (case-insensitive). It further excludes certain plugins based on
+	 * their class names, such as "QuestHelperPlugin", "MInventorySetupsPlugin", "MicrobotPlugin",
+	 * "ShortestPathPlugin", "AntibanPlugin", and "ExamplePlugin".
+	 *
+	 * @return a list of active plugins belonging to the "microbot" package, excluding the specified plugins.
+	 */
+	public static List<Plugin> getActiveMicrobotPlugins()
+	{
+		return pluginManager.getActivePlugins().stream()
+			.filter(x -> x.getClass().getPackage().getName().toLowerCase().contains("microbot"))
+			.filter(x -> !x.getClass().getSimpleName().equalsIgnoreCase("QuestHelperPlugin")
+				&& !x.getClass().getSimpleName().equalsIgnoreCase("MInventorySetupsPlugin")
+				&& !x.getClass().getSimpleName().equalsIgnoreCase("MicrobotPlugin")
+				&& !x.getClass().getSimpleName().equalsIgnoreCase("ShortestPathPlugin")
+				&& !x.getClass().getSimpleName().equalsIgnoreCase("AntibanPlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("ExamplePlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("PluginDisablerPlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("QoLPlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("EventDismissPlugin")
+                 )
+			.collect(Collectors.toList());
+	}
 
     /**
      * Retrieves a list of active `Script` instances from the currently active microbot plugins.
