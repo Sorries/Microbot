@@ -60,7 +60,7 @@ public class PlayerMonitorScript extends Script {
                                 if (config.useFlash()) {
                                     flashOverlay.setFlashColor(config.flashColor());
                                 }
-                                if ((config.useFlash() || config.playAlarmSound()) && config.useEmergency() && !newPlayer && (config.onlyWilderness() && Microbot.getVarbitValue(Varbits.IN_WILDERNESS) == 1) || !config.onlyWilderness()) {
+                                if (config.useEmergency() && (config.onlyWilderness() && Microbot.getVarbitValue(Varbits.IN_WILDERNESS) == 1)) {
                                     newPlayer = true;
                                     otherPlayerLocation = Rs2Player.getWorldLocation();
                                     otherPlayerWorld = Rs2Player.getWorld();
@@ -151,14 +151,10 @@ public class PlayerMonitorScript extends Script {
     }
 
     private void logoutPlayer() {
-        ClientUI.getClient().setEnabled(false);
         if (this.isRunning()) {
-            sleep(61, 93);}
-        if (this.isRunning()) {
-            Rs2Player.logout();}
-        if (this.isRunning()) {
-            sleep(61, 93);}
-        ClientUI.getClient().setEnabled(true);
+            Microbot.hopToWorld(Login.getRandomWorld(Rs2Player.isMember()));
+            //Rs2Player.logout();
+        }
     }
 
     @Override

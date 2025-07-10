@@ -64,7 +64,7 @@ public interface LunarPlankMakeConfig extends Config {
             section = generalSection
     )
     default int setDelay() {
-        return 500; // Default to 500 milliseconds
+        return 900; // Default to 500 milliseconds
     }
 
     @ConfigItem(

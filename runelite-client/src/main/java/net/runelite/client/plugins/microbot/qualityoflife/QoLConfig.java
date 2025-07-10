@@ -431,6 +431,17 @@ public interface QoLConfig extends Config {
         return false;
     }
 
+    @ConfigItem(
+            keyName = "smartSlayer",
+            name = "Smart Slayer",
+            description = "If not in combat for amount of time, will attack slayer monster",
+            position = 11,
+            section = upkeepSection
+    )
+    default boolean smartSlayer() {
+        return false;
+    }
+
 
     // boolean to display Inventory setups as a menu option in the bank
     @ConfigItem(
