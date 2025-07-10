@@ -127,6 +127,8 @@ public class Rs2Walker {
      * @return
      */
     public static WalkerState walkWithState(WorldPoint target, int distance) {
+        System.out.println("Current Position: " + Rs2Player.getWorldLocation());
+        System.out.println("Target Position: " + target);
         if (Rs2Tile.getReachableTilesFromTile(Rs2Player.getWorldLocation(), distance).containsKey(target)
                 || !Rs2Tile.isWalkable(LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), target)) && Rs2Player.getWorldLocation().distanceTo(target) <= distance) {
             return WalkerState.ARRIVED;
@@ -292,7 +294,9 @@ public class Rs2Walker {
 
                 System.out.println("start loop " + i);
 
-				// add breakpoint here
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
 
                 if (ShortestPathPlugin.getMarker() == null) {
                     System.out.println("marker is null");
@@ -367,6 +371,9 @@ public class Rs2Walker {
                 }
             }
             if (Rs2Player.getWorldLocation().distanceTo(target) < distance) {
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
                 setTarget(null);
                 return WalkerState.ARRIVED;
             } else {
