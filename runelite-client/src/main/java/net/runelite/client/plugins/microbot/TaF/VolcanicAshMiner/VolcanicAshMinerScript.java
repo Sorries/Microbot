@@ -30,7 +30,7 @@ public class VolcanicAshMinerScript extends Script {
     public boolean run(VolcanicAshMinerConfig config) {
         BOT_STATUS = VolcanicAshMinerState.MINING;
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2AntibanSettings.usePlayStyle = true;
         Rs2AntibanSettings.simulateFatigue = false;
         Rs2AntibanSettings.simulateAttentionSpan = true;

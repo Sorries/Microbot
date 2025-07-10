@@ -54,7 +54,7 @@ public class BarrowsPlugin extends Plugin implements SchedulablePlugin {
             overlayManager.add(barrowsOverlay);
         }
         Rs2Antiban.activateAntiban();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
         Rs2Antiban.setActivity(Activity.BARROWS);
         barrowsScript.run(config, this);
@@ -63,7 +63,7 @@ public class BarrowsPlugin extends Plugin implements SchedulablePlugin {
     }
 
     protected void shutDown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2Antiban.deactivateAntiban();
         barrowsScript.neededRune = "unknown";
         barrowsScript.shutdown();

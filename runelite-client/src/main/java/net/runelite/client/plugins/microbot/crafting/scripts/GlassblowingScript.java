@@ -59,7 +59,7 @@ public class GlassblowingScript extends Script implements ICraftingScript {
 
         if (config.glassType() == Glass.PROGRESSIVE) calculateItemToCraft();
 
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2Antiban.antibanSetupTemplates.applyCraftingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -152,7 +152,7 @@ public class GlassblowingScript extends Script implements ICraftingScript {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         super.shutdown();
     }
 }
