@@ -21,7 +21,7 @@ import net.runelite.client.plugins.microbot.util.npc.Rs2NpcManager;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.poh.PohTeleports;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
-import net.runelite.client.plugins.microbot.util.skills.slayer.Rs2Slayer;
+import net.runelite.client.plugins.microbot.util.slayer.Rs2Slayer;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
 import java.awt.*;
