@@ -60,7 +60,7 @@ public class AirOrbScript extends Script {
     public boolean run() {
         Microbot.enableAutoRunOn = false;
         //Rs2antiban.resetantibansettings();
-        //Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
+        Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
         Rs2Antiban.setActivity(Activity.CHARGING_AIR_ORBS);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
