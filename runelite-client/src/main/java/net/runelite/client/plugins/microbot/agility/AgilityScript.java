@@ -11,12 +11,12 @@ import net.runelite.api.TileObject;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
-import net.runelite.client.config.Config;
 import net.runelite.client.plugins.agility.AgilityPlugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.agility.courses.GnomeStrongholdCourse;
 import net.runelite.client.plugins.microbot.agility.courses.PrifddinasCourse;
+import net.runelite.client.plugins.microbot.agility.courses.WerewolfCourse;
 import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
 import net.runelite.client.plugins.microbot.util.antiban.Rs2AntibanSettings;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
@@ -55,7 +55,7 @@ public class AgilityScript extends Script
 	public boolean run()
 	{
 		Microbot.enableAutoRunOn = true;
-		//Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+		Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
 		Rs2AntibanSettings.actionCooldownChance = 0.10;
 		Rs2AntibanSettings.dynamicActivity = false;
 		startPoint = plugin.getCourseHandler().getStartPoint();
@@ -125,6 +125,26 @@ public class AgilityScript extends Script
 					}
 
 					if (course.handleWalkToStart(playerWorldLocation))
+					{
+						return;
+					}
+				}
+				else if(plugin.getCourseHandler() instanceof WerewolfCourse)
+				{
+					WerewolfCourse course = (WerewolfCourse) plugin.getCourseHandler();
+					if(course.handleFirstSteppingStone(playerWorldLocation))
+					{
+						return;
+					}
+					if(course.handleStickPickup(playerWorldLocation))
+					{
+						return;
+					}
+					else if(course.handleSlide())
+					{
+						return;
+					}
+					else if(course.handleStickReturn(playerWorldLocation))
 					{
 						return;
 					}
