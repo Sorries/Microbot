@@ -28,7 +28,7 @@ public class FlaxScript extends Script {
         Microbot.enableAutoRunOn = false;
         initialPlayerLocation = null;
 
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         applyAntiBanSettings();
         Rs2Antiban.setActivity(Activity.GENERAL_COLLECTING);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -91,7 +91,7 @@ public class FlaxScript extends Script {
     @Override
     public void shutdown(){
         super.shutdown();
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
     }
 
     private void getState(AutoLooterConfig config) {

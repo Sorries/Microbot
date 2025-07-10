@@ -35,7 +35,7 @@ public class PlankRunnerScript extends Script {
 
     public boolean run() {
         Microbot.enableAutoRunOn = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
         Rs2Antiban.setActivityIntensity(ActivityIntensity.HIGH);
         Rs2Walker.disableTeleports = true;
@@ -165,7 +165,7 @@ public class PlankRunnerScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
         super.shutdown();
     }
 
