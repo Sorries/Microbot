@@ -29,7 +29,7 @@ public class BarbarianFishingScript extends Script {
 
     public boolean run(BarbarianFishingConfig config) {
         this.config = config;
-        ////Rs2antiban.resetantibansettings();
+        //Rs2Antiban.resetAntibanSettings();
         //Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             if (!super.run() || !Microbot.isLoggedIn() || !Rs2Inventory.hasItem("feather") || !Rs2Inventory.hasItem("rod")) {
@@ -71,8 +71,10 @@ public class BarbarianFishingScript extends Script {
                 validateInteractable(fishingspot);
             }
 
-            sleep(1000, 10000);
-            Rs2Npc.interact(fishingspot, "Use-rod");
+            if(Rs2Npc.interact(fishingspot, "Use-rod")) {
+                Rs2Antiban.actionCooldown();
+                Rs2Antiban.takeMicroBreakByChance();
+            };
 
         }, 0, 600, TimeUnit.MILLISECONDS);
         return true;
