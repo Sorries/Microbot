@@ -392,6 +392,8 @@ public class Rs2Widget {
         return isWidgetVisible(475, 11);
     }
 
+    public static boolean isWorldMapInterfaceOpen() {return isWidgetVisible(595, 38);}
+
     public static boolean enterWilderness() {
         if (!isWildernessInterfaceOpen()) return false;
 
@@ -400,5 +402,10 @@ public class Rs2Widget {
 
         return true;
     }
-
+    public static boolean worldMapInterfaceClose() {
+        if (!isWorldMapInterfaceOpen()) return false;
+        Microbot.log("Detected WorldMap opened, interacting...");
+        Rs2Widget.clickWidget(595, 38);
+        return true;
+    }
 }

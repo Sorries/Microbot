@@ -1995,6 +1995,10 @@ public class Rs2Bank {
                     depositAll(itemName,false);
                     //Rs2Bank.depositAll(x -> x.name.toLowerCase().contains(itemName));
                 }
+                if (Rs2Bank.isOpen()){
+                    sleep(Rs2Random.between(750,1250));
+                    Rs2Bank.closeBank();
+                }
             }
             return false;
         }

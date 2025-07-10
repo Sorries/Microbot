@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
+import net.runelite.api.widgets.ComponentID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -38,6 +39,7 @@ import net.runelite.client.plugins.microbot.util.magic.Rs2Spellbook;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Spells;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
+import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
@@ -121,6 +123,8 @@ public class QoLPlugin extends Plugin {
     private WintertodtOverlay wintertodtOverlay;
     @Inject
     private QolCannonScript cannonScript;
+    @Inject
+    private SmartSlayer smartSlayer;
     @Inject
     @Getter
     private PvpScript pvpScript;
@@ -241,8 +245,19 @@ public class QoLPlugin extends Plugin {
                 && (chatMessageType == ChatMessageType.GAMEMESSAGE || chatMessageType == ChatMessageType.SPAM)) {
             wintertodtScript.onChatMessage(chatMessage);
         }
-
-
+//        if (chatMessage.getMessage().toLowerCase().contains("you received")) {
+//            Microbot.log(""+ chatMessage.getType());
+//            QoLScript.setCompletedSlayerTask(true);
+//        }
+        if (chatMessage.getType() == ChatMessageType.CONSOLE) {
+            String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
+            if (cleanText.toLowerCase().contains("you have completed your task")) {
+                SmartSlayer.setCompletedSlayerTask(true);
+            }
+//            if (chatMessage.getMessage().toLowerCase().contains("you received")) {
+//                QoLScript.setCompletedSlayerTask(true);
+//            }
+        }
     }
 
 

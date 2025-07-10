@@ -14,6 +14,7 @@ import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -68,6 +69,10 @@ public class HerbrunScript extends Script {
                         plugin.reportFinished("Failed to load inventory setup",false);
                         return;
                     }
+                    if (Rs2Inventory.hasItem("open herb sack")) {
+                        Rs2Inventory.interact(24478,"Empty to bank",9);
+                        sleep(Rs2Random.between(500,800));
+                    }
                     Rs2Bank.closeBank();
                 }
 
@@ -82,9 +87,9 @@ public class HerbrunScript extends Script {
             if (currentPatch == null) {
                 HerbrunPlugin.status = "Finishing up";
                 if (config.goToBank()) {
-                    Rs2Walker.walkTo(Rs2Bank.getNearestBank().getWorldPoint());
+                    Rs2Bank.walkToBank(BankLocation.GRAND_EXCHANGE);
                     if (!Rs2Bank.isOpen()) Rs2Bank.openBank();
-                    Rs2Bank.depositAll();
+//                    Rs2Bank.depositAll();
                 }
                 HerbrunPlugin.status = "Finished";
                 plugin.reportFinished("Herb run finished",true);
@@ -94,8 +99,8 @@ public class HerbrunScript extends Script {
 
             if (!currentPatch.isInRange(10)) {
                 HerbrunPlugin.status = "Walking to " + currentPatch.getRegionName();
-                Rs2Walker.walkTo(currentPatch.getLocation(), 20);
-
+                Rs2Walker.walkTo(currentPatch.getLocation(), 9);
+                sleep(Rs2Random.skewedRandAuto(500));
             }
 
             HerbrunPlugin.status = "Farming " + currentPatch.getRegionName();
@@ -184,6 +189,17 @@ public class HerbrunScript extends Script {
                 Rs2GameObject.interact(obj, "Clear");
                 sleepUntil(() -> getHerbPatchState(obj).equals("Empty"));
                 return false;
+            case "Diseased":
+                if(Rs2Inventory.hasItem(6036)) {
+                    Rs2GameObject.interact(obj, "Cure");
+                    sleepUntil(() -> !Rs2Player.isInteracting());
+                    if (Rs2Inventory.contains(229)) { // drop vial
+                        Rs2Inventory.dropAll(229);
+                    }
+                }else{
+                currentPatch = null;
+                return true;
+                }
             default:
                 currentPatch = null;
                 return true;
