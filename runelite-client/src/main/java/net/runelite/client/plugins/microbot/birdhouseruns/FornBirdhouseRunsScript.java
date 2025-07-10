@@ -64,11 +64,8 @@ public class FornBirdhouseRunsScript extends Script {
                             Rs2Bank.withdrawOne(ItemID.CHISEL);
                             Rs2Bank.withdrawX(selectedLogs, 4);
                             Rs2Bank.withdrawX(selectedSeed, seedAmount * 4);
-                            Rs2Inventory.waitForInventoryChanges(500);
-                            while(Rs2Bank.isOpen()){
-                                Rs2Bank.closeBank();
-                                sleepUntil(()->!Rs2Bank.isOpen());
-                            }
+                            Rs2Bank.closeBank();
+                            sleepUntil(()->!Rs2Bank.isOpen());
                             botStatus = states.TELEPORTING;
                         }
                         break;
