@@ -8,7 +8,6 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
-import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2Cannon;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
@@ -20,7 +19,6 @@ import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.poh.PohTeleports;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.slayer.Rs2Slayer;
-import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,15 +34,15 @@ public class SmartSlayer extends Script {
 private static boolean completedSlayerTask = false;
 
 
-public boolean run(QoLConfig config) {
-    mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
-        try {
-            if (!Microbot.isLoggedIn()) return;
-            if (!super.run() || !config.smartSlayer()) return;
-            List<String> monsters = Rs2Slayer.getSlayerMonsters();
-            AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
-            if (monsters != null) {
-                for (String monster : monsters) {
+    public boolean run(QoLConfig config) {
+        mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
+            try {
+                if (!Microbot.isLoggedIn()) return;
+                if (!super.run() || !config.smartSlayer()) return;
+                List<String> monsters = Rs2Slayer.getSlayerMonsters();
+                AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
+                if (monsters != null) {
+                    for (String monster : monsters) {
 //                        Rs2Npc.getNpcs(monster).forEach(npc -> {
 //                            if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
 //                                isNearSlayerMonster.set(true);
@@ -59,22 +57,22 @@ public boolean run(QoLConfig config) {
 //                                    isNearSlayerMonster.set(true);
 //                                }
 //                            });
-                    Optional.ofNullable(Rs2Npc.getNpcs(monster))
-                            .orElse(Stream.empty())
-                            .forEach(npc -> {
-                                if (npc == null) {
-                                    Microbot.log("Npc is null for monster: " + monster);
-                                    return;
-                                }
-                                if (npc.getWorldLocation() == null || Rs2Player.getWorldLocation() == null) {
-                                    Microbot.log("Null location: NPC=" + npc.getName());
-                                    return;
-                                }
+                        Optional.ofNullable(Rs2Npc.getNpcs(monster))
+                                .orElse(Stream.empty())
+                                .forEach(npc -> {
+                                    if (npc == null) {
+                                        Microbot.log("Npc is null for monster: " + monster);
+                                        return;
+                                    }
+                                    if (npc.getWorldLocation() == null || Rs2Player.getWorldLocation() == null) {
+                                        Microbot.log("Null location: NPC=" + npc.getName());
+                                        return;
+                                    }
 
-                                if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
-                                    isNearSlayerMonster.set(true);
-                                }
-                            });
+                                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
+                                        isNearSlayerMonster.set(true);
+                                    }
+                                });
                     }
                 }
                 if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
@@ -110,11 +108,6 @@ public boolean run(QoLConfig config) {
                             }
                         }
                     }
-                    if (Rs2Combat.inCombat()){
-                        if (Rs2Player.drinkGoadingPotion()){
-                             Rs2Player.waitForAnimation();
-                       }
-                    }
                 }
                 if (completedSlayerTask){
 //            //if(!Rs2Bank.walkToBankAndUseBank()) return;
@@ -129,6 +122,7 @@ public boolean run(QoLConfig config) {
                         Rs2Inventory.interact(8013, "break");
                         sleepUntil(PohTeleports::isInHouse);
                     }else if (Rs2Inventory.contains(13393)) {
+                        Rs2Inventory.interact(13393,"teleport",131076);
                         Rs2Bank.walkToBank();
                         sleepUntil(() ->Rs2Bank.isNearBank(5));
                     }
