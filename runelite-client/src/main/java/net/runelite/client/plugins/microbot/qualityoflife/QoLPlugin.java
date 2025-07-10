@@ -202,14 +202,8 @@ public class QoLPlugin extends Plugin implements KeyListener {
         }
         if (config.useSpecWeapon()) {
             Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-            if (Rs2Inventory.contains(config.specWeapon().toString())){
-                Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
-                Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
-            }
-            else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
-                Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
-                Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
-            }
+            Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
+            Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
         }
 		if (config.autoRun()) {
 			Microbot.enableAutoRunOn = true;
@@ -223,7 +217,6 @@ public class QoLPlugin extends Plugin implements KeyListener {
         qoLScript.run(config);
         wintertodtScript.run(config);
         cannonScript.run(config);
-        smartSlayer.run(config);
         autoItemDropperScript.run(config);
         eventBus.register(fletchingManager);
         eventBus.register(firemakingManager);
@@ -243,7 +236,6 @@ public class QoLPlugin extends Plugin implements KeyListener {
         autoRunScript.shutdown();
         specialAttackScript.shutdown();
         cannonScript.shutdown();
-        smartSlayer.shutdown();
         autoItemDropperScript.shutdown();
         overlayManager.remove(qoLOverlay);
         overlayManager.remove(wintertodtOverlay);
@@ -271,20 +263,16 @@ public class QoLPlugin extends Plugin implements KeyListener {
     public void onChatMessage(ChatMessage chatMessage) {
         ChatMessageType chatMessageType = chatMessage.getType();
 
-
         if (!Microbot.isLoggedIn()) return;
         if (isInWintertodtRegion()
                 && (chatMessageType == ChatMessageType.GAMEMESSAGE || chatMessageType == ChatMessageType.SPAM)) {
             wintertodtScript.onChatMessage(chatMessage);
         }
-
-//        if (chatMessage.getMessage().toLowerCase().contains("you have completed your task")) {
+//        if (chatMessage.getMessage().toLowerCase().contains("you received")) {
 //            Microbot.log(""+ chatMessage.getType());
+//            QoLScript.setCompletedSlayerTask(true);
 //        }
-
-        //Microbot.log("Chat message"+ chatMessage.getMessage() +" Chat message type: " + chatMessageType);
-
-        if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
+        if (chatMessage.getType() == ChatMessageType.CONSOLE) {
             String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
             if (cleanText.toLowerCase().contains("you have completed your task")) {
                 SmartSlayer.setCompletedSlayerTask(true);
@@ -303,16 +291,10 @@ public class QoLPlugin extends Plugin implements KeyListener {
             NeverLogoutScript.onGameTick(event);
         }
         if (config.useSpecWeapon()) {
-            if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() == config.specWeapon()
-                    || Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() == config.specWeapon2()) {
+            if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-                if (Rs2Inventory.contains(config.specWeapon().toString())) {
-                    Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
-                    Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
-                } else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
-                    Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
-                    Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
-                }
+                Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
+                Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
             }
         }
     }
@@ -594,16 +576,11 @@ public class QoLPlugin extends Plugin implements KeyListener {
                 configManager.setConfiguration("QoL", "quickFletchKindling", true);
             }
         }
-        if (ev.getKey().equals("useSpecWeapon") || ev.getKey().equals("specWeapon")|| ev.getKey().equals("specWeapon2")) {
+        if (ev.getKey().equals("useSpecWeapon") || ev.getKey().equals("specWeapon")) {
             if (config.useSpecWeapon()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-                if (Rs2Inventory.contains(config.specWeapon().toString())) {
-                    Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
-                    Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
-                }else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
-                    Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
-                    Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
-                }
+                Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
+                Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
             } else {
                 Microbot.getSpecialAttackConfigs().reset();
             }
