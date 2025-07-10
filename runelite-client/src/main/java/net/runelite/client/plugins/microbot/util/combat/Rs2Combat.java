@@ -166,6 +166,20 @@ public class Rs2Combat {
         return Microbot.getVarbitPlayerValue(172) == 0;
     }
 
+    public static boolean disableAutoRetaliate() {
+        if (Microbot.getVarbitPlayerValue(172) == 0) {
+            Rs2Tab.switchToCombatOptionsTab();
+            sleepUntil(() -> Rs2Tab.getCurrentTab() == InterfaceTab.COMBAT, 2000);
+            Rs2Widget.clickWidget(38862879);
+        }
+
+        return Microbot.getVarbitPlayerValue(172) == 1;
+    }
+
+    public static boolean isAutoRetaliateDisabled() {
+        return Microbot.getVarbitPlayerValue(172) == 1;
+    }
+
     public static boolean inCombat() {
         if (!Microbot.isLoggedIn()) return false;
 
