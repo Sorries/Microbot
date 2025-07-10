@@ -60,7 +60,7 @@ public class GlassblowingScript extends Script implements ICraftingScript {
         if (config.glassType() == Glass.PROGRESSIVE) calculateItemToCraft();
 
         //Rs2antiban.resetantibansettings();
-        //Rs2Antiban.antibanSetupTemplates.applyCraftingSetup();
+        Rs2Antiban.antibanSetupTemplates.applyCraftingSetup();
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!Microbot.isLoggedIn()) return;
