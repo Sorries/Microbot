@@ -198,7 +198,7 @@ public class AntibanPlugin extends Plugin {
 
     @Subscribe
     public void onProfileChanged(ProfileChanged event) {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2antiban.resetantibansettings();
     }
 
     @Subscribe
