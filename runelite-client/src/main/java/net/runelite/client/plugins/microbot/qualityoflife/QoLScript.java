@@ -1,26 +1,44 @@
 package net.runelite.client.plugins.microbot.qualityoflife;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Skill;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
+import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.dialogues.Rs2Dialogue;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
+import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
+import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcManager;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.poh.PohTeleports;
+import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
+import net.runelite.client.plugins.microbot.util.slayer.Rs2Slayer;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
 import java.awt.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class QoLScript extends Script {
 
     private final boolean bankOpen = false;
+    private boolean runOnce = false;
+    private int randomPoints = 0;
+//    @Getter
+//    @Setter
+//    private static boolean completedSlayerTask = false;
 
     public boolean run(QoLConfig config) {
         Microbot.enableAutoRunOn = false;
@@ -122,7 +140,23 @@ public class QoLScript extends Script {
     }
 
     private void handleAutoDrinkPrayPot(int points) {
-        Rs2Player.drinkPrayerPotionAt(points);
+        if(!runOnce) {
+            randomPoints = points + Rs2Random.between(-2,3);
+            if (randomPoints <= 0) {return;}
+            runOnce = true;
+//            Microbot.log("Generated prayer drink threshold: " + randomPoints);
+        }
+        if (Rs2Player.getBoostedSkillLevel(Skill.PRAYER) <= randomPoints) {
+            if(Rs2Player.drinkPrayerPotionAt(randomPoints)) {
+//                Microbot.log("Drank at " + randomPoints + " prayer points");
+                runOnce = false;
+                sleep(400);
+            }
+            if (Rs2Inventory.contains(229)){
+                Rs2Inventory.dropAll(229);
+            }
+        }
+
     }
 
     // handle dialogue continue
@@ -257,6 +291,7 @@ public class QoLScript extends Script {
 
     @Override
     public void shutdown() {
+        runOnce = false;
         super.shutdown();
         log.info("QoLScript shutdown complete.");
     }

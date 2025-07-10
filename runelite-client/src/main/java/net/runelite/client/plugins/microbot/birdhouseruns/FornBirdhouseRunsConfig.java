@@ -1,88 +1,96 @@
 package net.runelite.client.plugins.microbot.birdhouseruns;
 
-import net.runelite.client.config.*;
-import net.runelite.client.plugins.microbot.birdhouseruns.enums.Log;
-import net.runelite.client.plugins.microbot.inventorysetups.InventorySetup;
+import net.runelite.client.config.Config;
+import net.runelite.client.config.ConfigGroup;
+import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
 
-
-@ConfigInformation("Automated Birdhouse Runs on Fossil Island<br/><br/>" +
-        "<b>Requirements:</b><br/>" +
-        "• Bone Voyage quest completed<br/>" +
-        "• Hunter level 9+ (higher for better birdhouses)<br/>" +
-        "• Crafting level 15+ (higher for better birdhouses)<br/><br/>" +
-        "<b>Two Setup Options:</b><br/>" +
-        "1. Inventory Setup: Use your custom inventory configuration<br/>" +
-        "2. Auto Banking: Let the plugin handle everything!<br/><br/>" +
-        "<b>Auto Banking withdraws:</b><br/>" +
-        "• 1 Chisel & 1 Hammer<br/>" +
-        "• 1 Digsite pendant (uses lowest charges first)<br/>" +
-        "• 4 Logs (your choice)<br/>" +
-        "• 40 Seeds (automatically selects cheapest available)<br/><br/>" +
-        "The plugin visits all 4 birdhouse locations in optimal order!")
 @ConfigGroup("FornBirdhouseRuns")
 public interface FornBirdhouseRunsConfig extends Config {
     @ConfigSection(
-            name = "Inventory Setup Method",
-            description = "Use a pre-configured inventory setup",
-            position = 0
+        name = "Guide",
+        description = "Guide",
+        position = 1
     )
-    String inventorySection = "inventory";
+    String guideSection = "Guide";
 
     @ConfigItem(
-            keyName = "useInventorySetup",
-            name = "Use Inventory Setup",
-            description = "Enable to use RuneLite inventory setups | Disable for automatic banking",
-            section = inventorySection,
-            position = 0
+        keyName = "guide",
+        name = "How to use",
+        description = "How to use this plugin",
+        position = 1,
+        section = guideSection
     )
-    default boolean useInventorySetup() {
+    default String GUIDE() {
+        return "Start next to a bank\n" +
+            "Have the following in your bank:\n" +
+            "1. Digsite pendant\n" +
+            "2. Runes for Varrock tele if teleporting \n\n" +
+            "Equip graceful option will bank equipped \n" +
+            "Otherwise will use current equipped gear except amulet \n" +
+            "Have to turn off manually after run";
+    }
+
+    @ConfigSection(
+        name = "Settings",
+        description = "Settings",
+        position = 2
+    )
+    String settingsSection = "Settings";
+
+//    For debugging
+//    @ConfigItem(
+//        keyName = "step",
+//        name = "Step to start on",
+//        description = "Step to start on",
+//        position = 1,
+//        section = settingsSection
+//    )
+//    default states STEP() {
+//        return states.GEARING;
+//    }
+
+    @ConfigItem(
+        keyName = "seed",
+        name = "Seeds to use",
+        description = "What seed to use in birdhouse",
+        position = 2,
+        section = settingsSection
+    )
+    default FornBirdhouseRunsInfo.seedTypes SEED() {
+        return FornBirdhouseRunsInfo.seedTypes.POTATO_SEED;
+    }
+
+    @ConfigItem(
+        keyName = "logs",
+        name = "Logs to use",
+        description = "What logs to use for birdhouse",
+        position = 3,
+        section = settingsSection
+    )
+    default FornBirdhouseRunsInfo.logTypes LOG() {
+        return FornBirdhouseRunsInfo.logTypes.MAHOGANY_LOGS;
+    }
+
+    @ConfigItem(
+        keyName = "graceful",
+        name = "Equip graceful?",
+        description = "Should graceful be equipped from bank?",
+        position = 4,
+        section = settingsSection
+    )
+    default boolean GRACEFUL() {
         return false;
     }
 
     @ConfigItem(
-            keyName = "inventorySetup",
-            name = "Inventory Setup Name",
-            description = "Select your pre-configured inventory setup",
-            section = inventorySection,
-            position = 1
+        keyName = "teleport",
+        name = "Teleport at end?",
+        description = "Should it teleport at the end of the run?",
+        position = 5,
+        section = settingsSection
     )
-    default InventorySetup inventorySetup() {
-        return null;
-    }
-
-    @ConfigSection(
-            name = "Automatic Banking Method",
-            description = "Let the plugin handle banking for you",
-            position = 1
-    )
-    String autoSection = "auto";
-
-    @ConfigItem(
-            keyName = "logType",
-            name = "Log Type",
-            description = "Choose which logs to craft birdhouses with",
-            section = autoSection,
-            position = 0
-    )
-    default Log logType() {
-        return Log.NORMAL_LOGS;
-    }
-
-    @ConfigSection(
-            name = "Run Options",
-            description = "Additional plugin behavior",
-            position = 2
-    )
-    String optionsSection = "options";
-
-    @ConfigItem(
-            keyName = "bank",
-            name = "Bank After Run",
-            description = "Automatically bank and empty bird nests when finished",
-            section = optionsSection,
-            position = 0
-    )
-    default boolean goToBank() {
+    default boolean TELEPORT() {
         return false;
     }
 

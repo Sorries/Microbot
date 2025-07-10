@@ -11,6 +11,7 @@ import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
 import net.runelite.client.plugins.microbot.util.Global;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
@@ -87,10 +88,15 @@ public abstract class Script extends Global implements IScript {
         //Avoid executing any blocking events if the player hasn't finished Tutorial Island
         if (Microbot.isLoggedIn() && !Rs2Player.hasCompletedTutorialIsland())
             return true;
-		if (Microbot.getBlockingEventManager().shouldBlockAndProcess()) {
+
+        // Add a small delay to ensure the client has fully loaded
+        if (Microbot.getLoginTime().toSeconds() > Rs2Random.betweenInclusive(3,5)) {
+		    if (Microbot.getBlockingEventManager().shouldBlockAndProcess()) {
 			// A blocking event was found & is executing
 			return false;
-		}
+		    }
+        }
+
         if (Microbot.isLoggedIn()) {
             boolean hasRunEnergy = Microbot.getClient().getEnergy() > Microbot.runEnergyThreshold;
             if (Microbot.enableAutoRunOn && hasRunEnergy)
