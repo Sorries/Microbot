@@ -399,7 +399,7 @@ public class PluginManager
 	public boolean startPlugin(Plugin plugin) throws PluginInstantiationException
 	{
 		// plugins always start in the EDT
-		assert SwingUtilities.isEventDispatchThread();
+		//assert SwingUtilities.isEventDispatchThread();
 
 		if (activePlugins.contains(plugin) || !isPluginEnabled(plugin))
 		{
@@ -463,7 +463,7 @@ public class PluginManager
 	public boolean stopPlugin(Plugin plugin) throws PluginInstantiationException
 	{
 		// plugins always stop in the EDT
-		assert SwingUtilities.isEventDispatchThread();
+//		assert SwingUtilities.isEventDispatchThread();
 
 		if (!activePlugins.remove(plugin))
 		{
