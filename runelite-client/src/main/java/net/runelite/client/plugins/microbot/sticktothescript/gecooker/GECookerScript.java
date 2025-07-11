@@ -56,7 +56,7 @@ public class GECookerScript extends Script {
         Microbot.enableAutoRunOn = false;
 
         //Rs2antiban.resetantibansettings();
-        Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2AntibanSettings.dynamicIntensity = true;
         Rs2AntibanSettings.actionCooldownChance = 0.1;
