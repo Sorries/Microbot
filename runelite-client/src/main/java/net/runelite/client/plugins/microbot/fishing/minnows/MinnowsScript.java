@@ -32,7 +32,7 @@ public class MinnowsScript extends Script {
 
     public boolean run() {
         //Rs2antiban.resetantibansettings();
-        Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
         Rs2AntibanSettings.profileSwitching = false;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
