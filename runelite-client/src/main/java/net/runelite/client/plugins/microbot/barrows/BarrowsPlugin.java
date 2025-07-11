@@ -55,7 +55,7 @@ public class BarrowsPlugin extends Plugin implements SchedulablePlugin {
         }
         Rs2Antiban.activateAntiban();
         //Rs2antiban.resetantibansettings();
-        Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
         Rs2Antiban.setActivity(Activity.BARROWS);
         barrowsScript.run(config, this);
         barrowsScript.outOfPoweredStaffCharges = false;
