@@ -56,7 +56,7 @@ public class AgilityScript extends Script
 	public boolean run()
 	{
 		Microbot.enableAutoRunOn = true;
-		Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+		//Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
 		Rs2AntibanSettings.actionCooldownChance = 0.10;
 		Rs2AntibanSettings.dynamicActivity = false;
 		startPoint = plugin.getCourseHandler().getStartPoint();
