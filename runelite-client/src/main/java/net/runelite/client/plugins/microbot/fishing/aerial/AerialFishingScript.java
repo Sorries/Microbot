@@ -28,7 +28,7 @@ public class AerialFishingScript extends Script {
     public static final WorldPoint FISHING_SPOT = new WorldPoint(1376, 3629, 0);
     public boolean run(AerialFishingConfig config) {
         //Rs2antiban.resetantibansettings();
-        Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
         Rs2AntibanSettings.actionCooldownChance = 0.14;
         Rs2AntibanSettings.simulateMistakes = true;
         Rs2AntibanSettings.takeMicroBreaks = true;
