@@ -47,7 +47,7 @@ public class AutoCookingScript extends Script {
         Microbot.enableAutoRunOn = false;
         CookingItem cookingItem = config.cookingItem();
         //Rs2antiban.resetantibansettings();
-        Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyCookingSetup();
         Rs2Antiban.setActivity(Activity.GENERAL_COOKING);
         init = true;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
