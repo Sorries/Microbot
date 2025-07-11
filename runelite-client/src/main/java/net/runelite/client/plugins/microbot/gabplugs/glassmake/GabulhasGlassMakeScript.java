@@ -31,7 +31,7 @@ public class GabulhasGlassMakeScript extends Script {
 
     public boolean run(GabulhasGlassMakeConfig config) {
         oneTimeSpellBookCheck = false;
-        Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
         Rs2AntibanSettings.actionCooldownChance = 0.2;
        currentItem= config.ITEM();
         Microbot.enableAutoRunOn = false;
