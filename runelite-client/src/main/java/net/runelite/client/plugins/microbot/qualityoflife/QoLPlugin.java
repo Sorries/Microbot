@@ -196,6 +196,7 @@ public class QoLPlugin extends Plugin {
         qoLScript.run(config);
         wintertodtScript.run(config);
         cannonScript.run(config);
+        smartSlayer.run(config);
         autoItemDropperScript.run(config);
         eventBus.register(fletchingManager);
         eventBus.register(firemakingManager);
@@ -214,6 +215,7 @@ public class QoLPlugin extends Plugin {
         autoRunScript.shutdown();
         specialAttackScript.shutdown();
         cannonScript.shutdown();
+        smartSlayer.shutdown();
         autoItemDropperScript.shutdown();
         overlayManager.remove(qoLOverlay);
         overlayManager.remove(wintertodtOverlay);
