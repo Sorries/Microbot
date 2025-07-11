@@ -31,7 +31,7 @@ public class AlchScript extends Script {
     public boolean run() {
         Microbot.enableAutoRunOn = false;
         //Rs2antiban.resetantibansettings();
-        Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyGeneralBasicSetup();
         Rs2AntibanSettings.simulateAttentionSpan = true;
         Rs2AntibanSettings.nonLinearIntervals = true;
         Rs2AntibanSettings.contextualVariability = true;
