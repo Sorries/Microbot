@@ -88,7 +88,7 @@ public class RcScript extends Script {
     public boolean run() {
         Microbot.enableAutoRunOn = false;
         //Rs2antiban.resetantibansettings();
-        Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyRunecraftingSetup();
         Rs2Antiban.setActivity(Activity.CRAFTING_BLOODS_TRUE_ALTAR);
         Rs2Camera.setZoom(200);
         Rs2Camera.setPitch(369);
