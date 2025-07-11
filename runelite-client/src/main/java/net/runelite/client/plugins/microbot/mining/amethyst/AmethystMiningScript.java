@@ -245,7 +245,7 @@ public class AmethystMiningScript extends Script {
     }
 
     private void initialize() {
-        Rs2Antiban.antibanSetupTemplates.applyMiningSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyMiningSetup();
         status = Status.IDLE;
         miningSpot = MiningSpot.NULL;
         oreVein = null;
