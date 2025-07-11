@@ -62,7 +62,7 @@ public class BarbarianVillageFisherScript extends Script {
         Microbot.enableAutoRunOn = false;
 
         //Rs2antiban.resetantibansettings();
-        Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
+        //Rs2Antiban.antibanSetupTemplates.applyFishingSetup();
         Rs2AntibanSettings.dynamicActivity = true;
         Rs2AntibanSettings.dynamicIntensity = true;
         Rs2AntibanSettings.actionCooldownChance = 0.1;
