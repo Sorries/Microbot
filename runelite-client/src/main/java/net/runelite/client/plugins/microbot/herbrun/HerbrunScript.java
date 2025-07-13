@@ -101,9 +101,9 @@ public class HerbrunScript extends Script {
                 
             }
 
-            if (!currentPatch.isInRange(10)) {
+            if (!currentPatch.isInRange(9)) {
                 HerbrunPlugin.status = "Walking to " + currentPatch.getRegionName();
-                Rs2Walker.walkTo(currentPatch.getLocation(), 9);
+                Rs2Walker.walkTo(currentPatch.getLocation(), 8);
                 sleep(Rs2Random.skewedRandAuto(500));
             }
 
