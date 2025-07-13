@@ -1,5 +1,7 @@
 package net.runelite.client.plugins.microbot.birdhouseruns;
 
+import lombok.Getter;
+import net.runelite.api.ItemID;
 
 public class FornBirdhouseRunsInfo {
     public static states botStatus;
