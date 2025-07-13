@@ -8,6 +8,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
+import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2Cannon;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
@@ -19,6 +20,7 @@ import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.poh.PohTeleports;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.slayer.Rs2Slayer;
+import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
 import java.util.List;
 import java.util.Optional;
@@ -122,7 +124,6 @@ private static boolean completedSlayerTask = false;
                         Rs2Inventory.interact(8013, "break");
                         sleepUntil(PohTeleports::isInHouse);
                     }else if (Rs2Inventory.contains(13393)) {
-                        Rs2Inventory.interact(13393,"teleport",131076);
                         Rs2Bank.walkToBank();
                         sleepUntil(() ->Rs2Bank.isNearBank(5));
                     }
