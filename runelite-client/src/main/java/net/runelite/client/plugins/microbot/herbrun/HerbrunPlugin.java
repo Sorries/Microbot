@@ -10,9 +10,8 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.pluginscheduler.api.SchedulablePlugin;
 import net.runelite.client.plugins.microbot.pluginscheduler.condition.logical.AndCondition;
-import net.runelite.client.plugins.microbot.pluginscheduler.condition.logical.LockCondition;
 import net.runelite.client.plugins.microbot.pluginscheduler.condition.logical.LogicalCondition;
-import net.runelite.client.plugins.microbot.pluginscheduler.event.PluginScheduleEntryPostScheduleTaskEvent;
+import net.runelite.client.plugins.microbot.pluginscheduler.event.PluginScheduleEntrySoftStopEvent;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 import javax.inject.Inject;
@@ -42,8 +41,7 @@ public class HerbrunPlugin extends Plugin implements SchedulablePlugin{
     HerbrunScript herbrunScript;
 
     static String status;
-    private LockCondition lockCondition;
-    private LogicalCondition stopCondition = null;
+    private LogicalCondition stopCondition = new AndCondition();
     
 
     @Override
@@ -57,45 +55,18 @@ public class HerbrunPlugin extends Plugin implements SchedulablePlugin{
     protected void shutDown() {
         herbrunScript.shutdown();
         overlayManager.remove(HerbrunOverlay);
-        status = null; // Reset status on shutdown
     }
 
     @Subscribe
-    public void onPluginScheduleEntryPostScheduleTaskEvent(PluginScheduleEntryPostScheduleTaskEvent event) {
-        try {
-            if (event.getPlugin() == this) {
-                // Check if lock is active before stopping
-                if (lockCondition != null && lockCondition.isLocked()) {
-                    log.info("Soft stop deferred - plugin is locked: {}", lockCondition.getReason());
-                    // Defer the stop operation to respect the lock
-                    Microbot.getClientThread().invokeLater(() -> {
-                        // Re-check lock state when invokeLater executes
-                        if (lockCondition == null || !lockCondition.isLocked()) {
-                            log.info("Lock released, proceeding with deferred stop");
-                            Microbot.stopPlugin(this);
-                        } else {
-                            log.warn("Lock still active, stop operation cancelled");
-                        }
-                        return true;
-                    });
-                } else {
-                    log.info("Stopping plugin immediately - no lock active");
-                    Microbot.stopPlugin(this);
-                }
-            }
-        } catch (Exception e) {
-            log.error("Error stopping plugin: ", e);
+    public void onPluginScheduleEntrySoftStopEvent(PluginScheduleEntrySoftStopEvent event) {
+        if (event.getPlugin() == this) {
+            Microbot.log("Test");
+           Microbot.stopPlugin(this);
         }
     }
-
-    @Override
+     @Override     
     public LogicalCondition getStopCondition() {
-        if (this.stopCondition == null) {
-            this.lockCondition = new LockCondition("Herb run in progress");
-            AndCondition andCondition = new AndCondition();
-            andCondition.addCondition(lockCondition);
-            this.stopCondition = andCondition;
-        }
+        // Create a new stop condition        
         return this.stopCondition;
     }
     @Override
