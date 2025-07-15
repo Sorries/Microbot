@@ -59,8 +59,9 @@ public class HerbrunScript extends Script {
                 initialized = true;
                 HerbrunPlugin.status = "Gearing up";
                 populateHerbPatches();
-                if (herbPatches.isEmpty()) {                    
-                    plugin.reportFinished("No herb patches ready to farm",true);
+                if (herbPatches.isEmpty()) {
+                    //plugin.reportFinished("No herb patches ready to farm",true);
+                    Microbot.log("No herb patches ready to farm");
                     this.shutdown();
                     return;
                 }
@@ -96,7 +97,7 @@ public class HerbrunScript extends Script {
 //                    Rs2Bank.depositAll();
                 }
                 HerbrunPlugin.status = "Finished";
-                plugin.reportFinished("Herb run finished",true);
+                //plugin.reportFinished("Herb run finished",true);
                 this.shutdown();
                 
             }
