@@ -57,6 +57,7 @@ public class FishingTrawlerScript extends Script {
                         Rs2Widget.clickWidget(367,19);
                         sleep(Rs2Random.randomGaussian(600, 300));
                         wasInsideBoat = false;
+                        sleep(Rs2Random.skewedRandAuto(1000));
                         BreakHandlerScript.setLockState(false);
                         if (BreakHandlerScript.isBreakActive()) {
                             Microbot.log("Break time, waiting...");
@@ -82,8 +83,8 @@ public class FishingTrawlerScript extends Script {
                 String contributionText = contributionWidget != null ? contributionWidget.getText() : null;
 
                 if (gangplankMessage != null && gangplankMessage.contains("continue")) {
-                        Rs2Widget.clickWidget(WIDGET_GANGPLANK_CONTINUE);
-                        Microbot.status = "Waiting inside the boat";
+                    Rs2Widget.clickWidget(WIDGET_GANGPLANK_CONTINUE);
+                    Microbot.status = "Waiting inside the boat";
                 }
 
                 int contributionValue = 0;
@@ -100,9 +101,11 @@ public class FishingTrawlerScript extends Script {
                 if (Rs2Player.getWorldLocation().getPlane() == 0 && Rs2GameObject.exists(OBJECT_SHIPSLADDER)) {
                     Microbot.log("In minigame — heading up ladder");
                     wasInsideBoat = true;
+                    sleep(Rs2Random.skewedRandAuto(1000));
                     Rs2GameObject.interact(new WorldPoint(1884, 4826, 0), "Climb-up");
                     Rs2Player.waitForWalking();
                     Rs2Player.waitForAnimation();
+                    sleep(Rs2Random.skewedRandAuto(600));
                     Rs2Walker.walkFastCanvas(new WorldPoint(1885, 4827, 1));
                 }
 
@@ -116,15 +119,21 @@ public class FishingTrawlerScript extends Script {
                     if (tentacleNpc != null) {
                         if (!tentacle) {
                             Microbot.log("Tentacle found, chopping it down");
-                            Rs2Camera.turnTo(tentacleNpc);
+                            if (Rs2Camera.getYaw() != 512){
+                                Rs2Widget.clickWidget(1074793);
+                                Rs2Widget.clickWidgetFast(Rs2Widget.getWidget(164,31),1,4,"Look West");
+                                sleep(500,750);
+                            }
                         }
                         sleepUntil(() -> tentacleNpc.getAnimation() == 8953, 10000);
+                        sleep(50,150);
                         Rs2Npc.interact("Enormous Tentacle", "Chop");
                         sleepUntilTick(2);
-                        if (!Rs2Player.isInteracting()) Rs2Npc.interact("Enormous Tentacle", "Chop");
+                        //if (!Rs2Player.isInteracting()) Rs2Npc.interact("Enormous Tentacle", "Chop");
                         tentacle = true;
                         wasInsideBoat = true;
                         sleepUntil(() -> !Rs2Player.isInteracting());
+                        sleep(300,1000);
                     } else if (tentacle) {
                         GameObject ladderObject = Rs2GameObject.getGameObject(OBJECT_TENTACLE_LADDER);
                         if (ladderObject != null) {
