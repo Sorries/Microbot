@@ -362,6 +362,12 @@ public class Rs2Widget {
         Microbot.doInvoke(new NewMenuEntry(param0 != -1 ? param0 : widget.getType(), param1, menuAction.getId(), identifier, widget.getItemId(), target), widget.getBounds());
     }
 
+    public static void clickWidgetFast(Widget widget, int param0, int identifier, String target) {
+        int param1 = widget.getId();
+        MenuAction menuAction = MenuAction.CC_OP;
+        Microbot.doInvoke(new NewMenuEntry(param0 != -1 ? param0 : widget.getType(), param1, menuAction.getId(), identifier, widget.getItemId(), target), widget.getBounds());
+    }
+
     public static void clickWidgetFast(Widget widget, int param0) {
         clickWidgetFast(widget, param0, 1);
     }
