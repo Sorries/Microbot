@@ -57,7 +57,7 @@ public class FishingTrawlerScript extends Script {
                         Rs2Widget.clickWidget(367,19);
                         sleep(Rs2Random.randomGaussian(600, 300));
                         wasInsideBoat = false;
-                        sleep(Rs2Random.skewedRandAuto(1000));
+                        sleep(Rs2Random.skewedRandAuto(1500));
                         BreakHandlerScript.setLockState(false);
                         if (BreakHandlerScript.isBreakActive()) {
                             Microbot.log("Break time, waiting...");
