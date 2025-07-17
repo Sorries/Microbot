@@ -120,7 +120,7 @@ public class FishingTrawlerScript extends Script {
                         if (!tentacle) {
                             Microbot.log("Tentacle found, chopping it down");
                             if (Rs2Camera.getYaw() != 512){
-                                Rs2Widget.clickWidget(1074793);
+                                //Rs2Widget.clickWidget(1074793);
                                 Rs2Widget.clickWidgetFast(Rs2Widget.getWidget(164,31),1,4,"Look West");
                                 sleep(500,750);
                             }
