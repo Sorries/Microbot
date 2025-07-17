@@ -21,6 +21,8 @@ public class PotionManagerScript extends Script {
                 if (!super.run()) return;
                 if (!config.enablePotionManager()) return;
 
+                sleep(500,1500);
+
                 // Always attempt to drink anti-poison
                 if (Rs2Player.drinkAntiPoisonPotion()) {
                     Rs2Player.waitForAnimation();
