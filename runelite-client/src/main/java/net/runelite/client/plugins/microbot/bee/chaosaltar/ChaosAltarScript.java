@@ -25,6 +25,7 @@ import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Pvp;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
@@ -198,9 +199,11 @@ public class ChaosAltarScript extends Script {
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
             sleep(1000,3000);
-        }else{
+        }else if (Rs2Npc.getNpc(CHAOS_FANATIC) == null){
             Rs2Walker.walkTo(2979, 3845,0,10);
             sleep(1500,3000);
+        }else{
+            Rs2Player.hopIfPlayerDetected(1,Rs2Random.betweenInclusive(1000,3000),30);
         }
     }
 
@@ -232,8 +235,9 @@ public class ChaosAltarScript extends Script {
             sleep(500,750);
         }
 
-        boolean underAttack = Rs2Combat.inCombat();
+        boolean underAttack = Rs2Player.getHealthPercentage() < 95;
         Rs2Prayer.toggleQuickPrayer(underAttack);
+
 
         //if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
         //System.out.println("11");
