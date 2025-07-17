@@ -185,6 +185,7 @@ public class HerbrunScript extends Script {
             case "Harvestable":
                 Rs2GameObject.interact(obj, "Pick");
                 sleepUntil(() -> getHerbPatchState(obj).equals("Empty") || Rs2Inventory.isFull(), 20000);
+
                 return false;
             case "Weeds":
                 Rs2GameObject.interact(obj);
