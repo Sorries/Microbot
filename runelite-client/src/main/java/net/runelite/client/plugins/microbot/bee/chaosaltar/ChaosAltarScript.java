@@ -131,7 +131,11 @@ public class ChaosAltarScript extends Script {
         boolean atAltar = isAtChaosAltar();
 //        System.out.println("has any bones: " + Rs2Inventory.contains(DRAGON_BONES));
 //        System.out.println("is at altar: " + isAtChaosAltar());
-
+        boolean underAttack = Rs2Player.getHealthPercentage() < 95;
+        if (!Rs2Prayer.isQuickPrayerEnabled() && underAttack) {
+            //Rs2Prayer.toggleQuickPrayer(underAttack);
+            Rs2Widget.clickWidget(10485779);
+        }
 
         if (!inWilderness && !hasBones) {
             return State.BANK;
@@ -195,6 +199,11 @@ public class ChaosAltarScript extends Script {
         //sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 2000);
         // Attack chaos fanatic to die
         if (Rs2Combat.inCombat() || Rs2Npc.attack("Chaos Fanatic")) {
+            if (!Rs2Prayer.isQuickPrayerEnabled()) {
+                sleep(1000,2000);
+                Rs2Widget.clickWidget(10485779);
+                sleep(1000,2000);
+            }
             Rs2Equipment.unEquip(EquipmentInventorySlot.WEAPON);
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
@@ -236,10 +245,10 @@ public class ChaosAltarScript extends Script {
         }
 
         boolean underAttack = Rs2Player.getHealthPercentage() < 95;
-        Rs2Prayer.toggleQuickPrayer(underAttack);
-
-
-        //if (Rs2Player.isInCombat()) {offerBonesFast(); return;}
+        if (underAttack) {
+            offerBonesFast();
+            return;
+        }
         //System.out.println("11");
         if (CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
             //System.out.println("22");
