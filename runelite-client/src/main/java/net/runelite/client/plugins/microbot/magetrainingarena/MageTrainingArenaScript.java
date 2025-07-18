@@ -34,7 +34,6 @@ import net.runelite.client.plugins.mta.telekinetic.TelekineticRoom;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 
 import java.awt.event.KeyEvent;
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -45,7 +44,7 @@ import static net.runelite.client.plugins.microbot.util.magic.Rs2Magic.getRs2Sta
 import static net.runelite.client.plugins.microbot.util.magic.Rs2Magic.getRs2Tome;
 
 public class MageTrainingArenaScript extends Script {
-    public static String version = "1.1.3";
+    public static String version = "1.1.2";
 
     private static boolean firstTime = false;
 
@@ -189,8 +188,7 @@ public class MageTrainingArenaScript extends Script {
         Predicate<Rs2ItemModel> additionalItemPredicate = x -> !x.getName().toLowerCase().contains("rune")
                 && !x.getName().toLowerCase().contains("staff")
                 && !x.getName().toLowerCase().contains("tome")
-                && !previousRewards.contains(x.getId())
-                && !x.getName().toLowerCase().contains("bass");
+                && !previousRewards.contains(x.getId());
 
         if (Rs2Inventory.contains(additionalItemPredicate)) {
             if (!Rs2Bank.walkToBankAndUseBank())
@@ -321,18 +319,12 @@ public class MageTrainingArenaScript extends Script {
             sleepGaussian(600, 150);
             Rs2Inventory.interact(itemId);
 
-            sleepUntil(() -> !Rs2Inventory.contains(itemId) || itemId != ItemID.MAGICTRAINING_DRAGONSTONE && bonusShape != getBonusShape(), 20_000);
-        } else {
-            // keep clicking for around 5-7 * 2 tick
-            int maxShapes = Rs2Random.between(5, 7);
-            Instant maxTime = Instant.now().plusMillis(maxShapes * 1200L); // 2 ticks per shape
-            while (Rs2Inventory.emptySlotCount() > 0 && Rs2GameObject.getGameObject(obj -> obj.getId() == bonusShape.getObjectId() && Rs2Camera.isTileOnScreen(obj)) != null && Instant.now().isBefore(maxTime)) {
-                Rs2GameObject.interact(object, "Take-from");
-                sleepGaussian(80, 30);
-            }
-            if (Rs2Player.getWorldLocation().distanceTo(object.getWorldLocation()) > 10) {
-                Rs2Walker.setTarget(null);
-            }
+            sleepUntil(() -> !Rs2Inventory.contains(itemId) || itemId != ItemID.MAGICTRAINING_DRAGONSTONE && bonusShape != getBonusShape(), 20000);
+        } else if (Rs2GameObject.interact(object, "Take-from")) {
+            Rs2Inventory.waitForInventoryChanges(1000);
+            Rs2Walker.setTarget(null);
+        } else if (Rs2Player.getWorldLocation().distanceTo(object.getWorldLocation()) > 10){
+            Rs2Walker.walkFastCanvas(object.getWorldLocation());
         }
     }
 
@@ -357,7 +349,7 @@ public class MageTrainingArenaScript extends Script {
         if (room.getTarget() != null)
             target = room.getTarget();
         else {
-            Rs2Walker.walkTo(teleRoom.getMaze(), 4);
+            Rs2Walker.walkTo(teleRoom.getMaze(), 2);
             sleepUntil(() -> room.getTarget() != null, 10_000);
             // MageTrainingArenaScript is dependent on the official mage arena plugin of runelite
             // In some cases it glitches out and target is not defined by an arrow, in this case we will reset them room
@@ -373,8 +365,8 @@ public class MageTrainingArenaScript extends Script {
         var localTarget = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), target);
         var targetConverted = WorldPoint.fromLocalInstance(Microbot.getClient(), Objects.requireNonNull(localTarget));
 
-        if (Rs2Camera.getZoom() < 40 || Rs2Camera.getZoom() > 60) {
-            Rs2Camera.setZoom(Rs2Random.betweenInclusive(40,60));
+        if (Microbot.getClient().getScale() < 400) {
+            Rs2Camera.setZoom(Rs2Random.between(400, 430));
         }
 
         if (room.getGuardian().getWorldLocation().equals(room.getFinishLocation())) {
@@ -383,7 +375,7 @@ public class MageTrainingArenaScript extends Script {
             Rs2Npc.interact(new Rs2NpcModel(room.getGuardian()), "New-maze");
             sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(teleRoom.getArea()) != 0);
         } else {
-            while (!Rs2Player.getWorldLocation().equals(targetConverted)
+            if (!Rs2Player.getWorldLocation().equals(targetConverted)
                     && (Microbot.getClient().getLocalDestinationLocation() == null
                     || !Microbot.getClient().getLocalDestinationLocation().equals(localTarget))) {
                 if (Rs2Camera.isTileOnScreen(localTarget) && Rs2Player.getWorldLocation().distanceTo(targetConverted) < 10) {
@@ -392,7 +384,6 @@ public class MageTrainingArenaScript extends Script {
                 } else {
                     Rs2Walker.walkTo(targetConverted);
                 }
-                sleepUntil(() -> !Rs2Player.isMoving());
             }
 
             if (!Rs2Player.isAnimating()
@@ -403,7 +394,7 @@ public class MageTrainingArenaScript extends Script {
                     && !room.getGuardian().getLocalLocation().equals(room.getDestination())) {
                 Rs2Magic.cast(MagicAction.TELEKINETIC_GRAB);
                 sleepGaussian(600, 150);
-                if (Rs2Random.dicePercentage(20)) {
+                if (!Rs2Camera.isTileOnScreen(room.getGuardian().getLocalLocation())) {
                     Rs2Camera.turnTo(room.getGuardian());
                 }
                 Rs2Npc.interact(new Rs2NpcModel(room.getGuardian()));
@@ -424,7 +415,9 @@ public class MageTrainingArenaScript extends Script {
         if (mtaPlugin.getGraveyardRoom().getCounter() != null && mtaPlugin.getGraveyardRoom().getCounter().getCount() >= boneGoal) {
             Rs2Magic.cast(btp ? MagicAction.BONES_TO_PEACHES : MagicAction.BONES_TO_BANANAS);
             Rs2Player.waitForAnimation();
+            return;
         }
+
         if (Rs2Inventory.contains(ItemID.BANANA, ItemID.PEACH)) {
             var currentHp = Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS);
             var maxHp = Microbot.getClient().getRealSkillLevel(Skill.HITPOINTS);
@@ -439,13 +432,13 @@ public class MageTrainingArenaScript extends Script {
                         sleepGaussian(1400, 350);
                 }
             }
-            Rs2GameObject.interact(new WorldPoint(3354, 9639, 1), "Deposit");
-            sleepUntil(() -> !Rs2Inventory.contains(ItemID.BANANA, ItemID.PEACH), 5000);
+
+            Rs2Inventory.waitForInventoryChanges(() -> Rs2GameObject.interact(new WorldPoint(3354, 9639, 1), "Deposit"));
+            return;
         }
-        while (mtaPlugin.getGraveyardRoom().getCounter() == null || mtaPlugin.getGraveyardRoom().getCounter().getCount() < boneGoal){
-            Rs2GameObject.interact(new WorldPoint(3352, 9637, 1), "Grab");
-            sleep(Rs2Random.betweenInclusive(50, 500));
-        }
+
+        Rs2GameObject.interact(new WorldPoint(3352, 9637, 1), "Grab");
+        Rs2Player.waitForWalking();
     }
 
     private void handleAlchemistRoom() {
