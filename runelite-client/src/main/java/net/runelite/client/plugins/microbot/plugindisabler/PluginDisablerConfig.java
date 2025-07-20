@@ -117,5 +117,15 @@ public interface PluginDisablerConfig extends Config {
         return 120;
     }
 
+    @ConfigItem(
+            name = "Teleport out after disabling plugin",
+            keyName = "teleOut",
+            position = 12,
+            description = "Teleport out after disabling plugin"
+    )
+    default boolean teleOut() {
+        return true;
+    }
+
 
 }
