@@ -124,7 +124,7 @@ public interface PluginDisablerConfig extends Config {
             description = "Teleport out after disabling plugin"
     )
     default boolean teleOut() {
-        return true;
+        return false;
     }
 
 
