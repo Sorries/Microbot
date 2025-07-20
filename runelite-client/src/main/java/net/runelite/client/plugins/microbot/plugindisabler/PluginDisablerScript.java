@@ -8,7 +8,10 @@ import net.runelite.client.config.Notification;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
+import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
+import net.runelite.client.plugins.microbot.util.poh.PohTeleports;
 
 
 import javax.inject.Inject;
@@ -85,7 +88,7 @@ public class PluginDisablerScript extends Script {
                 checkExpGained();
                 if (config.noExp() && config.minutes() > 0) {
                     long now = System.currentTimeMillis();
-                    PluginDisablerScript.minutesSinceXpGained = (now - lastXpTime) / (60 * 1000.0);
+                    minutesSinceXpGained = (now - lastXpTime) / (60 * 1000.0);
                     System.out.printf("No exp for %.2f seconds%n", (now - lastXpTime) / 1000.0);
                     if ((now - lastXpTime) > ((long) config.minutes() * 60 * 1000)) {
                         Microbot.log("Disabling plugin due to no experience gained for " + Math.round(minutesSinceXpGained) + " minutes.");
@@ -157,6 +160,20 @@ public class PluginDisablerScript extends Script {
         Microbot.pauseAllScripts.set(true);
         disablePluginsFlag = false;
         setLockState(true);
+        if (config.teleOut()){
+            if(Rs2Inventory.contains(8013)) {
+                Rs2Inventory.interact(8013, "break");
+                sleepUntil(PohTeleports::isInHouse);
+            }else if (Rs2Bank.walkToBankAndUseBank()){
+                Rs2Bank.withdrawOne(8013);
+                Rs2Inventory.waitForInventoryChanges(1000);
+                Rs2Bank.closeBank();
+                sleepUntil(() -> !Rs2Bank.isOpen());
+                Rs2Inventory.interact(8013, "break");
+                sleepUntil(PohTeleports::isInHouse);
+            }
+
+        }
         notifier.notify(Notification.ON, "Plugin Disabled.");
     }
 
