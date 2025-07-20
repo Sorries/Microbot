@@ -82,8 +82,15 @@ public class PluginDisablerOverlay extends OverlayPanel {
                         .build());
             }
 
-            if (PluginDisablerScript.disablePluginsFlag){panelComponent.getChildren().add(LineComponent.builder().build());
-            panelComponent.getChildren().add(TitleComponent.builder()
+            if(config.teleOut()){
+                panelComponent.getChildren().add(TitleComponent.builder()
+                        .text("Will teleport Out")
+                        .color(Color.BLUE)
+                        .build());
+            }
+
+            if (PluginDisablerScript.disablePluginsFlag){
+                panelComponent.getChildren().add(TitleComponent.builder()
                     .text("Enabled")
                     .color(Color.GREEN)
                     .build());
