@@ -11,6 +11,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
+import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.poh.PohTeleports;
 
 
@@ -161,6 +162,7 @@ public class PluginDisablerScript extends Script {
         disablePluginsFlag = false;
         setLockState(true);
         if (config.teleOut()){
+            sleepUntil(()-> !Rs2Player.isMoving() && !Rs2Player.isInteracting(),20000);
             if(Rs2Inventory.contains(8013)) {
                 Rs2Inventory.interact(8013, "break");
                 sleepUntil(PohTeleports::isInHouse);
@@ -172,7 +174,6 @@ public class PluginDisablerScript extends Script {
                 Rs2Inventory.interact(8013, "break");
                 sleepUntil(PohTeleports::isInHouse);
             }
-
         }
         notifier.notify(Notification.ON, "Plugin Disabled.");
     }
