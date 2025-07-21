@@ -68,6 +68,7 @@ public class BarbarianFishingScript extends Script {
             }
 
             if (!Rs2Camera.isTileOnScreen(fishingspot.getLocalLocation())) {
+                sleep(1000,5000);
                 validateInteractable(fishingspot);
             }
 
