@@ -198,8 +198,7 @@ public class ChaosAltarScript extends Script {
         //Microbot.log("Walking");
         //sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 2000);
         // Attack chaos fanatic to die
-        if (Rs2Player.isInCombat()) {return;}
-        if (Rs2Combat.inCombat() || Rs2Npc.attack("Chaos Fanatic")) {
+        if (Rs2Player.isInCombat() || Rs2Npc.attack("Chaos Fanatic")) {
             if (!Rs2Prayer.isQuickPrayerEnabled()) {
                 sleep(1000,2000);
                 Rs2Widget.clickWidget(10485779);
