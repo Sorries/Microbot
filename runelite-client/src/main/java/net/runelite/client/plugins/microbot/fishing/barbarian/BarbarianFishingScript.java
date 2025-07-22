@@ -68,14 +68,11 @@ public class BarbarianFishingScript extends Script {
             }
 
             if (!Rs2Camera.isTileOnScreen(fishingspot.getLocalLocation())) {
-                sleep(1000,5000);
                 validateInteractable(fishingspot);
             }
 
-            if(Rs2Npc.interact(fishingspot, "Use-rod")) {
-                Rs2Antiban.actionCooldown();
-                Rs2Antiban.takeMicroBreakByChance();
-            };
+            sleep(1000, 10000);
+            Rs2Npc.interact(fishingspot, "Use-rod");
 
         }, 0, 600, TimeUnit.MILLISECONDS);
         return true;
