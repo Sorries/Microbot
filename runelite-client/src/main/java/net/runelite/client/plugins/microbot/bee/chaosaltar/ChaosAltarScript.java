@@ -198,6 +198,7 @@ public class ChaosAltarScript extends Script {
         //Microbot.log("Walking");
         //sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 2000);
         // Attack chaos fanatic to die
+        if (Rs2Player.isInCombat()) {return;}
         if (Rs2Combat.inCombat() || Rs2Npc.attack("Chaos Fanatic")) {
             if (!Rs2Prayer.isQuickPrayerEnabled()) {
                 sleep(1000,2000);
@@ -287,7 +288,7 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10747935);
         }
 
-        while (Rs2Inventory.contains(DRAGON_BONES)
+        if (Rs2Inventory.contains(DRAGON_BONES)
                 && isRunning()
                 && CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())
                 && Rs2GameObject.exists(411)) {
