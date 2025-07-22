@@ -348,7 +348,7 @@ public class MageTrainingArenaScript extends Script {
         if (room.getTarget() != null)
             target = room.getTarget();
         else {
-            Rs2Walker.walkTo(teleRoom.getMaze(), 2);
+            Rs2Walker.walkTo(teleRoom.getMaze(), 3);
             sleepUntil(() -> room.getTarget() != null, 10_000);
             // MageTrainingArenaScript is dependent on the official mage arena plugin of runelite
             // In some cases it glitches out and target is not defined by an arrow, in this case we will reset them room
@@ -392,13 +392,13 @@ public class MageTrainingArenaScript extends Script {
                     && TelekineticRoom.getMoves().peek() == room.getPosition()
                     && room.getGuardian().getId() != NpcID.MAGICTRAINING_GUARD_MAZE_MOVING
                     && !room.getGuardian().getLocalLocation().equals(room.getDestination())) {
-                Rs2Magic.cast(MagicAction.TELEKINETIC_GRAB);
-                sleep(100, 300);
-                sleepUntil(()->room.getGuardian().getId() != NpcID.MAGICTRAINING_GUARD_MAZE_MOVING);
                 if (!Rs2Camera.isTileOnScreen(room.getGuardian().getLocalLocation())) {
                     Rs2Camera.turnTo(room.getGuardian());
                 }
+                Rs2Magic.cast(MagicAction.TELEKINETIC_GRAB);
+                sleep(100, 300);
                 Rs2Npc.interact(new Rs2NpcModel(room.getGuardian()));
+                sleepUntil(()->room.getGuardian().getId() != NpcID.MAGICTRAINING_GUARD_MAZE_MOVING);
             }
         }
     }
@@ -444,11 +444,14 @@ public class MageTrainingArenaScript extends Script {
             }
             return;
         }
+        if (mtaPlugin.getGraveyardRoom().getCounter() == null){
+            Rs2GameObject.interact(new WorldPoint(3352, 9637, 1), "Grab");
+        }
         while (mtaPlugin.getGraveyardRoom().getCounter() != null && mtaPlugin.getGraveyardRoom().getCounter().getCount() < boneGoal && isRunning()){
             System.out.println("Plugin Counter: " + mtaPlugin.getGraveyardRoom().getCounter().getCount() + " boneGoal: " + boneGoal);
             Rs2GameObject.interact(new WorldPoint(3352, 9637, 1), "Grab");
             Rs2Inventory.waitForInventoryChanges(5000);
-            boneGoal = 28 - Rs2Inventory.items().filter(x -> x.getName().equalsIgnoreCase("Animals' bones")).count();
+            boneGoal = (Rs2Inventory.items().filter(x -> x.getName().equalsIgnoreCase("Animals' bones")).count()+Rs2Inventory.emptySlotCount());
             sleep(Rs2Random.skewedRandAuto(400));
         }
 
