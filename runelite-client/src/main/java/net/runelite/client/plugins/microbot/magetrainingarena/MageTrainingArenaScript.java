@@ -44,7 +44,7 @@ import static net.runelite.client.plugins.microbot.util.magic.Rs2Magic.getRs2Sta
 import static net.runelite.client.plugins.microbot.util.magic.Rs2Magic.getRs2Tome;
 
 public class MageTrainingArenaScript extends Script {
-    public static String version = "1.1.2";
+    public static String version = "1.1.4";
 
     private static boolean firstTime = false;
 
@@ -187,7 +187,8 @@ public class MageTrainingArenaScript extends Script {
         Predicate<Rs2ItemModel> additionalItemPredicate = x -> !x.getName().toLowerCase().contains("rune")
                 && !x.getName().toLowerCase().contains("staff")
                 && !x.getName().toLowerCase().contains("tome")
-                && !previousRewards.contains(x.getId());
+                && !previousRewards.contains(x.getId())
+                && !x.getName().toLowerCase().contains("bass");
 
         if (Rs2Inventory.contains(additionalItemPredicate)) {
             if (!Rs2Bank.walkToBankAndUseBank())
@@ -279,10 +280,7 @@ public class MageTrainingArenaScript extends Script {
             return;
         }
 
-        boolean successFullLoot = Rs2Inventory.waitForInventoryChanges(() -> {
-            Rs2GroundItem.loot(ItemID.MAGICTRAINING_DRAGONSTONE, 12);
-            sleepUntil(() -> !Rs2Player.isMoving() && Rs2Inventory.waitForInventoryChanges(5000));
-        });
+        boolean successFullLoot = Rs2GroundItem.loot(ItemID.MAGICTRAINING_DRAGONSTONE, 12) && Rs2Inventory.waitForInventoryChanges(5000);
 
         if (successFullLoot && Rs2Inventory.emptySlotCount() > 0)
             return;
@@ -348,7 +346,7 @@ public class MageTrainingArenaScript extends Script {
         if (room.getTarget() != null)
             target = room.getTarget();
         else {
-            Rs2Walker.walkTo(teleRoom.getMaze(), 3);
+            Rs2Walker.walkTo(teleRoom.getMaze(), 4);
             sleepUntil(() -> room.getTarget() != null, 10_000);
             // MageTrainingArenaScript is dependent on the official mage arena plugin of runelite
             // In some cases it glitches out and target is not defined by an arrow, in this case we will reset them room
@@ -364,8 +362,8 @@ public class MageTrainingArenaScript extends Script {
         var localTarget = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), target);
         var targetConverted = WorldPoint.fromLocalInstance(Microbot.getClient(), Objects.requireNonNull(localTarget));
 
-        if (Microbot.getClient().getScale() < 400) {
-            Rs2Camera.setZoom(Rs2Random.between(400, 430));
+        if (Rs2Camera.getZoom() < 40 || Rs2Camera.getZoom() > 60) {
+            Rs2Camera.setZoom(Rs2Random.betweenInclusive(40,60));
         }
 
         if (room.getGuardian().getWorldLocation().equals(room.getFinishLocation())) {
@@ -392,11 +390,11 @@ public class MageTrainingArenaScript extends Script {
                     && TelekineticRoom.getMoves().peek() == room.getPosition()
                     && room.getGuardian().getId() != NpcID.MAGICTRAINING_GUARD_MAZE_MOVING
                     && !room.getGuardian().getLocalLocation().equals(room.getDestination())) {
-                if (!Rs2Camera.isTileOnScreen(room.getGuardian().getLocalLocation())) {
+                Rs2Magic.cast(MagicAction.TELEKINETIC_GRAB);
+                sleepGaussian(600, 150);
+                if (Rs2Random.dicePercentage(50)) {
                     Rs2Camera.turnTo(room.getGuardian());
                 }
-                Rs2Magic.cast(MagicAction.TELEKINETIC_GRAB);
-                sleep(100, 300);
                 Rs2Npc.interact(new Rs2NpcModel(room.getGuardian()));
                 sleepUntil(()->room.getGuardian().getId() != NpcID.MAGICTRAINING_GUARD_MAZE_MOVING);
             }
@@ -482,12 +480,11 @@ public class MageTrainingArenaScript extends Script {
 
         if (room.getSuggestion() == null) {
             Rs2GameObject.interact("Cupboard", "Search");
-            Rs2Inventory.waitForInventoryChanges(5000);
             sleep(300,600);
 
         } else {
             Rs2GameObject.interact(room.getSuggestion().getGameObject(), "Take-5");
-            Rs2Inventory.waitForInventoryChanges(2000);
+            Rs2Inventory.waitForInventoryChanges(3000);
             sleep(300,600);
         }
     }
