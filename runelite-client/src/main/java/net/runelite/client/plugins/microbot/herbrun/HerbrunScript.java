@@ -77,8 +77,10 @@ public class HerbrunScript extends Script {
                         Rs2Inventory.interact(24478,"Empty to bank",9);
                         sleep(Rs2Random.between(500,800));
                     }
-                    Rs2Bank.closeBank();
-                    sleepUntil(()->!Rs2Bank.isOpen());
+                    while(Rs2Bank.isOpen()){
+                        Rs2Bank.closeBank();
+                        sleepUntil(()->!Rs2Bank.isOpen());
+                    }
                 }
 
                 log("Will visit " + herbPatches.size() + " herb patches");
