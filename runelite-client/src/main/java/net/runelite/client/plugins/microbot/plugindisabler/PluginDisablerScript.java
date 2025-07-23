@@ -167,12 +167,18 @@ public class PluginDisablerScript extends Script {
                 Rs2Inventory.interact(8013, "break");
                 sleepUntil(PohTeleports::isInHouse);
             }else if (Rs2Bank.walkToBankAndUseBank()){
-                Rs2Bank.withdrawOne(8013);
-                Rs2Inventory.waitForInventoryChanges(1000);
-                Rs2Bank.closeBank();
-                sleepUntil(() -> !Rs2Bank.isOpen());
-                Rs2Inventory.interact(8013, "break");
-                sleepUntil(PohTeleports::isInHouse);
+                if(Rs2Bank.isOpen()){
+                    if(Rs2Inventory.emptySlotCount() <= 1) {
+                        Rs2Bank.depositAll();
+                        Rs2Inventory.waitForInventoryChanges(1000);
+                    }
+                    Rs2Bank.withdrawOne(8013);
+                    Rs2Inventory.waitForInventoryChanges(1000);
+                    Rs2Bank.closeBank();
+                    sleepUntil(() -> !Rs2Bank.isOpen());
+                    Rs2Inventory.interact(8013, "break");
+                    sleepUntil(PohTeleports::isInHouse);
+                }
             }
         }
         notifier.notify(Notification.ON, "Plugin Disabled.");
