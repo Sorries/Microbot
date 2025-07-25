@@ -265,16 +265,20 @@ public class QoLPlugin extends Plugin implements KeyListener {
     public void onChatMessage(ChatMessage chatMessage) {
         ChatMessageType chatMessageType = chatMessage.getType();
 
+
         if (!Microbot.isLoggedIn()) return;
         if (isInWintertodtRegion()
                 && (chatMessageType == ChatMessageType.GAMEMESSAGE || chatMessageType == ChatMessageType.SPAM)) {
             wintertodtScript.onChatMessage(chatMessage);
         }
-//        if (chatMessage.getMessage().toLowerCase().contains("you received")) {
+
+//        if (chatMessage.getMessage().toLowerCase().contains("you have completed your task")) {
 //            Microbot.log(""+ chatMessage.getType());
-//            QoLScript.setCompletedSlayerTask(true);
 //        }
-        if (chatMessage.getType() == ChatMessageType.CONSOLE) {
+
+        //Microbot.log("Chat message"+ chatMessage.getMessage() +" Chat message type: " + chatMessageType);
+
+        if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
             String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
             if (cleanText.toLowerCase().contains("you have completed your task")) {
                 SmartSlayer.setCompletedSlayerTask(true);
