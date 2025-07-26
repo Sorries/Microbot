@@ -198,12 +198,12 @@ public class ChaosAltarScript extends Script {
         //Microbot.log("Walking");
         //sleepUntil(() -> Rs2Npc.getNpc(CHAOS_FANATIC) != null, 2000);
         // Attack chaos fanatic to die
+        if (!Rs2Prayer.isQuickPrayerEnabled()) {
+            sleep(1000,2000);
+            Rs2Widget.clickWidget(10485779);
+            sleep(1000,2000);
+        }
         if (Rs2Player.isInCombat() || Rs2Npc.attack("Chaos Fanatic")) {
-            if (!Rs2Prayer.isQuickPrayerEnabled()) {
-                sleep(1000,2000);
-                Rs2Widget.clickWidget(10485779);
-                sleep(1000,2000);
-            }
             Rs2Equipment.unEquip(EquipmentInventorySlot.WEAPON);
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
