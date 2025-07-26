@@ -36,15 +36,15 @@ public class SmartSlayer extends Script {
 private static boolean completedSlayerTask = false;
 
 
-    public boolean run(QoLConfig config) {
-        mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
-            try {
-                if (!Microbot.isLoggedIn()) return;
-                if (!super.run() || !config.smartSlayer()) return;
-                List<String> monsters = Rs2Slayer.getSlayerMonsters();
-                AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
-                if (monsters != null) {
-                    for (String monster : monsters) {
+public boolean run(QoLConfig config) {
+    mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
+        try {
+            if (!Microbot.isLoggedIn()) return;
+            if (!super.run() || !config.smartSlayer()) return;
+            List<String> monsters = Rs2Slayer.getSlayerMonsters();
+            AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
+            if (monsters != null) {
+                for (String monster : monsters) {
 //                        Rs2Npc.getNpcs(monster).forEach(npc -> {
 //                            if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 5) {
 //                                isNearSlayerMonster.set(true);
@@ -59,22 +59,22 @@ private static boolean completedSlayerTask = false;
 //                                    isNearSlayerMonster.set(true);
 //                                }
 //                            });
-                        Optional.ofNullable(Rs2Npc.getNpcs(monster))
-                                .orElse(Stream.empty())
-                                .forEach(npc -> {
-                                    if (npc == null) {
-                                        Microbot.log("Npc is null for monster: " + monster);
-                                        return;
-                                    }
-                                    if (npc.getWorldLocation() == null || Rs2Player.getWorldLocation() == null) {
-                                        Microbot.log("Null location: NPC=" + npc.getName());
-                                        return;
-                                    }
+                    Optional.ofNullable(Rs2Npc.getNpcs(monster))
+                            .orElse(Stream.empty())
+                            .forEach(npc -> {
+                                if (npc == null) {
+                                    Microbot.log("Npc is null for monster: " + monster);
+                                    return;
+                                }
+                                if (npc.getWorldLocation() == null || Rs2Player.getWorldLocation() == null) {
+                                    Microbot.log("Null location: NPC=" + npc.getName());
+                                    return;
+                                }
 
-                                    if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
-                                        isNearSlayerMonster.set(true);
-                                    }
-                                });
+                                if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
+                                    isNearSlayerMonster.set(true);
+                                }
+                            });
                     }
                 }
                 if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
