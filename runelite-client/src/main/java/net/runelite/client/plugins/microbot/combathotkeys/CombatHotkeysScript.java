@@ -27,14 +27,17 @@ public class CombatHotkeysScript extends Script {
                     if(Rs2Player.getWorldLocation().equals(config.tile1())){
                         Rs2Walker.walkFastCanvas(config.tile2());
                         Global.sleepUntil(() -> Rs2Player.getWorldLocation().equals(config.tile2()), 1000);
+                        sleep(100,250);
                     }
                     else if(Rs2Player.getWorldLocation().equals(config.tile2())){
                         Rs2Walker.walkFastCanvas(config.tile1());
                         Global.sleepUntil(() -> Rs2Player.getWorldLocation().equals(config.tile1()), 1000);
+                        sleep(100,250);
                     }
                     else{
                         Rs2Walker.walkFastCanvas(config.tile1());
                         Global.sleepUntil(() -> Rs2Player.getWorldLocation().equals(config.tile1()), 1000);
+                        sleep(100,250);
                     }
                 }
             } catch (Exception ex) {
