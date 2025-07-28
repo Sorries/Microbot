@@ -71,6 +71,7 @@ public class HerbrunScript extends Script {
                     if (Rs2Combat.enableAutoRetialiate()) {
                         sleep(500, 750);
                         Rs2Tab.switchToInventoryTab();
+                        sleep(1500,3000);
                     }
                 }
                 var inventorySetup = new Rs2InventorySetup(config.inventorySetup(), mainScheduledFuture);
