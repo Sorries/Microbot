@@ -259,7 +259,7 @@ public class MotherloadMineScript extends Script
     private void fixWaterwheel()
     {
         ensureLowerFloor();
-        if (Rs2Walker.walkTo(new WorldPoint(3741, 5666, 0), 15))
+        if (Rs2Walker.walkTo(new WorldPoint(3741, 5665, 0), 15))
         {
             Microbot.isGainingExp = false;
             if (Rs2GameObject.interact(ObjectID.BROKEN_STRUT))
