@@ -287,14 +287,14 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10747935);
         }
 
-        if (Rs2Inventory.contains(DRAGON_BONES)
+        while (Rs2Inventory.contains(DRAGON_BONES)
                 && isRunning()
                 && CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())
                 && Rs2GameObject.exists(411)) {
             Rs2Inventory.useLast(DRAGON_BONES);
-            sleep((int)Rs2Random.skewedRand(150,100,250,2));
+            sleep((int)Rs2Random.skewedRand(150,100,200,2));
             Rs2GameObject.interact(411);
-            sleep((int)Rs2Random.skewedRand(150,100,250,2));
+            sleep((int)Rs2Random.skewedRand(150,100,200,2));
         }
     }
 
