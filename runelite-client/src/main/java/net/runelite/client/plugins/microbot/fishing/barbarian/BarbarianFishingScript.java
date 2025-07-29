@@ -57,7 +57,7 @@ public class BarbarianFishingScript extends Script {
                 return;
 
             if (Rs2Inventory.isFull()) {
-                sleep(1000,8000);
+                sleep(3000, 10000);
                 dropInventoryItems(config);
                 return;
             }
@@ -71,10 +71,8 @@ public class BarbarianFishingScript extends Script {
                 validateInteractable(fishingspot);
             }
 
-            if(Rs2Npc.interact(fishingspot, "Use-rod")) {
-                Rs2Antiban.actionCooldown();
-                Rs2Antiban.takeMicroBreakByChance();
-            };
+            sleep(1000, 2000);
+            Rs2Npc.interact(fishingspot, "Use-rod");
 
         }, 0, 600, TimeUnit.MILLISECONDS);
         return true;
