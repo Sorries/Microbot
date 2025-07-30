@@ -1112,6 +1112,9 @@ public class Rs2Walker {
                 }
 
                 if (found) {
+                    if (Rs2Player.getWorldLocation().getRegionID() == 13150){
+                        return true;
+                    }
                     if (!handleDoorException(object, action)) {
                         Microbot.log("Door Object: " + object + ", Door action: " + action);
                         Rs2GameObject.interact(object, action);
