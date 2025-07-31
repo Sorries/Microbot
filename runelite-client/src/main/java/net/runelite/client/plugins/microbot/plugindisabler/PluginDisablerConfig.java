@@ -97,10 +97,32 @@ public interface PluginDisablerConfig extends Config {
         return 30;
     }
 
+    //
+    @ConfigItem(
+            name = "Pause all plugins after X amount of 'can't reach'",
+            keyName = "cantReach",
+            position = 10,
+            description = "Pause all plugins after X amount of 'can't reach'"
+    )
+    default boolean cantReach() {
+        return true;
+    }
+
+    @ConfigItem(
+            name = "How many X 'can't reach' to check",
+            keyName = "cantReachNumber",
+            position = 11,
+            description = "How many 'can't reach' to check before shutting off"
+    )
+    default int cantReachNumber() {
+        return 5;
+    }
+    //
+
     @ConfigItem(
             name = "Stop all plugins after X amount of time",
             keyName = "noTime",
-            position = 10,
+            position = 12,
             description = "Pause all plugins after X amount of time"
     )
     default boolean noTime() {
@@ -110,7 +132,7 @@ public interface PluginDisablerConfig extends Config {
     @ConfigItem(
             name = "How many X minutes to check",
             keyName = "time",
-            position = 11,
+            position = 13,
             description = "How many X minutes to check before shutting off"
     )
     default int time() {
@@ -120,7 +142,7 @@ public interface PluginDisablerConfig extends Config {
     @ConfigItem(
             name = "Teleport out after disabling plugin",
             keyName = "teleOut",
-            position = 12,
+            position = 14,
             description = "Teleport out after disabling plugin"
     )
     default boolean teleOut() {
