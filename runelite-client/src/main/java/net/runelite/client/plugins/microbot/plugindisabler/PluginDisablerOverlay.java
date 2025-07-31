@@ -21,10 +21,11 @@ public class PluginDisablerOverlay extends OverlayPanel {
         setPosition(OverlayPosition.TOP_LEFT);
         setNaughty();
     }
+
     @Override
     public Dimension render(Graphics2D graphics) {
         try {
-            panelComponent.setPreferredSize(new Dimension(200, 300));
+            panelComponent.setPreferredSize(new Dimension(225, 300));
             panelComponent.getChildren().add(TitleComponent.builder()
                     .text("Plugin Disabler" + PluginDisablerScript.version)
                     .color(Color.GREEN)
@@ -68,6 +69,17 @@ public class PluginDisablerOverlay extends OverlayPanel {
 
                 panelComponent.getChildren().add(LineComponent.builder()
                         .left("Maximum duplicate clicks allow: " + config.clicks())
+                        .build());
+            }
+            if (config.cantReach()){
+                panelComponent.getChildren().add(LineComponent.builder().build());
+
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Number of 'can't reach': " + PluginDisablerScript.getInstance().cantReachTimestamps.size())
+                        .build());
+
+                panelComponent.getChildren().add(LineComponent.builder()
+                        .left("Maximum number of 'can't reach': " + config.cantReachNumber())
                         .build());
             }
             if (config.noTime()) {
