@@ -292,9 +292,9 @@ public class ChaosAltarScript extends Script {
                 && CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())
                 && Rs2GameObject.exists(411)) {
             Rs2Inventory.useLast(DRAGON_BONES);
-            sleep((int)Rs2Random.skewedRand(150,100,200,2));
+            sleep((int)Rs2Random.skewedRand(125,75,175,2));
             Rs2GameObject.interact(411);
-            sleep((int)Rs2Random.skewedRand(150,100,200,2));
+            sleep((int)Rs2Random.skewedRand(125,75,175,2));
         }
     }
 
