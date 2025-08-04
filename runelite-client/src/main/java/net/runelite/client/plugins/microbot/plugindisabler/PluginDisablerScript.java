@@ -135,9 +135,9 @@ public class PluginDisablerScript extends Script {
                 if (config.cantReach() && config.cantReachNumber() > 0) {
                     Instant now = Instant.now();
                     cantReachTimestamps.removeIf(t -> Duration.between(t, now).toMinutes() >= 10);
-                    System.out.println("Cant Reach " + cantReachTimestamps);
+                    //System.out.println("Cant Reach " + cantReachTimestamps);
 
-                    Microbot.log("'Cant Reach' count in last 10 minutes: " + cantReachTimestamps.size());
+                    //Microbot.log("'Cant Reach' count in last 10 minutes: " + cantReachTimestamps.size());
 
                     if (cantReachTimestamps.size() >= config.cantReachNumber()) {
                         Microbot.log("Disabling plugin due to repeated 'I can't reach that!' within 15 minutes");
