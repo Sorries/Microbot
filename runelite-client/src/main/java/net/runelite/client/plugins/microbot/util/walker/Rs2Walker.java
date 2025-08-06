@@ -125,7 +125,14 @@ public class Rs2Walker {
     public static boolean walkTo(WorldPoint target, int distance) {
         return walkWithState(target, distance) == WalkerState.ARRIVED;
     }
-
+    public static WalkerState walkWithState(WorldPoint target, int distance) {
+        boolean walkWithBankedTransports = config.walkWithBankedTransports();
+        if (walkWithBankedTransports){
+            return walkWithBankedTransportsAndState(target, distance,false);
+        }else {
+            return walkWithStateInternal(target, distance);
+        }
+    }
     /**
      * Replaces the walkTo method
      *
