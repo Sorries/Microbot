@@ -137,15 +137,6 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
         }
 
-        if (!inWilderness && !hasBones) {
-            return State.BANK;
-        }
-        if (!inWilderness && hasBones) {
-            if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
-                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
-            }
-            return State.TELEPORT_TO_WILDERNESS;
-        }
         if (inWilderness && hasAnyBones && !atAltar) {
             return State.WALK_TO_ALTAR;
         }
@@ -158,7 +149,15 @@ public class ChaosAltarScript extends Script {
             }
             return State.DIE_TO_NPC;
         }
-
+        if (!inWilderness && !hasBones) {
+            return State.BANK;
+        }
+        if (!inWilderness && hasBones) {
+            if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
+                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
+            }
+            return State.TELEPORT_TO_WILDERNESS;
+        }
         return State.UNKNOWN;
     }
 
