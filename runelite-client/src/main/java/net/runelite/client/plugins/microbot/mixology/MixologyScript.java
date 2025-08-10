@@ -85,6 +85,7 @@ public class MixologyScript extends Script {
 
                     if (digweed != null && !Rs2Player.isAnimating() && !Rs2Inventory.hasItem(DIGWEED)
                             && config.pickDigWeed()) {
+                        sleep(1500,3000);
                         Rs2GameObject.interact(digweed.coordinate());
                         Rs2Player.waitForWalking();
                         Rs2Player.waitForAnimation();
@@ -240,6 +241,7 @@ public class MixologyScript extends Script {
                         break;
                     case TAKE_FROM_MIXIN_VESSEL:
                         Rs2GameObject.interact(MIXING_VESSEL.objectId());
+                        sleep(Rs2Random.skewedRandAuto(450));
                         boolean result = Rs2Inventory.waitForInventoryChanges(5000);
                         if (result) {
                             mixologyState = MixologyState.MIX_POTION_STAGE_1;
@@ -292,6 +294,7 @@ public class MixologyScript extends Script {
                             mixologyState = MixologyState.MIX_POTION_STAGE_1;
                             return;
                         }
+                        sleep(Rs2Random.skewedRandAuto(1500));
                         if (Rs2GameObject.interact(AlchemyObject.CONVEYOR_BELT.objectId())) {
                             Rs2Inventory.waitForInventoryChanges(5000);
                             currentAgaPoints = getAgaPoints();
@@ -398,8 +401,7 @@ public class MixologyScript extends Script {
                 Rs2Player.waitForAnimation();
             } else {
                 sleepUntil(Rs2Player::isAnimating);
-                final int sleep = Rs2Random.between(300, 600);
-                sleepGaussian(sleep, sleep / 4);
+            sleep(Rs2Random.skewedRandAuto(250));
             }
             leverRetries++;
         }
