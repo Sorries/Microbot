@@ -345,6 +345,7 @@ public class MixologyScript extends Script {
     }
 
     private static void processPotion(PotionOrder nonFulfilledPotion) {
+        sleep(Rs2Random.skewedRandAuto(350));
         switch (nonFulfilledPotion.potionModifier()) {
             case HOMOGENOUS:
                 GameObject agitator = (GameObject) Rs2GameObject.findObjectById(AlchemyObject.AGITATOR.objectId());
