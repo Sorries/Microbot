@@ -155,9 +155,9 @@ public class MixologyScript extends Script {
                         if (Rs2Inventory.hasItem(config.agaHerb().toString()) || Rs2Inventory.hasItem(config.lyeHerb().toString()) || Rs2Inventory.hasItem(config.moxHerb().toString())) {
                             Rs2GameObject.interact(ObjectID.MM_LAB_MILL);
                             Rs2Player.waitForAnimation();
-                            sleepGaussian(1000, 150);
+                            sleepGaussian(450, 150);
                             if (!config.useQuickActionRefiner()) {
-                                sleepUntil(() -> !Microbot.isGainingExp, 35000);
+                                sleepUntil(() -> !Microbot.isGainingExp, 30000);
                             }
                             return;
                         }
@@ -178,7 +178,6 @@ public class MixologyScript extends Script {
                                     Rs2Bank.withdrawAll(ItemID.MM_MOX_PASTE);
                                     Rs2Bank.withdrawAll(ItemID.MM_LYE_PASTE);
                                     Rs2Bank.withdrawAll(ItemID.MM_AGA_PASTE);
-                                    Rs2Bank.closeBank();
                                     mixologyState = MixologyState.DEPOSIT_HOPPER;
                                     return;
                                 }
@@ -242,9 +241,11 @@ public class MixologyScript extends Script {
                         break;
                     case TAKE_FROM_MIXIN_VESSEL:
                         Rs2GameObject.interact(MIXING_VESSEL.objectId());
-                        Rs2Inventory.waitForInventoryChanges(5000);
-                        sleep(850,1550);
-                        mixologyState = MixologyState.MIX_POTION_STAGE_1;
+                        sleep(Rs2Random.skewedRandAuto(450));
+                        boolean result = Rs2Inventory.waitForInventoryChanges(5000);
+                        if (result) {
+                            mixologyState = MixologyState.MIX_POTION_STAGE_1;
+                        }
                         break;
                     case MIX_POTION_STAGE_2:
 
@@ -293,13 +294,12 @@ public class MixologyScript extends Script {
                             mixologyState = MixologyState.MIX_POTION_STAGE_1;
                             return;
                         }
-                        sleep(1000,3000);
+                        sleep(Rs2Random.skewedRandAuto(1500));
                         if (Rs2GameObject.interact(AlchemyObject.CONVEYOR_BELT.objectId())) {
                             Rs2Inventory.waitForInventoryChanges(5000);
                             currentAgaPoints = getAgaPoints();
                             currentLyePoints = getLyePoints();
                             currentMoxPoints = getMoxPoints();
-                            sleep(1000,3000);
                         }
                         break;
                 }
@@ -345,7 +345,6 @@ public class MixologyScript extends Script {
     }
 
     private static void processPotion(PotionOrder nonFulfilledPotion) {
-        sleep(1000,3000);
         switch (nonFulfilledPotion.potionModifier()) {
             case HOMOGENOUS:
                 GameObject agitator = (GameObject) Rs2GameObject.findObjectById(AlchemyObject.AGITATOR.objectId());
@@ -402,7 +401,7 @@ public class MixologyScript extends Script {
                 Rs2Player.waitForAnimation();
             } else {
                 sleepUntil(Rs2Player::isAnimating);
-            sleep(Rs2Random.skewedRandAuto(800));
+            sleep(Rs2Random.skewedRandAuto(250));
             }
             leverRetries++;
         }
