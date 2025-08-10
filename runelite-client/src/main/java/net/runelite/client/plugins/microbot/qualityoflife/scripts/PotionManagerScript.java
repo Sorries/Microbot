@@ -61,9 +61,9 @@ public class PotionManagerScript extends Script {
                 }
 
                 // Always attempt to drink goading potion
-                if (Rs2Player.drinkGoadingPotion()) {
-                    Rs2Player.waitForAnimation();
-                }
+//                if (Rs2Player.drinkGoadingPotion()) {
+//                    Rs2Player.waitForAnimation();
+//                }
 
                 if(Rs2Inventory.hasItem(ItemID.VIAL_EMPTY)) {
                     Rs2Inventory.dropAll(ItemID.VIAL_EMPTY);
