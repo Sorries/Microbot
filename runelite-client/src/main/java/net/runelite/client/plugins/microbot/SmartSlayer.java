@@ -110,6 +110,11 @@ public boolean run(QoLConfig config) {
                             }
                         }
                     }
+                    if (Rs2Combat.inCombat()){
+                        if (Rs2Player.drinkGoadingPotion()){
+                             Rs2Player.waitForAnimation();
+                       }
+                    }
                 }
                 if (completedSlayerTask){
 //            //if(!Rs2Bank.walkToBankAndUseBank()) return;
