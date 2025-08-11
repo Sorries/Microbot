@@ -209,9 +209,9 @@ public class ChaosAltarScript extends Script {
             sleep(1000,3000);
         }else if (Rs2Npc.getNpc(CHAOS_FANATIC) == null){
             Rs2Walker.walkTo(2979, 3845,0,10);
-            sleep(1500,3000);
+            sleep(1000,1500);
         }else{
-            Rs2Player.hopIfPlayerDetected(1,Rs2Random.betweenInclusive(1000,3000),30);
+            Rs2Player.hopIfPlayerDetected(1,Rs2Random.betweenInclusive(100,500),30);
         }
     }
 
