@@ -13,6 +13,7 @@ import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.poh.PohTeleports;
+import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
 
 import javax.inject.Inject;
@@ -191,6 +192,7 @@ public class PluginDisablerScript extends Script {
         Microbot.pauseAllScripts.set(true);
         disablePluginsFlag = false;
         setLockState(true);
+        Rs2Walker.setTarget(null);
         if (config.teleOut()){
             sleepUntil(()-> !Rs2Player.isMoving() && !Rs2Player.isInteracting(),20000);
             if(Rs2Inventory.contains(8013)) {
