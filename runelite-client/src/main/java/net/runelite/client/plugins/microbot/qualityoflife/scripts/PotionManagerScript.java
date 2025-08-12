@@ -20,6 +20,8 @@ public class PotionManagerScript extends Script {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
                 if (!config.enablePotionManager()) return;
+                if (!Rs2Player.isInCombat()) return;
+
 
                 sleep(500,1500);
 
