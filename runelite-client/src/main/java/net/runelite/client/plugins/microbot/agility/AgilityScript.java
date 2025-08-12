@@ -48,6 +48,7 @@ public class AgilityScript extends Script
 	@Override
 	public void shutdown()
 	{
+		Rs2AntibanSettings.actionCooldownChance = 0.00;
 		super.shutdown();
 	}
 
@@ -55,7 +56,7 @@ public class AgilityScript extends Script
 	{
 		Microbot.enableAutoRunOn = true;
 		//Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
-		Rs2AntibanSettings.actionCooldownChance = 0.10;
+		Rs2AntibanSettings.actionCooldownChance = 0.05;
 		Rs2AntibanSettings.dynamicActivity = false;
 		startPoint = plugin.getCourseHandler().getStartPoint();
 		mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
