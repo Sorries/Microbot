@@ -137,11 +137,11 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
         }
 
-        if (inWilderness && hasAnyBones && !atAltar) {
-            return State.WALK_TO_ALTAR;
-        }
         if (inWilderness && hasAnyBones && atAltar) {
             return State.OFFER_BONES;
+        }
+        if (inWilderness && hasAnyBones && !atAltar) {
+            return State.WALK_TO_ALTAR;
         }
         if (inWilderness && !hasAnyBones) {
             if (Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
