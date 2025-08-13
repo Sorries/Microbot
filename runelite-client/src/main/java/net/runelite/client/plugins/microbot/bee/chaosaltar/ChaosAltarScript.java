@@ -52,6 +52,7 @@ public class ChaosAltarScript extends Script {
     public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 6, 0); //2953,3824
     public static final WorldPoint CHAOS_ALTAR_POINT = new WorldPoint(2949, 3820,0);
     public static final WorldPoint CHAOS_ALTAR_POINT_SOUTH = new WorldPoint(3014, 3820,0);
+    public boolean inWilderness = false;
 
     private ChaosAltarConfig config;
     private boolean externalStateOverride = false;
@@ -72,7 +73,6 @@ public class ChaosAltarScript extends Script {
                 long startTime = System.currentTimeMillis();
 
                 Rs2Combat.disableAutoRetaliate();
-
                 // Determine current state
                 if (!externalStateOverride) {
                     currentState = determineState();
@@ -125,7 +125,8 @@ public class ChaosAltarScript extends Script {
 
     private State determineState() {
 
-        boolean inWilderness = Rs2Pvp.isInWilderness();
+//        boolean inWilderness = Rs2Pvp.isInWilderness();
+        inWilderness = Rs2Pvp.isInWilderness();
         boolean hasBones = Rs2Inventory.count(DRAGON_BONES) > 4;
         boolean hasAnyBones = Rs2Inventory.contains(DRAGON_BONES);
         boolean atAltar = isAtChaosAltar();
@@ -224,6 +225,7 @@ public class ChaosAltarScript extends Script {
 //            Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_ITEM, true);
 //            sleep(500, 800);
 //        }
+        if (Rs2Pvp.isInWilderness()){return;}
         if (hasBurningAmulet() && !Rs2Pvp.isInWilderness()){
             walkTo(CHAOS_ALTAR_POINT_SOUTH,10);
             //Microbot.log("Fin");
