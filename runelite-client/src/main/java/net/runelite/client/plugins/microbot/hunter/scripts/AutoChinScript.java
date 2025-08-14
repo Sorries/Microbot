@@ -7,6 +7,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerScript;
 import net.runelite.client.plugins.microbot.hunter.AutoHunterConfig;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
+import net.runelite.client.plugins.microbot.util.gameobject.Rs2ObjectModel;
 import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
@@ -16,6 +17,7 @@ import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -124,6 +126,33 @@ public class AutoChinScript extends Script {
                 currentState = State.CATCHING;
                 return;
             }
+
+//            // IDs of the shaking boxes
+//            int[] shakingBoxIds = {
+//                    ObjectID.SHAKING_BOX_9384,
+//                    ObjectID.SHAKING_BOX_9383,
+//                    ObjectID.SHAKING_BOX_9382
+//            };
+//
+//// Collect all shaking boxes into one list
+//            List<Rs2ObjectModel> shakingBoxes = new ArrayList<>();
+//            System.out.println("shake"+shakingBoxes);
+//            for (int id : shakingBoxIds) {
+//                Rs2GameObject.getGameObjects(id)
+//                        .forEach(obj -> shakingBoxes.add((Rs2ObjectModel) obj)); // resolves the ambiguity
+//            }
+//
+//// Sort by earliest spawn tick (first-come-first-serve)
+//            shakingBoxes.sort(Comparator.comparingInt(Rs2ObjectModel::getCreationTick));
+//
+//// Try to interact with the first one
+//            if (!shakingBoxes.isEmpty()) {
+//                Rs2ObjectModel firstBox = shakingBoxes.get(0);
+//                if (Rs2GameObject.interact(firstBox.getId(), "reset", 4)) {
+//                    currentState = State.CATCHING;
+//                    return;
+//                }
+//            }
 
             // Interact with traps that have not caught anything
             if (Rs2GameObject.interact(ObjectID.BOX_TRAP_9385, "reset", 4)) {
