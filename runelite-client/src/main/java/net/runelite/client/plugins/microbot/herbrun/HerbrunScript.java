@@ -2,13 +2,14 @@ package net.runelite.client.plugins.microbot.herbrun;
 
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.gameval.ObjectID;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
-import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.herbrun.FarmingHandler;
-import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.herbrun.FarmingPatch;
-import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.herbrun.FarmingWorld;
+import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingHandler;
+import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingPatch;
+import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingWorld;
 import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.bank.enums.BankLocation;
@@ -24,7 +25,7 @@ import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 import net.runelite.client.plugins.timetracking.Tab;
-import net.runelite.client.plugins.timetracking.farming.CropState;
+import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.CropState;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +58,7 @@ public class HerbrunScript extends Script {
     public boolean run() {
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             if (!Microbot.isLoggedIn()) return;
+            if (!super.run()) return;
             if (!initialized) {
                 initialized = true;
                 HerbrunPlugin.status = "Gearing up";
@@ -78,9 +80,10 @@ public class HerbrunScript extends Script {
                 if (!inventorySetup.doesInventoryMatch() || !inventorySetup.doesEquipmentMatch()) {
                     Rs2Walker.walkTo(Rs2Bank.getNearestBank().getWorldPoint(), 20);
                     if (!inventorySetup.loadEquipment() || !inventorySetup.loadInventory()) {                        
-//                        plugin.reportFinished("Failed to load inventory setup",false);
+                        //plugin.reportFinished("Failed to load inventory setup",false);
                         Microbot.log("Failed to load equipment");
                         shutdown();
+                        return;
                     }
                     if (Rs2Inventory.hasItem("open herb sack")) {
                         Rs2Inventory.interact(24478,"Empty to bank",9);
@@ -170,16 +173,16 @@ public class HerbrunScript extends Script {
         }
 
         Integer[] ids = {
-                18816,
-                8151,
-                8153,
-                50697,
-                27115,
-                8152,
-                8150,
-                33979,
-                33176,
-                9372
+                ObjectID.MYARM_HERBPATCH,
+                ObjectID.FARMING_HERB_PATCH_2,
+                ObjectID.FARMING_HERB_PATCH_4,
+                ObjectID.FARMING_HERB_PATCH_8,
+                ObjectID.FARMING_HERB_PATCH_6,
+                ObjectID.FARMING_HERB_PATCH_3,
+                ObjectID.FARMING_HERB_PATCH_1,
+                ObjectID.FARMING_HERB_PATCH_7,
+                ObjectID.MY2ARM_HERBPATCH,
+                ObjectID.FARMING_HERB_PATCH_5
         };
         var obj = Rs2GameObject.findObject(ids);
         if (obj == null) return false;
