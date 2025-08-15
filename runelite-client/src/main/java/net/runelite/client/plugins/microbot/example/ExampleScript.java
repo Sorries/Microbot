@@ -82,42 +82,42 @@ public class ExampleScript extends Script {
 //                long endTime = System.currentTimeMillis();
 //                long totalTime = endTime - startTime;
 //                System.out.println("Total time for loop " + totalTime);
-
-                            // IDs of the shaking boxes
-            int[] shakingBoxIds = {
-                    ObjectID.SHAKING_BOX_9384,
-                    ObjectID.SHAKING_BOX_9383,
-                    ObjectID.SHAKING_BOX_9382
-            };
-
-// Collect all shaking boxes into one list
-                List<Rs2ObjectModel> shakingBoxes = new ArrayList<>();
-
-                for (int id : shakingBoxIds) {
-                    List<GameObject> gameObjects = Rs2GameObject.getGameObjects(obj -> obj.getId() == id);
-                    if (gameObjects != null) {
-                        for (GameObject gameObject : gameObjects) {
-                            if (gameObject != null) {
-                                Tile tile = Microbot.getClient()
-                                        .getScene()
-                                        .getTiles()[gameObject.getPlane()][gameObject.getSceneX()][gameObject.getSceneY()];
-                                shakingBoxes.add(new Rs2ObjectModel(gameObject, tile));
-                            }
-                        }
-                    }
-                }
-
-// Sort by earliest spawn tick (first-come-first-serve)
-            shakingBoxes.sort(Comparator.comparingInt(Rs2ObjectModel::getCreationTick));
-
-//// Try to interact with the first one
-//            if (!shakingBoxes.isEmpty()) {
-//                Rs2ObjectModel firstBox = shakingBoxes.get(0);
-//                System.out.println("firstBox"+firstBox);
-////                if (Rs2GameObject.interact(firstBox.getId(), "reset", 4)) {
-////                    return;
-////                }
-//            }
+//
+//                            // IDs of the shaking boxes
+//            int[] shakingBoxIds = {
+//                    ObjectID.SHAKING_BOX_9384,
+//                    ObjectID.SHAKING_BOX_9383,
+//                    ObjectID.SHAKING_BOX_9382
+//            };
+//
+//// Collect all shaking boxes into one list
+//                List<Rs2ObjectModel> shakingBoxes = new ArrayList<>();
+//
+//                for (int id : shakingBoxIds) {
+//                    List<GameObject> gameObjects = Rs2GameObject.getGameObjects(obj -> obj.getId() == id);
+//                    if (gameObjects != null) {
+//                        for (GameObject gameObject : gameObjects) {
+//                            if (gameObject != null) {
+//                                Tile tile = Microbot.getClient()
+//                                        .getScene()
+//                                        .getTiles()[gameObject.getPlane()][gameObject.getSceneX()][gameObject.getSceneY()];
+//                                shakingBoxes.add(new Rs2ObjectModel(gameObject, tile));
+//                            }
+//                        }
+//                    }
+//                }
+//
+//// Sort by earliest spawn tick (first-come-first-serve)
+//            shakingBoxes.sort(Comparator.comparingInt(Rs2ObjectModel::getCreationTick));
+//
+////// Try to interact with the first one
+////            if (!shakingBoxes.isEmpty()) {
+////                Rs2ObjectModel firstBox = shakingBoxes.get(0);
+////                System.out.println("firstBox"+firstBox);
+//////                if (Rs2GameObject.interact(firstBox.getId(), "reset", 4)) {
+//////                    return;
+//////                }
+////            }
 
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
