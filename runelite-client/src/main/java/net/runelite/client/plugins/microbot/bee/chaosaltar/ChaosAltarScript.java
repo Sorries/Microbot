@@ -127,6 +127,8 @@ public class ChaosAltarScript extends Script {
 
 //        boolean inWilderness = Rs2Pvp.isInWilderness();
         inWilderness = Rs2Pvp.isInWilderness();
+        // 11835
+        boolean inWilderness2 = CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation());
         boolean hasBones = Rs2Inventory.count(DRAGON_BONES) > 4;
         boolean hasAnyBones = Rs2Inventory.contains(DRAGON_BONES);
         boolean atAltar = isAtChaosAltar();
@@ -138,7 +140,7 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
         }
 
-        if (inWilderness && hasAnyBones && atAltar) {
+        if ((inWilderness || inWilderness2) && hasAnyBones && atAltar) {
             return State.OFFER_BONES;
         }
         if (inWilderness && hasAnyBones && !atAltar) {
