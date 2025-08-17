@@ -133,7 +133,7 @@ public class ChaosAltarScript extends Script {
         boolean hasBones = Rs2Inventory.count(DRAGON_BONES) > 4;
         boolean hasAnyBones = Rs2Inventory.contains(DRAGON_BONES);
         boolean atAltar = isAtChaosAltar();
-        System.out.println("Wilderness1: "+inWilderness + " Wilderness2: "+ inWilderness2);
+        System.out.println("Wilderness1: "+inWilderness + " Wilderness2: "+ inWilderness2 + " Wilderness 3: "+ inWilderness3);
 //        System.out.println("has any bones: " + Rs2Inventory.contains(DRAGON_BONES));
 //        System.out.println("is at altar: " + isAtChaosAltar());
         boolean underAttack = Rs2Player.getHealthPercentage() < 95;
@@ -142,7 +142,7 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
         }
 
-        if ((inWilderness || inWilderness2) && hasAnyBones && atAltar) {
+        if ((inWilderness || inWilderness3) && hasAnyBones && atAltar) {
             return State.OFFER_BONES;
         }
         if (inWilderness && hasAnyBones && !atAltar) {
@@ -207,6 +207,7 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
             sleep(1000,2000);
         }
+        Rs2Player.hopIfPlayerDetected(1,Rs2Random.betweenInclusive(100,500),30);
         if (Rs2Player.isInCombat() || Rs2Npc.attack("Chaos Fanatic")) {
             Rs2Equipment.unEquip(EquipmentInventorySlot.WEAPON);
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
