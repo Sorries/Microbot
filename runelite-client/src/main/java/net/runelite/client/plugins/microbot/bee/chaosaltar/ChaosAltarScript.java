@@ -207,7 +207,7 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
             sleep(1000,2000);
         }
-        Rs2Player.hopIfPlayerDetected(1,Rs2Random.betweenInclusive(100,500),30);
+        Rs2Player.hopIfPlayerDetected(1,0,0);
         if (Rs2Player.isInCombat() || Rs2Npc.attack("Chaos Fanatic")) {
             Rs2Equipment.unEquip(EquipmentInventorySlot.WEAPON);
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
