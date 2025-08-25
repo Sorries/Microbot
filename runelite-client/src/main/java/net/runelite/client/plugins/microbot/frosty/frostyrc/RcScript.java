@@ -155,7 +155,7 @@ public class RcScript extends Script {
 
     @Override
     public void shutdown() {
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         super.shutdown();
         Microbot.log("Script has been stopped");
         //Rs2Player.logout();
