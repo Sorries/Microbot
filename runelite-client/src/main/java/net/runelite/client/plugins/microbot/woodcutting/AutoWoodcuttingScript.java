@@ -147,7 +147,7 @@ public class AutoWoodcuttingScript extends Script {
                 return true;
         }
 
-        if (Rs2Woodcutting.isWearingAxeWithSpecialAttack())
+        if (Rs2Woodcutting.isWearingAxeWithSpecialAttack() && Rs2Inventory.emptySlotCount()>5)
             Rs2Combat.setSpecState(true, 1000);
 
         if (Rs2Inventory.isFull()) {
