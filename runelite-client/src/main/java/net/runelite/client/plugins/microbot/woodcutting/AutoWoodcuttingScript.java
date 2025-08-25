@@ -87,10 +87,10 @@ public class AutoWoodcuttingScript extends Script {
     }
 
     public boolean run(AutoWoodcuttingConfig config) {
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyWoodcuttingSetup();
-        Rs2AntibanSettings.dynamicActivity = true;
-        Rs2AntibanSettings.dynamicIntensity = true;
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyWoodcuttingSetup();
+       // Rs2AntibanSettings.dynamicActivity = true;
+        //Rs2AntibanSettings.dynamicIntensity = true;
         initialPlayerLocation = null;
         if (config.firemakeOnly()) {
             woodcuttingScriptState = WoodcuttingScriptState.FIREMAKING;
@@ -391,6 +391,6 @@ public class AutoWoodcuttingScript extends Script {
         returnPoint = null;
         initialPlayerLocation = null;
         hasAutoHopMessageShown = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
     }
 }

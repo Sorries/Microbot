@@ -60,7 +60,7 @@ public class TitheFarmingPlugin extends Plugin {
 
         if (config.enableAntiban()){
             Rs2AntibanSettings.naturalMouse = true;
-            Rs2Antiban.antibanSetupTemplates.applyFarmingSetup();
+            //Rs2Antiban.antibanSetupTemplates.applyFarmingSetup();
             Rs2Antiban.setActivity(Activity.GENERAL_FARMING);
             Rs2Antiban.activateAntiban();
         }
