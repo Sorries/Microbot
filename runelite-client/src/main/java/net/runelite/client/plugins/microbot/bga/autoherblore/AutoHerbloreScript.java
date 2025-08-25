@@ -28,8 +28,8 @@ public class AutoHerbloreScript extends Script {
     private AutoHerbloreConfig config;
     public boolean run(AutoHerbloreConfig config) {
         this.config = config;
-        Rs2Antiban.resetAntibanSettings();
-        Rs2Antiban.antibanSetupTemplates.applyHerbloreSetup();
+        //Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.antibanSetupTemplates.applyHerbloreSetup();
         state = State.BANK;
         current = null;
         currentHerbForUnfinished = null;

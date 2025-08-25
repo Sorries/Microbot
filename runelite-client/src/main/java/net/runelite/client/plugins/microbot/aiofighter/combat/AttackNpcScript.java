@@ -56,8 +56,8 @@ public class AttackNpcScript extends Script {
     public void run(AIOFighterConfig config) {
         try {
             Rs2NpcManager.loadJson();
-            Rs2Antiban.resetAntibanSettings();
-            Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
+            //Rs2Antiban.resetAntibanSettings();
+            //Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
             Rs2Antiban.setActivityIntensity(ActivityIntensity.EXTREME);
         } catch (Exception e) {
             throw new RuntimeException(e);

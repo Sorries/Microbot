@@ -161,7 +161,7 @@ public class BanksShopperScript extends Script {
         state = ShopperState.SHOPPING; // Reset state to SHOPPING for next run
         initialPlayerLocation = null; // Reset initial player location
 
-        Rs2Antiban.resetAntibanSettings();
+       // Rs2Antiban.resetAntibanSettings();
         super.shutdown();
     }
 
