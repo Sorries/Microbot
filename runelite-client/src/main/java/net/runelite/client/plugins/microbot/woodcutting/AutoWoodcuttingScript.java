@@ -280,6 +280,8 @@ public class AutoWoodcuttingScript extends Script {
                 itemsToLootList.add("nest");
             }
 
+            itemsToLootList.add("crystal");
+
             String[] itemsToLoot = itemsToLootList.toArray(new String[0]);
 
         LootingParameters itemLootParams = new LootingParameters(
