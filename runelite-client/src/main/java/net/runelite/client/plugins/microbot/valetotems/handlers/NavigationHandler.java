@@ -1,11 +1,9 @@
 package net.runelite.client.plugins.microbot.valetotems.handlers;
 
 import net.runelite.api.GameObject;
-import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.api.Client;
-import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.valetotems.enums.BankLocation;
 import net.runelite.client.plugins.microbot.valetotems.enums.GameObjectId;
 import net.runelite.client.plugins.microbot.valetotems.enums.TotemLocation;
@@ -19,7 +17,6 @@ import net.runelite.client.plugins.microbot.valetotems.handlers.FletchingHandler
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
-
 
 import static net.runelite.client.plugins.microbot.util.Global.sleep;
 import static net.runelite.client.plugins.microbot.util.Global.sleepGaussian;
@@ -158,21 +155,6 @@ public class NavigationHandler {
             // Main walking loop
             while (!CoordinateUtils.isAtTotemLocation(totemLocation, ARRIVAL_TOLERANCE) &&
                     System.currentTimeMillis() - startTime < WALK_TIMEOUT_MS) {
-
-                //check if on bridge 1435,3336, x = 2 , y = 9
-                WorldArea bridgeArea = new WorldArea(1435, 3336, 2, 9, 0);
-                if (bridgeArea.contains(Rs2Player.getWorldLocation())){
-                    System.out.println("Found bridge area");
-                    walkWithRunEnergyCheck(new WorldPoint(1433 + Rs2Random.betweenInclusive(-1,1),3349 + Rs2Random.betweenInclusive(-1,1),0));
-                    Rs2Player.waitForWalking();
-                    sleepUntil(()->!Rs2Player.isMoving(),5000);
-                    path = Rs2Walker.getWalkPath(destination);
-                    if (path == null || path.isEmpty()) {
-                        System.err.println("Could not recalculate path on the bridge");
-                        return false;
-                    }
-                    continue; // Restart loop with new path
-                }
 
                 // Priority 1: Check for and handle ent trails.
                 // This has ABSOLUTE priority - even if we're fletching, we stop and handle ent trails first

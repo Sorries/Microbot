@@ -312,7 +312,7 @@ public class TotemHandler {
 
             // Small 2% change to mouse click to avoid detection
             int mouseClickChange = RandomUtils.nextInt(1,100);
-            if (mouseClickChange <= 30) {
+            if (mouseClickChange <= 2) {
                 // Press the corresponding number key
                 sleep(1000,2000);
                 Rs2Widget.clickWidget(270,animal.getWidgetChildId());
