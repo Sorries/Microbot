@@ -65,6 +65,8 @@ public class Rs2Slayer {
         if (taskId == 0) {
             return null;
         }
+//        return Microbot.getEnum(EnumID.SLAYER_TASK_CREATURE)
+//                .getStringValue(taskId);
         return Microbot.getEnum(693)
                 .getStringValue(taskId);
     }
