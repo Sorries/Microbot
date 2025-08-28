@@ -245,7 +245,7 @@ public class FletchingHandler {
             if (quantity == 1) {
                 interactWithWidget(QUANTITY_1_CHILD_ID, "1 bow");
                 Microbot.log("Selected 1 bow");
-            } else if (quantity <= 5) {
+            } else if (quantity == 5) {
                 interactWithWidget(QUANTITY_5_CHILD_ID, "5 bows");
                 Microbot.log("Selected 5 bows");
             } else if (quantity == 10) {
