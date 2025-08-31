@@ -21,7 +21,6 @@ import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.Text;
 import org.apache.commons.lang3.ArrayUtils;
-import java.util.Deque;
 
 import javax.inject.Inject;
 import java.awt.AWTException;
@@ -42,7 +41,7 @@ import java.util.*;
 )
 
 public class HerbiboarPlugin extends Plugin {
-    static final String version = "1.2.1";
+    static final String version = "1.2.0";
 
     @Getter
     @Setter
@@ -115,9 +114,6 @@ public class HerbiboarPlugin extends Plugin {
 
     @Inject
     private HerbiboarScript script;
-
-    @Getter
-    private final Deque<String> lastMessages = new ArrayDeque<>(5);
 
     /**
      * Objects which appear at the beginning of Herbiboar hunting trails
@@ -211,12 +207,10 @@ public class HerbiboarPlugin extends Plugin {
 
     @Subscribe
     public void onChatMessage(ChatMessage chatMessage) {
-        String msg = chatMessage.getMessage();
-        if (lastMessages.size() == 5) lastMessages.removeFirst();
-        lastMessages.addLast(msg);
         if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
-            if (msg.equals("successfully confused you with its tracks") ||
-                    msg.equals("need to start again")) {
+            String message = chatMessage.getMessage();
+            if (message.equals("The creature has successfully confused you with its tracks, leading you round in circles.") ||
+                message.equals("You'll need to start again.")) {
                 script.handleConfusionMessage();
             }
         }
