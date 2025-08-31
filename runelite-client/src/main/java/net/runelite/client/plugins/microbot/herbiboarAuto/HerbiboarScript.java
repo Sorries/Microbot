@@ -410,10 +410,10 @@ public class HerbiboarScript extends Script {
         /*
          * Set camera settings for the script.
          */
-        Rs2Camera.setZoom(Rs2Random.randomGaussian(170, 20));
+        Rs2Camera.setZoom(Rs2Random.randomGaussian(-150, 20));
         //Rs2Camera.setYaw((Rs2Random.dicePercentage(50)? Rs2Random.randomGaussian(750, 50) : Rs2Random.randomGaussian(1700, 50)));
         sleep(1500,2000);
-        Rs2Camera.setPitch(Rs2Random.betweenInclusive(418, 512));
+        //Rs2Camera.setPitch(Rs2Random.betweenInclusive(418, 512));
         
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
