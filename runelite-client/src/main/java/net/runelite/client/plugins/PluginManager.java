@@ -243,25 +243,27 @@ public class PluginManager {
         for (ClassInfo classInfo : classPath.getTopLevelClassesRecursive(PLUGIN_PACKAGE)) {
 
             Class<?> clazz = classInfo.load();
-            String pkg = clazz.getPackageName().toLowerCase();
-
-
-            /**
-             * TODO: Over time these should be moved into a core folder within the microbot plugins folder
-             * This way we can easily detect any core plugins required to run microbot
-             */
-            if (pkg.contains(".microbot") && (
-                    pkg.contains(".util")
-                            || pkg.contains(".ui")
-                            || pkg.endsWith("microbot")
-                            || pkg.contains(".shortestpath")
-                            || pkg.contains(".rs2cachedebugger")
-                            || pkg.contains("pluginscheduler")
-                            || pkg.contains("inventorysetups"))) {
-                microbotPlugins.add(clazz);
-            } else if (!pkg.contains("microbot")) {
-                otherPlugins.add(clazz);
-            }
+            microbotPlugins.add(clazz);
+//            String pkg = clazz.getPackageName().toLowerCase();
+//
+//
+//            /**
+//             * TODO: Over time these should be moved into a core folder within the microbot plugins folder
+//             * This way we can easily detect any core plugins required to run microbot
+//             */
+//            if (pkg.contains(".microbot") && (
+//                    pkg.contains(".util")
+//                            || pkg.contains(".ui")
+//                            || pkg.endsWith("microbot")
+//                            || pkg.contains(".shortestpath")
+//                            || pkg.contains(".rs2cachedebugger")
+//                            || pkg.contains("pluginscheduler")
+//                            || pkg.contains("inventorysetups")
+//            )) {
+//                microbotPlugins.add(clazz);
+//            } else if (!pkg.contains("microbot")) {
+//                otherPlugins.add(clazz);
+//            }
         }
 
         otherPlugins.addAll(microbotPlugins);
