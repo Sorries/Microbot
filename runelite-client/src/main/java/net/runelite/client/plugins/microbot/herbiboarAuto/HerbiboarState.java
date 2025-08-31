@@ -8,8 +8,7 @@ public enum HerbiboarState {
     TUNNEL("Checking tunnel"),
     HARVEST("Harvesting"),
     BANK("Banking"),
-    RETURN_FROM_ISLAND("Returning from island"),
-    RESET("Resetting");
+    RETURN_FROM_ISLAND("Returning from island");
 
     private final String description;
 
