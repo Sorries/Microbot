@@ -433,19 +433,24 @@ public class HerbiboarScript extends Script {
                 if (BreakHandlerScript.isMicroBreakActive()) return;
                 if (BreakHandlerScript.isBreakActive()) return;
 
+                System.out.println("last move: " + getLastMove() + " last move 2: " + getLastMove().plusSeconds(60));
+                System.out.println("last location: " + getLastLocation());
                 // Keep checking for time of last movement, if more than 1 minute, set state to RESET
                 if (getLastLocation() != null && !getLastLocation().equals(Rs2Player.getWorldLocation())) {
+                    System.out.println("1");
                     setLastMove(Instant.now());
                     setLastLocation(Rs2Player.getWorldLocation());
                 } else if (config.resetIfStuck() && getLastMove() != null
                         && Instant.now().isAfter(getLastMove().plusSeconds(60))
                         && state != HerbiboarState.RESET && state != HerbiboarState.INITIALIZING
                         && state != HerbiboarState.CHECK_AUTO_RETALIATE && state != HerbiboarState.BANK) {
+                    System.out.println("2");
                     Microbot.log(Level.INFO,"Player has not moved for over 1 minute, resetting script state");
                     setLastMove(Instant.now());
                     setLastLocation(null);
                     setState(HerbiboarState.RESET);
-                } else if (getLastMove() == null) {
+                } else if (getLastMove() == null || getLastLocation() == null) {
+                    System.out.println("3");
                     setLastMove(Instant.now());
                     setLastLocation(Rs2Player.getWorldLocation());
                 }
