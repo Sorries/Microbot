@@ -184,8 +184,14 @@ public class QoLPlugin extends Plugin {
         }
         if (config.useSpecWeapon()) {
             Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-            Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
-            Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
+            if (Rs2Inventory.contains(config.specWeapon().toString())){
+                Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
+                Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
+            }
+            else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
+                Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
+                Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
+            }
         }
 		if (config.autoRun()) {
 			Microbot.enableAutoRunOn = true;
@@ -277,10 +283,16 @@ public class QoLPlugin extends Plugin {
             NeverLogoutScript.onGameTick(event);
         }
         if (config.useSpecWeapon()) {
-            if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon()) {
+            if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() == config.specWeapon()
+                    || Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() == config.specWeapon2()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-                Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
-                Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
+                if (Rs2Inventory.contains(config.specWeapon().toString())) {
+                    Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
+                    Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
+                } else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
+                    Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
+                    Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
+                }
             }
         }
     }
@@ -562,11 +574,16 @@ public class QoLPlugin extends Plugin {
                 configManager.setConfiguration("QoL", "quickFletchKindling", true);
             }
         }
-        if (ev.getKey().equals("useSpecWeapon") || ev.getKey().equals("specWeapon")) {
+        if (ev.getKey().equals("useSpecWeapon") || ev.getKey().equals("specWeapon")|| ev.getKey().equals("specWeapon2")) {
             if (config.useSpecWeapon()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-                Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
-                Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
+                if (Rs2Inventory.contains(config.specWeapon().toString())) {
+                    Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
+                    Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
+                }else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
+                    Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
+                    Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
+                }
             } else {
                 Microbot.getSpecialAttackConfigs().reset();
             }
