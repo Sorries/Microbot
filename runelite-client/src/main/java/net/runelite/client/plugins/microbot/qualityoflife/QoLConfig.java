@@ -388,11 +388,23 @@ public interface QoLConfig extends Config {
         return SpecialAttackWeaponEnum.DRAGON_DAGGER;
     }
 
+    // spec weapon
+    @ConfigItem(
+            keyName = "specWeapon2",
+            name = "Spec Weapon",
+            description = "Spec Weapon",
+            position = 7,
+            section = upkeepSection
+    )
+    default SpecialAttackWeaponEnum specWeapon2() {
+        return SpecialAttackWeaponEnum.DRAGON_DAGGER;
+    }
+
 	@ConfigItem(
 		keyName = "autoRun",
 		name = "Auto Run",
 		description = "Auto Run",
-		position = 7,
+		position = 8,
 		section = upkeepSection
 	)
 	default boolean autoRun() {
@@ -404,7 +416,7 @@ public interface QoLConfig extends Config {
             keyName = "autoStamina",
             name = "Auto Stamina",
             description = "Auto Stamina",
-            position = 8,
+            position = 9,
             section = upkeepSection
     )
     default boolean autoStamina() {
@@ -420,7 +432,7 @@ public interface QoLConfig extends Config {
             keyName = "staminaThreshold",
             name = "Stamina Threshold",
             description = "Stamina Threshold",
-            position = 9,
+            position = 10,
             section = upkeepSection
     )
     default int staminaThreshold() {
@@ -431,7 +443,7 @@ public interface QoLConfig extends Config {
             keyName = "refillCannopn",
             name = "Refill cannon",
             description = "Refill & Repair cannon",
-            position = 10,
+            position = 11,
             section = upkeepSection
     )
     default boolean refillCannon() {
@@ -442,7 +454,7 @@ public interface QoLConfig extends Config {
             keyName = "smartSlayer",
             name = "Smart Slayer",
             description = "If not in combat for amount of time, will attack slayer monster",
-            position = 11,
+            position = 12,
             section = upkeepSection
     )
     default boolean smartSlayer() {
