@@ -159,7 +159,7 @@ public boolean run(QoLConfig config) {
                 }
                 sleep(1000,3000);
                 Rs2Tab.switchTo(InterfaceTab.PRAYER);
-                Rs2Prayer.disableAllPrayers();
+                Rs2Prayer.disableAllPrayers(true);
                 Microbot.getConfigManager().setConfiguration("npcindicators", "npcToHighlight", "");
                 completedSlayerTask = false;
             }
