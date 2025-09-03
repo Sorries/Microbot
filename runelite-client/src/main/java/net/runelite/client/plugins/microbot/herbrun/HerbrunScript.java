@@ -7,6 +7,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingHandler;
 import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingPatch;
 import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farmruns.FarmingWorld;
@@ -30,6 +31,7 @@ import net.runelite.client.plugins.microbot.questhelper.helpers.mischelpers.farm
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import java.util.Collections;
 
 import static net.runelite.client.plugins.microbot.Microbot.log;
 
@@ -68,11 +70,13 @@ public class HerbrunScript extends Script {
                     Microbot.log("No herb patches ready to farm");
                     this.shutdown();
                     return;
+                } else {
+                    Collections.shuffle(herbPatches);
                 }
                 if (Rs2Combat.isAutoRetaliateDisabled()) {
                     if (Rs2Combat.enableAutoRetialiate()) {
                         sleep(500, 750);
-                        Rs2Tab.switchToInventoryTab();
+                        Rs2Tab.switchTo(InterfaceTab.INVENTORY);
                         sleep(1500,3000);
                     }
                 }
