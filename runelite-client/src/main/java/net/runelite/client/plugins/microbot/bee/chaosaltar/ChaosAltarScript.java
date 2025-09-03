@@ -189,10 +189,8 @@ public class ChaosAltarScript extends Script {
                     .findFirst()
                     .orElse(null);
 
-            if (Rs2GameObject.isReachable(gameObject)) {
-                //Microbot.log("Chaos Altar");
-                return true;
-            }
+            //Microbot.log("Chaos Altar");
+            return Rs2GameObject.isReachable(gameObject);
         }
         return false;
     }
