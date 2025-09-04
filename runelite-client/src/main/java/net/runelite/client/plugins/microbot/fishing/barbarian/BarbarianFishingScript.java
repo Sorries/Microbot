@@ -71,7 +71,7 @@ public class BarbarianFishingScript extends Script {
                 validateInteractable(fishingspot);
             }
 
-            sleep(1000, 2000);
+            sleep(1000, 5000);
             Rs2Npc.interact(fishingspot, "Use-rod");
 
         }, 0, 600, TimeUnit.MILLISECONDS);
