@@ -155,9 +155,9 @@ public class MixologyScript extends Script {
                         if (Rs2Inventory.hasItem(config.agaHerb().toString()) || Rs2Inventory.hasItem(config.lyeHerb().toString()) || Rs2Inventory.hasItem(config.moxHerb().toString())) {
                             Rs2GameObject.interact(ObjectID.MM_LAB_MILL);
                             Rs2Player.waitForAnimation();
-                            sleepGaussian(450, 150);
+                            sleepGaussian(1000, 150);
                             if (!config.useQuickActionRefiner()) {
-                                sleepUntil(() -> !Microbot.isGainingExp, 30000);
+                                sleepUntil(() -> !Microbot.isGainingExp, 35000);
                             }
                             return;
                         }
