@@ -105,4 +105,8 @@ public class HerbPatch {
         return this.regionName.equals(regionName);
     }
 
+    @Override
+    public String toString() {
+        return regionName;
+    }
 }
