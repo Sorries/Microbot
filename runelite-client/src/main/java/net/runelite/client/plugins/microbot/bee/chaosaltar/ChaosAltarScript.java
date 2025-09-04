@@ -137,9 +137,7 @@ public class ChaosAltarScript extends Script {
         boolean inWilderness = Rs2Pvp.isInWilderness();
         boolean inWilderness2 = CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation());
         //boolean inWilderness3 = Rs2Player.getWorldLocation().getRegionID() == 11835;
-        boolean inWilderness3 = WILDERNESS_REGIONS.contains(
-                Rs2Player.getWorldLocation().getRegionID()
-        );
+        boolean inWilderness3 = WILDERNESS_REGIONS.contains(Rs2Player.getWorldLocation().getRegionID());
         boolean hasBones = Rs2Inventory.count(DRAGON_BONES) > 4;
         boolean hasAnyBones = Rs2Inventory.contains(DRAGON_BONES);
         boolean atAltar = isAtChaosAltar();
