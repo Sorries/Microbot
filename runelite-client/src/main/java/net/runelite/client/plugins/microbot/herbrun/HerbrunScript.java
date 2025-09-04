@@ -72,6 +72,7 @@ public class HerbrunScript extends Script {
                     return;
                 } else {
                     Collections.shuffle(herbPatches);
+                    System.out.println(herbPatches);
                 }
                 if (Rs2Combat.isAutoRetaliateDisabled()) {
                     if (Rs2Combat.enableAutoRetialiate()) {
