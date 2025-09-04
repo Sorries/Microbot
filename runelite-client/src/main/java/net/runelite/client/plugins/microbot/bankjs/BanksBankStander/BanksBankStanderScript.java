@@ -232,14 +232,14 @@ public class BanksBankStanderScript extends Script {
             isWaitingForPrompt = false; // Ensure prompt flag is reset
             if (secondItemId != null) {
                 if(config.amuletOfChemistry()){
-                    sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId) || (!Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY) && !Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY_IMBUED_CHARGED)), 40000);
+                    sleepUntil(() -> !Rs2Inventory.hasItem(firstItemId) ||!Rs2Inventory.hasItem(secondItemId) || (!Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY) && !Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY_IMBUED_CHARGED)), 40000);
                     sleep(calculateSleepDuration(1));
                     checkForAmulet();
 //                    if(Rs2Bank.isOpen()) {
 //                        Rs2Bank.closeBank();
 //                    }
                 }else{
-                    sleepUntil(() -> !Rs2Inventory.hasItem(secondItemId), 40000);
+                    sleepUntil(() -> !Rs2Inventory.hasItem(firstItemId) || !Rs2Inventory.hasItem(secondItemId), 40000);
                 }
             } else {
                 sleepUntil(() -> !Rs2Inventory.hasItem(config.secondItemIdentifier()), 40000);
