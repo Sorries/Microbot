@@ -155,12 +155,16 @@ public class HerbrunScript extends Script {
             }
 
             // Start with weiss, getNearestBank doesn't like that area!
+//            currentPatch = herbPatches.stream()
+//                    .filter(patch -> Objects.equals(patch.getRegionName(), "Weiss"))
+//                    .findFirst()
+//                    .orElseGet(() -> herbPatches.stream()
+//                            .findFirst()
+//                            .orElse(null));
+//            herbPatches.remove(currentPatch);
             currentPatch = herbPatches.stream()
-                    .filter(patch -> Objects.equals(patch.getRegionName(), "Weiss"))
-                    .findFirst()
-                    .orElseGet(() -> herbPatches.stream()
                             .findFirst()
-                            .orElse(null));
+                            .orElse(null);
             herbPatches.remove(currentPatch);
         }
     }
