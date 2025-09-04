@@ -36,6 +36,7 @@ import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMo
 
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -53,6 +54,12 @@ public class ChaosAltarScript extends Script {
     public static final WorldPoint CHAOS_ALTAR_POINT = new WorldPoint(2949, 3820,0);
     public static final WorldPoint CHAOS_ALTAR_POINT_SOUTH = new WorldPoint(3014, 3820,0);
     public boolean inWilderness = false;
+    private static final List<Integer> WILDERNESS_REGIONS = List.of(
+            11835,
+            12091,
+            11836,
+            12092
+    );
 
     private ChaosAltarConfig config;
     private boolean externalStateOverride = false;
@@ -126,10 +133,13 @@ public class ChaosAltarScript extends Script {
     private State determineState() {
 
 //        boolean inWilderness = Rs2Pvp.isInWilderness();
-        inWilderness = Rs2Pvp.isInWilderness();
-        // 11835
+
+        boolean inWilderness = Rs2Pvp.isInWilderness();
         boolean inWilderness2 = CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation());
-        boolean inWilderness3 = Rs2Player.getWorldLocation().getRegionID() == 11835;
+        //boolean inWilderness3 = Rs2Player.getWorldLocation().getRegionID() == 11835;
+        boolean inWilderness3 = WILDERNESS_REGIONS.contains(
+                Rs2Player.getWorldLocation().getRegionID()
+        );
         boolean hasBones = Rs2Inventory.count(DRAGON_BONES) > 4;
         boolean hasAnyBones = Rs2Inventory.contains(DRAGON_BONES);
         boolean atAltar = isAtChaosAltar();
@@ -145,10 +155,10 @@ public class ChaosAltarScript extends Script {
         if ((inWilderness || inWilderness3) && hasAnyBones && atAltar) {
             return State.OFFER_BONES;
         }
-        if (inWilderness && hasAnyBones && !atAltar) {
+        if ((inWilderness || inWilderness3) && hasAnyBones && !atAltar) {
             return State.WALK_TO_ALTAR;
         }
-        if (inWilderness && !hasAnyBones) {
+        if ((inWilderness || inWilderness3) && !hasAnyBones) {
             if (Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
                 Microbot.stopPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
             }
