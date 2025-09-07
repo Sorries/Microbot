@@ -32,7 +32,7 @@ import org.apache.commons.lang3.RandomUtils;
 public class NavigationHandler {
 
     private static final int ARRIVAL_TOLERANCE = 7; // Distance to consider "arrived"
-    private static final int ENT_TRAIL_SEARCH_RADIUS = 10;
+    private static final int ENT_TRAIL_SEARCH_RADIUS = 7;
     private static final long WALK_TIMEOUT_MS = 30000; // 30 seconds
     
     // Track processed ent trail pairs to avoid repeating them
