@@ -13,7 +13,9 @@ import net.runelite.client.plugins.microbot.util.gameobject.Rs2ObjectModel;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.SmartSlayer;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
+import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
+import net.runelite.client.plugins.microbot.util.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -118,7 +120,6 @@ public class ExampleScript extends Script {
 //////                    return;
 //////                }
 ////            }
-
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
