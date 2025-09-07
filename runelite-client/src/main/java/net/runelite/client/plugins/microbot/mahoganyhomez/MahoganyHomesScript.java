@@ -24,6 +24,7 @@ import net.runelite.client.plugins.microbot.util.tile.Rs2Tile;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.walker.WalkerState;
 
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -461,6 +462,7 @@ public class MahoganyHomesScript extends Script {
     // Walk to current home
     private void walkToHome() {
         Home currentHome = plugin.getCurrentHome();
+        System.out.println("Current home: " + currentHome.getName());
         if (currentHome != null
                 && plugin.distanceBetween(currentHome.getArea(), Rs2Player.getWorldLocation()) > 0
                 && !isMissingItems()) {
