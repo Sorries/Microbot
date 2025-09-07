@@ -155,7 +155,7 @@ public class AgilityScript extends Script
 				if (Rs2GameObject.interact(gameObject))
 				{
 					plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
-					sleep(Rs2Random.skewedRandAuto(1000));
+					sleep(Rs2Random.skewedRandAuto(1500));
 				}
 			}
 			catch (Exception ex)
