@@ -18,6 +18,7 @@ import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
 
+
 import static net.runelite.client.plugins.microbot.util.Global.sleep;
 import static net.runelite.client.plugins.microbot.util.Global.sleepGaussian;
 import static net.runelite.client.plugins.microbot.util.Global.sleepUntil;
@@ -32,7 +33,7 @@ import org.apache.commons.lang3.RandomUtils;
 public class NavigationHandler {
 
     private static final int ARRIVAL_TOLERANCE = 7; // Distance to consider "arrived"
-    private static final int ENT_TRAIL_SEARCH_RADIUS = 7;
+    private static final int ENT_TRAIL_SEARCH_RADIUS = 3;
     private static final long WALK_TIMEOUT_MS = 30000; // 30 seconds
     
     // Track processed ent trail pairs to avoid repeating them
