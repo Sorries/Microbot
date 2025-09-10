@@ -1837,6 +1837,7 @@ public class Rs2Walker {
 
         MagicAction magicSpell = Arrays.stream(MagicAction.values()).filter(x -> x.getName().toLowerCase().contains(spellName)).findFirst().orElse(null);
         if (magicSpell != null) {
+            System.out.println("Magic spell: " + magicSpell.getName() + " option " + option + " identifier " + identifier);
             return Rs2Magic.cast(magicSpell, option, identifier);
         }
         return false;
