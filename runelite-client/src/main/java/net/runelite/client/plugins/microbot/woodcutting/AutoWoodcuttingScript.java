@@ -137,6 +137,7 @@ public class AutoWoodcuttingScript extends Script {
         }
 
         if (tree != null) {
+            sleep(500,2000);
             if (Rs2GameObject.interact(tree, config.TREE().getAction())) {
                 Rs2Player.waitForAnimation();
                 Rs2Antiban.actionCooldown();
