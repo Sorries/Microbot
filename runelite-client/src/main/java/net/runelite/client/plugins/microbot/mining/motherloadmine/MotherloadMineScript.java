@@ -359,15 +359,19 @@ public class MotherloadMineScript extends Script
         {
             handleDragonPickaxeSpec();
         }
-        if (Rs2GameObject.interact(vein))
-        {
-            oreVein = vein;
-            sleepUntil(Rs2Player::isAnimating, 5000);
-            if (!Rs2Player.isAnimating())
+        if (vein != null) {
+            sleep(500,2000);
+            if (Rs2GameObject.interact(vein))
             {
-                oreVein = null;
+                oreVein = vein;
+                sleepUntil(Rs2Player::isAnimating, 5000);
+                if (!Rs2Player.isAnimating())
+                {
+                    oreVein = null;
+                }
             }
         }
+
     }
 
     private WallObject findClosestVein()
