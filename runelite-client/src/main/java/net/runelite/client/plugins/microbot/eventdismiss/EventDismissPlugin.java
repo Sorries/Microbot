@@ -33,6 +33,10 @@ public class EventDismissPlugin extends Plugin {
 
     @Override
     protected void startUp() throws AWTException {
+        if (config == null) {
+            Microbot.log("EventDismissConfig is null. Did you register it correctly?");
+            return;
+        }
         dismissNpcEvent = new DismissNpcEvent(config);
         Microbot.getBlockingEventManager().add(dismissNpcEvent);
     }

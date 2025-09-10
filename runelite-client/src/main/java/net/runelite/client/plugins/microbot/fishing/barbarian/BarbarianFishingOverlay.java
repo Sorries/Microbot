@@ -46,7 +46,7 @@ public class BarbarianFishingOverlay extends OverlayPanel {
                     .build());
 
             panelComponent.getChildren().add(LineComponent.builder().build());
-            Rs2Antiban.renderAntibanOverlayComponents(panelComponent);
+            //Rs2Antiban.renderAntibanOverlayComponents(panelComponent);
 
             panelComponent.getChildren().add(LineComponent.builder()
                     .left(Microbot.status)
