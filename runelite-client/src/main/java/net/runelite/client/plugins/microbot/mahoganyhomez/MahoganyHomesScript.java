@@ -379,7 +379,12 @@ public class MahoganyHomesScript extends Script {
             ShortestPathPlugin.getPathfinderConfig().setIgnoreTeleportAndItems(false);
             if (Rs2Bank.walkToBank(bankLocation)) {
                 if(Rs2Bank.openBank()) {
-                    sleep(600, 1200);
+                    sleepUntil(Rs2Bank::isOpen);
+                    if (Rs2Bank.count(plugin.getConfig().currentTier().getPlankSelection().getPlankId()) <= 28 || Rs2Bank.count(ItemID.STEEL_BAR) <= 4 ){
+                        System.out.println("Out of Plank or Steel Bar");
+                        shutdown();
+                        return;
+                    }
                     if (plugin.getConfig().usePlankSack()) {
                         if (Rs2Inventory.isFull() && !Rs2Inventory.contains(ItemID.STEEL_BAR)) {
                             Rs2Bank.depositAll(plugin.getConfig().currentTier().getPlankSelection().getPlankId());
