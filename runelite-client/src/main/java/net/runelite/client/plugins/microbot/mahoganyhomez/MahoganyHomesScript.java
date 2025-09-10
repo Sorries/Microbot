@@ -214,27 +214,22 @@ public class MahoganyHomesScript extends Script {
             if (tile != null)
                 door = tile.getWallObject();
 
+            if (door == null)
+                door = Rs2GameObject.getGameObject(wp);
+
             if (door == null) continue;
 
             var objectComp = Rs2GameObject.getObjectComposition(door.getId());
             if (objectComp == null) continue;
 
-            String name = objectComp.getName();
-
-            if (Arrays.asList(objectComp.getActions()).contains("Open") && !name.equalsIgnoreCase("Chest")) {
+            if (Arrays.asList(objectComp.getActions()).contains("Open")) {
                 doors.add(door);
             }
 
         }
 
-        List<String> doorNames = doors.stream()
-                .map(d -> Rs2GameObject.getObjectComposition(d.getId()).getName())
-                .collect(Collectors.toList());
-
-        System.out.println("Doors found: " + doorNames + " Size: " + doors.size());
-
-//        logInfo("Found {} doors", doors.size());
-//        log("Doors found: %s", doors.size());
+        logInfo("Found {} doors", doors.size());
+        log("Doors found: %s", doors.size());
 
         for (TileObject door : doors) {
             ObjectComposition doorComp = Rs2GameObject.getObjectComposition(door.getId());
@@ -387,7 +382,7 @@ public class MahoganyHomesScript extends Script {
                     sleepUntil(Rs2Bank::isOpen);
                     if (Rs2Bank.count(plugin.getConfig().currentTier().getPlankSelection().getPlankId()) <= 28 || Rs2Bank.count(ItemID.STEEL_BAR) <= 4 ){
                         System.out.println("Out of Plank or Steel Bar");
-                        Microbot.stopPlugin(plugin);
+                        shutdown();
                         return;
                     }
                     if (plugin.getConfig().usePlankSack()) {
