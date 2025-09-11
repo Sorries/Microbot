@@ -1,50 +1,37 @@
 package net.runelite.client.plugins.microbot.bee.chaosaltar;
 
-import lombok.Setter;
-import net.runelite.api.*;
-
-import java.time.Duration;
-
+import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.GameObject;
+import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
-import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
+import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
-import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorScript;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
-import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
-import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
-import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Pvp;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
-import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
-import net.runelite.client.plugins.microbot.Microbot;
-import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
 
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static net.runelite.api.ItemID.BURNING_AMULET5;
 import static net.runelite.api.ItemID.DRAGON_BONES;
 import static net.runelite.api.NpcID.CHAOS_FANATIC;
-import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.*;
+import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.walkTo;
 
 
 public class ChaosAltarScript extends Script {
@@ -84,6 +71,17 @@ public class ChaosAltarScript extends Script {
                 if (!externalStateOverride) {
                     currentState = determineState();
                 } else {
+                    Microbot.log("Trigger external state override : Bank");
+                    if(Microbot.isPluginEnabled(ShortestPathPlugin.class)){
+                        var plugin = Microbot.getPlugin(ShortestPathPlugin.class);
+                        if (plugin != null) {
+                            Microbot.log("Shortest path plugin stopped");
+                            plugin.getShortestPathScript().setTriggerWalker(null);
+                            Rs2Walker.setTarget(null);
+                        } else {
+                            Microbot.log("ShortestPathPlugin is not running.");
+                        }
+                    }
                     externalStateOverride = false; // Only override for one loop
                 }
                 //Microbot.log("Current state: " + currentState);
