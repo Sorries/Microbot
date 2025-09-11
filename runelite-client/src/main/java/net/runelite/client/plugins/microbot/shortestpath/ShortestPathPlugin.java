@@ -189,7 +189,7 @@ public class ShortestPathPlugin extends Plugin implements KeyListener {
     public static boolean startPointSet = false;
     @Setter
     private static int reachedDistance;
-    @Getter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PUBLIC)
     private ShortestPathScript shortestPathScript;
     @Provides
     public ShortestPathConfig provideConfig(ConfigManager configManager) {
