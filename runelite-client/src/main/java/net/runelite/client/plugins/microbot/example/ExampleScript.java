@@ -7,6 +7,8 @@ import net.runelite.api.TileObject;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerPlugin;
+import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
+import net.runelite.client.plugins.microbot.shortestpath.ShortestPathScript;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2ObjectModel;
@@ -120,6 +122,16 @@ public class ExampleScript extends Script {
 //////                    return;
 //////                }
 ////            }
+                if(Microbot.isPluginEnabled(ShortestPathPlugin.class)){
+                    Microbot.log("active");
+                    var plugin = Microbot.getPlugin(ShortestPathPlugin.class);
+                    if (plugin != null) {
+                        Microbot.log("shutting down");
+                        plugin.getShortestPathScript().setTriggerWalker(null);
+                    } else {
+                        Microbot.log("ShortestPathScript is not running.");
+                    }
+                }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
