@@ -222,11 +222,20 @@ public class MahoganyHomesScript extends Script {
             var objectComp = Rs2GameObject.getObjectComposition(door.getId());
             if (objectComp == null) continue;
 
-            if (Arrays.asList(objectComp.getActions()).contains("Open")) {
+            String name = objectComp.getName();
+            if(!name.equalsIgnoreCase("null")) System.out.println("Object found1: " + name);
+
+            if (Arrays.asList(objectComp.getActions()).contains("Open") && !name.equalsIgnoreCase("Chest")) {
                 doors.add(door);
             }
 
         }
+
+        List<String> doorNames = doors.stream()
+                .map(d -> Rs2GameObject.getObjectComposition(d.getId()).getName())
+                .collect(Collectors.toList());
+
+        System.out.println("Doors found: " + doorNames + " Size: " + doors.size());
 
         logInfo("Found {} doors", doors.size());
         log("Doors found: %s", doors.size());
