@@ -429,6 +429,7 @@ public class MahoganyHomesScript extends Script {
                         if (Rs2Inventory.getEmptySlots() > 0)
                             Rs2Bank.openBank();
                             Rs2Bank.withdrawAll(plugin.getConfig().currentTier().getPlankSelection().getPlankId());
+                            Rs2Inventory.waitForInventoryChanges(1000);
                             Rs2Bank.closeBank();
                     } else {
                         // Withdraw steel bars first if needed
