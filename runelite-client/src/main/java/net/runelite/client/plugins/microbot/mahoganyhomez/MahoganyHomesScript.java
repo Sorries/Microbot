@@ -214,9 +214,10 @@ public class MahoganyHomesScript extends Script {
             if (tile != null)
                 door = tile.getWallObject();
 
-            if (door == null)
+            if (door == null) {
                 door = Rs2GameObject.getGameObject(wp);
-
+                System.out.println("From GameObject(wp): " + door);
+            }
             if (door == null) continue;
 
             var objectComp = Rs2GameObject.getObjectComposition(door.getId());
