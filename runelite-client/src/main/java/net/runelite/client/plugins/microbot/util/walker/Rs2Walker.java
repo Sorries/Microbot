@@ -3334,8 +3334,11 @@ public class Rs2Walker {
                 log.warn("Cannot perform banking workflow with null locations");
                 return WalkerState.EXIT;
             }
-            // Step 1: Walk to bank       
-            setTarget(null); // Clear current target to avoid conflicts           
+            if (Rs2Widget.worldMapInterfaceClose()) {
+                sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+            }
+            // Step 1: Walk to bank
+            setTarget(null); // Clear current target to avoid conflicts
             WalkerState bankWalkResult = walkWithStateInternal(bankLocation, distance);
             if (bankWalkResult != WalkerState.ARRIVED) {
                 log.warn("Failed to arrive at bank at: " + bankLocation + ", state: " + bankWalkResult);
