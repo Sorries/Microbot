@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Item;
+import net.runelite.api.Skill;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
@@ -507,7 +508,7 @@ public class HerbiboarScript extends Script {
                         }
                         Rs2GameObject.interact(resetRock, "Inspect");
                         Rs2Player.waitForAnimation();
-                        sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 5000);
+                        sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving() && Rs2Player.waitForXpDrop(Skill.HUNTER,10000), 10000);
                         sleep(1000,2000);
                         if (herbiboarPlugin.getCurrentGroup() == null) {
                             setState(HerbiboarState.START);
@@ -551,7 +552,7 @@ public class HerbiboarScript extends Script {
                                     }
                                     Rs2GameObject.interact(start, "Search");
                                     Rs2Player.waitForAnimation();
-                                    sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 1000);
+                                    sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving() && Rs2Player.waitForXpDrop(Skill.HUNTER,10000), 10000);
                                     sleep(1000,1500);
                                 }
                             }
@@ -580,7 +581,7 @@ public class HerbiboarScript extends Script {
                                 }
                                 Rs2GameObject.interact(object, "Search");
                                 Rs2Player.waitForAnimation();
-                                sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 5000);
+                                sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving() && Rs2Player.waitForXpDrop(Skill.HUNTER,10000), 10000);
                                 sleep(1000,1500);
                             }
                             if (checkForConfusionMessage(herbiboarPlugin)) return;
@@ -604,7 +605,7 @@ public class HerbiboarScript extends Script {
                                     attackedTunnel = Rs2GameObject.hasAction(Rs2GameObject.convertToObjectComposition(tunnel), "Attack") ? Rs2GameObject.interact(tunnel, "Attack") : Rs2GameObject.interact(tunnel, "Search");
                                     if (attackedTunnel) {
                                         Rs2Player.waitForAnimation();
-                                        sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 5000);
+                                        sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving() && Rs2Player.waitForXpDrop(Skill.HUNTER,10000), 10000);
                                         sleep(1000,2000);
                                     }
                                 }
@@ -623,7 +624,7 @@ public class HerbiboarScript extends Script {
                             if (Rs2Player.getWorldLocation().distanceTo(loc) <= 8) {
                                 Rs2Npc.interact(herb, "Harvest");
                                 Rs2Player.waitForAnimation();
-                                sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 5000);
+                                sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving() && Rs2Player.waitForXpDrop(Skill.HUNTER,10000), 10000);
                                 sleep(1000,1500);
                                 incrementHerbisCaught();
                                 TileObject start = herbiboarPlugin.getStarts().values().stream()
@@ -641,7 +642,7 @@ public class HerbiboarScript extends Script {
                                         Microbot.log(Level.INFO,"Searching for next herbiboar");
                                         Rs2GameObject.interact(start, "Search");
                                         Rs2Player.waitForAnimation();
-                                        sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 3000);
+                                        sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving() && Rs2Player.waitForXpDrop(Skill.HUNTER,10000), 10000);
                                         sleep(1000,2000);
                                     }
                                 }
