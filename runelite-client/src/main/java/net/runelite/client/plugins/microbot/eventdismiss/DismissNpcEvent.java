@@ -21,15 +21,12 @@ public class DismissNpcEvent implements BlockingEvent {
     @Override
     public boolean validate() {
         Rs2NpcModel randomEventNPC = Rs2Npc.getRandomEventNPC();
-        return randomEventNPC != null && Rs2Npc.hasLineOfSight(randomEventNPC);
+        return Rs2Npc.hasLineOfSight(randomEventNPC);
     }
 
     @Override
     public boolean execute() {
         Rs2NpcModel randomEventNPC = Rs2Npc.getRandomEventNPC();
-        if (randomEventNPC == null) {
-            return false; // nothing to dismiss
-        }
         String name = randomEventNPC.getName();
         Microbot.log("Random Event: " + (name != null ? name : "Unknown"));
         boolean shouldDismiss = shouldDismissNpc(randomEventNPC);
