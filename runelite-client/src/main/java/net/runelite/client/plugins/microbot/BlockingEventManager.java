@@ -158,7 +158,10 @@ public class BlockingEventManager
             return true;
         }
 
-        BlockingEvent event = eventQueue.poll();    
+        BlockingEvent event = eventQueue.poll();
+        if (event != null) {
+            System.out.println("" + event);
+        }
         if (event == null)
         {
             return false;
@@ -173,6 +176,7 @@ public class BlockingEventManager
 
         blockingExecutor.execute(() -> {
             boolean executedSuccess = false;
+            System.out.println("3");
             try
             {
                 executedSuccess = event.execute();
@@ -187,7 +191,7 @@ public class BlockingEventManager
             finally
             {
                 if (executedSuccess){
-                    log.debug("BlockingEvent {} executed successfully", event.getName());                    
+                    log.debug("BlockingEvent {} executed successfully", event.getName());
                     pendingEvents.remove(event);
                 }else{
                     //queue it back if execution failed
