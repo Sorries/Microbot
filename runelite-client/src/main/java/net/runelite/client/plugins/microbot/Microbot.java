@@ -88,7 +88,7 @@ public class Microbot {
 	@Getter
 	private static final SpecialAttackConfigs specialAttackConfigs = new SpecialAttackConfigs();
 	public static MenuEntry targetMenu;
-	public static boolean isGainingExp = false;
+	public static volatile boolean isGainingExp = false;
 	public static AtomicBoolean pauseAllScripts = new AtomicBoolean(false);
 	public static String status = "IDLE";
 
