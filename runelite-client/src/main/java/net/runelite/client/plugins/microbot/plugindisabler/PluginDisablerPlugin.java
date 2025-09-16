@@ -6,6 +6,7 @@ import net.runelite.api.ChatMessageType;
 import net.runelite.api.MenuAction;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -118,6 +119,13 @@ public class PluginDisablerPlugin extends Plugin {
             }
         }
     }
+
+//    @Subscribe
+//    public void onStatChanged(StatChanged statChanged) {
+//        PluginDisablerScript.lastXpTime = System.currentTimeMillis();
+//        Microbot.log("XP event2: " + statChanged.getSkill()
+//                + " +" + statChanged.getXp());
+//    }
 
     @Override
     protected void startUp() throws AWTException {
