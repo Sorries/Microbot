@@ -158,7 +158,7 @@ public class BlockingEventManager
 
         BlockingEvent event = eventQueue.poll();
         if (event != null) {
-            System.out.println("" + event);
+            System.out.println("Events are: " + event);
         }
         if (event == null)
         {
@@ -174,7 +174,6 @@ public class BlockingEventManager
 
         blockingExecutor.execute(() -> {
             boolean executedSuccess = false;
-            System.out.println("3");
             try
             {
                 executedSuccess = event.execute();
