@@ -26,27 +26,29 @@ public class DismissNpcEvent implements BlockingEvent {
 
     @Override
     public boolean execute() {
-        Rs2NpcModel randomEventNPC = Rs2Npc.getRandomEventNPC();
-        String name = randomEventNPC.getName();
-        Microbot.log("Random Event: " + (name != null ? name : "Unknown"));
-        boolean shouldDismiss = shouldDismissNpc(randomEventNPC);
-        if (shouldDismiss) {
-            Global.sleep(800,1250);
-            Rs2Npc.interact(randomEventNPC, "Dismiss");
-            Global.sleepUntil(() -> Rs2Npc.getRandomEventNPC() == null);
-            Global.sleep(800,1250);
-            return true;
-        } else if (!Rs2Inventory.isFull()) {
-            Global.sleep(800,1250);
-            Rs2Npc.interact(randomEventNPC, "Talk-to");
-            Global.sleep(200,400);
-            Rs2Dialogue.sleepUntilHasContinue();
-            Global.sleep(200,400);
-            Rs2Dialogue.clickContinue();
-            Global.sleep(800,1250);
-            return true;
+        if (Rs2Npc.getRandomEventNPC() != null) {
+            Rs2NpcModel randomEventNPC = Rs2Npc.getRandomEventNPC();
+            String name = randomEventNPC.getName();
+            Microbot.log("Random Event: " + (name != null ? name : "Unknown"));
+            boolean shouldDismiss = shouldDismissNpc(randomEventNPC);
+            if (shouldDismiss) {
+                Global.sleep(800, 1250);
+                Rs2Npc.interact(randomEventNPC, "Dismiss");
+                Global.sleepUntil(() -> Rs2Npc.getRandomEventNPC() == null);
+                Global.sleep(800, 1250);
+                return true;
+            } else if (!Rs2Inventory.isFull()) {
+                Global.sleep(800, 1250);
+                Rs2Npc.interact(randomEventNPC, "Talk-to");
+                Global.sleep(200, 400);
+                Rs2Dialogue.sleepUntilHasContinue();
+                Global.sleep(200, 400);
+                Rs2Dialogue.clickContinue();
+                Global.sleep(800, 1250);
+                return true;
+            }
         }
-        return false;
+        return true;
     }
 
     @Override
