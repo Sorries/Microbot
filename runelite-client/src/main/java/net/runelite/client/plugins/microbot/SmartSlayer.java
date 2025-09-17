@@ -9,6 +9,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
+import net.runelite.client.plugins.microbot.util.cache.Rs2PohCache;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
@@ -150,10 +151,12 @@ public boolean run(QoLConfig config) {
                     }
                     sleep(500,1000);
                 }
-                if(Rs2Inventory.contains(8013)) {
+                while (Rs2Inventory.contains(8013) && !Rs2PohCache.isInPOH()){
                     Rs2Inventory.interact(8013, "break");
                     sleepUntil(PohTeleports::isInHouse);
-                }else if (Rs2Inventory.contains(13393)) {
+                    sleep(500,1000);
+                }
+                if (Rs2Inventory.contains(13393)) {
                     Rs2Bank.walkToBank();
                     sleepUntil(() ->Rs2Bank.isNearBank(5));
                 }
