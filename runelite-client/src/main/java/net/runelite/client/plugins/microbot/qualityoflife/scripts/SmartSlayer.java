@@ -151,12 +151,13 @@ public boolean run(QoLConfig config) {
                     }
                     sleep(500,1000);
                 }
-                while (Rs2Inventory.contains(8013) && !Rs2PohCache.isInPOH()){
-                    Rs2Inventory.interact(8013, "break");
-                    sleepUntil(PohTeleports::isInHouse);
-                    sleep(500,1000);
-                }
-                if (Rs2Inventory.contains(13393)) {
+                if (Rs2Inventory.contains(8013)) {
+                    while (Rs2Inventory.contains(8013) && !Rs2PohCache.isInPOH()) {
+                        Rs2Inventory.interact(8013, "break");
+                        sleepUntil(PohTeleports::isInHouse);
+                        sleep(500, 1000);
+                    }
+                } else if (Rs2Inventory.contains(13393)) {
                     Rs2Bank.walkToBank();
                     sleepUntil(() ->Rs2Bank.isNearBank(5));
                 }
