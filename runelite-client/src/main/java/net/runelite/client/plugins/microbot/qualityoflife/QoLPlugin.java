@@ -303,8 +303,8 @@ public class QoLPlugin extends Plugin implements KeyListener {
             NeverLogoutScript.onGameTick(event);
         }
         if (config.useSpecWeapon()) {
-            if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() == config.specWeapon()
-                    || Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() == config.specWeapon2()) {
+            if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon()
+                    || Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon2()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
                 if (Rs2Inventory.contains(config.specWeapon().toString())) {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
