@@ -27,7 +27,9 @@ import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.Microbot;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -374,12 +376,28 @@ public class MotherloadMineScript extends Script
 
     }
 
+//    private WallObject findClosestVein()
+//    {
+//        return Rs2GameObject.getWallObjects().stream()
+//                .filter(this::isValidVein)
+//                .min(Comparator.comparing(this::distanceToPlayer))
+//                .orElse(null);
+//    }
+
     private WallObject findClosestVein()
     {
-        return Rs2GameObject.getWallObjects().stream()
+        List<WallObject> veins = Rs2GameObject.getWallObjects().stream()
                 .filter(this::isValidVein)
-                .min(Comparator.comparing(this::distanceToPlayer))
-                .orElse(null);
+                .collect(Collectors.toList());
+
+        if (veins.isEmpty())
+        {
+            return null;
+        }
+
+        int index = Rs2Random.between(0, veins.size() - 1);
+        System.out.println("random index: " + index);
+        return veins.get(index);
     }
 
     private boolean isValidVein(WallObject wallObject)
