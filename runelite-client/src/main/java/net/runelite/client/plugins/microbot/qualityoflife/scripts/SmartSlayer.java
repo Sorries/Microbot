@@ -154,7 +154,7 @@ public boolean run(QoLConfig config) {
                 if (Rs2Inventory.contains(8013)) {
                     while (Rs2Inventory.contains(8013) && !Rs2PohCache.isInPOH()) {
                         Rs2Inventory.interact(8013, "break");
-                        sleepUntil(PohTeleports::isInHouse);
+                        sleepUntil(Rs2PohCache::isInPOH,10000);
                         sleep(500, 1000);
                     }
                 } else if (Rs2Inventory.contains(13393)) {
