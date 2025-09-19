@@ -72,16 +72,6 @@ public class ChaosAltarScript extends Script {
                     currentState = determineState();
                 } else {
                     Microbot.log("Trigger external state override : Bank");
-                    if(Microbot.isPluginEnabled(ShortestPathPlugin.class)){
-                        var plugin = Microbot.getPlugin(ShortestPathPlugin.class);
-                        if (plugin != null) {
-                            Microbot.log("Shortest path plugin stopped");
-                            plugin.getShortestPathScript().setTriggerWalker(null);
-                            Rs2Walker.setTarget(null);
-                        } else {
-                            Microbot.log("ShortestPathPlugin is not running.");
-                        }
-                    }
                     externalStateOverride = false; // Only override for one loop
                 }
                 //Microbot.log("Current state: " + currentState);

@@ -6,6 +6,8 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
+import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.api.events.*;
@@ -53,6 +55,16 @@ public class ChaosAltarPlugin extends Plugin {
             Microbot.log("Dead");
             if (chaosAltarScript != null) {
                 chaosAltarScript.setCurrentState(State.BANK);
+            }
+            if(Microbot.isPluginEnabled(ShortestPathPlugin.class)){
+                var plugin = Microbot.getPlugin(ShortestPathPlugin.class);
+                if (plugin != null) {
+                    Microbot.log("Shortest path plugin stopped");
+                    plugin.getShortestPathScript().setTriggerWalker(null);
+                    Rs2Walker.setTarget(null);
+                } else {
+                    Microbot.log("ShortestPathPlugin is not running.");
+                }
             }
         }
     }
