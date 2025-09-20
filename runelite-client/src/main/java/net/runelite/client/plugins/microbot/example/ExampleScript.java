@@ -122,16 +122,80 @@ public class ExampleScript extends Script {
 //////                    return;
 //////                }
 ////            }
-                if(Microbot.isPluginEnabled(ShortestPathPlugin.class)){
-                    Microbot.log("active");
-                    var plugin = Microbot.getPlugin(ShortestPathPlugin.class);
-                    if (plugin != null) {
-                        Microbot.log("shutting down");
-                        plugin.getShortestPathScript().setTriggerWalker(null);
-                    } else {
-                        Microbot.log("ShortestPathScript is not running.");
-                    }
-                }
+//                if(Microbot.isPluginEnabled(ShortestPathPlugin.class)){
+//                    Microbot.log("active");
+//                    var plugin = Microbot.getPlugin(ShortestPathPlugin.class);
+//                    if (plugin != null) {
+//                        Microbot.log("shutting down");
+//                        plugin.getShortestPathScript().setTriggerWalker(null);
+//                    } else {
+//                        Microbot.log("ShortestPathScript is not running.");
+//                    }
+//                }
+
+//                private Bars resolveActiveBar() {
+//                    Bars configured = config.getBars();
+//                    int level = Rs2Player.getBoostedSkillLevel(Skill.SMITHING);
+//
+//                    Microbot.log("Resolve: start (configured=" + configured + ", lvl=" + level + ")");
+//
+//
+//                    if (configured != null && level >= configured.getMinSmithingLevel()) {
+//                        int invCntConfigured = Rs2Inventory.count(configured.getPrimaryOre());
+//                        Microbot.log("Resolve: inv " + configured + " primary=" + invCntConfigured + "/27");
+//                        if (invCntConfigured >= 27) {
+//                            Microbot.log("Resolve: selecting configured from inventory: " + configured);
+//                            return configured;
+//                        }
+//                    }
+//
+//                    if (this.activeBar != null && level >= this.activeBar.getMinSmithingLevel()) {
+//                        int invCntActive = Rs2Inventory.count(this.activeBar.getPrimaryOre());
+//                        Microbot.log("Resolve: inv " + this.activeBar + " primary=" + invCntActive + "/27");
+//                        if (invCntActive >= 27) {
+//                            Microbot.log("Resolve: finishing previous active from inventory: " + this.activeBar);
+//                            return this.activeBar;
+//                        }
+//                    }
+//
+//                    Bars[] priority = new Bars[] { Bars.RUNITE_BAR, Bars.ADAMANTITE_BAR, Bars.MITHRIL_BAR, Bars.STEEL_BAR };
+//
+//                    for (Bars b : priority) {
+//                        if (b == configured || b == this.activeBar) continue;
+//                        int invCnt = Rs2Inventory.count(b.getPrimaryOre());
+//                        if (level >= b.getMinSmithingLevel() && invCnt >= 27) {
+//                            Microbot.log("Resolve: selecting from inventory by priority: " + b + " (primary=" + invCnt + ")");
+//                            return b;
+//                        }
+//                    }
+//
+//                    if (configured == Bars.GOLD_BAR) {
+//                        if (level >= configured.getMinSmithingLevel() && hasRequiredOresForBar(configured)) {
+//                            Microbot.log("Resolve: selecting configured via bank: " + configured);
+//                            return configured;
+//                        }
+//                        return null; // Gold does not fallback to other bars
+//                    }
+//
+//                    // Try configured bar first (bank-based) with 27/54 threshold when applicable
+//                    if (level >= configured.getMinSmithingLevel()) {
+//                        if (!Rs2Bank.isOpen()) {
+//                            Rs2Bank.openBank();
+//                            sleepUntil(Rs2Bank::isOpen, 2000);
+//                        }
+//                        int primaryCount = Rs2Bank.count(configured.getPrimaryOre());
+//                        Integer sec = configured.getSecondaryOre();
+//                        boolean requires54Coal = sec != null && sec == ItemID.COAL;
+//                        String secStr = (sec == null) ? "N/A" : String.valueOf(Rs2Bank.count(sec));
+//                        Microbot.log("Resolve: bank " + configured + " primary=" + primaryCount + ", secondary=" + secStr + (requires54Coal ? " (need>=54 coal)" : (sec == null ? "" : " (need>=27)")));
+//
+//                        if (hasAtLeast27PrimaryAnd54SecondaryInBank(configured)) {
+//                            Microbot.log("Resolve: selecting configured via bank: " + configured);
+//                            return configured;
+//                        } else {
+//                            Microbot.log("Resolve: configured bank threshold not met, trying fallbacks");
+//                        }
+//                    }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
