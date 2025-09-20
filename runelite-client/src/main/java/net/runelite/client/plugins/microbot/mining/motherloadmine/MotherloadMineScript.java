@@ -283,7 +283,7 @@ public class MotherloadMineScript extends Script
         }
         if (hopper.isPresent() && Rs2GameObject.interact(hopper.get()))
         {
-            sleepUntil(() -> !Rs2Inventory.isFull());
+            sleepUntil(() -> !Rs2Inventory.isFull(),10000);
             if (Microbot.getVarbitValue(Varbits.SACK_NUMBER) > maxSackSize - 28)
             {
                 shouldEmptySack = true;
