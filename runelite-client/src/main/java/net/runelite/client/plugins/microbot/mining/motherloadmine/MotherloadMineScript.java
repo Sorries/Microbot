@@ -39,7 +39,8 @@ public class MotherloadMineScript extends Script
     public static final String VERSION = "1.7.2";
 
     private static final WorldArea WEST_UPPER_AREA = new WorldArea(3748, 5676, 7, 9, 0); //3755,5685
-    private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 8, 8, 0);
+//    private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 7, 8, 0); //3763,5670
+    private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 7, 9, 0); //3763,5670
     // Static areas for lower floor to avoid getting stuck behind rockfall
     private static final WorldArea WEST_LOWER_AREA = new WorldArea(3729, 5653, 10, 22, 0);
     private static final WorldArea SOUTH_LOWER_AREA = new WorldArea(3740, 5640, 20, 20, 0);
@@ -396,6 +397,7 @@ public class MotherloadMineScript extends Script
         }
 
         int index = Rs2Random.between(0, veins.size() - 1);
+        System.out.println("Veins: " + veins);
         System.out.println("random index: " + index);
         return veins.get(index);
     }
