@@ -71,8 +71,10 @@ public class BarbarianFishingScript extends Script {
                 validateInteractable(fishingspot);
             }
 
-            sleep(1000, 5000);
-            Rs2Npc.interact(fishingspot, "Use-rod");
+            if(!Rs2Player.isInteracting()) {
+                sleep(1000, 5000);
+                Rs2Npc.interact(fishingspot, "Use-rod");
+            }
 
         }, 0, 600, TimeUnit.MILLISECONDS);
         return true;
