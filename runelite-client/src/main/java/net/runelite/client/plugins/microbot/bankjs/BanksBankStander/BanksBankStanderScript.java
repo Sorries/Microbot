@@ -427,6 +427,7 @@ public class BanksBankStanderScript extends Script {
     private void checkForAmulet(){
         if (!Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY) && !Rs2Equipment.isWearing(ItemID.AMULET_OF_CHEMISTRY_IMBUED_CHARGED)){
             Rs2ItemModel currentAmulet = Rs2Equipment.get(EquipmentInventorySlot.AMULET);
+            Rs2ItemModel currentHead = Rs2Equipment.get(EquipmentInventorySlot.HEAD);
             if (!Rs2Bank.isOpen()) {
                 Rs2Bank.openBank();
                 sleepUntil(Rs2Bank::isOpen);
@@ -439,9 +440,12 @@ public class BanksBankStanderScript extends Script {
                 Microbot.log("Missing Alchemist's Amulet and Amulet of Chemistry. (disable button if not required to wear an amulet)");
                 shutdown();
             }
-            if (currentAmulet != null) {
+            if (Rs2Bank.isOpen() && Rs2Bank.hasItem(ItemID.MM_ALCHEMIST_HAT)) {
+                Rs2Bank.withdrawAndEquip(ItemID.MM_ALCHEMIST_HAT);
+            }
+            if (currentAmulet != null || currentHead != null ){
                 sleep(Rs2Random.between(1000, 1500));
-                Rs2Bank.depositOne(currentAmulet.getId());
+                Rs2Bank.depositItems(currentHead.getId(), currentAmulet.getId());
                 sleep(Rs2Random.between(1000, 1500));
             }
         }
