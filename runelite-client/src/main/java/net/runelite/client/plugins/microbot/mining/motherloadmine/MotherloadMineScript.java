@@ -40,7 +40,7 @@ public class MotherloadMineScript extends Script
 
     private static final WorldArea WEST_UPPER_AREA = new WorldArea(3748, 5676, 7, 9, 0); //3755,5685
 //    private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 7, 8, 0); //3763,5670
-    private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 7, 9, 0); //3763,5670
+    private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 7, 8, 0); //3763,5670
     // Static areas for lower floor to avoid getting stuck behind rockfall
     private static final WorldArea WEST_LOWER_AREA = new WorldArea(3729, 5653, 10, 22, 0);
     private static final WorldArea SOUTH_LOWER_AREA = new WorldArea(3740, 5640, 20, 20, 0);
