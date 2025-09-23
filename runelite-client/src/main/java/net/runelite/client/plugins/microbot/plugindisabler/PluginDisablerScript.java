@@ -164,7 +164,7 @@ public class PluginDisablerScript extends Script {
 
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;
-                // System.out.println("Total time for loop: " + totalTime);
+                 System.out.println("Total time for loop: " + totalTime);
 
             } catch (Exception ex) {
                 log.error("Error in PluginDisablerScript", ex);
@@ -185,7 +185,7 @@ public class PluginDisablerScript extends Script {
         super.shutdown();
     }
 
-    private void disablePlugins() {
+    void disablePlugins() {
         for (Plugin plugin : Microbot.getActiveMicrobotPlugins()) {
             Microbot.stopPlugin(plugin);
         }
