@@ -110,7 +110,7 @@ public class PluginDisablerPlugin extends Plugin {
         ChatMessageType chatMessageType = chatMessage.getType();
         if (!Microbot.isLoggedIn()) return;
 
-        Microbot.log("Chat message"+ chatMessage.getMessage() +" Chat message type: " + chatMessageType);
+        //Microbot.log("Chat message"+ chatMessage.getMessage() +" Chat message type: " + chatMessageType);
 
         if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
             String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
