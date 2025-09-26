@@ -39,7 +39,7 @@ public class MotherloadMineScript extends Script
 {
     public static final String VERSION = "1.7.2";
 
-    private static final WorldArea WEST_UPPER_AREA = new WorldArea(3748, 5676, 7, 9, 0); //3755,5685
+    private static final WorldArea WEST_UPPER_AREA = new WorldArea(3749, 5676, 6, 9, 0); //3755,5685
 //    private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 7, 8, 0); //3763,5670
     private static final WorldArea EAST_UPPER_AREA = new WorldArea(3756, 5667, 7, 8, 0); //3763,5670
     // Static areas for lower floor to avoid getting stuck behind rockfall
