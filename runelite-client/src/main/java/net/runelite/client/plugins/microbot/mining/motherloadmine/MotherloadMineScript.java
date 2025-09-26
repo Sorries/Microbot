@@ -16,6 +16,7 @@ import net.runelite.client.plugins.microbot.util.antiban.enums.ActivityIntensity
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
+import net.runelite.client.plugins.microbot.util.depositbox.Rs2DepositBox;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
@@ -230,7 +231,7 @@ public class MotherloadMineScript extends Script
             if (Rs2Inventory.count() <= 2)
             {
                 Rs2GameObject.interact(SACK_ID);
-                sleepUntil(this::hasOreInInventory);
+                sleepUntil(this::hasOreInInventory,5000);
                 int time = Rs2Random.skewedRandAuto(1700);
                 //Microbot.log("s1 "+ time );
                 sleep(time);
@@ -300,7 +301,19 @@ public class MotherloadMineScript extends Script
 
     private void bankItems()
     {
-        if (Rs2Bank.useBank())
+        if(Rs2Inventory.hasItem("hammer") || Rs2Equipment.isWearing("hammer")){
+            if(Rs2DepositBox.openDepositBox()){
+                sleepUntil(() -> Rs2DepositBox.isOpen());
+                Rs2DepositBox.depositAllExcept("hammer",pickaxeName);
+                Rs2Inventory.waitForInventoryChanges(1000);
+                sleep(800,1300);
+                if(Rs2DepositBox.isOpen()) {
+                    Rs2DepositBox.closeDepositBox();
+                    sleep(800,1300);
+                }
+
+            }
+        }else if (Rs2Bank.useBank())
         {
             sleepUntil(Rs2Bank::isOpen);
             Rs2Bank.depositAllExcept("hammer", pickaxeName);
@@ -347,7 +360,7 @@ public class MotherloadMineScript extends Script
         {
             goUp();
         }
-        return config.mineUpstairs() && isUpperFloor() || Rs2Walker.walkTo(target, 10);
+        return config.mineUpstairs() && isUpperFloor() || Rs2Walker.walkTo(target, 5);
     }
 
     private void attemptToMineVein()
