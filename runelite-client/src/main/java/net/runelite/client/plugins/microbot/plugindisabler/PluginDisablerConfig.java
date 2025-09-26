@@ -149,5 +149,15 @@ public interface PluginDisablerConfig extends Config {
         return false;
     }
 
+    @ConfigItem(
+            name = "Disable plugin after reaching level 99",
+            keyName = "level99",
+            position = 15,
+            description = "Disable plugin after reaching level 99"
+    )
+    default boolean level99() {
+        return true;
+    }
+
 
 }

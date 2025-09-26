@@ -391,8 +391,8 @@ public interface QoLConfig extends Config {
     // spec weapon
     @ConfigItem(
             keyName = "specWeapon2",
-            name = "Spec Weapon",
-            description = "Spec Weapon",
+            name = "Spec Weapon2",
+            description = "Spec Weapon2",
             position = 7,
             section = upkeepSection
     )
