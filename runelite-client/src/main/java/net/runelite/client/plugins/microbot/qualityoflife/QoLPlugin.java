@@ -203,11 +203,11 @@ public class QoLPlugin extends Plugin implements KeyListener {
         }
         if (config.useSpecWeapon()) {
             Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-            if (Rs2Inventory.contains(config.specWeapon().getName()) || Rs2Equipment.isWearing(config.specWeapon().getName())){
+            if (Rs2Inventory.contains(config.specWeapon().getName())){
                 Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
                 Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
             }
-            else if (Rs2Inventory.contains(config.specWeapon2().getName()) || Rs2Equipment.isWearing(config.specWeapon2().getName())) {
+            else if (Rs2Inventory.contains(config.specWeapon2().getName())) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
                 Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
             }
@@ -308,12 +308,12 @@ public class QoLPlugin extends Plugin implements KeyListener {
         }
         if (config.useSpecWeapon()) {
             if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon()
-                    || Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon2()) {
+                    && Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon2()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-                if (Rs2Inventory.contains(config.specWeapon().getName()) || Rs2Equipment.isWearing(config.specWeapon().getName()) ) {
+                if (Rs2Inventory.contains(config.specWeapon().getName())){
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
-                } else if (Rs2Inventory.contains(config.specWeapon2().getName()) || Rs2Equipment.isWearing(config.specWeapon2().getName())) {
+                } else if (Rs2Inventory.contains(config.specWeapon2().getName())) {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
                 }
@@ -607,10 +607,10 @@ public class QoLPlugin extends Plugin implements KeyListener {
         if (ev.getKey().equals("useSpecWeapon") || ev.getKey().equals("specWeapon")|| ev.getKey().equals("specWeapon2")) {
             if (config.useSpecWeapon()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-                if (Rs2Inventory.contains(config.specWeapon().getName()) || Rs2Equipment.isWearing(config.specWeapon().getName())) {
+                if (Rs2Inventory.contains(config.specWeapon().getName())) {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
-                }else if (Rs2Inventory.contains(config.specWeapon2().getName()) || Rs2Equipment.isWearing(config.specWeapon2().getName())) {
+                }else if (Rs2Inventory.contains(config.specWeapon2().getName())) {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
                 }
