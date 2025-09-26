@@ -111,11 +111,12 @@ public class PluginDisablerPlugin extends Plugin {
         if (!Microbot.isLoggedIn()) return;
 
         //Microbot.log("Chat message"+ chatMessage.getMessage() +" Chat message type: " + chatMessageType);
-
-        if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
-            String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
-            if (cleanText.toLowerCase().contains("you are now level 99")) {
-                pluginDisabler.disablePlugins();
+        if(config.level99()) {
+            if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
+                String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
+                if (cleanText.toLowerCase().contains("you are now level 99")) {
+                    pluginDisabler.disablePlugins();
+                }
             }
         }
 
