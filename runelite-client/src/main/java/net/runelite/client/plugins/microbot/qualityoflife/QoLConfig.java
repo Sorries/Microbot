@@ -461,6 +461,17 @@ public interface QoLConfig extends Config {
         return false;
     }
 
+    @ConfigItem(
+            keyName = "npcAggressionReset",
+            name = "NPC aggression reset",
+            description = "Will reset if npc aggression timer",
+            position = 13,
+            section = upkeepSection
+    )
+    default boolean npcAggressionReset() {
+        return false;
+    }
+
 
     // boolean to display Inventory setups as a menu option in the bank
     @ConfigItem(
