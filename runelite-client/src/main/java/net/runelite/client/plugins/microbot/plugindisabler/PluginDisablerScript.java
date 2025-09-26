@@ -169,7 +169,7 @@ public class PluginDisablerScript extends Script {
             } catch (Exception ex) {
                 log.error("Error in PluginDisablerScript", ex);
             }
-        }, 0, 100, TimeUnit.MILLISECONDS); // Adjust delay as needed
+        }, 0, 1000, TimeUnit.MILLISECONDS); // Adjust delay as needed
         return true;
     }
 
