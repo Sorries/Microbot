@@ -94,13 +94,6 @@ public class PluginDisablerOverlay extends OverlayPanel {
                         .build());
             }
 
-            if(config.teleOut()){
-                panelComponent.getChildren().add(TitleComponent.builder()
-                        .text("Will teleport Out")
-                        .color(Color.BLUE)
-                        .build());
-            }
-
             if (PluginDisablerScript.disablePluginsFlag){
                 panelComponent.getChildren().add(TitleComponent.builder()
                     .text("Enabled")
@@ -112,6 +105,19 @@ public class PluginDisablerOverlay extends OverlayPanel {
                     .color(Color.RED)
                     .build());
             }
+            if(config.teleOut()){
+                panelComponent.getChildren().add(TitleComponent.builder()
+                        .text("Will teleport out")
+                        .color(Color.BLUE)
+                        .build());
+            }
+
+//            if(config.level99()){
+//                panelComponent.getChildren().add(TitleComponent.builder()
+//                        .text("Will disable after level 99")
+//                        .color(Color.BLUE)
+//                        .build());
+//            }
 
         } catch(Exception ex) {
             System.out.println(ex.getMessage());
