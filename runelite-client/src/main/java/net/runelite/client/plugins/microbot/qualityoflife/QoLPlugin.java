@@ -317,10 +317,12 @@ public class QoLPlugin extends Plugin implements KeyListener {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
                 }
-                Microbot.log("On tick spec weapon set: " +
-                        (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != null
-                                ? Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon().getName()
-                                : "Null"));
+                if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != null){
+                    Microbot.log("On tick spec weapon set: " +
+                            (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != null
+                                    ? Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon().getName()
+                                    : "Null"));
+                }
             }
         }
     }
