@@ -142,6 +142,8 @@ public class QoLPlugin extends Plugin implements KeyListener {
     @Inject
     private SmartSlayer smartSlayer;
     @Inject
+    private NpcAggressionReset npcAggressionReset;
+    @Inject
     @Getter
     private PvpScript pvpScript;
     @Inject
@@ -228,6 +230,7 @@ public class QoLPlugin extends Plugin implements KeyListener {
         wintertodtScript.run(config);
         cannonScript.run(config);
         smartSlayer.run(config);
+        npcAggressionReset.run(config);
         autoItemDropperScript.run(config);
         eventBus.register(fletchingManager);
         eventBus.register(firemakingManager);
@@ -248,6 +251,7 @@ public class QoLPlugin extends Plugin implements KeyListener {
         specialAttackScript.shutdown();
         cannonScript.shutdown();
         smartSlayer.shutdown();
+        npcAggressionReset.shutdown();
         autoItemDropperScript.shutdown();
         overlayManager.remove(qoLOverlay);
         overlayManager.remove(wintertodtOverlay);
