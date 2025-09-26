@@ -132,6 +132,7 @@ public class Rs2DepositBox {
         for (Rs2ItemModel item : items) {
             if (item == null) continue;
             invokeMenu(6, item);
+            sleep(Rs2Random.randomGaussian(400,200));
             result = true;
         }
         return result;
