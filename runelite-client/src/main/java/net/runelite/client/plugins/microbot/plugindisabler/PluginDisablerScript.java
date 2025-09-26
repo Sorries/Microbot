@@ -164,12 +164,12 @@ public class PluginDisablerScript extends Script {
 
                 long endTime = System.currentTimeMillis();
                 long totalTime = endTime - startTime;
-                 System.out.println("Total time for loop: " + totalTime);
+                 //System.out.println("Total time for loop: " + totalTime);
 
             } catch (Exception ex) {
                 log.error("Error in PluginDisablerScript", ex);
             }
-        }, 0, 1000, TimeUnit.MILLISECONDS); // Adjust delay as needed
+        }, 0, 100, TimeUnit.MILLISECONDS); // Adjust delay as needed
         return true;
     }
 
