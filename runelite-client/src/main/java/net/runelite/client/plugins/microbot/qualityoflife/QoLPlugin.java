@@ -14,6 +14,7 @@ import net.runelite.client.events.ProfileChanged;
 import net.runelite.client.input.KeyManager;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.VarClientID;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -202,14 +203,17 @@ public class QoLPlugin extends Plugin implements KeyListener {
         }
         if (config.useSpecWeapon()) {
             Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-            if (Rs2Inventory.contains(config.specWeapon().toString())){
+            if (Rs2Inventory.contains(config.specWeapon().getName()) || Rs2Equipment.isWearing(config.specWeapon().getName())){
                 Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
                 Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
             }
-            else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
+            else if (Rs2Inventory.contains(config.specWeapon2().getName()) || Rs2Equipment.isWearing(config.specWeapon2().getName())) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
                 Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
             }
+            Microbot.log("Initial spec weapon set: " + (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != null
+                    ? Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon().getName()
+                    : "Null"));
         }
 		if (config.autoRun()) {
 			Microbot.enableAutoRunOn = true;
@@ -306,13 +310,17 @@ public class QoLPlugin extends Plugin implements KeyListener {
             if (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon()
                     || Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != config.specWeapon2()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-                if (Rs2Inventory.contains(config.specWeapon().toString())) {
+                if (Rs2Inventory.contains(config.specWeapon().getName()) || Rs2Equipment.isWearing(config.specWeapon().getName()) ) {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
-                } else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
+                } else if (Rs2Inventory.contains(config.specWeapon2().getName()) || Rs2Equipment.isWearing(config.specWeapon2().getName())) {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
                 }
+                Microbot.log("On tick spec weapon set: " +
+                        (Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon() != null
+                                ? Microbot.getSpecialAttackConfigs().getSpecialAttackWeapon().getName()
+                                : "Null"));
             }
         }
     }
@@ -597,10 +605,10 @@ public class QoLPlugin extends Plugin implements KeyListener {
         if (ev.getKey().equals("useSpecWeapon") || ev.getKey().equals("specWeapon")|| ev.getKey().equals("specWeapon2")) {
             if (config.useSpecWeapon()) {
                 Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
-                if (Rs2Inventory.contains(config.specWeapon().toString())) {
+                if (Rs2Inventory.contains(config.specWeapon().getName()) || Rs2Equipment.isWearing(config.specWeapon().getName())) {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon().getEnergyRequired());
-                }else if (Rs2Inventory.contains(config.specWeapon2().toString())) {
+                }else if (Rs2Inventory.contains(config.specWeapon2().getName()) || Rs2Equipment.isWearing(config.specWeapon2().getName())) {
                     Microbot.getSpecialAttackConfigs().setSpecialAttackWeapon(config.specWeapon2());
                     Microbot.getSpecialAttackConfigs().setMinimumSpecEnergy(config.specWeapon2().getEnergyRequired());
                 }
