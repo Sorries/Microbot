@@ -410,8 +410,8 @@ public class MotherloadMineScript extends Script
             return null;
         }
 
-        int index = Rs2Random.between(0, veins.size() - 1);
-        System.out.println("Veins: " + veins);
+        int index = Rs2Random.betweenInclusive(0, veins.size() - 1);
+        System.out.println("Veins: " + veins + " vein size: " + (veins.size()-1));
         System.out.println("random index: " + index);
         return veins.get(index);
     }
