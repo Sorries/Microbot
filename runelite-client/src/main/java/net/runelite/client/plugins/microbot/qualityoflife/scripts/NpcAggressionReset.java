@@ -63,14 +63,15 @@ public class NpcAggressionReset extends Script {
                         Microbot.log("Current Position: " + playerLocation);
                         Microbot.log("Walkable tiles around safe areas (sorted by distance): " + walkableTilesAroundSafeAreas);
 
-                        
                         if (Duration.between(Instant.now(),plugin.getEndTime()).toSeconds() <= 0 ){
                             // Walk to the closest walkable tile
                             int index = Rs2Random.betweenInclusive(0, 5);
                             if (!walkableTilesAroundSafeAreas.isEmpty() && Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(index))) {
-                                Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(index));
-                                sleepUntil(()-> Objects.equals(Rs2Player.getWorldLocation(), walkableTilesAroundSafeAreas.get(index)));
-                                sleepUntil(()-> !Rs2Player.isMoving(),5000);
+                                if (Rs2Walker.getWalkPath(walkableTilesAroundSafeAreas.get(index)) != null && !Rs2Walker.getWalkPath(walkableTilesAroundSafeAreas.get(index)).isEmpty()) {
+                                    Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(index));
+                                    Rs2Player.waitForWalking();
+                                    sleepUntil(()-> !Rs2Player.isMoving(),5000);
+                                }
                             }
                         }
                     } else {
