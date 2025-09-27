@@ -6,6 +6,7 @@ import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tile.Rs2Tile;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
@@ -65,8 +66,10 @@ public class NpcAggressionReset extends Script {
                         
                         if (Duration.between(Instant.now(),plugin.getEndTime()).toSeconds() <= 0 ){
                             // Walk to the closest walkable tile
-                            if (!walkableTilesAroundSafeAreas.isEmpty() && Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(0))) {
-                                Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(0));
+                            int index = Rs2Random.betweenInclusive(0, 5);
+                            if (!walkableTilesAroundSafeAreas.isEmpty() && Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(index))) {
+                                Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(index));
+                                sleepUntil(()-> Objects.equals(Rs2Player.getWorldLocation(), walkableTilesAroundSafeAreas.get(index)));
                                 sleepUntil(()-> !Rs2Player.isMoving(),5000);
                             }
                         }
