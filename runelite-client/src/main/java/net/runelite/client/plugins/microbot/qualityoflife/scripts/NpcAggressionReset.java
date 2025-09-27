@@ -2,6 +2,7 @@ package net.runelite.client.plugins.microbot.qualityoflife.scripts;
 
 import com.google.inject.Inject;
 import net.runelite.api.Tile;
+import net.runelite.api.WorldView;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.Plugin;
@@ -46,12 +47,13 @@ public class NpcAggressionReset extends Script {
                         this.safeCenters[1] = plugin.getSafeCenters()[1];
                         Microbot.log("Npc safe wp: " + Arrays.toString(this.safeCenters));
                         Microbot.log("Aggression Timer: " + Duration.between(Instant.now(),plugin.getEndTime()).toSeconds());
-                        //Microbot.log("Generated Area: "+ generateSafeArea().toWorld);
+
+                        List<WorldArea> safeAreas = generateSafeAreas();
+                        Microbot.log("Generated Area: "+ safeAreas);
+//                        walkable
                         if (Duration.between(Instant.now(),plugin.getEndTime()).toSeconds() <= 0 ){
 
                         }
-
-
                     } else {
                         Microbot.log("Npc Agro is not running.");
                     }
@@ -65,27 +67,30 @@ public class NpcAggressionReset extends Script {
         return true;
     }
 
-//    private Area generateSafeArea()
-//    {
-//        WorldArea area = new WorldArea();
-//
-//        for (WorldPoint wp : safeCenters)
-//        {
-//            if (wp == null)
-//            {
-//                continue;
-//            }
-//
-//            Polygon poly = new Polygon();
-//            poly.addPoint(wp.getX() - SAFE_AREA_RADIUS, wp.getY() - SAFE_AREA_RADIUS);
-//            poly.addPoint(wp.getX() - SAFE_AREA_RADIUS, wp.getY() + SAFE_AREA_RADIUS + 1);
-//            poly.addPoint(wp.getX() + SAFE_AREA_RADIUS + 1, wp.getY() + SAFE_AREA_RADIUS + 1);
-//            poly.addPoint(wp.getX() + SAFE_AREA_RADIUS + 1, wp.getY() - SAFE_AREA_RADIUS);
-//            area.add(new Area(poly));
-//        }
-//
-//        return area;
-//    }
+    private List<WorldArea> generateSafeAreas()
+    {
+        List<WorldArea> areas = new ArrayList<>();
+
+        for (WorldPoint wp : safeCenters)
+        {
+            if (wp == null)
+            {
+                continue;
+            }
+
+            int westpoint = wp.getX() - SAFE_AREA_RADIUS;
+            int southpoint = wp.getY() - SAFE_AREA_RADIUS;
+
+            areas.add(new WorldArea(
+                    westpoint,
+                    southpoint,
+                    SAFE_AREA_RADIUS * 2,
+                    SAFE_AREA_RADIUS * 2,
+                    Microbot.getClient().getTopLevelWorldView().getPlane()
+            ));
+        }
+        return areas;
+    }
 
 }
 
