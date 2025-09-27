@@ -368,7 +368,7 @@ public class MotherloadMineScript extends Script
         WallObject vein = findClosestVein();
         if (vein == null)
         {
-            repositionCameraAndMove();
+            resetMiningState();
             return;
         }
         if (Rs2Inventory.getEmptySlots()<Rs2Random.between(5,27))
