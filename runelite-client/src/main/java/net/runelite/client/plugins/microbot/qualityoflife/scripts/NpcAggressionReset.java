@@ -38,35 +38,36 @@ public class NpcAggressionReset extends Script {
                     if (plugin != null) {
                         this.safeCenters[0] = plugin.getSafeCenters()[0];
                         this.safeCenters[1] = plugin.getSafeCenters()[1];
-                        Microbot.log("Npc safe wp: " + Arrays.toString(this.safeCenters));
-                        Microbot.log("Aggression Timer: " + Duration.between(Instant.now(),plugin.getEndTime()).toSeconds());
+                        //Microbot.log("Npc safe wp: " + Arrays.toString(this.safeCenters));
+                        //Microbot.log("Aggression Timer: " + Duration.between(Instant.now(),plugin.getEndTime()).toSeconds());
                         List<WorldArea> safeAreas = generateSafeAreas();
-                        Microbot.log("Generated Area: "+ safeAreas);
+                        //Microbot.log("Generated Area: "+ safeAreas);
                         
                         // Get all walkable tiles surrounding the safe areas
                         List<WorldPoint> walkableTilesAroundSafeAreas = getWalkableTilesAroundSafeAreas(safeAreas);
-                        
+
                         // Remove all tiles that are within the safe areas
-                        walkableTilesAroundSafeAreas.removeIf(tile -> 
-                            safeAreas.stream().anyMatch(safeArea -> safeArea.contains(tile))
+                        walkableTilesAroundSafeAreas.removeIf(tile ->
+                                safeAreas.stream().anyMatch(safeArea -> safeArea.contains(tile))
                         );
                         
                         // Sort by distance from player's current location
                         WorldPoint playerLocation = Rs2Player.getWorldLocation();
-                        walkableTilesAroundSafeAreas.sort((tile1, tile2) -> 
+                        walkableTilesAroundSafeAreas.sort((tile1, tile2) ->
                             Integer.compare(
-                                playerLocation.distanceTo(tile1), 
+                                playerLocation.distanceTo(tile1),
                                 playerLocation.distanceTo(tile2)
                             )
                         );
-                        
+                        Microbot.log("Current Position: " + playerLocation);
                         Microbot.log("Walkable tiles around safe areas (sorted by distance): " + walkableTilesAroundSafeAreas);
 
                         
                         if (Duration.between(Instant.now(),plugin.getEndTime()).toSeconds() <= 0 ){
                             // Walk to the closest walkable tile
-                            if (!walkableTilesAroundSafeAreas.isEmpty()&& Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(0))) {
+                            if (!walkableTilesAroundSafeAreas.isEmpty() && Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(0))) {
                                 Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(0));
+                                sleepUntil(()-> !Rs2Player.isMoving(),5000);
                             }
                         }
                     } else {
