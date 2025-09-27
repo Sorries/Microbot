@@ -402,6 +402,7 @@ public class MotherloadMineScript extends Script
     {
         List<WallObject> veins = Rs2GameObject.getWallObjects().stream()
                 .filter(this::isValidVein)
+                .filter(this::isFreeVein)
                 .collect(Collectors.toList());
 
         if (veins.isEmpty())
@@ -435,6 +436,49 @@ public class MotherloadMineScript extends Script
         }
 
     }
+    private boolean isFreeVein(WallObject wallObject) {
+        // Check valid vein IDs
+        int id = wallObject.getId();
+        boolean isVein = (id == 26661 || id == 26662 || id == 26663 || id == 26664);
+        if (!isVein) return false;
+
+        WorldPoint veinLoc = wallObject.getWorldLocation();
+
+        // Check if any other players are adjacent on X/Y only
+        boolean occupied = Rs2Player.getPlayers(p -> {
+                    if (p == null) return false;
+
+                    WorldPoint playerLoc = p.getWorldLocation();
+                    int dx = Math.abs(playerLoc.getX() - veinLoc.getX());
+                    int dy = Math.abs(playerLoc.getY() - veinLoc.getY());
+
+                    // Same tile OR directly north/south/east/west
+                    boolean axisAdjacent = (dx == 0 && dy == 0) || (dx + dy == 1);
+
+                    return axisAdjacent;
+                })
+                .peek(p -> Microbot.log("Player " + p.getName() + " near vein " + id + " at " + veinLoc))
+                .findAny()
+                .isPresent();
+
+        //Microbot.log("Vein id=" + id + " occupied=" + occupied + " at " + veinLoc);
+        return !occupied;
+    }
+//    private boolean isFreeVein(WallObject wallObject) {
+//        // Check valid vein IDs
+//        int id = wallObject.getId();
+//        boolean isVein = (id == 26661 || id == 26662 || id == 26663 || id == 26664);
+//
+//        if (!isVein) return false;
+//        // Check if any other players are interacting with or standing on the vein
+//        boolean occupied = Rs2Player.getPlayers(p ->
+//                p != null && p.getWorldLocation().distanceTo(wallObject.getWorldLocation()) <= 1
+//        )
+//        .peek(p -> Microbot.log("Player " + p.getName() + " is interacting near vein at " + wallObject.getWorldLocation()))
+//        .findAny().isPresent();
+//        Microbot.log("Vein found at id: " + id + " and occupied: " + occupied + " and location: " + wallObject.getWorldLocation());
+//        return !occupied;
+//    }
 
     private boolean hasWalkableTilesAround(WallObject wallObject)
     {
@@ -454,7 +498,7 @@ public class MotherloadMineScript extends Script
         Rs2Camera.resetPitch();
         Rs2Camera.resetZoom();
         Rs2Camera.turnTo(LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), miningSpot.getWorldPoint().get(0)));
-        Rs2Walker.walkFastCanvas(miningSpot.getWorldPoint().get(0));
+        //Rs2Walker.walkFastCanvas(miningSpot.getWorldPoint().get(0));
     }
 
     private void goUp()
