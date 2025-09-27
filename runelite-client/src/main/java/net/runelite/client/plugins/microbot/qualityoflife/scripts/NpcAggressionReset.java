@@ -47,6 +47,11 @@ public class NpcAggressionReset extends Script {
                         // Get all walkable tiles surrounding the safe areas
                         List<WorldPoint> walkableTilesAroundSafeAreas = getWalkableTilesAroundSafeAreas(safeAreas);
                         
+                        // Remove all tiles that are within the safe areas
+                        walkableTilesAroundSafeAreas.removeIf(tile -> 
+                            safeAreas.stream().anyMatch(safeArea -> safeArea.contains(tile))
+                        );
+                        
                         // Sort by distance from player's current location
                         WorldPoint playerLocation = Rs2Player.getWorldLocation();
                         walkableTilesAroundSafeAreas.sort((tile1, tile2) -> 
@@ -96,8 +101,8 @@ public class NpcAggressionReset extends Script {
             areas.add(new WorldArea(
                     westpoint,
                     southpoint,
-                    SAFE_AREA_RADIUS * 2,
-                    SAFE_AREA_RADIUS * 2,
+                    (SAFE_AREA_RADIUS * 2) + 1,
+                    (SAFE_AREA_RADIUS * 2) + 1,
                     Microbot.getClient().getTopLevelWorldView().getPlane()
             ));
         }
