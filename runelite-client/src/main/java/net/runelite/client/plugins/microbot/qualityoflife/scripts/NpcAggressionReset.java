@@ -40,7 +40,6 @@ public class NpcAggressionReset extends Script {
                         this.safeCenters[1] = plugin.getSafeCenters()[1];
                         Microbot.log("Npc safe wp: " + Arrays.toString(this.safeCenters));
                         Microbot.log("Aggression Timer: " + Duration.between(Instant.now(),plugin.getEndTime()).toSeconds());
-
                         List<WorldArea> safeAreas = generateSafeAreas();
                         Microbot.log("Generated Area: "+ safeAreas);
                         
@@ -62,14 +61,13 @@ public class NpcAggressionReset extends Script {
                         );
                         
                         Microbot.log("Walkable tiles around safe areas (sorted by distance): " + walkableTilesAroundSafeAreas);
-                        
-                        // Walk to the closest walkable tile
-                        if (!walkableTilesAroundSafeAreas.isEmpty()&& Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(0))) {
-                            Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(0));
-                        }
+
                         
                         if (Duration.between(Instant.now(),plugin.getEndTime()).toSeconds() <= 0 ){
-
+                            // Walk to the closest walkable tile
+                            if (!walkableTilesAroundSafeAreas.isEmpty()&& Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(0))) {
+                                Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(0));
+                            }
                         }
                     } else {
                         Microbot.log("Npc Agro is not running.");
