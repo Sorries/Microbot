@@ -74,6 +74,7 @@ public class BarbarianFishingScript extends Script {
             if(!Rs2Player.isInteracting()) {
                 sleep(1000, 5000);
                 Rs2Npc.interact(fishingspot, "Use-rod");
+                sleepUntil(Rs2Player::isInteracting);
             }
 
         }, 0, 600, TimeUnit.MILLISECONDS);
