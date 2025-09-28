@@ -74,11 +74,9 @@ public class NpcAggressionReset extends Script {
                                 if (Rs2Walker.getWalkPath(walkableTilesAroundSafeAreas.get(index)) != null && !Rs2Walker.getWalkPath(walkableTilesAroundSafeAreas.get(index)).isEmpty()) {
                                     Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(index));
                                     Rs2Player.waitForWalking();
-                                    sleepUntil(()-> !Rs2Player.isMoving(),5000);
                                     sleep(1000,2500);
                                     Rs2Walker.walkTo(originalLocation,3);
                                     Rs2Player.waitForWalking();
-                                    sleepUntil(()-> !Rs2Player.isMoving(),5000);
                                 }
                             }
                         }
