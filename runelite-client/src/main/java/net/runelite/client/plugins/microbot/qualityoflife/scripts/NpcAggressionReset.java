@@ -52,23 +52,31 @@ public class NpcAggressionReset extends Script {
                                 safeAreas.stream().anyMatch(safeArea -> safeArea.contains(tile))
                         );
                         
-                        // Sort by distance from player's current location
+
+                        // Sort by Euclidean distance from player's current location
                         WorldPoint playerLocation = Rs2Player.getWorldLocation();
-                        walkableTilesAroundSafeAreas.sort((tile1, tile2) ->
-                            Integer.compare(
-                                playerLocation.distanceTo(tile1),
-                                playerLocation.distanceTo(tile2)
-                            )
-                        );
+                        walkableTilesAroundSafeAreas.sort((tile1, tile2) -> {
+                            double dist1 = Math.sqrt(Math.pow(playerLocation.getX() - tile1.getX(), 2) +
+                                    Math.pow(playerLocation.getY() - tile1.getY(), 2));
+                            double dist2 = Math.sqrt(Math.pow(playerLocation.getX() - tile2.getX(), 2) +
+                                    Math.pow(playerLocation.getY() - tile2.getY(), 2));
+                            return Double.compare(dist1, dist2);
+                        });
                         Microbot.log("Current Position: " + playerLocation);
                         Microbot.log("Walkable tiles around safe areas (sorted by distance): " + walkableTilesAroundSafeAreas);
 
                         if (Duration.between(Instant.now(),plugin.getEndTime()).toSeconds() <= 0 ){
+                            sleep(2000,10000);
                             // Walk to the closest walkable tile
+                            WorldPoint originalLocation = Rs2Player.getWorldLocation();
                             int index = Rs2Random.betweenInclusive(0, 5);
                             if (!walkableTilesAroundSafeAreas.isEmpty() && Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(index))) {
                                 if (Rs2Walker.getWalkPath(walkableTilesAroundSafeAreas.get(index)) != null && !Rs2Walker.getWalkPath(walkableTilesAroundSafeAreas.get(index)).isEmpty()) {
                                     Rs2Walker.walkFastCanvas(walkableTilesAroundSafeAreas.get(index));
+                                    Rs2Player.waitForWalking();
+                                    sleepUntil(()-> !Rs2Player.isMoving(),5000);
+                                    sleep(1000,2500);
+                                    Rs2Walker.walkTo(originalLocation,3);
                                     Rs2Player.waitForWalking();
                                     sleepUntil(()-> !Rs2Player.isMoving(),5000);
                                 }
