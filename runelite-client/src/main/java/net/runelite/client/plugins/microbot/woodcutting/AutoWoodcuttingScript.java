@@ -140,7 +140,7 @@ public class AutoWoodcuttingScript extends Script {
             sleep(500,2000);
             if (Rs2GameObject.interact(tree, config.TREE().getAction())) {
                 Rs2Player.waitForAnimation();
-                Rs2Antiban.actionCooldown();
+                //Rs2Antiban.actionCooldown();
 
                 if (config.walkBack().equals(WoodcuttingWalkBack.LAST_LOCATION)) {
                     returnPoint = Rs2Player.getWorldLocation();
