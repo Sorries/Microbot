@@ -6,6 +6,7 @@ import net.runelite.api.VarPlayer;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.client.plugins.cannon.CannonPlugin;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -62,6 +63,7 @@ public class Rs2Cannon {
             cannon.getWorldLocation().getPlane()
         );
         if (!cannonLocation.toWorldPoint().equals(CannonPlugin.getCannonPosition().toWorldPoint())) return false;
+        if (cannon.getWorldLocation().distanceTo(Rs2Player.getWorldLocation()) >= 15 || !Rs2Camera.isTileOnScreen(cannon)) return false;
 		Microbot.pauseAllScripts.compareAndSet(false, true);
         Rs2GameObject.interact(cannon, "Fire");
         //Rs2Player.waitForWalking();
