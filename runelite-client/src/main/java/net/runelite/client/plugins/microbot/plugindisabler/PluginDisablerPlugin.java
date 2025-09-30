@@ -115,6 +115,7 @@ public class PluginDisablerPlugin extends Plugin {
             if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
                 String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
                 if (cleanText.toLowerCase().contains("you are now level 99")) {
+                    Microbot.log("Reached level 99");
                     pluginDisabler.disablePlugins();
                 }
             }
