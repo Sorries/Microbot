@@ -13,7 +13,6 @@ import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
-import net.runelite.client.plugins.microbot.util.math.Random;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -44,7 +43,7 @@ public class NmzScript extends Script {
 
     private boolean hasWalkedToCenter = false;
 
-    private WorldPoint center = new WorldPoint(Random.random(2270, 2276), Random.random(4693, 4696), 0);
+    private WorldPoint center = new WorldPoint(Rs2Random.between(2270, 2276), Rs2Random.between(4693, 4696), 0);
 
     @Getter
     @Setter
@@ -65,8 +64,8 @@ public class NmzScript extends Script {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
                 Rs2Combat.enableAutoRetialiate();
-                if (Random.random(1, 50) == 1 && config.randomMouseMovements()) {
-                    Microbot.getMouse().click(Random.random(0, Microbot.getClient().getCanvasWidth()), Random.random(0, Microbot.getClient().getCanvasHeight()), true);
+                if (Rs2Random.between(1, 50) == 1 && config.randomMouseMovements()) {
+                    Microbot.getMouse().click(Rs2Random.between(0, Microbot.getClient().getCanvasWidth()), Rs2Random.between(0, Microbot.getClient().getCanvasHeight()), true);
                 }
                 boolean isOutsideNmz = Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(new WorldPoint(2602, 3116, 0)) < 20;
                 useOverload = Microbot.getClient().getBoostedSkillLevel(Skill.RANGED) == Microbot.getClient().getRealSkillLevel(Skill.RANGED) && config.overloadPotionAmount() > 0;
@@ -133,7 +132,7 @@ public class NmzScript extends Script {
 
     public void startNmzDream() {
         // Set new center so that it is random for every time joining the dream
-        center = new WorldPoint(Random.random(2270, 2276), Random.random(4693, 4696), 0);
+        center = new WorldPoint(Rs2Random.between(2270, 2276), Rs2Random.between(4693, 4696), 0);
         Rs2Npc.interact(NpcID.DOMINIC_ONION, "Dream");
         sleepUntil(() -> Rs2Widget.hasWidget("Which dream would you like to experience?"));
         Rs2Widget.clickWidget("Previous:");
@@ -199,7 +198,7 @@ public class NmzScript extends Script {
             }
 
             if (currentHP == 1) {
-                maxHealth = Random.random(2, 4);
+                maxHealth = Rs2Random.between(2, 4);
             }
         }
 
@@ -209,7 +208,7 @@ public class NmzScript extends Script {
     }
 
     public void randomlyToggleRapidHeal() {
-        if (Random.random(1, 50) == 2) {
+        if (Rs2Random.between(1, 50) == 2) {
             Rs2Prayer.toggle(Rs2PrayerEnum.RAPID_HEAL, true);
             sleep(500, 800);
             Rs2Prayer.toggle(Rs2PrayerEnum.RAPID_HEAL, false);
@@ -229,11 +228,11 @@ public class NmzScript extends Script {
 
     public void useAbsorptionPotion() {
         if (Microbot.getVarbitValue(NMZ_ABSORPTION) < minAbsorption && Rs2Inventory.hasItem("absorption")) {
-            for (int i = 0; i < Random.random(4, 8); i++) {
+            for (int i = 0; i < Rs2Random.between(4, 8); i++) {
                 Rs2Inventory.interact(x -> x.getName().toLowerCase().contains("absorption"), "drink");
                 sleep(1000, 1500);
             }
-            minAbsorption = Random.random(100, 500);
+            minAbsorption = Rs2Random.between(100, 500);
         }
     }
 
@@ -269,11 +268,11 @@ public class NmzScript extends Script {
 
     public void consumeEmptyVial() {
         final int EMPTY_VIAL = 26291;
-        if (Microbot.getClientThread().runOnClientThread(() -> Rs2Widget.getWidget(129, 6) == null || Rs2Widget.getWidget(129, 6).isHidden())) {
+        if (Microbot.getClientThread().runOnClientThreadOptional(() -> Rs2Widget.getWidget(129, 6) == null || Rs2Widget.getWidget(129, 6).isHidden()).orElse(false)) {
             Rs2GameObject.interact(EMPTY_VIAL, "drink");
         }
         Widget widget = Rs2Widget.getWidget(129, 6);
-        if (!Microbot.getClientThread().runOnClientThread(widget::isHidden)) {
+        if (!Microbot.getClientThread().runOnClientThreadOptional(widget::isHidden).orElse(false)) {
             Rs2Widget.clickWidget(widget.getId());
             sleep(300);
             Rs2Widget.clickWidget(widget.getId());
@@ -317,7 +316,7 @@ public class NmzScript extends Script {
             Rs2Widget.clickWidgetFast(benefitsBtn, 4, 4);
         }
         int count = 0;
-        while (count < Random.random(3, 5)) {
+        while (count < Rs2Random.between(3, 5)) {
             Widget nmzRewardShop = Rs2Widget.getWidget(206, 6);
             if (nmzRewardShop == null) break;
             Widget overload = nmzRewardShop.getChild(6);
