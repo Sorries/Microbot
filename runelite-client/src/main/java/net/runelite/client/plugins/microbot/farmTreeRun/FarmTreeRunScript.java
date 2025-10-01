@@ -329,9 +329,9 @@ public class FarmTreeRunScript extends Script {
                 Rs2Inventory.waitForInventoryChanges(3000);
             }
 
-            if (config.useGraceful() && !alreadyWearingGraceful() && !Rs2Equipment.isNaked()) {
+            if (config.useGraceful() && !alreadyWearingGraceful() && !Rs2Equipment.isWearing()) {
                 Rs2Bank.depositEquipment();
-                sleepUntil(Rs2Equipment::isNaked);
+                sleepUntil(()-> !Rs2Equipment.isWearing());
                 sleep(500, 2200);
             }
 
