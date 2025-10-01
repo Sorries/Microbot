@@ -6,13 +6,11 @@ import net.runelite.api.ChatMessageType;
 import net.runelite.api.MenuAction;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
-import net.runelite.client.plugins.microbot.qualityoflife.scripts.SmartSlayer;
 import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.events.ConfigChanged;
@@ -21,7 +19,6 @@ import javax.inject.Inject;
 import java.awt.*;
 import java.time.Instant;
 
-import static net.runelite.client.plugins.microbot.qualityoflife.scripts.wintertodt.WintertodtScript.isInWintertodtRegion;
 
 @PluginDescriptor(
         name = PluginDescriptor.Default + "Plugin Disabler",
