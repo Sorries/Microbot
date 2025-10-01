@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment.isEquipped;
 
 public class ThievingScript extends Script {
 
@@ -165,7 +164,7 @@ public class ThievingScript extends Script {
         for (Map.Entry<String, EquipmentInventorySlot> entry: equipmentSet.entrySet()) {
             String itemName = entry.getKey();
             EquipmentInventorySlot slot = entry.getValue();
-            if (!isEquipped(itemName, slot)) {
+            if (!Rs2Equipment.isWearing(itemName)) {
                 if (Rs2Inventory.contains(itemName)) {
                     Rs2Inventory.wear(itemName);
                     Rs2Inventory.waitForInventoryChanges(1200);
@@ -310,7 +309,7 @@ public class ThievingScript extends Script {
         equipSet(rogueEquipment);
 
         if (config.shadowVeil()) {
-            if (!isEquipped("Lava battlestaff", EquipmentInventorySlot.WEAPON)) {
+            if (!Rs2Equipment.isWearing("Lava battlestaff")) {
                 if (Rs2Bank.hasBankItem("Lava battlestaff")) {
                     Rs2Bank.withdrawItem("Lava battlestaff");
                     Rs2Inventory.waitForInventoryChanges(3000);
