@@ -313,7 +313,7 @@ public class MotherloadMineScript extends Script
                 }
 
             }
-        }else if (Rs2Bank.useBank())
+        }else if (Rs2Bank.openBank())
         {
             sleepUntil(Rs2Bank::isOpen);
             Rs2Bank.depositAllExcept("hammer", pickaxeName);
