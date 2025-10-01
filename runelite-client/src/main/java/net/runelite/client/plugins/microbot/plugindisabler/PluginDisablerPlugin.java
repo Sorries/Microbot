@@ -111,7 +111,7 @@ public class PluginDisablerPlugin extends Plugin {
         if(config.level99()) {
             if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
                 String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
-                if (cleanText.toLowerCase().contains("you are now level 99")) {
+                if (cleanText.toLowerCase().contains("level of 99")) {
                     Microbot.log("Disabling plugin due to level 99 reached");
                     pluginDisabler.disablePlugins();
                 }
