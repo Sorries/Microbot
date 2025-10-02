@@ -42,12 +42,16 @@ public class Rs2RunePouch
 	};
 
 	private static final int BANK_PARENT_ID = InterfaceID.BANKSIDE;
-	private static final int RUNEPOUCH_ROOT_CHILD_ID = 19;
-	private static final int RUNEPOUCH_CLOSE_CHILD_ID = 22;
-	private static final int RUNEPOUCH_DEPOSIT_ALL_CHILD_ID = 20;
-	private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(34, 38, 41, 44, 46, 48, 50, 52, 54, 56);
-	private static final List<Integer> RUNEPOUCH_LOADOUT_BUTTON = Arrays.asList(28, 29, 30, 31, 89, 90, 91, 92, 93, 94);
-	//private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(28, 30, 32, 34);
+//	private static final int RUNEPOUCH_ROOT_CHILD_ID = 19;
+//	private static final int RUNEPOUCH_CLOSE_CHILD_ID = 22;
+//	private static final int RUNEPOUCH_DEPOSIT_ALL_CHILD_ID = 20;
+//	private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(34, 38, 41, 44, 46, 48, 50, 52, 54, 56);
+//	private static final List<Integer> RUNEPOUCH_LOADOUT_BUTTON = Arrays.asList(28, 29, 30, 31, 89, 90, 91, 92, 93, 94);
+//	//private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(28, 30, 32, 34);
+	private static final int RUNEPOUCH_ROOT_CHILD_ID = 19; // Validated
+	private static final int RUNEPOUCH_CLOSE_CHILD_ID = 22; // Validated
+	private static final int RUNEPOUCH_DEPOSIT_ALL_CHILD_ID = 20; // Validated
+	private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(34, 38, 41, 44, 46, 48, 50, 52, 54, 56); // New Loadout Child IDs
 
 	@Getter
 	private static final List<PouchSlot> slots = new ArrayList<>();
@@ -431,9 +435,13 @@ public class Rs2RunePouch
 
 			if (loadoutMap.equals(requiredRunes))
 			{
-				int widgetIndex = RUNEPOUCH_LOADOUT_BUTTON.get(entry.getKey());
-				System.out.println("widgetIndex: " + widgetIndex);
-				Rs2Widget.clickWidget(BANK_PARENT_ID, (widgetIndex));
+//				int widgetIndex = RUNEPOUCH_LOADOUT_BUTTON.get(entry.getKey());
+//				System.out.println("widgetIndex: " + widgetIndex);
+//				Rs2Widget.clickWidget(BANK_PARENT_ID, (widgetIndex));
+				final int widgetIndex = RUNEPOUCH_LOADOUT_WIDGETS.get(entry.getKey());
+				Widget parentLoadoutWidget = Rs2Widget.getWidget(BANK_PARENT_ID, widgetIndex);
+				Widget loadWidget = Rs2Widget.findWidget("Load", List.of(parentLoadoutWidget));
+				Rs2Widget.clickWidget(loadWidget);
 				Global.sleepUntil(() -> getRunes().entrySet().stream().allMatch(e -> requiredRunes.getOrDefault(e.getKey(), 0) <= e.getValue()));
 				Microbot.log("inter");
 				return closeRunePouch();
