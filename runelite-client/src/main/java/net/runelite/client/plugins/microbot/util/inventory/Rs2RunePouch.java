@@ -2,6 +2,7 @@ package net.runelite.client.plugins.microbot.util.inventory;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.runelite.api.MenuAction;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.WidgetLoaded;
@@ -12,9 +13,13 @@ import net.runelite.client.plugins.microbot.inventorysetups.InventorySetupsItem;
 import net.runelite.client.plugins.microbot.util.Global;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.magic.Runes;
+import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
+import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -42,12 +47,6 @@ public class Rs2RunePouch
 	};
 
 	private static final int BANK_PARENT_ID = InterfaceID.BANKSIDE;
-//	private static final int RUNEPOUCH_ROOT_CHILD_ID = 19;
-//	private static final int RUNEPOUCH_CLOSE_CHILD_ID = 22;
-//	private static final int RUNEPOUCH_DEPOSIT_ALL_CHILD_ID = 20;
-//	private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(34, 38, 41, 44, 46, 48, 50, 52, 54, 56);
-//	private static final List<Integer> RUNEPOUCH_LOADOUT_BUTTON = Arrays.asList(28, 29, 30, 31, 89, 90, 91, 92, 93, 94);
-//	//private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(28, 30, 32, 34);
 	private static final int RUNEPOUCH_ROOT_CHILD_ID = 19; // Validated
 	private static final int RUNEPOUCH_CLOSE_CHILD_ID = 22; // Validated
 	private static final int RUNEPOUCH_DEPOSIT_ALL_CHILD_ID = 20; // Validated
@@ -148,10 +147,9 @@ public class Rs2RunePouch
 
 				PouchSlot slot = new PouchSlot(Runes.byItemId(itemId), quantity);
 				pouchSlots.add(slot);
-				//System.out.println("index"+ index + " pouch slots: " + slot);
 			}
+
 			loadoutSlots.put(index, pouchSlots);
-			//System.out.println("Loadout: "+ loadoutSlots);
 		}
 	}
 
@@ -417,11 +415,10 @@ public class Rs2RunePouch
 		{
 			return false;
 		}
-		Microbot.log("1");
-		Rs2Inventory.interact(RunePouchType.getPouchIds(),"Configure",1);
-		Microbot.log("2");
+
+		Rs2Inventory.interact(RunePouchType.getPouchIds(), "Configure");
 		Global.sleepUntil(() -> Rs2Widget.isWidgetVisible(BANK_PARENT_ID, RUNEPOUCH_ROOT_CHILD_ID));
-		Microbot.log("3");
+
 		for (Map.Entry<Integer, List<PouchSlot>> entry : loadoutSlots.entrySet())
 		{
 			List<PouchSlot> loadout = entry.getValue();
@@ -435,15 +432,23 @@ public class Rs2RunePouch
 
 			if (loadoutMap.equals(requiredRunes))
 			{
-//				int widgetIndex = RUNEPOUCH_LOADOUT_BUTTON.get(entry.getKey());
-//				System.out.println("widgetIndex: " + widgetIndex);
-//				Rs2Widget.clickWidget(BANK_PARENT_ID, (widgetIndex));
 				final int widgetIndex = RUNEPOUCH_LOADOUT_WIDGETS.get(entry.getKey());
 				Widget parentLoadoutWidget = Rs2Widget.getWidget(BANK_PARENT_ID, widgetIndex);
-				Widget loadWidget = Rs2Widget.findWidget("Load", List.of(parentLoadoutWidget));
-				Rs2Widget.clickWidget(loadWidget);
+				if (parentLoadoutWidget == null || parentLoadoutWidget.getStaticChildren() == null)
+				{
+					Microbot.log("Failed to find loadout widget for index: " + widgetIndex, Level.WARNING);
+					break;
+				}
+				Widget loadWidget = Rs2Widget.findWidget("Load", List.of(parentLoadoutWidget.getStaticChildren()));
+				if (loadWidget == null)
+				{
+					Microbot.log("Failed to find 'Load' child widget in loadout index: " + widgetIndex, Level.WARNING);
+					break;
+				}
+				Rectangle loadBounds = loadWidget.getBounds();
+				NewMenuEntry menuEntry = new NewMenuEntry("Load", "", 1, MenuAction.CC_OP, -1, loadWidget.getId(), false);
+				Microbot.doInvoke(menuEntry, loadBounds != null && Rs2UiHelper.isRectangleWithinCanvas(loadBounds) ? loadBounds : Rs2UiHelper.getDefaultRectangle());
 				Global.sleepUntil(() -> getRunes().entrySet().stream().allMatch(e -> requiredRunes.getOrDefault(e.getKey(), 0) <= e.getValue()));
-				Microbot.log("inter");
 				return closeRunePouch();
 			}
 		}
@@ -465,12 +470,12 @@ public class Rs2RunePouch
 			}
 			Global.sleepUntil(() -> contains(rune, qty));
 		}
-		Microbot.log("4");
+
 		Global.sleepUntil(() -> {
 			Map<Runes, Integer> currentRunes = getRunes();
 			return requiredRunes.entrySet().stream().allMatch(e -> currentRunes.getOrDefault(e.getKey(), 0) >= e.getValue());
 		});
-		Microbot.log("5");
+
 		return closeRunePouch();
 	}
 
@@ -531,17 +536,7 @@ public class Rs2RunePouch
 		{
 			return true;
 		}
-		Rs2Inventory.interact(RunePouchType.getPouchIds(),"Configure");
-		return Global.sleepUntil(Rs2RunePouch::isRunePouchOpen);
-	}
-
-	public static boolean openRunePouch2()
-	{
-		if (isRunePouchOpen())
-		{
-			return true;
-		}
-		Rs2Inventory.interact(RunePouchType.getPouchIds(),"Configure",1);
+		Rs2Inventory.interact(RunePouchType.getPouchIds(), "Configure");
 		return Global.sleepUntil(Rs2RunePouch::isRunePouchOpen);
 	}
 
