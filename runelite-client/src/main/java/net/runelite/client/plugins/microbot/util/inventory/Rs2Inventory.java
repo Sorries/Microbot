@@ -1250,6 +1250,10 @@ public class Rs2Inventory {
     public static boolean interact(int[] ids, String action) {
         return Arrays.stream(ids).sequential().anyMatch(id -> interact(id, action));
     }
+    
+    public static boolean interact(int[] ids, String action, int identifier) {
+        return Arrays.stream(ids).sequential().anyMatch(id -> interact(id, action, identifier));
+    }
 
     /**
      * Interacts with an item with the specified name in the inventory using the specified action.
@@ -1932,6 +1936,7 @@ public class Rs2Inventory {
             String[] actions = itemWidget != null && itemWidget.getActions() != null ?
                     itemWidget.getActions() :
                     rs2Item.getInventoryActions();
+            System.out.println("actions: " + Arrays.toString(actions)+ " itemWidget: " + Arrays.toString(itemWidget.getActions())+ " rs2item: " + Arrays.toString(rs2Item.getInventoryActions()));
 
             int simpleIndex = indexOfIgnoreCase(stripColTags(actions), action);
             if (simpleIndex != -1) {
