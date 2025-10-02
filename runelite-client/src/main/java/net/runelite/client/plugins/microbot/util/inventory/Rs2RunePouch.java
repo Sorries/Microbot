@@ -45,7 +45,9 @@ public class Rs2RunePouch
 	private static final int RUNEPOUCH_ROOT_CHILD_ID = 19;
 	private static final int RUNEPOUCH_CLOSE_CHILD_ID = 22;
 	private static final int RUNEPOUCH_DEPOSIT_ALL_CHILD_ID = 20;
-	private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(28, 30, 32, 34);
+	private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(34, 38, 41, 44, 46, 48, 50, 52, 54, 56);
+	private static final List<Integer> RUNEPOUCH_LOADOUT_BUTTON = Arrays.asList(28, 29, 30, 31, 89, 90, 91, 92, 93, 94);
+	//private static final List<Integer> RUNEPOUCH_LOADOUT_WIDGETS = Arrays.asList(28, 30, 32, 34);
 
 	@Getter
 	private static final List<PouchSlot> slots = new ArrayList<>();
@@ -142,9 +144,10 @@ public class Rs2RunePouch
 
 				PouchSlot slot = new PouchSlot(Runes.byItemId(itemId), quantity);
 				pouchSlots.add(slot);
+				//System.out.println("index"+ index + " pouch slots: " + slot);
 			}
-
 			loadoutSlots.put(index, pouchSlots);
+			//System.out.println("Loadout: "+ loadoutSlots);
 		}
 	}
 
@@ -410,10 +413,11 @@ public class Rs2RunePouch
 		{
 			return false;
 		}
-
-		Rs2Inventory.interact(RunePouchType.getPouchIds(), "Configure");
+		Microbot.log("1");
+		Rs2Inventory.interact(RunePouchType.getPouchIds(),"Configure",1);
+		Microbot.log("2");
 		Global.sleepUntil(() -> Rs2Widget.isWidgetVisible(BANK_PARENT_ID, RUNEPOUCH_ROOT_CHILD_ID));
-
+		Microbot.log("3");
 		for (Map.Entry<Integer, List<PouchSlot>> entry : loadoutSlots.entrySet())
 		{
 			List<PouchSlot> loadout = entry.getValue();
@@ -427,9 +431,11 @@ public class Rs2RunePouch
 
 			if (loadoutMap.equals(requiredRunes))
 			{
-				int widgetIndex = RUNEPOUCH_LOADOUT_WIDGETS.get(entry.getKey());
-				Rs2Widget.clickWidget(BANK_PARENT_ID, (widgetIndex + 1));
+				int widgetIndex = RUNEPOUCH_LOADOUT_BUTTON.get(entry.getKey());
+				System.out.println("widgetIndex: " + widgetIndex);
+				Rs2Widget.clickWidget(BANK_PARENT_ID, (widgetIndex));
 				Global.sleepUntil(() -> getRunes().entrySet().stream().allMatch(e -> requiredRunes.getOrDefault(e.getKey(), 0) <= e.getValue()));
+				Microbot.log("inter");
 				return closeRunePouch();
 			}
 		}
@@ -451,12 +457,12 @@ public class Rs2RunePouch
 			}
 			Global.sleepUntil(() -> contains(rune, qty));
 		}
-
+		Microbot.log("4");
 		Global.sleepUntil(() -> {
 			Map<Runes, Integer> currentRunes = getRunes();
 			return requiredRunes.entrySet().stream().allMatch(e -> currentRunes.getOrDefault(e.getKey(), 0) >= e.getValue());
 		});
-
+		Microbot.log("5");
 		return closeRunePouch();
 	}
 
@@ -517,7 +523,17 @@ public class Rs2RunePouch
 		{
 			return true;
 		}
-		Rs2Inventory.interact(RunePouchType.getPouchIds(), "Configure");
+		Rs2Inventory.interact(RunePouchType.getPouchIds(),"Configure");
+		return Global.sleepUntil(Rs2RunePouch::isRunePouchOpen);
+	}
+
+	public static boolean openRunePouch2()
+	{
+		if (isRunePouchOpen())
+		{
+			return true;
+		}
+		Rs2Inventory.interact(RunePouchType.getPouchIds(),"Configure",1);
 		return Global.sleepUntil(Rs2RunePouch::isRunePouchOpen);
 	}
 
