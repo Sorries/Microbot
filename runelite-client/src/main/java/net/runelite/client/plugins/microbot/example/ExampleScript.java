@@ -1,8 +1,13 @@
 package net.runelite.client.plugins.microbot.example;
 
+import net.runelite.api.Client;
+import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
+import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
 
 import java.util.concurrent.TimeUnit;
 
@@ -175,6 +180,10 @@ public class ExampleScript extends Script {
 //                            Microbot.log("Resolve: configured bank threshold not met, trying fallbacks");
 //                        }
 //                    }
+
+                LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), new WorldPoint(1,1,1));
+                Microbot.getClient().getLocalPlayer();
+                Rs2Player.getPlayerEquipmentIds((Rs2PlayerModel) Microbot.getClient().getLocalPlayer());
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
