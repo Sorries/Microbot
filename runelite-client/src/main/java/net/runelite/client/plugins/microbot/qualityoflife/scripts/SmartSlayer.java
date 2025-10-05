@@ -49,6 +49,7 @@ private static boolean completedSlayerTask = false;
                 List<String> monsters = Rs2Slayer.getSlayerMonsters();
                 Map<NPC, HighlightedNpc> highlightedNpcs =  net.runelite.client.plugins.npchighlight.NpcIndicatorsPlugin.getHighlightedNpcs();
                 AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
+                if(Rs2Inventory.contains(false,"cannon base")) return;
                 if (monsters != null) {
                     for (String monster : monsters) {
     //                        Rs2Npc.getNpcs(monster).forEach(npc -> {
