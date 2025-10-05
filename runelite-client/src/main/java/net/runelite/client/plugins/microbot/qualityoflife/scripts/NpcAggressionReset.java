@@ -27,6 +27,7 @@ public class NpcAggressionReset extends Script {
 
     private static final int SAFE_AREA_RADIUS = 10;
     private final WorldPoint[] safeCenters = new WorldPoint[2];
+    public static List<WorldPoint> walkableTilesAroundSafeAreas;
 
     public boolean run(QoLConfig config) {
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -45,7 +46,7 @@ public class NpcAggressionReset extends Script {
                         //Microbot.log("Generated Area: "+ safeAreas);
                         
                         // Get all walkable tiles surrounding the safe areas
-                        List<WorldPoint> walkableTilesAroundSafeAreas = getWalkableTilesAroundSafeAreas(safeAreas);
+                        walkableTilesAroundSafeAreas = getWalkableTilesAroundSafeAreas(safeAreas);
 
                         // Remove all tiles that are within the safe areas
                         walkableTilesAroundSafeAreas.removeIf(tile ->
