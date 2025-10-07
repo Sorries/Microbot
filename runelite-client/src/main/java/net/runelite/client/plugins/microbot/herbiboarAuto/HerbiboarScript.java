@@ -510,6 +510,7 @@ public class HerbiboarScript extends Script {
                         Rs2Player.waitForAnimation();
                         sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 10000);
                         sleep(1000,2000);
+                        herbiboarPlugin.resetTrailData();
                         if (herbiboarPlugin.getCurrentGroup() == null) {
                             setState(HerbiboarState.START);
                         } else {
@@ -583,6 +584,7 @@ public class HerbiboarScript extends Script {
                                 Rs2Player.waitForAnimation();
                                 sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 10000);
                                 sleep(1000,1500);
+                                herbiboarPlugin.updateTrailData();
                             }
                             if (checkForConfusionMessage(herbiboarPlugin)) return;
                         }
