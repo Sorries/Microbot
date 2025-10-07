@@ -215,13 +215,14 @@ public class HerbiboarPlugin extends Plugin {
         if (lastMessages.size() == 5) lastMessages.removeFirst();
         lastMessages.addLast(msg);
         if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
-            if (msg.equals("successfully confused you with its tracks") ||
-                    msg.equals("need to start again")) {
+            if (msg.toLowerCase().contains("successfully confused you with its tracks") ||
+                    msg.toLowerCase().contains("need to start again")) {
+                Microbot.log("Chat Reset");
                 script.handleConfusionMessage();
             }
         }
     }
-    private void updateTrailData()
+    public void updateTrailData()
     {
         if (!isInHerbiboarArea())
         {
@@ -237,6 +238,7 @@ public class HerbiboarPlugin extends Plugin {
             for (TrailToSpot trail : spot.getTrails())
             {
                 int value = client.getVarbitValue(trail.getVarbitId());
+                Microbot.log("Trail varbit "+trail.getVarbitId()+" = "+value+" for "+spot.name());
 
                 if (value == trail.getValue())
                 {
@@ -270,7 +272,7 @@ public class HerbiboarPlugin extends Plugin {
         {
             startSpot = HerbiboarStart.from(startPoint);
         }
-
+        Microbot.log("finishId = "+finishId+", started = "+started+", currentGroup = "+currentGroup);
         if (finished)
         {
             resetTrailData();
@@ -294,7 +296,7 @@ public class HerbiboarPlugin extends Plugin {
         }
     }
 
-    private void resetTrailData()
+    public void resetTrailData()
     {
         Microbot.log("Reset trail data");
         shownTrails.clear();
@@ -307,7 +309,7 @@ public class HerbiboarPlugin extends Plugin {
         startSpot = null;
     }
 
-    private void clearCache()
+    public void clearCache()
     {
         starts.clear();
         trails.clear();
