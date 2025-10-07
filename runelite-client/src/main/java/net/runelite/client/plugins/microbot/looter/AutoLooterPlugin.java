@@ -51,7 +51,7 @@ public class AutoLooterPlugin extends Plugin {
         switch (config.looterActivity()) {
             case DEFAULT:
                 defaultScript.run(config);
-                defaultScript.handleWalk(config);
+                //defaultScript.handleWalk(config);
                 break;
             case FLAX:
                 flaxScript.run(config);

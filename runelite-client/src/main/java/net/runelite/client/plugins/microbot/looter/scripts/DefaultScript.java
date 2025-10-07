@@ -33,14 +33,13 @@ public class DefaultScript extends Script {
         Microbot.enableAutoRunOn = false;
         initialPlayerLocation = null;
         //Rs2antiban.resetantibansettings();
-        applyAntiBanSettings();
+        //applyAntiBanSettings();
         Rs2Antiban.setActivity(Activity.GENERAL_COLLECTING);
 
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
                 if (!super.run()) return;
                 if (!Microbot.isLoggedIn() || Rs2Combat.inCombat()) return;
-                if (Rs2AntibanSettings.actionCooldownActive) return;
 
                 long startTime = System.currentTimeMillis();
 
@@ -94,9 +93,9 @@ public class DefaultScript extends Script {
                                 Rs2GroundItem.lootItemBasedOnValue(valueParams);
                             }
 
-                            Microbot.pauseAllScripts.set(false);
-                            Rs2Antiban.actionCooldown();
-                            Rs2Antiban.takeMicroBreakByChance();
+                            //Microbot.pauseAllScripts.set(false);
+                            //Rs2Antiban.actionCooldown();
+                            //Rs2Antiban.takeMicroBreakByChance();
                         } else {
                             failedLootAttempts++;
 
