@@ -462,14 +462,47 @@ public interface QoLConfig extends Config {
     }
 
     @ConfigItem(
+            keyName = "tagMultipleMonster",
+            name = "Tag Multiple Monster",
+            description = "Tag Multiple Monster",
+            position = 13,
+            section = upkeepSection
+    )
+    default boolean tagMultipleMonster() {
+        return false;
+    }
+
+    @ConfigItem(
             keyName = "npcAggressionReset",
             name = "NPC aggression reset",
             description = "Will reset if npc aggression timer",
-            position = 13,
+            position = 14,
             section = upkeepSection
     )
     default boolean npcAggressionReset() {
         return false;
+    }
+
+    @ConfigItem(
+            keyName = "autoLootOnValue",
+            name = "Auto loot base on value",
+            description = "",
+            position = 15,
+            section = upkeepSection
+    )
+    default boolean autoLootOnValue() {
+        return false;
+    }
+
+    @ConfigItem(
+            keyName = "autoLootValueAmount",
+            name = "Auto loot value amount",
+            description = "",
+            position = 16,
+            section = upkeepSection
+    )
+    default int autoLootValueAmount() {
+        return 5000;
     }
 
 
