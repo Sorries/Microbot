@@ -75,9 +75,10 @@ public class NpcAggressionReset extends Script {
 
                         //Microbot.log("Walkable tiles around safe areas (sorted by distance): " + walkableTilesAroundSafeAreas);
 
-                        if (Duration.between(Instant.now(),plugin.getEndTime()).toSeconds() <= 0 ){
+                        if (plugin.getEndTime()!= null && Duration.between(Instant.now(),plugin.getEndTime()).toSeconds() <= 0 ){
                             sleep(2000,10000);
                             // Walk to the closest walkable tile
+                            Microbot.log("Walking to reset aggro");
                             WorldPoint originalLocation = Rs2Player.getWorldLocation();
                             int index = Rs2Random.betweenInclusive(0, 6);
                             if (!walkableTilesAroundSafeAreas.isEmpty() && Rs2Tile.isWalkable(walkableTilesAroundSafeAreas.get(index))) {
