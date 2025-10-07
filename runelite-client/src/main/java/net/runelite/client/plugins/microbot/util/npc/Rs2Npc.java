@@ -867,6 +867,19 @@ public class Rs2Npc {
         return interact(npc, "attack");
     }
 
+    public static boolean attackInMulti(Rs2NpcModel npc) {
+        if (npc == null) return false;
+        if (!hasLineOfSight(npc))
+        {
+            Microbot.log("no line of sight");
+            return false;
+        }
+        if (npc.isInteracting() && !Objects.equals(npc.getInteracting(), Microbot.getClient().getLocalPlayer())) return false;
+        if (!Rs2Player.isInMulti()) return false;
+
+        return interact(npc, "attack");
+    }
+
     /**
      * Attacks an NPC using its unique in-game ID.
      *

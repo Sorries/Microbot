@@ -1,6 +1,7 @@
 package net.runelite.client.plugins.microbot.util.grounditem;
 
 import com.google.common.collect.Table;
+import com.google.gson.internal.bind.util.ISO8601Utils;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
@@ -32,7 +33,8 @@ import static net.runelite.client.plugins.microbot.util.Global.sleepUntil;
  */
 @Slf4j
 public class Rs2GroundItem {
-    private static final int DESPAWN_DELAY_THRESHOLD_TICKS = 150;
+    //private static final int DESPAWN_DELAY_THRESHOLD_TICKS = 150;
+    private static int DESPAWN_DELAY_THRESHOLD_TICKS = Rs2Random.betweenInclusive(100,150);
 
     public static boolean runWhilePaused(BooleanSupplier booleanSupplier) {
         final boolean paused = Microbot.pauseAllScripts.getAndSet(true);
@@ -328,6 +330,8 @@ public class Rs2GroundItem {
             Predicate<GroundItem> itemPredicate,
             Set<String> ignoredLower
     ) {
+//        int DESPAWN_DELAY_THRESHOLD_TICKS = Rs2Random.betweenInclusive(100,150);
+//        Microbot.log("Delayed Threshold: " + DESPAWN_DELAY_THRESHOLD_TICKS);
         final Predicate<GroundItem> base = baseRangeAndOwnershipFilter(params);
         final Predicate<GroundItem> combined = base.and(itemPredicate);
 
@@ -343,6 +347,8 @@ public class Rs2GroundItem {
                     .orElse(null);
             if (soonest == null) return false;
             if (calculateDespawnTime(soonest) > DESPAWN_DELAY_THRESHOLD_TICKS) return false;
+            DESPAWN_DELAY_THRESHOLD_TICKS = Rs2Random.betweenInclusive(100,150);
+            Microbot.log("Delayed Threshold: " + DESPAWN_DELAY_THRESHOLD_TICKS);
         }
 
         return runWhilePaused(() -> {

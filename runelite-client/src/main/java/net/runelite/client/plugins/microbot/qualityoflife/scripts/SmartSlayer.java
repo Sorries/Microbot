@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.NPC;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
+import net.runelite.client.plugins.microbot.looter.enums.DefaultLooterStyle;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.cache.Rs2PohCache;
@@ -16,6 +18,8 @@ import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2Cannon;
 import net.runelite.client.game.npcoverlay.HighlightedNpc;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
+import net.runelite.client.plugins.microbot.util.grounditem.LootingParameters;
+import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
@@ -27,10 +31,12 @@ import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.skills.slayer.Rs2Slayer;
 import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
+import net.runelite.client.plugins.npchighlight.NpcIndicatorsPlugin;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SmartSlayer extends Script {
@@ -39,6 +45,7 @@ public class SmartSlayer extends Script {
 @Getter
 @Setter
 private static boolean completedSlayerTask = false;
+private static String slayerMonster = null;
 
 
     public boolean run(QoLConfig config) {
@@ -48,6 +55,8 @@ private static boolean completedSlayerTask = false;
                 if (!super.run() || !config.smartSlayer()) return;
                 List<String> monsters = Rs2Slayer.getSlayerMonsters();
                 Map<NPC, HighlightedNpc> highlightedNpcs =  net.runelite.client.plugins.npchighlight.NpcIndicatorsPlugin.getHighlightedNpcs();
+//                NpcIndicatorsPlugin plugin = Microbot.getPlugin(NpcIndicatorsPlugin.class);
+//                Map<NPC, HighlightedNpc> highlightedNpcs = plugin.getHighlightedNpcs();
                 AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
                 if(Rs2Inventory.contains(false,"cannon base")) return;
                 if (monsters != null) {
@@ -68,6 +77,7 @@ private static boolean completedSlayerTask = false;
     //                            })
                         Optional.ofNullable(Rs2Npc.getNpcs(monster))
                             .orElse(Stream.empty())
+                            .filter(npc -> npc.getName() != null && !npc.getName().toLowerCase().contains("superior"))
                             .forEach(npc -> {
                                 if (npc == null) {
                                     Microbot.log("Npc is null for monster: " + monster);
@@ -79,6 +89,7 @@ private static boolean completedSlayerTask = false;
                                 }
 
                                 if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
+                                    slayerMonster = monster;
                                     isNearSlayerMonster.set(true);
                                 }
                             });
@@ -90,6 +101,7 @@ private static boolean completedSlayerTask = false;
                             if (npc.getWorldLocation() != null && Rs2Player.getWorldLocation() != null) {
                                 if (Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
                                     //Microbot.log("Highlighted slayer monster is " + Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) + " tiles far");
+                                    slayerMonster = npc.getName();
                                     isNearSlayerMonster.set(true);
                                     break;
                                 }
@@ -108,6 +120,57 @@ private static boolean completedSlayerTask = false;
                         if(Rs2Inventory.contains(21177)) {
                             sleep(Rs2Random.skewedRandAuto(700));
                             Rs2Inventory.interact(21177, "Wear");
+                        }
+                    }
+
+                    if (config.autoLootOnValue()) {
+                        LootingParameters valueParams = new LootingParameters(
+                                config.autoLootValueAmount(),
+                                Integer.MAX_VALUE,
+                                15,
+                                1,
+                                2,
+                                true,
+                                true
+                        );
+                        Rs2GroundItem.lootItemBasedOnValue(valueParams);
+                        sleep(1000,2000);
+                    }
+
+                    while (isRunning()
+                            && config.tagMultipleMonster()
+                            && Rs2Npc.getNpcsForPlayer(slayerMonster).size() < 3)
+                    {
+                        // For Tag Multiple Monster
+                        List<Rs2NpcModel> validNpc = Rs2Npc.getAttackableNpcs(true)
+                                .filter(npc -> npc.getWorldLocation().distanceTo(Rs2Player.getWorldLocation()) <= 8)
+                                .filter(npc -> slayerMonster.contains(npc.getName()))
+                                .collect(Collectors.toList());
+
+                        // Pick a random NPC safely
+                        int needed = 3 - Rs2Npc.getNpcsForPlayer(slayerMonster).size();
+                        if (validNpc.isEmpty() || validNpc.size() < needed) {
+                            Microbot.log("Not enough valid NPCs: " + validNpc.size() + " (need " + needed + ")");
+                            break; // stop the loop safely
+                        }
+
+                        Microbot.log("ValidNpc: " + validNpc.size() + " Current interacting with me: " + Rs2Npc.getNpcsForPlayer(slayerMonster).size());
+
+                        Rs2NpcModel selectedNpc = validNpc.get(Rs2Random.betweenInclusive(0, validNpc.size() - 1));
+                        Microbot.log("Selected NPC: " + selectedNpc.getName() + " null " + (selectedNpc != null) + " Dead " + selectedNpc.isDead() + " interact " + selectedNpc.getInteracting());
+                        // Attack only if the NPC isn’t already engaged
+                        if (selectedNpc != null && !selectedNpc.isDead() && selectedNpc.getInteracting() == null) {
+                            Rs2Npc.attackInMulti(selectedNpc);
+                            sleepUntil(() -> {
+                                var interacting = selectedNpc.getInteracting();
+                                return interacting != null && interacting.equals(Microbot.getClient().getLocalPlayer());
+                            }, 5000);
+                            if (selectedNpc.getInteracting() != null ) {
+                                Microbot.log("selectedNpc2: " + selectedNpc.getInteracting() + " Interacting With: " + selectedNpc.getInteracting().equals(Microbot.getClient().getLocalPlayer()));
+                            }
+                        } else {
+                            // Remove invalid NPCs to avoid infinite looping on dead or already-engaged targets
+                            validNpc.remove(selectedNpc);
                         }
                     }
 
@@ -135,7 +198,7 @@ private static boolean completedSlayerTask = false;
                                 Microbot.log("No slayer monsters found.");
                             }
                         }
-                        }
+                    }
                         if (Rs2Combat.inCombat()){
                             if (Rs2Player.drinkGoadingPotion()){
                                  Rs2Player.waitForAnimation();
