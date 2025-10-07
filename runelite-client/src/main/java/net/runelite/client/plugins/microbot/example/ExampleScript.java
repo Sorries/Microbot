@@ -6,6 +6,7 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
+import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
 
@@ -183,7 +184,8 @@ public class ExampleScript extends Script {
 
                 LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), new WorldPoint(1,1,1));
                 Microbot.getClient().getLocalPlayer();
-                Rs2Player.getPlayerEquipmentIds((Rs2PlayerModel) Microbot.getClient().getLocalPlayer());
+                Rs2Player.getPlayerEquipmentIds(new Rs2PlayerModel(Microbot.getClient().getLocalPlayer()));
+                Rs2Npc.getNpcsForPlayer();
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
