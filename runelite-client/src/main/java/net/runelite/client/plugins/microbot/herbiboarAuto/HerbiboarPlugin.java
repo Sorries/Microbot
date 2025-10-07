@@ -238,7 +238,7 @@ public class HerbiboarPlugin extends Plugin {
             for (TrailToSpot trail : spot.getTrails())
             {
                 int value = client.getVarbitValue(trail.getVarbitId());
-                Microbot.log("Trail varbit "+trail.getVarbitId()+" = "+value+" for "+spot.name());
+                //Microbot.log("Trail varbit "+trail.getVarbitId()+" = "+value+" for "+spot.name());
 
                 if (value == trail.getValue())
                 {
@@ -272,7 +272,7 @@ public class HerbiboarPlugin extends Plugin {
         {
             startSpot = HerbiboarStart.from(startPoint);
         }
-        Microbot.log("finishId = "+finishId+", started = "+started+", currentGroup = "+currentGroup);
+        Microbot.log("finishId = "+finishId+", started = "+started+", currentGroup = "+currentGroup + " path active: "+pathActive);
         if (finished)
         {
             resetTrailData();
