@@ -6,10 +6,17 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
+import net.runelite.client.plugins.microbot.util.grounditem.InteractModel;
+
+import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
+import net.runelite.client.plugins.microbot.util.models.RS2Item;
+import net.runelite.client.plugins.grounditems.GroundItem;
+import net.runelite.client.plugins.grounditems.GroundItemsPlugin;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject.nameMatches;
@@ -182,10 +189,14 @@ public class ExampleScript extends Script {
 //                        }
 //                    }
 
-                LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), new WorldPoint(1,1,1));
-                Microbot.getClient().getLocalPlayer();
-                Rs2Player.getPlayerEquipmentIds(new Rs2PlayerModel(Microbot.getClient().getLocalPlayer()));
-                Rs2Npc.getNpcsForPlayer();
+//                LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), new WorldPoint(1,1,1));
+//                Microbot.getClient().getLocalPlayer();
+//                Rs2Player.getPlayerEquipmentIds(new Rs2PlayerModel(Microbot.getClient().getLocalPlayer()));
+//                Rs2Npc.getNpcsForPlayer();
+                RS2Item item = Arrays.stream(Rs2GroundItem.getAll(255))
+                        .filter(rs2Item -> rs2Item.getItem().getId() == 7946)
+                        .findFirst().orElse(null);
+                Rs2GroundItem.interact(new InteractModel(item.getTileItem().getId(), item.getTile().getWorldLocation(), item.getItem().getName()), "Take",true);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
