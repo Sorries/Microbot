@@ -217,7 +217,13 @@ private static String slayerMonster = null;
                     }
                     if (Rs2Inventory.contains(8013)) {
                         while (Rs2Inventory.contains(8013) && !Rs2PohCache.isInPOH()) {
-                            Rs2Inventory.interact(8013, "break");
+                            Rs2Inventory.interact(8013, "Break");
+                            sleepUntil(Rs2PohCache::isInPOH,10000);
+                            sleep(500, 1000);
+                        }
+                    } else if (Rs2Inventory.contains(9790)){
+                        while (Rs2Inventory.contains(9790) && !Rs2PohCache.isInPOH()) {
+                            Rs2Inventory.interact(9790, "Tele to POH");
                             sleepUntil(Rs2PohCache::isInPOH,10000);
                             sleep(500, 1000);
                         }
