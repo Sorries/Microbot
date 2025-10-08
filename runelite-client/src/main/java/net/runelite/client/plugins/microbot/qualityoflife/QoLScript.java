@@ -3,6 +3,7 @@ package net.runelite.client.plugins.microbot.qualityoflife;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.GameState;
 import net.runelite.api.Skill;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
@@ -49,6 +50,7 @@ public class QoLScript extends Script {
                     return;
                 }
 				if (!super.run()) return;
+                if (Microbot.getClient().getGameState() != GameState.LOGGED_IN) return;
 
                 if (config.autoDrinkPrayerPot() && !config.enablePotionManager()) {
                     handleAutoDrinkPrayPot(config.drinkPrayerPotPoints());
