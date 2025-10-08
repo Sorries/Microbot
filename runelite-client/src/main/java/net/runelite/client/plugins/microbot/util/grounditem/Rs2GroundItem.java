@@ -4,14 +4,18 @@ import com.google.common.collect.Table;
 import com.google.gson.internal.bind.util.ISO8601Utils;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.Menu;
+import net.runelite.api.Point;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.grounditems.GroundItem;
 import net.runelite.client.plugins.grounditems.GroundItemsPlugin;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.util.Global;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
+import net.runelite.client.plugins.microbot.util.misc.Rs2UiHelper;
 import net.runelite.client.plugins.microbot.util.models.RS2Item;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.reflection.Rs2Reflection;
@@ -21,11 +25,13 @@ import java.awt.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static net.runelite.api.TileItem.OWNERSHIP_SELF;
+import static net.runelite.client.plugins.microbot.util.Global.sleep;
 import static net.runelite.client.plugins.microbot.util.Global.sleepUntil;
 
 /**
@@ -124,9 +130,96 @@ public class Rs2GroundItem {
         }
         return true;
     }
+    /**
+     * Interacts with a ground item by performing a specified action.
+     *
+     * Simulates a realistic right-click -> menu open -> select entry -> invoke.
+     *
+     * @param groundItem The ground item to interact with.
+     * @param action     The action to perform on the ground item.
+     * @return true if successful, false otherwise.
+     */
+    public static boolean interact(InteractModel groundItem, String action, boolean Natural) {
+        if (groundItem == null) return false;
+
+        try {
+            // Step 0: Validate and get item composition
+            ItemComposition item = Microbot.getClientThread().runOnClientThreadOptional(
+                    () -> Microbot.getClient().getItemDefinition(groundItem.getId())
+            ).orElse(null);
+            if (item == null) return false;
+
+            LocalPoint localPoint = LocalPoint.fromWorld(Microbot.getClient(), groundItem.getLocation());
+            if (localPoint == null) return false;
+
+            Polygon canvasTile = Perspective.getCanvasTilePoly(Microbot.getClient(), localPoint);
+            if (canvasTile == null) return false;
+
+            // Step 1: Pick a random click point inside the tile and right-click
+            Rectangle tileBounds = canvasTile.getBounds();
+            Point clickPoint = new Point(
+                    (int) (tileBounds.getX() + Rs2Random.betweenInclusive(0, (int) tileBounds.getWidth())),
+                    (int) (tileBounds.getY() + Rs2Random.betweenInclusive(0, (int) tileBounds.getHeight()))
+            );
+
+            Microbot.getMouse().click(clickPoint, true); // right-click
+            sleep(150,300);
+
+            // Step 2: Wait for menu to appear and find the matching entry
+            Menu menu = Microbot.getClient().getMenu();
+            AtomicInteger matchIndex = new AtomicInteger(-1);
+            String wanted = action.toLowerCase();
+
+            Global.sleepUntil(() -> {
+                MenuEntry[] entries = menu.getMenuEntries();
+                if (entries == null) return false;
+                for (int i = 0; i < entries.length; i++) {
+                    String opt = Rs2UiHelper.stripColTags(entries[i].getOption()).toLowerCase();
+                    String tgt = Rs2UiHelper.stripColTags(entries[i].getTarget()).toLowerCase();
+                    if (opt.equals(wanted) && tgt.contains(groundItem.getName().toLowerCase())) {
+                        matchIndex.set(i);
+                        return true;
+                    }
+                }
+                return false;
+            }, 2000); // wait up to 2s for menu
+
+            int idx = matchIndex.get();
+            if (idx == -1) {
+                Microbot.log("Menu option not found: " + action + " " + groundItem.getName());
+                return false;
+            }
+
+            MenuEntry[] entries = menu.getMenuEntries();
+            if (entries == null || idx >= entries.length) return false;
+
+            // Step 3: Compute the on-screen rectangle of the selected menu entry
+            int menuX = menu.getMenuX();
+            int menuY = menu.getMenuY();
+            int menuWidth = menu.getMenuWidth();
+            int menuEntryHeight = 15;
+            int headerHeight = menuEntryHeight + 3;
+            int realPos = entries.length - idx - 1;
+            int entryTopY = menuY + headerHeight + realPos * menuEntryHeight;
+
+            Rectangle entryRect = new Rectangle(menuX, entryTopY, menuWidth, menuEntryHeight);
+
+            // Step 4: Move mouse and click the menu entry visually
+            sleep(500, 1250);
+            Microbot.getMouse().move(entryRect);
+            Microbot.getMouse().click(entryRect);
+
+            return true;
+
+        } catch (Exception ex) {
+            Microbot.log("Error interacting with ground item: " + ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+    }
 
     public static boolean interact(GroundItem groundItem) {
-        return interact(new InteractModel(groundItem.getId(), groundItem.getLocation(), groundItem.getName()), "Take");
+        return interact(new InteractModel(groundItem.getId(), groundItem.getLocation(), groundItem.getName()), "Take",true);
     }
 
     public static int calculateDespawnTime(GroundItem groundItem) {
