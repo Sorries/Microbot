@@ -291,12 +291,16 @@ public class MahoganyHomesScript extends Script {
             var npc = Rs2Npc.getNpc(plugin.getCurrentHome().getNpcId());
             if (npc == null && Rs2Player.getWorldLocation().getPlane() > 0) {
                 log("We are on the wrong floor, Trying to find ladder to go down");
-                TileObject closestLadder = Rs2GameObject.findObject(plugin.getCurrentHome().getLadders());
-                if (Rs2GameObject.interact(closestLadder))
-                    sleepUntil(
-                            () -> Rs2Player.getWorldLocation().getPlane() == 0
-                            , 5000);
-                return;
+                GameObject closestLadder = Rs2GameObject.findObject(plugin.getCurrentHome().getLadders());
+                Rs2WorldPoint objectLocation = Rs2Tile.getNearestWalkableTile(closestLadder);
+                if (!openDoorToObject(closestLadder, objectLocation)) {
+                    if (Rs2GameObject.interact(closestLadder)) {
+                        sleepUntil(
+                                () -> Rs2Player.getWorldLocation().getPlane() == 0
+                                , 5000);
+                        return;
+                    }
+                }
             }
             if (npc != null) {
                 Rs2WorldPoint npcLocation = new Rs2WorldPoint(npc.getWorldLocation());
