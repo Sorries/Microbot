@@ -127,7 +127,7 @@ private static String slayerMonster = null;
                         LootingParameters valueParams = new LootingParameters(
                                 config.autoLootValueAmount(),
                                 Integer.MAX_VALUE,
-                                15,
+                                20,
                                 1,
                                 2,
                                 true,
