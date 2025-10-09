@@ -122,6 +122,7 @@ public class Rs2GroundItem {
             } else {
                 Microbot.doInvoke(new NewMenuEntry(action, param0, param1, menuAction.getId(), identifier, -1, target),
                         new Rectangle(1, 1, Microbot.getClient().getCanvasWidth(), Microbot.getClient().getCanvasHeight()));
+                Rs2Inventory.waitForInventoryChanges(1500);
 
             }
         } catch (Exception ex) {
@@ -462,6 +463,7 @@ public class Rs2GroundItem {
                 if (!passesIgnoredNames(gi, ignoredLower)) continue;
                 if (!ensureSpaceFor(gi, params)) continue;
                 coreLoot(gi);
+                sleep(Rs2Random.skewedRandAuto(600));
             }
             return validateLoot(combined);
         });
