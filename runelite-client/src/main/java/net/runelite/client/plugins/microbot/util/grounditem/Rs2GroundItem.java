@@ -158,8 +158,8 @@ public class Rs2GroundItem {
             // Step 1: Pick a random click point inside the tile and right-click
             Rectangle tileBounds = canvasTile.getBounds();
             Point clickPoint = new Point(
-                    (int) (tileBounds.getX() + Rs2Random.betweenInclusive(0, (int) tileBounds.getWidth())),
-                    (int) (tileBounds.getY() + Rs2Random.betweenInclusive(0, (int) tileBounds.getHeight()))
+                    (int) (tileBounds.getX() +3 + Rs2Random.betweenInclusive(0, (int) tileBounds.getWidth() - 6)),
+                    (int) (tileBounds.getY() +3 + Rs2Random.betweenInclusive(0, (int) tileBounds.getHeight() - 6))
             );
 
             Microbot.getMouse().click(clickPoint, true); // right-click
@@ -183,10 +183,15 @@ public class Rs2GroundItem {
                 }
                 return false;
             }, 2000); // wait up to 2s for menu
-
             int idx = matchIndex.get();
             if (idx == -1) {
                 Microbot.log("Menu option not found: " + action + " " + groundItem.getName());
+                sleep(150,300);
+                Point aboveMenuPoint = new Point(
+                        (int) (tileBounds.getCenterX() + Rs2Random.betweenInclusive((int) -(tileBounds.getWidth()/2),(int) tileBounds.getWidth()/2)),
+                        (int) (tileBounds.getY() - Rs2Random.betweenInclusive(10,100))
+                );
+                Microbot.getMouse().move(aboveMenuPoint);
                 return false;
             }
 
@@ -208,7 +213,14 @@ public class Rs2GroundItem {
             sleep(500, 1250);
             Microbot.getMouse().move(entryRect);
             Microbot.getMouse().click(entryRect);
-
+            if (!Rs2Inventory.waitForInventoryChanges(3000)){
+                Point aboveMenuPoint = new Point(
+                        (int) (tileBounds.getCenterX() + Rs2Random.betweenInclusive((int) -(tileBounds.getWidth()/2),(int) tileBounds.getWidth()/2)),
+                        (int) (tileBounds.getY() - Rs2Random.betweenInclusive(10,100))
+                );
+                Microbot.getMouse().move(aboveMenuPoint);
+            }
+            sleep(100,300);
             return true;
 
         } catch (Exception ex) {
@@ -219,7 +231,7 @@ public class Rs2GroundItem {
     }
 
     public static boolean interact(GroundItem groundItem) {
-        return interact(new InteractModel(groundItem.getId(), groundItem.getLocation(), groundItem.getName()), "Take",true);
+        return interact(new InteractModel(groundItem.getId(), groundItem.getLocation(), groundItem.getName()), "Take");
     }
 
     public static int calculateDespawnTime(GroundItem groundItem) {
