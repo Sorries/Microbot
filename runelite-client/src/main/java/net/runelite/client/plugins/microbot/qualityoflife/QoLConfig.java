@@ -473,21 +473,10 @@ public interface QoLConfig extends Config {
     }
 
     @ConfigItem(
-            keyName = "npcAggressionReset",
-            name = "NPC aggression reset",
-            description = "Will reset if npc aggression timer",
-            position = 14,
-            section = upkeepSection
-    )
-    default boolean npcAggressionReset() {
-        return false;
-    }
-
-    @ConfigItem(
             keyName = "autoLootOnValue",
             name = "Auto loot base on value",
             description = "",
-            position = 15,
+            position = 14,
             section = upkeepSection
     )
     default boolean autoLootOnValue() {
@@ -498,11 +487,22 @@ public interface QoLConfig extends Config {
             keyName = "autoLootValueAmount",
             name = "Auto loot value amount",
             description = "",
-            position = 16,
+            position = 15,
             section = upkeepSection
     )
     default int autoLootValueAmount() {
         return 5000;
+    }
+
+    @ConfigItem(
+            keyName = "npcAggressionReset",
+            name = "NPC aggression reset",
+            description = "Will reset if npc aggression timer",
+            position = 16,
+            section = upkeepSection
+    )
+    default boolean npcAggressionReset() {
+        return false;
     }
 
 
