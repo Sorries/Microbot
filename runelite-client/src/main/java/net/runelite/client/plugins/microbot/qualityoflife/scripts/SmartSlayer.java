@@ -139,7 +139,8 @@ private static String slayerMonster = null;
 
                     while (isRunning()
                             && config.tagMultipleMonster()
-                            && Rs2Npc.getNpcsForPlayer(slayerMonster).size() < 3)
+                            && Rs2Npc.getNpcsForPlayer(slayerMonster).size() < 3
+                            && Rs2Player.isInMulti())
                     {
                         // For Tag Multiple Monster
                         List<Rs2NpcModel> validNpc = Rs2Npc.getAttackableNpcs(true)
