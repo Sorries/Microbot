@@ -362,9 +362,10 @@ public class Rs2GroundItem {
      * @return true if the ground item despawns, false otherwise
      */
     public static boolean waitForGroundItemDespawn(Runnable actionWhileWaiting,GroundItem groundItem){
+        double secondPerTile = (((double) Objects.requireNonNull(Rs2Player.getWorldLocation()).distanceTo(groundItem.getLocation()))/2 *(0.6)*1000); // assuming running 2 tiles per tick (0.6s)
         sleepUntil(() ->  {
             actionWhileWaiting.run();
-            sleepUntil(() -> groundItem != getGroundItems().get(groundItem.getLocation(), groundItem.getId()), Rs2Random.between(600, 2100));
+            sleepUntil(() -> groundItem != getGroundItems().get(groundItem.getLocation(), groundItem.getId()), (int) secondPerTile + Rs2Random.between(600, 2100));
             return groundItem != getGroundItems().get(groundItem.getLocation(), groundItem.getId());
         });
         return groundItem != getGroundItems().get(groundItem.getLocation(), groundItem.getId());
