@@ -47,6 +47,18 @@ public class SmartSlayer extends Script {
 private static boolean completedSlayerTask = false;
 private static String slayerMonster = null;
 
+    final Set<String> superiorVariants = Set.of(
+            "crushing hand", "chasm crawler", "screaming banshee", "screaming twisted banshee",
+            "giant rockslug", "cockathrice", "moonlight cockatrice", "flaming pyrelord",
+            "infernal pyrelord", "monstrous basilisk", "malevolent mage", "insatiable bloodveld",
+            "insatiable mutated bloodveld", "vitreous jelly", "vitreous warped jelly", "chilled jelly",
+            "spiked turoth", "mutated terrorbird", "mutated tortoise", "cave abomination",
+            "abhorrent spectre", "repugnant spectre", "basilisk sentinel", "shadow wyrm",
+            "choke devil", "king kurask", "marble gargoyle", "ancient custodian", "nechryarch",
+            "guardian drake", "greater abyssal demon", "night beast", "dreadborn araxyte",
+            "nuclear smoke devil", "colossal hydra"
+    );
+
 
     public boolean run(QoLConfig config) {
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -77,7 +89,8 @@ private static String slayerMonster = null;
     //                            })
                         Optional.ofNullable(Rs2Npc.getNpcs(monster))
                             .orElse(Stream.empty())
-                            .filter(npc -> npc.getName() != null && !npc.getName().toLowerCase().contains("superior"))
+                            .filter(Objects::nonNull)
+                            .filter(npc -> npc.getName() != null && !superiorVariants.contains(npc.getName().toLowerCase()))
                             .forEach(npc -> {
                                 if (npc == null) {
                                     Microbot.log("Npc is null for monster: " + monster);
