@@ -127,7 +127,7 @@ private static String slayerMonster = null;
                         LootingParameters valueParams = new LootingParameters(
                                 config.autoLootValueAmount(),
                                 Integer.MAX_VALUE,
-                                20,
+                                15,
                                 1,
                                 2,
                                 true,
@@ -210,20 +210,24 @@ private static String slayerMonster = null;
     //            //if(!Rs2Bank.walkToBankAndUseBank()) return;
                     Microbot.log("Slayer completed");
                     sleep(5000,10000);
-                    while (Rs2GameObject.exists(6) || Rs2GameObject.exists(43027)){
-                        if (Rs2GameObject.interact(6,"Pick-up") || Rs2GameObject.interact(43027,"Pick-up")){
-                            sleepUntil(()-> !Rs2GameObject.exists(6) || !Rs2GameObject.exists(43027));
+                    while (Rs2GameObject.exists(6) || Rs2GameObject.exists(43027) && isRunning()){
+                        if(Rs2Inventory.emptySlotCount()>=4) {
+                            if (Rs2GameObject.interact(6, "Pick-up") || Rs2GameObject.interact(43027, "Pick-up")) {
+                                sleepUntil(() -> !Rs2GameObject.exists(6) || !Rs2GameObject.exists(43027));
+                            }
+                            sleep(500, 1000);
+                        }else{
+                            shutdown();
                         }
-                        sleep(500,1000);
                     }
                     if (Rs2Inventory.contains(8013)) {
-                        while (Rs2Inventory.contains(8013) && !PohTeleports.isInHouse()) {
+                        while (Rs2Inventory.contains(8013) && !PohTeleports.isInHouse() && isRunning()) {
                             Rs2Inventory.interact(8013, "Break");
                             sleepUntil(PohTeleports::isInHouse,10000);
                             sleep(500, 1000);
                         }
                     } else if (Rs2Inventory.contains(9790)){
-                        while (Rs2Inventory.contains(9790) && !PohTeleports.isInHouse()) {
+                        while (Rs2Inventory.contains(9790) && !PohTeleports.isInHouse() && isRunning()) {
                             Rs2Inventory.interact(9790, "Tele to POH");
                             sleepUntil(PohTeleports::isInHouse,10000);
                             sleep(500, 1000);
