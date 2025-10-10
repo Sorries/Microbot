@@ -11,7 +11,7 @@ import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.looter.enums.DefaultLooterStyle;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
-import net.runelite.client.plugins.microbot.util.cache.Rs2PohCache;
+import net.runelite.client.plugins.microbot.util.poh.*;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.coords.Rs2WorldArea;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
@@ -216,15 +216,15 @@ private static String slayerMonster = null;
                         sleep(500,1000);
                     }
                     if (Rs2Inventory.contains(8013)) {
-                        while (Rs2Inventory.contains(8013) && !Rs2PohCache.isInPOH()) {
+                        while (Rs2Inventory.contains(8013) && !PohTeleports.isInHouse()) {
                             Rs2Inventory.interact(8013, "Break");
-                            sleepUntil(Rs2PohCache::isInPOH,10000);
+                            sleepUntil(PohTeleports::isInHouse,10000);
                             sleep(500, 1000);
                         }
                     } else if (Rs2Inventory.contains(9790)){
-                        while (Rs2Inventory.contains(9790) && !Rs2PohCache.isInPOH()) {
+                        while (Rs2Inventory.contains(9790) && !PohTeleports.isInHouse()) {
                             Rs2Inventory.interact(9790, "Tele to POH");
-                            sleepUntil(Rs2PohCache::isInPOH,10000);
+                            sleepUntil(PohTeleports::isInHouse,10000);
                             sleep(500, 1000);
                         }
                     } else if (Rs2Inventory.contains(13393)) {
