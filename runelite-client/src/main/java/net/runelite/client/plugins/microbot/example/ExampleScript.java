@@ -3,18 +3,24 @@ package net.runelite.client.plugins.microbot.example;
 import net.runelite.api.Client;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
+import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
+import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.grounditem.InteractModel;
 
 import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
+import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.models.RS2Item;
 import net.runelite.client.plugins.grounditems.GroundItem;
 import net.runelite.client.plugins.grounditems.GroundItemsPlugin;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
+import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -193,17 +199,30 @@ public class ExampleScript extends Script {
 //                Microbot.getClient().getLocalPlayer();
 //                Rs2Player.getPlayerEquipmentIds(new Rs2PlayerModel(Microbot.getClient().getLocalPlayer()));
 //                Rs2Npc.getNpcsForPlayer();
-                RS2Item item = Arrays.stream(Rs2GroundItem.getAll(255))
-                        .filter(rs2Item -> rs2Item.getItem().getId() == 7946)
-                        .findFirst().orElse(null);
-                Rs2GroundItem.interact(new InteractModel(item.getTileItem().getId(), item.getTile().getWorldLocation(), item.getItem().getName()), "Take",true);
+//                RS2Item item = Arrays.stream(Rs2GroundItem.getAll(255))
+//                        .filter(rs2Item -> rs2Item.getItem().getId() == 7946)
+//                        .findFirst().orElse(null);
+//                Rs2GroundItem.interact(new InteractModel(item.getTileItem().getId(), item.getTile().getWorldLocation(), item.getItem().getName()), "Take",true);
+//                Widget[] parentWidget = Rs2Widget.getWidget(25362432).getChildren(); //0x0183_0000
+//                Widget slot0 = getWidgetByPackedId(InterfaceID.Wornitems.SLOT0);
+//                Microbot.log("slot0 "+ slot0);
+//                Widget slot1 = Rs2Widget.getWidget(0x0183_000f);
+//                Microbot.log("slot1 "+ slot1);
+                if(Rs2Equipment.isWearing()) {
+                    Rs2Equipment.unEquip(e -> true);
+                }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
         }, 0, 1000, TimeUnit.MILLISECONDS);
         return true;
     }
-    
+    public static Widget getWidgetByPackedId(int packedId) {
+        int parent = (packedId >> 16) & 0xFFFF;
+        int child = packedId & 0xFFFF;
+        return Rs2Widget.getWidget(parent, child);
+    }
+
     @Override
     public void shutdown() {
         super.shutdown();
