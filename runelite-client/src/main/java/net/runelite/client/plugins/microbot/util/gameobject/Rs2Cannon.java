@@ -33,6 +33,7 @@ public class Rs2Cannon {
         Microbot.status = "Repairing Cannon";
 
         Rs2GameObject.interact(brokenCannon, "Repair");
+        sleepUntil(()->!Rs2Player.isInteracting() || !Rs2Player.isAnimating());
         return true;
     }
 
