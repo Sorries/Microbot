@@ -421,6 +421,7 @@ public class Rs2GroundItem {
 
     private static boolean ensureSpaceFor(GroundItem gi, LootingParameters params) {
         if (Rs2Inventory.emptySlotCount() > params.getMinInvSlots()) {
+            Microbot.log("Current empty space: "+ Rs2Inventory.emptySlotCount() + " Min Inv Slot: " + params.getMinInvSlots() + " Current min Value: " + params.getMinValue());
             return true;
         }
 
@@ -429,6 +430,7 @@ public class Rs2GroundItem {
                 Rs2Player.waitForAnimation();
             }
         }
+        Microbot.log("Current empty space2: "+ Rs2Inventory.emptySlotCount() + " Min Inv Slot2: " + params.getMinInvSlots() + " Current min Value2: " + params.getMinValue());
         return canTakeGroundItem(gi);
     }
 
@@ -670,7 +672,7 @@ public class Rs2GroundItem {
         int maxQuantity = groundItem.isStackable() ? 1 : groundItem.getQuantity();
         int availableSlots = Rs2Inventory.emptySlotCount();
         int quantity = Math.min(maxQuantity, availableSlots);
-
+        Microbot.log("quantity: " + quantity + " stackable: " + groundItem.isStackable() + " has item: " + Rs2Inventory.hasItem(groundItem.getId()) );
         if (quantity == 0 && groundItem.isStackable()) {
             return Rs2Inventory.hasItem(groundItem.getId());
         }
