@@ -53,7 +53,7 @@ public class DismissNpcEvent implements BlockingEvent {
                 }
             }
         }
-        return true;
+        return !validate();
     }
 
     @Override
