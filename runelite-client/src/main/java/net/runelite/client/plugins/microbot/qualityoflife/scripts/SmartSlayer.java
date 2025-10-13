@@ -241,12 +241,12 @@ private static String slayerMonster = null;
                     sleep(5000, 10000);
 
                     int attempts = 0;
-                    while ((Rs2GameObject.exists(6) || Rs2GameObject.exists(43027)) && isRunning() && attempts < 3) {
+                    while ((Rs2GameObject.exists(6) || Rs2GameObject.exists(43027)) && isRunning() && attempts < 5) {
                         if (Rs2Inventory.emptySlotCount() >= 4) {
                             if (Rs2GameObject.exists(14916) || Rs2GameObject.exists(43028)) {
                                 TileObject brokenCannon = Rs2GameObject.findObject(new Integer[]{ObjectID.BROKEN_MULTICANNON_14916, ObjectID.BROKEN_MULTICANNON_43028});
                                 Rs2GameObject.interact(brokenCannon, "Repair");
-                                sleep(1000,2000);
+                                sleep(1500,3000);
                             }
                             if (Rs2GameObject.interact(43027, "Pick-up") || Rs2GameObject.interact(6, "Pick-up")) {
                                 sleepUntil(() -> !Rs2GameObject.exists(43027) && !Rs2GameObject.exists(6));
