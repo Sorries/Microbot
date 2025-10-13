@@ -22,9 +22,6 @@ public class PotionManagerScript extends Script {
                 if (!config.enablePotionManager()) return;
                 if (!Rs2Player.isInCombat()) return;
 
-
-                sleep(500,1500);
-
                 sleep(500,1500);
 
                 // Always attempt to drink anti-poison
