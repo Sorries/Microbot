@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.NPC;
+import net.runelite.api.ObjectID;
+import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
@@ -137,6 +139,15 @@ private static String slayerMonster = null;
                     }
 
                     if (config.autoLootOnValue()) {
+                        LootingParameters nameParams = new LootingParameters(
+                                15,
+                                1,
+                                1,
+                                2,
+                                true,
+                                true,
+                                "blood rune"
+                        );
                         LootingParameters valueParams = new LootingParameters(
                                 config.autoLootValueAmount(),
                                 Integer.MAX_VALUE,
@@ -146,7 +157,13 @@ private static String slayerMonster = null;
                                 true,
                                 true
                         );
-                        Rs2GroundItem.lootItemBasedOnValue(valueParams);
+                        if(Rs2Random.betweenInclusive(0,1) == 0) {
+                            Rs2GroundItem.lootItemsBasedOnNames(nameParams);
+                            Rs2GroundItem.lootItemBasedOnValue(valueParams);
+                        }else{
+                            Rs2GroundItem.lootItemBasedOnValue(valueParams);
+                            Rs2GroundItem.lootItemsBasedOnNames(nameParams);
+                        }
                         sleep(1000,2000);
                     }
 
@@ -219,37 +236,53 @@ private static String slayerMonster = null;
                            }
                         }
                 }
-                if (completedSlayerTask){
-    //            //if(!Rs2Bank.walkToBankAndUseBank()) return;
+                if (completedSlayerTask) {
                     Microbot.log("Slayer completed");
-                    sleep(5000,10000);
-                    while (Rs2GameObject.exists(6) || Rs2GameObject.exists(43027) && isRunning()){
-                        if(Rs2Inventory.emptySlotCount()>=4) {
-                            if (Rs2GameObject.interact(6, "Pick-up") || Rs2GameObject.interact(43027, "Pick-up")) {
-                                sleepUntil(() -> !Rs2GameObject.exists(6) || !Rs2GameObject.exists(43027));
+                    sleep(5000, 10000);
+
+                    int attempts = 0;
+                    while ((Rs2GameObject.exists(6) || Rs2GameObject.exists(43027)) && isRunning() && attempts < 3) {
+                        if (Rs2Inventory.emptySlotCount() >= 4) {
+                            if (Rs2GameObject.exists(14916) || Rs2GameObject.exists(43028)) {
+                                TileObject brokenCannon = Rs2GameObject.findObject(new Integer[]{ObjectID.BROKEN_MULTICANNON_14916, ObjectID.BROKEN_MULTICANNON_43028});
+                                Rs2GameObject.interact(brokenCannon, "Repair");
+                            }
+                            if (Rs2GameObject.interact(43027, "Pick-up") || Rs2GameObject.interact(6, "Pick-up")) {
+                                sleepUntil(() -> !Rs2GameObject.exists(43027) && !Rs2GameObject.exists(6));
                             }
                             sleep(500, 1000);
-                        }else{
+                        } else {
                             shutdown();
                         }
+                        attempts++;
                     }
+
+                    attempts = 0;
                     if (Rs2Inventory.contains(8013)) {
-                        while (Rs2Inventory.contains(8013) && !PohTeleports.isInHouse() && isRunning()) {
+                        while (Rs2Inventory.contains(8013) && !PohTeleports.isInHouse() && isRunning() && attempts < 3) {
                             Rs2Inventory.interact(8013, "Break");
-                            sleepUntil(PohTeleports::isInHouse,10000);
+                            sleepUntil(PohTeleports::isInHouse, 10000);
                             sleep(500, 1000);
+                            attempts++;
                         }
-                    } else if (Rs2Inventory.contains(9790)){
-                        while (Rs2Inventory.contains(9790) && !PohTeleports.isInHouse() && isRunning()) {
+                    } else if (Rs2Inventory.contains(9790)) {
+                        attempts = 0;
+                        while (Rs2Inventory.contains(9790) && !PohTeleports.isInHouse() && isRunning() && attempts < 3) {
                             Rs2Inventory.interact(9790, "Tele to POH");
-                            sleepUntil(PohTeleports::isInHouse,10000);
+                            sleepUntil(PohTeleports::isInHouse, 10000);
                             sleep(500, 1000);
+                            attempts++;
                         }
                     } else if (Rs2Inventory.contains(13393)) {
-                        Rs2Bank.walkToBank();
-                        sleepUntil(() ->Rs2Bank.isNearBank(5));
+                        attempts = 0;
+                        while (!Rs2Bank.isNearBank(5) && attempts < 3) {
+                            Rs2Bank.walkToBank();
+                            sleepUntil(() -> Rs2Bank.isNearBank(5));
+                            attempts++;
+                        }
                     }
-                    sleep(1000,3000);
+
+                    sleep(1000, 3000);
                     Rs2Tab.switchTo(InterfaceTab.PRAYER);
                     Rs2Prayer.disableAllPrayers(true);
                     Microbot.getConfigManager().setConfiguration("npcindicators", "npcToHighlight", "");
