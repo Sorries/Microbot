@@ -4,6 +4,7 @@ import net.runelite.api.ObjectID;
 import net.runelite.api.TileObject;
 import net.runelite.api.VarPlayer;
 import net.runelite.api.coords.WorldArea;
+import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.client.plugins.cannon.CannonPlugin;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.Microbot;
@@ -49,7 +50,6 @@ public class Rs2Cannon {
         }
 
         int cannonBallsLeft = Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getVarpValue(VarPlayer.CANNON_AMMO)).orElse(0);
-
         if (cannonBallsLeft > cannonRefillAmount) return false;
 
         Microbot.status = "Refilling Cannon";
@@ -95,12 +95,44 @@ public class Rs2Cannon {
         int attempts = 0;
         while (Rs2GameObject.exists(cannon.getId()) && Rs2Inventory.emptySlotCount() >= 4 && attempts < 3){
             Rs2GameObject.interact(cannon, "Pick-up");
-            sleep(1200);
-            sleepUntil(() -> !Rs2GameObject.exists(cannon.getId()));
+            sleepUntil(() -> !Rs2GameObject.exists(cannon.getId()),5000);
+            sleep(250);
             attempts++;
         }
         Microbot.pauseAllScripts.compareAndSet(true, false);
         return true;
     }
 
+    public static boolean start() {
+        if (!Rs2Inventory.hasItemAmount("cannonball", 30, true)) {
+            //System.out.println("Not enough cannonballs!");
+            return false;
+        }
+
+        Microbot.status = "Starting up Cannon";
+
+        TileObject cannon = Rs2GameObject.findObject(new Integer[]{ObjectID.DWARF_MULTICANNON, ObjectID.DWARF_MULTICANNON_43027});
+        if (cannon == null) return false;
+
+        // Create centered WorldArea (3x3 area with cannon at center)
+        WorldArea cannonLocation = new WorldArea(
+                cannon.getWorldLocation().getX() - 1,
+                cannon.getWorldLocation().getY() - 1,
+                3, 3,
+                cannon.getWorldLocation().getPlane()
+        );
+        if (!cannonLocation.toWorldPoint().equals(CannonPlugin.getCannonPosition().toWorldPoint())) return false;
+        int attempts = 0;
+        while (Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getVarpValue(VarPlayerID.MCANNONMULTI)).orElse(0) == 0 && attempts < 3){
+            Microbot.log("Starting Cannon");
+            Rs2GameObject.interact(cannon, "Fire");
+            sleepUntil(()-> Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getVarpValue(VarPlayerID.MCANNONMULTI)).orElse(0) == 1048576);
+            sleep(250);
+            if (Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getVarpValue(VarPlayerID.MCANNONMULTI)).orElse(0) == 1048576){
+                return true;
+            }
+            attempts++;
+        }
+        return false;
+    }
 }
