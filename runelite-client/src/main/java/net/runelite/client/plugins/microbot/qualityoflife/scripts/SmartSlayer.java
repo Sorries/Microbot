@@ -239,9 +239,9 @@ private static String slayerMonster = null;
                 if (completedSlayerTask) {
                     Microbot.log("Slayer completed");
                     sleep(5000, 10000);
-                    if(!Rs2Cannon.repair()) {
-                        Rs2Cannon.pickup();
-                    }
+                    Rs2Cannon.repair();
+                    Rs2Cannon.pickup();
+
 
                     int attempts = 0;
                     if (Rs2Inventory.contains(8013)) {
