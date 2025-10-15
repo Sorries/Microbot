@@ -71,7 +71,7 @@ public class FornBirdhouseRunsScript extends Script {
                         break;
                     case TELEPORTING:
                         int digsite = Rs2Inventory.get("Digsite Pendant").getId();
-                        Rs2Inventory.interact(digsite,"rub",131078);
+                        Rs2Inventory.interact(digsite,"Fossil Island");
                         sleep(3000, 4000);
                         botStatus = states.VERDANT_TELEPORT;
                         break;
