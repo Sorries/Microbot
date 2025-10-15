@@ -5,6 +5,7 @@ import net.runelite.api.*;
 import net.runelite.api.gameval.ObjectID;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
@@ -50,7 +51,7 @@ public class HerbrunScript extends Script {
     @Inject
     ClientThread clientThread;
     private boolean initialized = false;
-
+    private Plugin itemCharge;
     @Inject
     public HerbrunScript(HerbrunPlugin plugin, HerbrunConfig config) {
         this.plugin = plugin;
@@ -98,8 +99,22 @@ public class HerbrunScript extends Script {
                         return;
                     }
                     if (Rs2Inventory.hasItem("open herb sack")) {
-                        Rs2Inventory.interact(24478,"Empty to bank",9);
+                        Rs2Inventory.interact(24478,"Empty");
                         sleep(Rs2Random.between(500,800));
+//                        if (itemCharge == null)
+//                        {
+//                            itemCharge = Microbot.getPluginManager()
+//                                    .getPlugins()
+//                                    .stream()
+//                                    .filter(plugin -> plugin.getClass().getSimpleName().equalsIgnoreCase("TicTac7xChargesImprovedPlugin"))
+//                                    .findFirst()
+//                                    .orElse(null);
+//                            if (Microbot.isPluginEnabled(itemCharge)) {
+//                                Microbot.stopPlugin(itemCharge);
+//
+//                                Microbot.startPlugin(itemCharge);
+//                            }
+//                        }
                     }
                     while(Rs2Bank.isOpen() && isRunning()){
                         Rs2Bank.closeBank();
