@@ -740,7 +740,7 @@ public class HerbiboarScript extends Script {
                             Microbot.log(Level.INFO,"Depositing all items except locked slots: "+ slotsToLock);
                             Rs2Widget.clickWidget(InterfaceID.Bankmain.DEPOSITINV);
                             if (config.useHerbSack() && Rs2Inventory.contains(ItemID.SLAYER_HERB_SACK, ItemID.SLAYER_HERB_SACK_OPEN)) {
-                                Rs2Inventory.interact(24478,"Empty to bank",9);
+                                Rs2Inventory.interact(24478,"Empty");
                                 Rs2Inventory.waitForInventoryChanges(1000);
                             }
                             Rs2Inventory.waitForInventoryChanges(1000);
