@@ -15,6 +15,8 @@ public class QolCannonScript extends Script {
                 if (!super.run() || !config.refillCannon()) return;
                 if (Rs2Cannon.repair())
                     return;
+                if(Rs2Cannon.start())
+                    return;
                 Rs2Cannon.refill();
             } catch(Exception ex) {
                 Microbot.logStackTrace(this.getClass().getSimpleName(), ex);
