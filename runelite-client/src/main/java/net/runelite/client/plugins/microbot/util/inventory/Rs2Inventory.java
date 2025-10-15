@@ -1215,20 +1215,6 @@ public class Rs2Inventory {
     public static boolean interact(int id, String action) {
         return interact(get(id), action);
     }
-    /**
-     * Interacts with an item with the specified ID in the inventory using the specified action.
-     *
-     * @param id     The ID of the item to interact with.
-     * @param action The action to perform on the item.
-     *
-     * @return True if the interaction was successful, false otherwise.
-     */
-    public static boolean interact(int id, String action, int identifier) {
-        final Rs2ItemModel rs2Item = get(id);
-        if (rs2Item == null) return false;
-        invokeMenu(rs2Item, action, identifier);
-        return true;
-    }
 
     /**
      * Interacts with an item with the specified name in the inventory using the first available action.
@@ -1263,10 +1249,6 @@ public class Rs2Inventory {
      */
     public static boolean interact(int[] ids, String action) {
         return Arrays.stream(ids).sequential().anyMatch(id -> interact(id, action));
-    }
-    
-    public static boolean interact(int[] ids, String action, int identifier) {
-        return Arrays.stream(ids).sequential().anyMatch(id -> interact(id, action, identifier));
     }
 
     /**
@@ -1901,9 +1883,8 @@ public class Rs2Inventory {
      *
      * @param rs2Item            The current item to interact with.
      * @param action             The action to be used on the item.
-     * @param providedIdentifier The identifier to use; if -1, compute using the old logic.
      */
-    private static void invokeMenu(Rs2ItemModel rs2Item, String action, int providedIdentifier) {
+    private static void invokeMenu(Rs2ItemModel rs2Item, String action) {
         if (rs2Item == null) return;
         if(!Rs2Bank.isOpen()){
             Rs2Tab.switchToInventoryTab();
@@ -1913,6 +1894,7 @@ public class Rs2Inventory {
         int param0;
         int param1;
         int identifier = -1;
+        String target = rs2Item.getName();
         MenuAction menuAction = MenuAction.CC_OP;
         Widget[] inventoryWidgets;
         param0 = rs2Item.getSlot();
@@ -1954,7 +1936,19 @@ public class Rs2Inventory {
                     rs2Item.getInventoryActions();
             System.out.println("actions: " + Arrays.toString(actions)+ " itemWidget: " + Arrays.toString(itemWidget.getActions())+ " rs2item: " + Arrays.toString(rs2Item.getInventoryActions()));
 
-            identifier = providedIdentifier == -1 ? indexOfIgnoreCase(stripColTags(actions), action) + 1 : providedIdentifier;
+            int simpleIndex = indexOfIgnoreCase(stripColTags(actions), action);
+            if (simpleIndex != -1) {
+                identifier = simpleIndex + 1;
+            } else {
+                // We could not find the action in the item widget's actions, so we try to find it in the sub-menu actions
+                Map.Entry<String, Integer> subActionMap = rs2Item.getIndexOfSubAction(action);
+                if (subActionMap != null) {
+                    // The main menu index depends on the inventory interface from which this item is interacted with
+                    int mainMenuIndex = java.util.Arrays.asList(actions).indexOf(subActionMap.getKey());
+                    identifier = NewMenuEntry.findIdentifier(subActionMap.getValue() + 1, mainMenuIndex + 1);
+                    target = "";
+                }
+            }
         }
 
 
@@ -1966,7 +1960,7 @@ public class Rs2Inventory {
             menuAction = MenuAction.WIDGET_TARGET_ON_WIDGET;
         }
 
-        Microbot.doInvoke(new NewMenuEntry(action, param0, param1, menuAction.getId(), identifier, rs2Item.getId(), rs2Item.getName()), (itemBounds(rs2Item) == null) ? new Rectangle(1, 1) : itemBounds(rs2Item));
+        Microbot.doInvoke(new NewMenuEntry(action, param0, param1, menuAction.getId(), identifier, rs2Item.getId(), target), (itemBounds(rs2Item) == null) ? new Rectangle(1, 1) : itemBounds(rs2Item));
 
         if (action.equalsIgnoreCase("destroy")) {
             sleepUntil(() -> Rs2Widget.isWidgetVisible(584, 0));
@@ -1974,16 +1968,6 @@ public class Rs2Inventory {
         }
     }
 
-
-    /**
-     * Method executes menu actions
-     *
-     * @param rs2Item Current item to interact with
-     * @param action  Action used on the item
-     */
-    private static void invokeMenu(Rs2ItemModel rs2Item, String action) {
-        invokeMenu(rs2Item, action, -1);
-    }
 
     public static Widget getInventory() {
         final int BANK_PIN_INVENTORY_ITEM_CONTAINER = 17563648;
