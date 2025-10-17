@@ -12,6 +12,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.looter.enums.DefaultLooterStyle;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
+import net.runelite.client.plugins.microbot.util.ActorModel;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.poh.*;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
@@ -73,6 +74,7 @@ private static String slayerMonster = null;
 //                Map<NPC, HighlightedNpc> highlightedNpcs = plugin.getHighlightedNpcs();
                 AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
                 if(Rs2Inventory.contains(false,"cannon base")) return;
+                //Microbot.log("Slayer monsters: " + monsters);
                 if (monsters != null) {
                     for (String monster : monsters) {
     //                        Rs2Npc.getNpcs(monster).forEach(npc -> {
@@ -104,6 +106,7 @@ private static String slayerMonster = null;
                                 }
 
                                 if (!npc.isDead() && Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
+                                    //Microbot.log("Found monster: " + monster);
                                     slayerMonster = monster;
                                     isNearSlayerMonster.set(true);
                                 }
@@ -115,8 +118,8 @@ private static String slayerMonster = null;
                         if (npc != null && !npc.isDead()) {
                             if (npc.getWorldLocation() != null && Rs2Player.getWorldLocation() != null) {
                                 if (Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
-                                    //Microbot.log("Highlighted slayer monster is " + Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) + " tiles far");
-                                    slayerMonster = npc.getName();
+                                    //Microbot.log("Highlighted slayer monster is " + new ActorModel(npc).getName()+ " and " + Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) + " tiles far");
+                                    slayerMonster = new ActorModel(npc).getName();
                                     isNearSlayerMonster.set(true);
                                     break;
                                 }
@@ -124,6 +127,7 @@ private static String slayerMonster = null;
                         }
                     }
                 }
+                //Microbot.log("Is near slayer monster " + isNearSlayerMonster.get());
                 if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
                     Rs2Combat.enableAutoRetialiate();
                     Rs2ItemModel currentGlove = Rs2Equipment.get(EquipmentInventorySlot.GLOVES);
@@ -146,7 +150,7 @@ private static String slayerMonster = null;
                                 2,
                                 true,
                                 true,
-                                "Blood rune","Araxyte venom sack"
+                                "Blood rune","Araxyte venom sack","shard"
                         );
                         LootingParameters valueParams = new LootingParameters(
                                 config.autoLootValueAmount(),
