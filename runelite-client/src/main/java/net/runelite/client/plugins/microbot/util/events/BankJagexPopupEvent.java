@@ -3,6 +3,7 @@ package net.runelite.client.plugins.microbot.util.events;
 import net.runelite.api.annotations.Component;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.microbot.BlockingEvent;
+import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.BlockingEventPriority;
 import net.runelite.client.plugins.microbot.util.Global;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
@@ -22,10 +23,10 @@ public class BankJagexPopupEvent implements BlockingEvent {
     @Override
     public boolean execute() {
         Widget parentWidget = Rs2Widget.getWidget(WANT_MORE_BANK_SPACE_COMPONENT_ID);
-        if (parentWidget == null) return false;
+        if (parentWidget == null) return !validate();
         
         Widget notNowButton = Rs2Widget.findWidget("Not now", List.of(parentWidget), false);
-        if (notNowButton == null) return false;
+        if (notNowButton == null) return !validate();
         
         Rs2Widget.clickWidget(notNowButton);
         Global.sleepUntil(() -> !Rs2Widget.isWidgetVisible(WANT_MORE_BANK_SPACE_COMPONENT_ID), 10000);
