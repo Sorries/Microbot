@@ -3,6 +3,7 @@ package net.runelite.client.plugins.microbot.util.events;
 import net.runelite.api.annotations.Component;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.microbot.BlockingEvent;
+import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.BlockingEventPriority;
 import net.runelite.client.plugins.microbot.util.Global;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
