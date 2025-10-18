@@ -150,7 +150,7 @@ private static String slayerMonster = null;
                                 2,
                                 true,
                                 true,
-                                "Blood rune","Araxyte venom sack","shard"
+                                "Blood rune","shard","Brimstone key"
                         );
                         LootingParameters valueParams = new LootingParameters(
                                 config.autoLootValueAmount(),
