@@ -91,7 +91,9 @@ public class HerbrunScript extends Script {
                 }
                 var inventorySetup = new Rs2InventorySetup(config.inventorySetup(), mainScheduledFuture);
                 if (!inventorySetup.doesInventoryMatch() || !inventorySetup.doesEquipmentMatch()) {
-                    Rs2Walker.walkTo(Rs2Bank.getNearestBank().getWorldPoint(), 20);
+                    if(!Rs2Bank.openBank()) {
+                        Rs2Walker.walkTo(Rs2Bank.getNearestBank().getWorldPoint(), 20);
+                    }
                     if (!inventorySetup.loadEquipment() || !inventorySetup.loadInventory()) {                        
                         //plugin.reportFinished("Failed to load inventory setup",false);
                         Microbot.log("Failed to load equipment");
