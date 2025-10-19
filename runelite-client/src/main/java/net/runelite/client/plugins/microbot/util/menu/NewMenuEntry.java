@@ -48,15 +48,6 @@ public class NewMenuEntry implements MenuEntry {
         this.itemId = itemId;
     }
 
-    public NewMenuEntry(int param0, int param1, int opcode, int identifier, int itemId, String option, String target) {
-        this(param0, param1, opcode, identifier);
-        this.option = option; // this.option = action (e.g. Teleport)
-        this.target = target; // this.target = rs2Item.getName();
-        this.forceLeftClick = false;
-        this.itemId = itemId;
-    }
-
-
     public NewMenuEntry(int param0, int param1, int opcode, int identifier, int itemId, String target, Actor actor, String option) {
         this(param0, param1, opcode, identifier);
         this.option = option;

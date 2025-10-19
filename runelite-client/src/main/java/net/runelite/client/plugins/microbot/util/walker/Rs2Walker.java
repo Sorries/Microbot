@@ -1894,7 +1894,7 @@ public class Rs2Walker {
         if (itemAction == null && !hasParsableDestination) {
             itemAction = rs2Item.getActionFromList(genericKeyWords);
         }
-
+        Microbot.log("Inventory is " + rs2Item + " Destination: " + itemAction);
         if (itemAction != null) {
             boolean interaction = Rs2Inventory.interact(rs2Item, itemAction);
             if (!interaction) {
@@ -1916,7 +1916,6 @@ public class Rs2Walker {
 
         if (Rs2Inventory.interact(itemId, itemAction)) {
             log.debug("Traveling with genericAction={}, to {} - ({})", itemAction, transport.getDisplayInfo(), transport.getDestination());
-            Microbot.log("Equipment is " + rs2Item + " Destination: " + itemAction);
 
             if (itemAction.equalsIgnoreCase("open") && itemId == ItemID.BOOKOFSCROLLS_CHARGED) {
                 return handleMasterScrollBook(destination);
