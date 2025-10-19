@@ -1935,13 +1935,14 @@ public class Rs2Walker {
         if (rs2Item == null) return false;
         if (transport.getDisplayInfo().contains(":")) {
             String[] values = transport.getDisplayInfo().split(":");
-            String destination = values[1].trim().toLowerCase();
+            String destination = values[1].trim();
 
             if (transport.getDisplayInfo().toLowerCase().contains("slayer ring")) {
-                Rs2Equipment.invokeMenu(rs2Item, "teleport");
+                Rs2Equipment.invokeMenu(rs2Item, "Teleport");
                 Rs2Dialogue.sleepUntilSelectAnOption();
                 Rs2Dialogue.clickOption(destination);
             } else {
+                Microbot.log("Equipment is " + rs2Item + " Destination: " + destination);
                 Rs2Equipment.invokeMenu(rs2Item, destination);
                 if (transport.getDisplayInfo().toLowerCase().contains("burning amulet")) {
                     Rs2Dialogue.sleepUntilInDialogue();
