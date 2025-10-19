@@ -99,21 +99,17 @@ public class HerbrunScript extends Script {
                         return;
                     }
                     if (Rs2Inventory.hasItem("open herb sack")) {
-
-                        if (itemCharge == null)
-                        {
-                            itemCharge = Microbot.getPluginManager()
-                                    .getPlugins()
-                                    .stream()
-                                    .filter(plugin -> plugin.getClass().getSimpleName().equalsIgnoreCase("TicTac7xChargesImprovedPlugin"))
-                                    .findFirst()
-                                    .orElse(null);
-                            if (Microbot.isPluginEnabled(itemCharge)) {
-                                Microbot.stopPlugin(itemCharge);
-                                Rs2Inventory.interact(24478,"Empty");
-                                sleep(Rs2Random.between(500,800));
-                                Microbot.startPlugin(itemCharge);
-                            }
+                        itemCharge = Microbot.getPluginManager()
+                                .getPlugins()
+                                .stream()
+                                .filter(plugin -> plugin.getClass().getSimpleName().equalsIgnoreCase("TicTac7xChargesImprovedPlugin"))
+                                .findFirst()
+                                .orElse(null);
+                        if (Microbot.isPluginEnabled(itemCharge)) {
+                            Microbot.stopPlugin(itemCharge);
+                            Rs2Inventory.interact(24478,"Empty");
+                            sleep(Rs2Random.between(500,800));
+                            Microbot.startPlugin(itemCharge);
                         }
                     }
                     while(Rs2Bank.isOpen() && isRunning()){
