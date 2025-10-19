@@ -1916,6 +1916,7 @@ public class Rs2Walker {
 
         if (Rs2Inventory.interact(itemId, itemAction)) {
             log.debug("Traveling with genericAction={}, to {} - ({})", itemAction, transport.getDisplayInfo(), transport.getDestination());
+            Microbot.log("Equipment is " + rs2Item + " Destination: " + itemAction);
 
             if (itemAction.equalsIgnoreCase("open") && itemId == ItemID.BOOKOFSCROLLS_CHARGED) {
                 return handleMasterScrollBook(destination);
