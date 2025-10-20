@@ -331,7 +331,8 @@ public class OuraniaScript extends Script
 
 						if (Rs2Inventory.hasAnyPouch())
 						{
-							while (!Rs2Inventory.allPouchesFull() && isRunning()) {
+							int attempts = 0;
+							while (!Rs2Inventory.allPouchesFull() && isRunning() && attempts < 3) {
 								if (!Rs2Bank.isOpen()) {
 									Rs2Bank.openBank();
 								}
@@ -341,7 +342,15 @@ public class OuraniaScript extends Script
 								}
 								if(Rs2Inventory.contains(config.essence().getItemId())) {
 									Rs2Inventory.fillPouches();
-									Rs2Inventory.waitForInventoryChanges(1800);
+									if (!Rs2Inventory.waitForInventoryChanges(1800)){
+										attempts++;
+										Microbot.log("attempts"+ attempts);
+										if (attempts >= 3) {
+											shutdown();
+											return;
+										}
+									}
+
 								}
 							}
 						}
