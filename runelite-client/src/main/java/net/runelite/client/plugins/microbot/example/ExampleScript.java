@@ -10,6 +10,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
 import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
+import net.runelite.client.plugins.microbot.util.gameobject.Rs2Cannon;
 import net.runelite.client.plugins.microbot.util.grounditem.InteractModel;
 
 import net.runelite.client.plugins.microbot.util.grounditem.LootingParameters;
@@ -212,16 +213,17 @@ public class ExampleScript extends Script {
 //                if(Rs2Equipment.isWearing()) {
 //                    Rs2Equipment.unEquip(e -> true);
 //                }
-                LootingParameters nameParams = new LootingParameters(
-                        15,
-                        1,
-                        1,
-                        2,
-                        false,
-                        true,
-                        "Blood rune","Araxyte venom sack"
-                );
-                Rs2GroundItem.lootItemsBasedOnNames(nameParams);
+//                LootingParameters nameParams = new LootingParameters(
+//                        15,
+//                        1,
+//                        1,
+//                        2,
+//                        false,
+//                        true,
+//                        "Blood rune","Araxyte venom sack"
+//                );
+//                Rs2GroundItem.lootItemsBasedOnNames(nameParams);
+                Rs2Cannon.pickup();
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
