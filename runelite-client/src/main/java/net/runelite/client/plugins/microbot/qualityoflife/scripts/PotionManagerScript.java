@@ -80,20 +80,17 @@ public class PotionManagerScript extends Script {
 
     private void handleAutoDrinkPrayPot(int points) {
         if(!runOnce) {
-            randomPoints = points + Rs2Random.between(-2,3);
+            randomPoints = points + Rs2Random.betweenInclusive(-2,2);
             if (randomPoints <= 0) {return;}
             runOnce = true;
 //            Microbot.log("Generated prayer drink threshold: " + randomPoints);
         }
         if (Rs2Player.getBoostedSkillLevel(Skill.PRAYER) <= randomPoints) {
             if(Rs2Player.drinkPrayerPotionAt(randomPoints)) {
-//                Microbot.log("Drank at " + randomPoints + " prayer points");
+                Microbot.log("Drank at " + randomPoints + " prayer points");
                 runOnce = false;
                 Rs2Player.waitForAnimation();
                 sleep(400);
-            }
-            if (Rs2Inventory.contains(229)){
-                Rs2Inventory.dropAll(229);
             }
         }
 
