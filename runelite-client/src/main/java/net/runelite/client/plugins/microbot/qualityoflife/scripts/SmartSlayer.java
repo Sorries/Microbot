@@ -73,8 +73,10 @@ private static String slayerMonster = null;
 //                NpcIndicatorsPlugin plugin = Microbot.getPlugin(NpcIndicatorsPlugin.class);
 //                Map<NPC, HighlightedNpc> highlightedNpcs = plugin.getHighlightedNpcs();
                 AtomicBoolean isNearSlayerMonster = new AtomicBoolean(false);
+                //Microbot.log("Checking Smart Slayer");
                 if(Rs2Inventory.contains(false,"cannon base")) return;
                 //Microbot.log("Slayer monsters: " + monsters);
+                //completedSlayerTask = true;
                 if (monsters != null) {
                     for (String monster : monsters) {
     //                        Rs2Npc.getNpcs(monster).forEach(npc -> {
@@ -94,7 +96,13 @@ private static String slayerMonster = null;
                         Optional.ofNullable(Rs2Npc.getNpcs(monster))
                             .orElse(Stream.empty())
                             .filter(Objects::nonNull)
-                            .filter(npc -> npc.getName() != null && !superiorVariants.contains(npc.getName().toLowerCase()))
+                            .filter(npc -> {
+                                if (npc == null) return false;
+                                String name = npc.getName();
+                                if (name == null) return false;
+                                name = name.toLowerCase();
+                                return !superiorVariants.contains(name);
+                            })
                             .forEach(npc -> {
                                 if (npc == null) {
                                     Microbot.log("Npc is null for monster: " + monster);
@@ -241,11 +249,20 @@ private static String slayerMonster = null;
                         }
                 }
                 if (completedSlayerTask) {
-                    Microbot.log("Slayer completed");
                     sleep(5000, 10000);
+                    LootingParameters valueParams = new LootingParameters(
+                            config.autoLootValueAmount(),
+                            Integer.MAX_VALUE,
+                            15,
+                            1,
+                            2,
+                            false,
+                            true
+                    );
+                    Rs2GroundItem.lootItemBasedOnValue(valueParams);
+                    sleep(500,1500);
                     Rs2Cannon.repair();
                     Rs2Cannon.pickup();
-
 
                     int attempts = 0;
                     if (Rs2Inventory.contains(8013)) {
@@ -277,6 +294,7 @@ private static String slayerMonster = null;
                     Rs2Prayer.disableAllPrayers(true);
                     Microbot.getConfigManager().setConfiguration("npcindicators", "npcToHighlight", "");
                     completedSlayerTask = false;
+                    Microbot.log("Slayer completed");
                 }
             } catch(Exception ex) {
                 Microbot.logStackTrace(this.getClass().getSimpleName(), ex);
