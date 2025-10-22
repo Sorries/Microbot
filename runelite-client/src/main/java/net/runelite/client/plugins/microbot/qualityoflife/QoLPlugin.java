@@ -295,11 +295,13 @@ public class QoLPlugin extends Plugin implements KeyListener {
         if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
             String cleanText = Rs2UiHelper.stripColTags(chatMessage.getMessage());
             if (cleanText.toLowerCase().contains("you have completed your task")) {
-                SmartSlayer.setCompletedSlayerTask(true);
-            }
+                if (config.smartSlayer()) {
+                    SmartSlayer.setCompletedSlayerTask(true);
+                }
 //            if (chatMessage.getMessage().toLowerCase().contains("you received")) {
 //                QoLScript.setCompletedSlayerTask(true);
 //            }
+            }
         }
     }
 

@@ -97,6 +97,7 @@ public class Rs2Cannon {
             Rs2GameObject.interact(cannon, "Pick-up");
             sleepUntil(() -> !Rs2GameObject.exists(cannon.getId()),5000);
             if(!Rs2GameObject.exists(cannon.getId())){
+                Microbot.pauseAllScripts.compareAndSet(true, false);
                 return true;
             }
             sleep(250);
