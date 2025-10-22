@@ -13,9 +13,10 @@ public class QolCannonScript extends Script {
             try {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run() || !config.refillCannon()) return;
+                //Microbot.log("Checking Cannon");
                 if (Rs2Cannon.repair())
                     return;
-                if(Rs2Cannon.start())
+                if (Rs2Cannon.start())
                     return;
                 Rs2Cannon.refill();
             } catch(Exception ex) {
