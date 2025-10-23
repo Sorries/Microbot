@@ -256,15 +256,23 @@ public class Rs2NpcManager {
      * Get slayer monsters by category (category is the same as the slayer task name, e.g., Monster: Fire Giant, Category/TaskName: Fire Giants).
      * This will get all monster variations for the task including superior variant.
      */
-    public static List<String> getSlayerMonstersByCategory(String category)
-    {
+//    public static List<String> getSlayerMonstersByCategory(String category)
+//    {
+//        return statsMap.values().stream()
+//                .filter(rs2NpcStats -> rs2NpcStats.getCategory() != null &&
+//                        rs2NpcStats.getCategory().stream().anyMatch(c -> c.equalsIgnoreCase(category)))
+//                .map(Rs2NpcStats::getName).distinct()
+//                .collect(Collectors.toList());
+//    }
+
+    public static List<String> getSlayerMonstersByCategory(String category) {
         return statsMap.values().stream()
                 .filter(rs2NpcStats -> rs2NpcStats.getCategory() != null &&
-                        rs2NpcStats.getCategory().stream().anyMatch(c -> c.equalsIgnoreCase(category)))
+                        rs2NpcStats.getCategory().stream()
+                                .anyMatch(c -> category.toLowerCase().contains(c.toLowerCase())))
                 .map(Rs2NpcStats::getName).distinct()
                 .collect(Collectors.toList());
     }
-
 
     // ---------------------------------------------------------
     //         NEW: Retrieve location data by NPC name
