@@ -221,7 +221,7 @@ public class HerbrunScript extends Script {
                 Rs2Inventory.use("compost");
                 Rs2GameObject.interact(obj, "Compost");
                 Rs2Player.waitForXpDrop(Skill.FARMING);
-                Rs2Inventory.use(" seed");
+                Rs2Inventory.use("seed","Use","hespori seed",false);
                 Rs2GameObject.interact(obj, "Plant");
                 sleepUntil(() -> getHerbPatchState(obj).equals("Growing"));
                 return false;
