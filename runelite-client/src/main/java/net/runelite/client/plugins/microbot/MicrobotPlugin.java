@@ -305,9 +305,12 @@ public class MicrobotPlugin extends Plugin
 		   if (client != null) {
 				int[] currentRegions = client.getTopLevelWorldView().getMapRegions();
 				boolean wasLoggedIn = LoginManager.isLoggedIn();
+				Microbot.log("logged in" + wasLoggedIn);
 				if (!wasLoggedIn) {
+					Microbot.log("3");
 					LoginManager.markLoggedIn();
 					Rs2RunePouch.fullUpdate();
+					Microbot.log("Fully update ran");
 					if (microbotConfig.isRs2CacheEnabled()) {
 						Rs2CacheManager.registerEventHandlers();
 					}
