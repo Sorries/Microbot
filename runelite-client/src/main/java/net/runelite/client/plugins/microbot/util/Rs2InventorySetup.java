@@ -421,8 +421,10 @@ public class Rs2InventorySetup {
 					Map.Entry::getValue,
 					Integer::sum
 				));
+			Microbot.log("requiredRunes: " + requiredRunes);
 
 			if (!Rs2RunePouch.contains(requiredRunes, false)) {
+				Microbot.log("Current Runes"+ Rs2RunePouch.getRunes());
 				Microbot.log("Rune pouch contents do not match expected setup.", Level.WARN);
 				found = false;
 			}
