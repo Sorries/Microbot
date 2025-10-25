@@ -1829,7 +1829,7 @@ public class Rs2Walker {
 
         String option = hasMultipleDestination
                 ? transport.getDisplayInfo().split(":")[1].trim().toLowerCase()
-                : "cast";
+                : "Cast";
 
         int identifier = hasMultipleDestination
                 ? 2
