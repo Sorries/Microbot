@@ -47,14 +47,27 @@ public final class LoginManager {
     @Setter
 	public static ConfigProfile activeProfile = null;
 
+//	public static ConfigProfile getActiveProfile() {
+//		try (ProfileManager.Lock lock = Microbot.getProfileManager().lock())
+//		{
+//			var profile = lock.getProfiles().stream().filter(ConfigProfile::isActive).findFirst().orElse(null);
+//			if (profile == null) {
+//				profile = lock.getProfiles().get(0);
+//			}
+//			return profile;
+//		}
+//	}
+	private static final Object PROFILE_LOCK = new Object();
+
 	public static ConfigProfile getActiveProfile() {
-		try (ProfileManager.Lock lock = Microbot.getProfileManager().lock())
-		{
-			var profile = lock.getProfiles().stream().filter(ConfigProfile::isActive).findFirst().orElse(null);
-			if (profile == null) {
-				profile = lock.getProfiles().get(0);
+		synchronized (PROFILE_LOCK) {
+			try (ProfileManager.Lock lock = Microbot.getProfileManager().lock()) {
+				var profile = lock.getProfiles().stream()
+						.filter(ConfigProfile::isActive)
+						.findFirst()
+						.orElse(lock.getProfiles().get(0));
+				return profile;
 			}
-			return profile;
 		}
 	}
 

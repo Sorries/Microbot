@@ -1909,9 +1909,9 @@ public class Rs2Inventory {
      */
     private static void invokeMenu(Rs2ItemModel rs2Item, String action) {
         if (rs2Item == null) return;
-        if(!Rs2Bank.isOpen()){
-            Rs2Tab.switchToInventoryTab();
-        }
+
+        Rs2Tab.switchTo(InterfaceTab.INVENTORY);
+
         Microbot.status = action + " " + rs2Item.getName();
 
         int param0;
