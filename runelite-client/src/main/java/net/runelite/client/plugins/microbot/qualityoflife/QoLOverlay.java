@@ -1,15 +1,16 @@
 package net.runelite.client.plugins.microbot.qualityoflife;
 
 import net.runelite.api.Perspective;
-import net.runelite.api.Player;
 import net.runelite.api.Point;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcManager;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
+import net.runelite.client.plugins.microbot.qualityoflife.scripts.NpcAggressionReset;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -47,6 +48,9 @@ public class QoLOverlay extends OverlayPanel {
                 renderNpcs(graphics);
 
             // renderPlayers(graphics);
+
+            if (config.npcAggressionReset())
+                renderWalkableTiles(graphics);
 
         } catch (Exception ex) {
             log("Error in QoLOverlay: " + ex.getMessage());
@@ -96,6 +100,36 @@ public class QoLOverlay extends OverlayPanel {
             textLocation = new Point(textLocation.getX(), textLocation.getY() - 25);
 
             OverlayUtil.renderTextLocation(graphics, textLocation, text, Color.YELLOW);
+        }
+    }
+
+    private void renderWalkableTiles(Graphics2D graphics) {
+        if (NpcAggressionReset.walkableTilesAroundSafeAreas == null || NpcAggressionReset.walkableTilesAroundSafeAreas.isEmpty()) {
+            return;
+        }
+
+        for (WorldPoint worldPoint : NpcAggressionReset.walkableTilesAroundSafeAreas) {
+            if (worldPoint.getPlane() != Microbot.getClient().getTopLevelWorldView().getPlane()) {
+                continue;
+            }
+
+            LocalPoint localPoint = LocalPoint.fromWorld(Microbot.getClient(), worldPoint);
+            if (localPoint == null) {
+                continue;
+            }
+
+            LocalPoint localPlayerLocation = Microbot.getClient().getLocalPlayer().getLocalLocation();
+            if (localPlayerLocation.distanceTo(localPoint) > 64) {
+                continue;
+            }
+
+            Polygon poly = Perspective.getCanvasTilePoly(Microbot.getClient(), localPoint);
+            if (poly != null) {
+                graphics.setColor(new Color(Color.GREEN.getRed(), Color.GREEN.getGreen(), Color.GREEN.getBlue(), 50));
+                graphics.fill(poly);
+                graphics.setColor(Color.GREEN);
+                graphics.draw(poly);
+            }
         }
     }
 }
