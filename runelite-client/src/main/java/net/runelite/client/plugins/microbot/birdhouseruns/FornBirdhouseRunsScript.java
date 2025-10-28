@@ -56,9 +56,13 @@ public class FornBirdhouseRunsScript extends Script {
                             }
                             Rs2Bank.withdrawItem("Digsite Pendant");
                             if (config.TELEPORT()) {
-                                Rs2Bank.withdrawOne(ItemID.LAW_RUNE);
-                                Rs2Bank.withdrawOne(ItemID.FIRE_RUNE);
-                                Rs2Bank.withdrawX(ItemID.AIR_RUNE, 3);
+                                if(Rs2Bank.hasBankItem("Construct. cape")){
+                                    Rs2Bank.withdrawItem("Construct. cape");
+                                }else {
+                                    Rs2Bank.withdrawOne(ItemID.LAW_RUNE);
+                                    Rs2Bank.withdrawOne(ItemID.FIRE_RUNE);
+                                    Rs2Bank.withdrawX(ItemID.AIR_RUNE, 3);
+                                }
                             }
                             Rs2Bank.withdrawOne(ItemID.HAMMER);
                             Rs2Bank.withdrawOne(ItemID.CHISEL);
@@ -128,10 +132,9 @@ public class FornBirdhouseRunsScript extends Script {
 //                        Rs2Walker.setTarget(null);
                         sleep(750,1250);
                         if (config.TELEPORT()) {
-                            if (!Rs2Bank.isOpen()) {
-                                Rs2Bank.walkToBankAndUseBank(BankLocation.GRAND_EXCHANGE);
-                                return;
-                            }
+                            Rs2Bank.walkToBank(BankLocation.GRAND_EXCHANGE);
+                            if (!Rs2Bank.isOpen()) Rs2Bank.openBank();
+                            return;
                         }
                         notifier.notify(Notification.ON, "Birdhouse run is finished.");
                         super.shutdown();
