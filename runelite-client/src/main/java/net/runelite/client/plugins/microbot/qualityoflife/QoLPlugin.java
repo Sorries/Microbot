@@ -139,6 +139,8 @@ public class QoLPlugin extends Plugin implements KeyListener {
     @Inject
     private WintertodtOverlay wintertodtOverlay;
     @Inject
+    private QoLFlashOverlay qoLFlashOverlay;
+    @Inject
     private QolCannonScript cannonScript;
     @Inject
     private SmartSlayer smartSlayer;
@@ -203,7 +205,10 @@ public class QoLPlugin extends Plugin implements KeyListener {
         if (overlayManager != null) {
             overlayManager.add(qoLOverlay);
             overlayManager.add(wintertodtOverlay);
+            overlayManager.add(qoLFlashOverlay);
         }
+        // Set flash overlay for player chat detection
+        PlayerChatDetectionScript.setFlashOverlay(qoLFlashOverlay);
         if (config.useSpecWeapon()) {
             Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
             if (Rs2Inventory.contains(config.specWeapon().getName())){
@@ -256,6 +261,7 @@ public class QoLPlugin extends Plugin implements KeyListener {
         autoItemDropperScript.shutdown();
         overlayManager.remove(qoLOverlay);
         overlayManager.remove(wintertodtOverlay);
+        overlayManager.remove(qoLFlashOverlay);
         eventBus.unregister(fletchingManager);
         eventBus.unregister(firemakingManager);
         eventBus.unregister(gemCuttingManager);
