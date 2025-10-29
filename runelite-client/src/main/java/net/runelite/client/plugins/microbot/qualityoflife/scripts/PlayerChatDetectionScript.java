@@ -4,6 +4,7 @@ import net.runelite.api.ChatMessageType;
 import net.runelite.api.Player;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.Notifier;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLFlashOverlay;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class PlayerChatDetectionScript {
 	private static QoLFlashOverlay flashOverlay;
+	private static Notifier notifier;
 
 	public static void onChatMessage(ChatMessage event, QoLConfig config) {
 		if (!config.detectPlayerChat()) {
@@ -65,6 +67,10 @@ public class PlayerChatDetectionScript {
 		flashOverlay = overlay;
 	}
 
+	public static void setNotifier(Notifier notifierInstance) {
+		notifier = notifierInstance;
+	}
+
 	private static void onPlayerChatDetected(Player player, String message, QoLConfig config) {
 		String playerName = player.getName();
 		String playerNameStr = playerName != null ? playerName : "Unknown";
@@ -77,11 +83,15 @@ public class PlayerChatDetectionScript {
 			flashOverlay.startFlash(config.playerChatFlashColor());
 		}
 		
+		// Send Dink custom notification
+		if (notifier != null) {
+			String notificationMessage = String.format("Player %s nearby: %s", playerNameStr, message);
+			notifier.notify(notificationMessage);
+		}
+		
 		// You can add additional actions here, such as:
 		// - Logging to a file
-		// - Triggering an alert
 		// - Taking a screenshot
-		// - Sending a notification
 	}
 }
 

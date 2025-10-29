@@ -33,6 +33,7 @@ import net.runelite.client.plugins.microbot.qualityoflife.managers.GemCuttingMan
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.*;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.bank.BankpinScript;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.pvp.PvpScript;
+import net.runelite.client.Notifier;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.PlayerChatDetectionScript;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.wintertodt.WintertodtOverlay;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.wintertodt.WintertodtScript;
@@ -169,6 +170,8 @@ public class QoLPlugin extends Plugin implements KeyListener {
 
     @Inject
     private KeyManager keyManager;
+    @Inject
+    private Notifier notifier;
 
     @Provides
     QoLConfig provideConfig(ConfigManager configManager) {
@@ -209,6 +212,8 @@ public class QoLPlugin extends Plugin implements KeyListener {
         }
         // Set flash overlay for player chat detection
         PlayerChatDetectionScript.setFlashOverlay(qoLFlashOverlay);
+        // Set notifier for player chat detection
+        PlayerChatDetectionScript.setNotifier(notifier);
         if (config.useSpecWeapon()) {
             Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
             if (Rs2Inventory.contains(config.specWeapon().getName())){
