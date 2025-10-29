@@ -54,11 +54,19 @@ public interface QoLConfig extends Config {
             position = 4
     )
     String upkeepSection = "upkeepSection";
+        // Section for Player Detection
+        @ConfigSection(
+                name = "Player Detection",
+                description = "Settings related to player detection and chat monitoring",
+                position = 5
+            )
+            String playerDetectionSection = "playerDetectionSection";
+
     // Section for Inventory/Equipment Configurations
     @ConfigSection(
             name = "Inventory/Equipment",
             description = "Settings related to inventory/equipment actions",
-            position = 5
+            position = 6
     )
     String inventorySection = "inventorySection";
 
@@ -66,7 +74,7 @@ public interface QoLConfig extends Config {
     @ConfigSection(
             name = "UI",
             description = "Settings related to UI",
-            position = 6
+            position = 7
     )
     String uiSection = "uiSection";
     // Wintertodt section
@@ -1006,6 +1014,30 @@ public interface QoLConfig extends Config {
     )
     default boolean aggressiveAntiPkMode() {
         return false;
+    }
+
+    // boolean to detect player chat
+    @ConfigItem(
+            keyName = "detectPlayerChat",
+            name = "Detect Player Chat",
+            description = "Monitor chat messages from other players within range",
+            position = 0,
+            section = playerDetectionSection
+    )
+    default boolean detectPlayerChat() {
+        return false;
+    }
+
+    // int for player chat detection distance
+    @ConfigItem(
+            keyName = "detectPlayerChatDistance",
+            name = "Chat Detection Distance",
+            description = "Maximum distance (in tiles) to detect player chat messages",
+            position = 1,
+            section = playerDetectionSection
+    )
+    default int detectPlayerChatDistance() {
+        return 10;
     }
 
     @ConfigItem(
