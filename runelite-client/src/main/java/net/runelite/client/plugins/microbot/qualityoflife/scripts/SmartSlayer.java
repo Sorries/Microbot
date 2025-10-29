@@ -242,11 +242,11 @@ private static String slayerMonster = null;
                             }
                         }
                     }
-                        if (Rs2Combat.inCombat()){
-                            if (Rs2Player.drinkGoadingPotion()){
-                                 Rs2Player.waitForAnimation();
-                           }
-                        }
+                    if (Rs2Combat.inCombat()){
+                        if (Rs2Player.drinkGoadingPotion()){
+                             Rs2Player.waitForAnimation();
+                       }
+                    }
                 }
                 if (completedSlayerTask) {
                     sleep(5000, 10000);
