@@ -8,8 +8,8 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 
 public class QoLFlashOverlay extends Overlay {
-	private Color flashColor = new Color(0, 0, 0, 0); // Start with fully transparent color
-	private Color configuredFlashColor = new Color(255, 0, 0, 150); // Default red
+	private Color flashColor = new Color(0, 0, 0, 0); // Current display color (transparent initially)
+	private Color configuredFlashColor = new Color(0, 0, 0, 0); // Configurable flash color (default transparent)
 	private long flashStartTime = 0;
 	private static final long FLASH_DURATION_MS = 3000; // 3 seconds
 	private boolean isFlashing = false;
@@ -25,7 +25,7 @@ public class QoLFlashOverlay extends Overlay {
 	}
 
 	public void startFlash(Color flashColor) {
-		this.configuredFlashColor = flashColor;
+		this.configuredFlashColor = flashColor; // Can be any color including transparent
 		this.flashStartTime = System.currentTimeMillis();
 		this.isFlashing = true;
 	}
