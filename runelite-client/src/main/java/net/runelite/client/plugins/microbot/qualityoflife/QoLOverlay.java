@@ -5,6 +5,7 @@ import net.runelite.api.Point;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.util.coords.Rs2WorldPoint;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcManager;
 import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
@@ -49,8 +50,8 @@ public class QoLOverlay extends OverlayPanel {
 
             // renderPlayers(graphics);
 
-            if (config.npcAggressionReset())
-                renderWalkableTiles(graphics);
+            if (config.npcAggressionReset());
+                //renderWalkableTiles(graphics);
 
         } catch (Exception ex) {
             log("Error in QoLOverlay: " + ex.getMessage());
@@ -119,7 +120,7 @@ public class QoLOverlay extends OverlayPanel {
             }
 
             LocalPoint localPlayerLocation = Microbot.getClient().getLocalPlayer().getLocalLocation();
-            if (localPlayerLocation.distanceTo(localPoint) > 64) {
+            if (localPlayerLocation.distanceTo(localPoint) > 5000) {
                 continue;
             }
 
