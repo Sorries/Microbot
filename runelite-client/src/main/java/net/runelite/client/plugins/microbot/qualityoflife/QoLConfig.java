@@ -1053,15 +1053,16 @@ public interface QoLConfig extends Config {
     }
 
     // Color for flash screen
+    @Alpha
     @ConfigItem(
             keyName = "playerChatFlashColor",
             name = "Flash Color",
-            description = "Color for the flash overlay when player chat is detected",
+            description = "Color for the flash overlay when player chat is detected (includes opacity slider)",
             position = 3,
             section = playerDetectionSection
     )
     default Color playerChatFlashColor() {
-        return new Color(255, 0, 0, 150); // Red with transparency
+        return new Color(255, 0, 0, 70); // Default red with transparency
     }
 
     @ConfigItem(
