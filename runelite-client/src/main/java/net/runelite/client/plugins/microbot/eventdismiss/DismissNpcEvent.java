@@ -36,13 +36,13 @@ public class DismissNpcEvent implements BlockingEvent {
             if (randomEventNPC.getWorldLocation().distanceTo(Objects.requireNonNull(Rs2Player.getWorldLocation())) <= 3) {
                 boolean shouldDismiss = shouldDismissNpc(randomEventNPC);
                 if (shouldDismiss) {
-                    Global.sleep(800, 1250);
+                    Global.sleep(1000,3000);
                     Rs2Npc.interact(randomEventNPC, "Dismiss");
                     Global.sleepUntil(() -> Rs2Npc.getRandomEventNPC() == null);
                     Global.sleep(800, 1250);
                     return true;
                 } else if (!Rs2Inventory.isFull()) {
-                    Global.sleep(800, 1250);
+                    Global.sleep(1000,3000);
                     Rs2Npc.interact(randomEventNPC, "Talk-to");
                     Global.sleep(200, 400);
                     Rs2Dialogue.sleepUntilHasContinue();
