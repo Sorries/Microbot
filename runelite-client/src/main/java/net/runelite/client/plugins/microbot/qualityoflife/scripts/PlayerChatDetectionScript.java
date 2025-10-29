@@ -6,12 +6,14 @@ import net.runelite.api.events.ChatMessage;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
+import net.runelite.client.plugins.microbot.qualityoflife.QoLFlashOverlay;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerChatDetectionScript {
+	private static QoLFlashOverlay flashOverlay;
 
 	public static void onChatMessage(ChatMessage event, QoLConfig config) {
 		if (!config.detectPlayerChat()) {
@@ -36,7 +38,7 @@ public class PlayerChatDetectionScript {
 			String playerName = player.getName();
 			if (playerName != null && playerName.equals(messageSender)) {
 				// Player chat detected within distance
-				onPlayerChatDetected(player, event.getMessage());
+				onPlayerChatDetected(player, event.getMessage(), config);
 				break;
 			}
 		}
@@ -59,12 +61,21 @@ public class PlayerChatDetectionScript {
 		return nearbyPlayers;
 	}
 
-	private static void onPlayerChatDetected(Player player, String message) {
+	public static void setFlashOverlay(QoLFlashOverlay overlay) {
+		flashOverlay = overlay;
+	}
+
+	private static void onPlayerChatDetected(Player player, String message, QoLConfig config) {
 		String playerName = player.getName();
 		String playerNameStr = playerName != null ? playerName : "Unknown";
 		String logMessage = String.format("Player nearby chat detected! Player: %s, Message: %s", 
 			playerNameStr, message);
 		Microbot.log(logMessage);
+		
+		// Flash the screen if enabled
+		if (config.flashScreenOnPlayerChat() && flashOverlay != null) {
+			flashOverlay.startFlash(config.playerChatFlashColor());
+		}
 		
 		// You can add additional actions here, such as:
 		// - Logging to a file
