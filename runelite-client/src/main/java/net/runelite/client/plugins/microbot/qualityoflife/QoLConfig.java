@@ -1040,6 +1040,30 @@ public interface QoLConfig extends Config {
         return 10;
     }
 
+    // boolean to flash screen on player chat
+    @ConfigItem(
+            keyName = "flashScreenOnPlayerChat",
+            name = "Flash Screen on Player Chat",
+            description = "Flash the screen when a nearby player sends a chat message",
+            position = 2,
+            section = playerDetectionSection
+    )
+    default boolean flashScreenOnPlayerChat() {
+        return true;
+    }
+
+    // Color for flash screen
+    @ConfigItem(
+            keyName = "playerChatFlashColor",
+            name = "Flash Color",
+            description = "Color for the flash overlay when player chat is detected",
+            position = 3,
+            section = playerDetectionSection
+    )
+    default Color playerChatFlashColor() {
+        return new Color(255, 0, 0, 150); // Red with transparency
+    }
+
     @ConfigItem(
             keyName = "grandExchangeHotkey",
             name = "Paste and Search GE Hotkey",
