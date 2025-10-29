@@ -33,6 +33,7 @@ import net.runelite.client.plugins.microbot.qualityoflife.managers.GemCuttingMan
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.*;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.bank.BankpinScript;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.pvp.PvpScript;
+import net.runelite.client.plugins.microbot.qualityoflife.scripts.PlayerChatDetectionScript;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.wintertodt.WintertodtOverlay;
 import net.runelite.client.plugins.microbot.qualityoflife.scripts.wintertodt.WintertodtScript;
 import net.runelite.client.plugins.microbot.util.Global;
@@ -284,6 +285,11 @@ public class QoLPlugin extends Plugin implements KeyListener {
         if (isInWintertodtRegion()
                 && (chatMessageType == ChatMessageType.GAMEMESSAGE || chatMessageType == ChatMessageType.SPAM)) {
             wintertodtScript.onChatMessage(chatMessage);
+        }
+
+        // Detect player chat messages
+        if (config.detectPlayerChat()) {
+            PlayerChatDetectionScript.onChatMessage(chatMessage, config);
         }
 
 //        if (chatMessage.getMessage().toLowerCase().contains("you have completed your task")) {
