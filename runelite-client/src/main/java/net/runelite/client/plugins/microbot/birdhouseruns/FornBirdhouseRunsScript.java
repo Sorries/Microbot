@@ -122,8 +122,10 @@ public class FornBirdhouseRunsScript extends Script {
                         break;
                     case FINISHING:
                         if (config.TELEPORT()) {
-                            Rs2Magic.cast(MagicAction.VARROCK_TELEPORT);
-                            sleep(2500);
+                            if(!Rs2Inventory.contains("Construct. cape")){
+                                Rs2Magic.cast(MagicAction.VARROCK_TELEPORT);
+                                sleep(2500);
+                            }
                         }
 //                        emptyNests();
                         botStatus = states.FINISHED;
