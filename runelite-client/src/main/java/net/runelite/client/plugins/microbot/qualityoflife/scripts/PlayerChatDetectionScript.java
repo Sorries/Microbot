@@ -89,7 +89,7 @@ public class PlayerChatDetectionScript {
 		String playerName = player.getName();
 		String playerNameStr = playerName != null ? playerName : "Unknown";
 		String playerDistance = "" + player.getWorldLocation().distanceTo(Rs2Player.getWorldLocation());
-		String logMessage = String.format("Player nearby chat detected! Player: %s, Message: %s, Distance: %s",
+		String logMessage = String.format("Player: %s, Message: %s, Distance: %s",
 				playerNameStr, message, playerDistance);
 		Microbot.log(logMessage);
 		
