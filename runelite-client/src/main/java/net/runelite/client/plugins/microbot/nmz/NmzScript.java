@@ -299,35 +299,37 @@ public class NmzScript extends Script {
             }
         }
 
-        Rs2GameObject.interact(26273);
-        sleepUntil(() -> Rs2Widget.isWidgetVisible(13500418) || Rs2Bank.isBankPinWidgetVisible(), 10000);
-        if (Rs2Bank.isBankPinWidgetVisible()) {
-            try {
-                Rs2Bank.handleBankPin(Encryption.decrypt(LoginManager.getActiveProfile().getBankPin()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            sleepUntil(() -> Rs2Widget.isWidgetVisible(13500418), 10000);
-        }
-
-        Widget benefitsBtn = Rs2Widget.getWidget(13500418);
-        if (benefitsBtn == null) return;
-        boolean notSelected = benefitsBtn.getSpriteId() != 813;
-        if (notSelected) {
-            Rs2Widget.clickWidgetFast(benefitsBtn, 4, 4);
-        }
-        int count = 0;
-        while (count < Rs2Random.between(3, 5)) {
-            Widget nmzRewardShop = Rs2Widget.getWidget(206, 6);
-            if (nmzRewardShop == null) break;
-            Widget overload = nmzRewardShop.getChild(6);
-            Rs2Widget.clickWidgetFast(overload, 6, 4);
-            sleep(600, 1200);
-            Widget absorption = nmzRewardShop.getChild(9);
-            Rs2Widget.clickWidgetFast(absorption, 9, 4);
-            sleep(600, 1200);
-            count++;
-        }
+        Microbot.showMessage("Please purchase overload / absorption potion");
+        shutdown();
+//        Rs2GameObject.interact(26273);
+//        sleepUntil(() -> Rs2Widget.isWidgetVisible(13500418) || Rs2Bank.isBankPinWidgetVisible(), 10000);
+//        if (Rs2Bank.isBankPinWidgetVisible()) {
+//            try {
+//                Rs2Bank.handleBankPin(Encryption.decrypt(LoginManager.getActiveProfile().getBankPin()));
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//            sleepUntil(() -> Rs2Widget.isWidgetVisible(13500418), 10000);
+//        }
+//
+//        Widget benefitsBtn = Rs2Widget.getWidget(13500418);
+//        if (benefitsBtn == null) return;
+//        boolean notSelected = benefitsBtn.getSpriteId() != 813;
+//        if (notSelected) {
+//            Rs2Widget.clickWidgetFast(benefitsBtn, 4, 4);
+//        }
+//        int count = 0;
+//        while (count < Rs2Random.between(3, 5)) {
+//            Widget nmzRewardShop = Rs2Widget.getWidget(206, 6);
+//            if (nmzRewardShop == null) break;
+//            Widget overload = nmzRewardShop.getChild(6);
+//            Rs2Widget.clickWidgetFast(overload, 6, 4);
+//            sleep(600, 1200);
+//            Widget absorption = nmzRewardShop.getChild(9);
+//            Rs2Widget.clickWidgetFast(absorption, 9, 4);
+//            sleep(600, 1200);
+//            count++;
+//        }
     }
 
 }
