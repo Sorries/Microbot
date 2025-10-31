@@ -168,11 +168,11 @@ public class NmzScript extends Script {
     public boolean interactWithObject(int objectId) {
         TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
         if (rs2GameObject != null) {
-            sleep(Rs2Random.between(2000, 5000));
+            sleep(Rs2Random.between(2000, 10000));
             if(Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) > 10) {
                 Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
+                sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
             }
-            sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
             Rs2GameObject.interact(objectId);
             return true;
         }
