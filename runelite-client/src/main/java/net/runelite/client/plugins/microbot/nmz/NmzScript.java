@@ -20,6 +20,7 @@ import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
 import net.runelite.client.plugins.microbot.util.security.Encryption;
 import net.runelite.client.plugins.microbot.util.security.Login;
+import net.runelite.client.plugins.microbot.util.security.LoginManager;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
@@ -167,11 +168,11 @@ public class NmzScript extends Script {
     public boolean interactWithObject(int objectId) {
         TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
         if (rs2GameObject != null) {
-            sleep(Rs2Random.between(2000, 5000));
+            sleep(Rs2Random.between(2000, 10000));
             if(Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) > 10) {
                 Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
+                sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
             }
-            sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
             Rs2GameObject.interact(objectId);
             return true;
         }
@@ -232,6 +233,10 @@ public class NmzScript extends Script {
                 Rs2Inventory.interact(x -> x.getName().toLowerCase().contains("absorption"), "drink");
                 sleep(1000, 1500);
             }
+//            while (Microbot.getVarbitValue(NMZ_ABSORPTION) <= 1000 && isRunning()){
+//                Rs2Inventory.interact(x -> x.getName().toLowerCase().contains("absorption"), "drink");
+//                sleep(1000, 1500);
+//            }
             minAbsorption = Rs2Random.between(100, 500);
         }
     }
@@ -298,35 +303,37 @@ public class NmzScript extends Script {
             }
         }
 
-        Rs2GameObject.interact(26273);
-        sleepUntil(() -> Rs2Widget.isWidgetVisible(13500418) || Rs2Bank.isBankPinWidgetVisible(), 10000);
-        if (Rs2Bank.isBankPinWidgetVisible()) {
-            try {
-                Rs2Bank.handleBankPin(Encryption.decrypt(Login.activeProfile.getBankPin()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            sleepUntil(() -> Rs2Widget.isWidgetVisible(13500418), 10000);
-        }
-
-        Widget benefitsBtn = Rs2Widget.getWidget(13500418);
-        if (benefitsBtn == null) return;
-        boolean notSelected = benefitsBtn.getSpriteId() != 813;
-        if (notSelected) {
-            Rs2Widget.clickWidgetFast(benefitsBtn, 4, 4);
-        }
-        int count = 0;
-        while (count < Rs2Random.between(3, 5)) {
-            Widget nmzRewardShop = Rs2Widget.getWidget(206, 6);
-            if (nmzRewardShop == null) break;
-            Widget overload = nmzRewardShop.getChild(6);
-            Rs2Widget.clickWidgetFast(overload, 6, 4);
-            sleep(600, 1200);
-            Widget absorption = nmzRewardShop.getChild(9);
-            Rs2Widget.clickWidgetFast(absorption, 9, 4);
-            sleep(600, 1200);
-            count++;
-        }
+        Microbot.showMessage("Please purchase overload / absorption potion");
+        shutdown();
+//        Rs2GameObject.interact(26273);
+//        sleepUntil(() -> Rs2Widget.isWidgetVisible(13500418) || Rs2Bank.isBankPinWidgetVisible(), 10000);
+//        if (Rs2Bank.isBankPinWidgetVisible()) {
+//            try {
+//                Rs2Bank.handleBankPin(Encryption.decrypt(LoginManager.getActiveProfile().getBankPin()));
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//            sleepUntil(() -> Rs2Widget.isWidgetVisible(13500418), 10000);
+//        }
+//
+//        Widget benefitsBtn = Rs2Widget.getWidget(13500418);
+//        if (benefitsBtn == null) return;
+//        boolean notSelected = benefitsBtn.getSpriteId() != 813;
+//        if (notSelected) {
+//            Rs2Widget.clickWidgetFast(benefitsBtn, 4, 4);
+//        }
+//        int count = 0;
+//        while (count < Rs2Random.between(3, 5)) {
+//            Widget nmzRewardShop = Rs2Widget.getWidget(206, 6);
+//            if (nmzRewardShop == null) break;
+//            Widget overload = nmzRewardShop.getChild(6);
+//            Rs2Widget.clickWidgetFast(overload, 6, 4, overload.getName(),"Buy-50");
+//            sleep(600, 1200);
+//            Widget absorption = nmzRewardShop.getChild(9);
+//            Rs2Widget.clickWidgetFast(absorption, 9, 4, absorption.getName(),"Buy-50");
+//            sleep(600, 1200);
+//            count++;
+//        }
     }
 
 }
