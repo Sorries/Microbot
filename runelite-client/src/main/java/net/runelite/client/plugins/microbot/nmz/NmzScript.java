@@ -233,6 +233,10 @@ public class NmzScript extends Script {
                 Rs2Inventory.interact(x -> x.getName().toLowerCase().contains("absorption"), "drink");
                 sleep(1000, 1500);
             }
+//            while (Microbot.getVarbitValue(NMZ_ABSORPTION) <= 1000 && isRunning()){
+//                Rs2Inventory.interact(x -> x.getName().toLowerCase().contains("absorption"), "drink");
+//                sleep(1000, 1500);
+//            }
             minAbsorption = Rs2Random.between(100, 500);
         }
     }
@@ -323,10 +327,10 @@ public class NmzScript extends Script {
 //            Widget nmzRewardShop = Rs2Widget.getWidget(206, 6);
 //            if (nmzRewardShop == null) break;
 //            Widget overload = nmzRewardShop.getChild(6);
-//            Rs2Widget.clickWidgetFast(overload, 6, 4);
+//            Rs2Widget.clickWidgetFast(overload, 6, 4, overload.getName(),"Buy-50");
 //            sleep(600, 1200);
 //            Widget absorption = nmzRewardShop.getChild(9);
-//            Rs2Widget.clickWidgetFast(absorption, 9, 4);
+//            Rs2Widget.clickWidgetFast(absorption, 9, 4, absorption.getName(),"Buy-50");
 //            sleep(600, 1200);
 //            count++;
 //        }
