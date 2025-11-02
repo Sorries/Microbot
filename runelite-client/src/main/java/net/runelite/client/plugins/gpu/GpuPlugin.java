@@ -1052,9 +1052,7 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 			z.multizoneLocs(scene, zx - offset, zz - offset, cameraX, cameraZ, ctx.zones);
 		}
 
-		glDepthMask(false);
 		z.renderAlpha(zx - offset, zz - offset, cameraYaw, cameraPitch, minLevel, this.level, maxLevel, level, hideRoofIds);
-		glDepthMask(true);
 
 		checkGLErrors();
 	}
@@ -1087,20 +1085,23 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 				}
 
 				vaos = vaoPO.unmap();
-				glDepthMask(false);
-				for (VAO vao : vaos)
+				if (!vaos.isEmpty())
 				{
-					vao.draw();
-				}
-				glDepthMask(true);
+					glDepthMask(false);
+					for (VAO vao : vaos)
+					{
+						vao.draw();
+					}
+					glDepthMask(true);
 
-				glColorMask(false, false, false, false);
-				for (VAO vao : vaos)
-				{
-					vao.draw();
-					vao.reset();
+					glColorMask(false, false, false, false);
+					for (VAO vao : vaos)
+					{
+						vao.draw();
+						vao.reset();
+					}
+					glColorMask(true, true, true, true);
 				}
-				glColorMask(true, true, true, true);
 			}
 		}
 		else if (pass == DrawCallbacks.PASS_ALPHA)
