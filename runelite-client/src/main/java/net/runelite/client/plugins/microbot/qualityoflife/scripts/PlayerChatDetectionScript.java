@@ -23,6 +23,8 @@ public class PlayerChatDetectionScript {
 			return;
 		}
 
+		if (Rs2Player.getWorldLocation().getRegionID() == 12598) return;
+
 		// Only detect chat from other players
 		if (event.getType() != ChatMessageType.PUBLICCHAT && 
 			event.getType() != ChatMessageType.AUTOTYPER) {
