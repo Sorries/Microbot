@@ -146,19 +146,21 @@ public class QoLScript extends Script {
             randomPoints = points + Rs2Random.between(-2,3);
             if (randomPoints <= 0) {return;}
             runOnce = true;
-//            Microbot.log("Generated prayer drink threshold: " + randomPoints);
         }
         if (Rs2Player.getBoostedSkillLevel(Skill.PRAYER) <= randomPoints) {
-            if(Rs2Player.drinkPrayerPotionAt(randomPoints)) {
-//                Microbot.log("Drank at " + randomPoints + " prayer points");
+            int before = Rs2Player.getBoostedSkillLevel(Skill.PRAYER);
+            if (Rs2Player.drinkPrayerPotionAt(randomPoints)) {
+                Microbot.log("Drank at " + Rs2Player.getBoostedSkillLevel(Skill.PRAYER)+ " from script");
+                Rs2Player.waitForAnimation();
+                sleepUntil(() -> Rs2Player.getBoostedSkillLevel(Skill.PRAYER) > before, 2000);
                 runOnce = false;
                 sleep(400);
             }
             if (Rs2Inventory.contains(229)){
                 Rs2Inventory.dropAll(229);
+                Rs2Inventory.waitForInventoryChanges(1000);
             }
         }
-
     }
 
     // handle dialogue continue
