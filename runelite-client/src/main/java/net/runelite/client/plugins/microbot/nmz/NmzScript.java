@@ -37,7 +37,6 @@ public class NmzScript extends Script {
     public static boolean useOverload = false;
     private boolean firstIterationOfOverLoad = true;
 
-    public static PrayerPotionScript prayerPotionScript;
 
     public static int maxHealth = Rs2Random.between(2, 8);
     public static int minAbsorption = Rs2Random.between(100, 300);
@@ -58,7 +57,6 @@ public class NmzScript extends Script {
 
     public boolean run(NmzConfig config) {
         NmzScript.config = config;
-        prayerPotionScript = new PrayerPotionScript();
         Microbot.getSpecialAttackConfigs().setSpecialAttack(true);
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
             try {
@@ -109,7 +107,6 @@ public class NmzScript extends Script {
     }
 
     public void handleInsideNmz() {
-        prayerPotionScript.run();
         if (config.togglePrayerPotions())
             Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_MELEE, true);
         if (!useOrbs() && config.walkToCenter()) {
@@ -224,6 +221,10 @@ public class NmzScript extends Script {
             Rs2Inventory.interact(x -> x.getName().toLowerCase().contains("overload"), "drink");
             sleep(10000);
             firstIterationOfOverLoad = false; // Mark first iteration as completed
+        }
+        if (!Rs2Inventory.hasItem("overload","prayer")){
+            Microbot.log("No overload or prayer potion found");
+            shutdown();
         }
     }
 
