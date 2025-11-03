@@ -56,6 +56,7 @@ public class NmzPlugin extends Plugin {
     }
 
     protected void shutDown() {
+        prayerPotionScript.shutdown();
         nmzScript.shutdown();
         overlayManager.remove(nmzOverlay);
         NmzScript.setHasSurge(false);
