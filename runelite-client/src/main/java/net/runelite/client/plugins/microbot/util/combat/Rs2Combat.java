@@ -1,6 +1,8 @@
 package net.runelite.client.plugins.microbot.util.combat;
 
 import net.runelite.api.*;
+import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.plugins.microbot.Microbot;
@@ -160,7 +162,7 @@ public class Rs2Combat {
         if (Microbot.getVarbitPlayerValue(172) == 1) {
             Rs2Tab.switchToCombatOptionsTab();
             sleepUntil(() -> Rs2Tab.getCurrentTab() == InterfaceTab.COMBAT, 2000);
-            Rs2Widget.clickWidget(38862879);
+            Rs2Widget.clickWidget(ComponentID.COMBAT_AUTO_RETALIATE);
         }
 
         return Microbot.getVarbitPlayerValue(172) == 0;
@@ -170,7 +172,7 @@ public class Rs2Combat {
         if (Microbot.getVarbitPlayerValue(172) == 0) {
             Rs2Tab.switchToCombatOptionsTab();
             sleepUntil(() -> Rs2Tab.getCurrentTab() == InterfaceTab.COMBAT, 2000);
-            Rs2Widget.clickWidget(38862879);
+            Rs2Widget.clickWidget(38862880);
         }
 
         return Microbot.getVarbitPlayerValue(172) == 1;
