@@ -9,6 +9,7 @@ import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
 import net.runelite.client.plugins.microbot.util.Rs2InventorySetup;
+import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2Cannon;
 import net.runelite.client.plugins.microbot.util.grounditem.InteractModel;
@@ -20,11 +21,13 @@ import net.runelite.client.plugins.microbot.util.models.RS2Item;
 import net.runelite.client.plugins.grounditems.GroundItem;
 import net.runelite.client.plugins.grounditems.GroundItemsPlugin;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
+import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.player.Rs2PlayerModel;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject.nameMatches;
@@ -223,7 +226,16 @@ public class ExampleScript extends Script {
 //                        "Blood rune","Araxyte venom sack"
 //                );
 //                Rs2GroundItem.lootItemsBasedOnNames(nameParams);
-                Rs2Cannon.pickup();
+//                Rs2Cannon.pickup();
+                if (!Rs2Combat.inCombat()) {
+                    Optional<Rs2NpcModel> monster = Rs2Npc.getAttackableNpcs()
+                            .filter(o -> true)
+                            .findFirst();
+
+                    if (monster.isPresent()) {
+                        Rs2Npc.attack(monster.get());
+                    }
+                }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
