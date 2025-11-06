@@ -15,6 +15,7 @@ import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
+import net.runelite.client.plugins.microbot.util.npc.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.prayer.Rs2PrayerEnum;
@@ -24,6 +25,7 @@ import net.runelite.client.plugins.microbot.util.security.LoginManager;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static net.runelite.api.Varbits.NMZ_ABSORPTION;
@@ -119,6 +121,31 @@ public class NmzScript extends Script {
         useOverloadPotion();
         manageSelfHarm();
         useAbsorptionPotion();
+        attackNearbyMonster();
+    }
+
+    private void attackNearbyMonster(){
+        if(!Rs2Combat.inCombat()) {
+            int waited = 0;
+            int timeout = Rs2Random.between(10000, 30000);
+            //System.out.println(timeout);
+            while (waited < timeout) {
+                if (Rs2Combat.inCombat()) {
+                    break;
+                }
+                sleep(250);
+                waited += 250;
+            }
+            if (!Rs2Combat.inCombat()) {
+                Optional<Rs2NpcModel> monster = Rs2Npc.getAttackableNpcs()
+                        .filter(o -> true)
+                        .findFirst();
+                if (monster.isPresent()) {
+                    Rs2Npc.attackInInstance(monster.get());
+                    Microbot.log("Attacked "+monster.get().getName());
+                }
+            }
+        }
     }
 
     private void walkToCenter() {
