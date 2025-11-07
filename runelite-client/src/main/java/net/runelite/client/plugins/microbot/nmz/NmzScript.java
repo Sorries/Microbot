@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.*;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
@@ -204,16 +205,21 @@ public class NmzScript extends Script {
     }
 
     public void manageSelfHarm() {
+        //Microbot.log("ManageSelfHarm");
         int currentHP = Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS);
         int currentRangedLevel = Microbot.getClient().getBoostedSkillLevel(Skill.RANGED);
         int realRangedLevel = Microbot.getClient().getRealSkillLevel(Skill.RANGED);
+        int overloadTimeLeft = Microbot.getClientThread().runOnClientThreadOptional(() ->Microbot.getClient().getVarbitValue(VarbitID.NZONE_OVERLOAD_POTION_EFFECTS)).orElse(0);
         boolean hasOverloadPotions = config.overloadPotionAmount() > 0;
+//useOverload = Microbot.getClient().getBoostedSkillLevel(Skill.RANGED) == Microbot.getClient().getRealSkillLevel(Skill.RANGED) && config.overloadPotionAmount() > 0;
+        // true = not active , false = active overload
 
         if (currentHP >= maxHealth
-                && !useOverload
+                && (!useOverload || overloadTimeLeft > 0) // false = not active overload , true = active overload
                 && (!hasOverloadPotions || currentRangedLevel != realRangedLevel)) {
+            Microbot.log("!useOverload: " + !useOverload + " overloadTimeLeft: " + overloadTimeLeft);
             maxHealth = 1;
-
+            Microbot.log("Current Hp: " + currentHP);
             if (Rs2Inventory.hasItem(ItemID.LOCATOR_ORB)) {
                 Rs2Inventory.interact(ItemID.LOCATOR_ORB, "feel");
                 sleep(100,300);
