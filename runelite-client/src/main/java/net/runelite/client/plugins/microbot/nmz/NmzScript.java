@@ -194,6 +194,7 @@ public class NmzScript extends Script {
         TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
         if (rs2GameObject != null) {
             sleep(Rs2Random.between(2000, 10000));
+            Microbot.log("Distance between: " + Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()));
             if(Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) > 10) {
                 Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
                 sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
@@ -216,7 +217,8 @@ public class NmzScript extends Script {
 
         if (currentHP >= maxHealth
                 && (!useOverload || overloadTimeLeft > 0) // false = not active overload , true = active overload
-                && (!hasOverloadPotions || currentRangedLevel != realRangedLevel)) {
+                && (!hasOverloadPotions || currentRangedLevel != realRangedLevel)
+                ) {
             Microbot.log("!useOverload: " + !useOverload + " overloadTimeLeft: " + overloadTimeLeft);
             maxHealth = 1;
             Microbot.log("Current Hp: " + currentHP);
