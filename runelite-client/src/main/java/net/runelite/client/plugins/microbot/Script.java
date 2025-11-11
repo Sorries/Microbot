@@ -110,6 +110,7 @@ public abstract class Script extends Global implements IScript {
                 Rs2Player.toggleRunEnergy(true);
             if (!hasRunEnergy && Microbot.useStaminaPotsIfNeeded && Rs2Player.isMoving()) {
                 Rs2Inventory.useRestoreEnergyItem();
+                Rs2Inventory.waitForInventoryChanges(1000);
             }
         }
         return true;
