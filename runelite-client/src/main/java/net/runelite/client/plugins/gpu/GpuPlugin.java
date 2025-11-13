@@ -130,7 +130,6 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 
 	static final Shader PROGRAM = new Shader()
 		.add(GL_VERTEX_SHADER, "vert.glsl")
-		.add(GL_GEOMETRY_SHADER, "geom.glsl")
 		.add(GL_FRAGMENT_SHADER, "frag.glsl");
 
 	static final Shader UI_PROGRAM = new Shader()
@@ -664,9 +663,18 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 		uniformBuffer = null;
 		Zone.freeBuffer();
 
-		vaoO.free();
-		vaoA.free();
-		vaoPO.free();
+		if (vaoO != null)
+		{
+			vaoO.free();
+		}
+		if (vaoA != null)
+		{
+			vaoA.free();
+		}
+		if (vaoPO != null)
+		{
+			vaoPO.free();
+		}
 		vaoO = vaoA = vaoPO = null;
 	}
 
