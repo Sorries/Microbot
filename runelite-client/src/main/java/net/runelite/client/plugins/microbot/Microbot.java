@@ -96,7 +96,7 @@ public class Microbot {
 
     // Feature Flags
     public static boolean enableAutoRunOn = true;
-    public static boolean useStaminaPotsIfNeeded = true;
+    public static boolean useStaminaPotsIfNeeded = false;
     public static int runEnergyThreshold = 1000;
     public static boolean isCantReachTargetDetectionEnabled = false;
 
