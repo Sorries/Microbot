@@ -5,7 +5,7 @@
     <option name="MAIN_CLASS_NAME" value="net.runelite.client.RuneLite" />
     <module name="client" />
     <option name="PROGRAM_PARAMETERS" value="-developer-mode" />
-    <option name="VM_PARAMETERS" value="-ea -Drunelite.pluginhub.version=1.12.4" />
+    <option name="VM_PARAMETERS" value="-ea -Drunelite.pluginhub.version=1.12.6" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

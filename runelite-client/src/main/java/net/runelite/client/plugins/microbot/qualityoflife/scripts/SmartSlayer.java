@@ -136,8 +136,9 @@ private static String slayerMonster = null;
                     }
                 }
                 //Microbot.log("Is near slayer monster " + isNearSlayerMonster.get());
+                //if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
                 if(Rs2Slayer.hasSlayerTask() && isNearSlayerMonster.get()){
-                    Rs2Combat.enableAutoRetialiate();
+                    Rs2Combat.setAutoRetaliate(true);
                     Rs2ItemModel currentGlove = Rs2Equipment.get(EquipmentInventorySlot.GLOVES);
                     if(currentGlove == null){
                         if(Rs2Inventory.contains(21183)) {
