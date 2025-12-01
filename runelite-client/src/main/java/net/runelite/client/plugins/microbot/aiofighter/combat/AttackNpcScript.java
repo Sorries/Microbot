@@ -60,7 +60,7 @@ public class AttackNpcScript extends Script {
             Rs2NpcManager.loadJson();
             //Rs2Antiban.resetAntibanSettings();
             //Rs2Antiban.antibanSetupTemplates.applyCombatSetup();
-            Rs2Antiban.setActivityIntensity(ActivityIntensity.EXTREME);
+            //Rs2Antiban.setActivityIntensity(ActivityIntensity.EXTREME);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
