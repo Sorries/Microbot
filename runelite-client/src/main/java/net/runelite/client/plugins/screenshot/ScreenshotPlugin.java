@@ -943,23 +943,14 @@ public class ScreenshotPlugin extends Plugin
 
 		Consumer<Image> imageCallback = (img) ->
 		{
-			// This callback is on the game thread, move to executor thread
-			executor.submit(() ->
-			{
+			// immediately jump to client thread before touching widgets
+			clientThread.invoke(() -> {
 				saveScreenshot(fileName, subDir, img);
 
-				if (reportButtonText != null)
-				{
-					clientThread.invokeLater(() ->
-					{
-						final Widget reportButtonTextWidget = client.getWidget(InterfaceID.Chatbox.REPORTABUSE_TEXT1);
-						if (reportButtonTextWidget != null)
-						{
-							reportButtonTextWidget.setText(reportButtonText);
-						}
-
-						reportButtonText = null;
-					});
+				if (reportButtonText != null) {
+					Widget widget = client.getWidget(InterfaceID.Chatbox.REPORTABUSE_TEXT1);
+					if (widget != null) widget.setText(reportButtonText);
+					reportButtonText = null;
 				}
 			});
 		};
