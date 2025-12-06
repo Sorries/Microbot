@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @PluginDescriptor(
-        name = PluginDescriptor.Mocrosoft + "AIO Fighter",
+        name = PluginDescriptor.Mocrosoft + "AIO Fighter Old",
         description = "Microbot Fighter plugin",
         tags = {"fight", "microbot", "misc", "combat", "playerassistant"},
         enabledByDefault = false
