@@ -91,9 +91,9 @@ public class TitheFarmingScript extends Script {
                         new TitheFarmPlant(35, 49, 9),
                         new TitheFarmPlant(40, 49, 10),
                         new TitheFarmPlant(45, 49, 11),
-                        new TitheFarmPlant(45, 46, 12),
-                        new TitheFarmPlant(45, 43, 13),
-                        new TitheFarmPlant(45, 40, 14)));
+                        new TitheFarmPlant(45, 46, 12)));
+//                        new TitheFarmPlant(45, 43, 13),
+//                        new TitheFarmPlant(45, 40, 14)));
                 break;
             case LANE_2_3:
                 plants = new ArrayList<>(Arrays.asList(
