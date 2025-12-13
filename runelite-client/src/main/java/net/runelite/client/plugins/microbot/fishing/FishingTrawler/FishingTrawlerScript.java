@@ -29,6 +29,7 @@ public class FishingTrawlerScript extends Script {
     private static final int WIDGET_CONTRIBUTION = 23986189;
     private static final int OBJECT_TRAWLERNET = 2483;
     private static final int OBJECT_SHIPSLADDER = 4060;
+    private static final int OBJECT_SHIPSWHEEL = 59928;
     private static final int OBJECT_DAISIES = 1189;
     private static final int OBJECT_TENTACLE_LADDER = 4139;
 
@@ -50,7 +51,7 @@ public class FishingTrawlerScript extends Script {
                     if (wasInsideBoat) {
                         Microbot.log("Looting Rewards");
                         Microbot.status = "Looting Rewards";
-                        Rs2GameObject.interact(OBJECT_TRAWLERNET, "inspect");
+                        Rs2GameObject.interact(OBJECT_TRAWLERNET, "Inspect");
                         Rs2Player.waitForWalking();
                         //check for visible trawler widget
                         sleepUntil(() -> Rs2Widget.isWidgetVisible(367, 19), 5000);
@@ -67,10 +68,13 @@ public class FishingTrawlerScript extends Script {
 
                     BreakHandlerScript.setLockState(true);
 
-                    if (Rs2GameObject.interact(new WorldPoint(2675, 3170, 0), "Cross")) {
-                        Microbot.log("Crossing Gangplank");
-                        Rs2Player.waitForWalking(10000);
+                    if(!Rs2GameObject.exists(OBJECT_SHIPSWHEEL)){
+                        if (Rs2GameObject.interact(new WorldPoint(2675, 3170, 0), "Cross")) {
+                            Microbot.log("Crossing Gangplank");
+                            Rs2Player.waitForWalking(10000);
+                        }
                     }
+
                 } else if (Rs2GameObject.exists(OBJECT_DAISIES) && Rs2Player.getWorldLocation().getPlane() == 0) {
                     Microbot.log("Washed up — heading back");
                     Rs2Walker.walkTo(new WorldPoint(2676, 3170, 0));
@@ -91,6 +95,7 @@ public class FishingTrawlerScript extends Script {
                 if (contributionText != null && contributionText.contains(":")) {
                     try {
                         contributionValue = Integer.parseInt(contributionText.split(":")[1].strip());
+                        //Microbot.log("Contribution: " + contributionValue);
                     } catch (Exception e) {
                         log.debug("Failed to parse contribution value: {} [{}]", contributionText, e.getMessage());
                     }
