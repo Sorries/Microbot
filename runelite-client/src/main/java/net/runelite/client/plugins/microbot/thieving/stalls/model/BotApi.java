@@ -4,9 +4,12 @@ import net.runelite.api.GameObject;
 import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
+import net.runelite.client.plugins.microbot.util.inventory.InteractOrder;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
+
+import java.util.Arrays;
 
 public class BotApi {
     private static final String STEAL_ACTION = "Steal-from";
@@ -28,7 +31,7 @@ public class BotApi {
 
     public void dropAll(int... ids)
     {
-        Rs2Inventory.dropAll(ids);
+        Rs2Inventory.dropAll(x-> Arrays.stream(ids).anyMatch(id-> id == x.getId()), InteractOrder.EFFICIENT_ROW);
     }
 
     public void sleepUntilNextTick()
