@@ -8,9 +8,11 @@ import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 
 import javax.inject.Inject;
 
+import static net.runelite.client.plugins.microbot.util.Global.sleep;
+
 @AllArgsConstructor(onConstructor_ = @Inject)
 public class HosidiusFruitThievingSpot implements IStallThievingSpot {
-    private static WorldPoint SAFESPOT = new WorldPoint(1800, 3607, 0);
+    private static WorldPoint SAFESPOT = new WorldPoint(1796, 3607, 0);
     private static final int STALL_ID = 28823;
 
     private BotApi botApi;
@@ -22,7 +24,7 @@ public class HosidiusFruitThievingSpot implements IStallThievingSpot {
             return;
         }
 
-        final GameObject stall = botApi.getGameObject(STALL_ID, SAFESPOT.dx(1));
+        final GameObject stall = botApi.getGameObject(STALL_ID, SAFESPOT.dx(-1));
         if (stall == null)
         {
             return;
@@ -30,6 +32,7 @@ public class HosidiusFruitThievingSpot implements IStallThievingSpot {
 
         botApi.steal(stall);
         botApi.sleepUntilNextTick();
+        sleep(100,300);
     }
 
     @Override

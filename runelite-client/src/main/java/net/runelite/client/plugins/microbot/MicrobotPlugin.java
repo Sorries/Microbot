@@ -357,7 +357,7 @@ public class MicrobotPlugin extends Plugin
 		{
 			MenuEntry entry =
 				Microbot.getClient().getMenu().createMenuEntry(-1)
-                    .setItemId(0)
+                    .setItemId(Microbot.targetMenu.getItemId())
 					.setOption(Microbot.targetMenu.getOption())
 					.setTarget(Microbot.targetMenu.getTarget())
 					.setIdentifier(Microbot.targetMenu.getIdentifier())
