@@ -89,7 +89,7 @@ public class NmzScript extends Script {
     public void handleOutsideNmz() {
         boolean hasStartedDream = Microbot.getVarbitValue(3946) > 0;
         if (config.togglePrayerPotions())
-            Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_MELEE, false);
+            Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_MELEE, false,true);
         if (!hasStartedDream) {
             startNmzDream();
         } else {
@@ -111,7 +111,7 @@ public class NmzScript extends Script {
 
     public void handleInsideNmz() {
         if (config.togglePrayerPotions())
-            Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_MELEE, true);
+            Rs2Prayer.toggle(Rs2PrayerEnum.PROTECT_MELEE, true,true);
         if (!useOrbs() && config.walkToCenter()) {
             walkToCenter();
         }
