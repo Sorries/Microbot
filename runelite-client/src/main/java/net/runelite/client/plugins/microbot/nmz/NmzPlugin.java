@@ -60,12 +60,12 @@ public class NmzPlugin extends Plugin {
         nmzScript.shutdown();
         overlayManager.remove(nmzOverlay);
         NmzScript.setHasSurge(false);
+        Microbot.log("NMZ Plugin shut down");
     }
 
     @Subscribe
     public void onActorDeath(ActorDeath actorDeath) {
         if (config.stopAfterDeath() && actorDeath.getActor() == Microbot.getClient().getLocalPlayer()) {
-            Rs2Player.logout();
             shutDown();
         }
     }
