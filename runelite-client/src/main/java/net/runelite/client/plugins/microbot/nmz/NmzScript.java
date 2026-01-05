@@ -216,7 +216,7 @@ public class NmzScript extends Script {
         // true = not active , false = active overload
 
         if (currentHP >= maxHealth
-                && (!useOverload || overloadTimeLeft > 0) // false = not active overload , true = active overload
+                && (!useOverload && overloadTimeLeft > 0) // false = not active overload , true = active overload
                 && (!hasOverloadPotions || currentRangedLevel != realRangedLevel)
                 ) {
             Microbot.log("!useOverload: " + !useOverload + " overloadTimeLeft: " + overloadTimeLeft);
