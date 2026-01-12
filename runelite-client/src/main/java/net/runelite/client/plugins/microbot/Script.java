@@ -3,15 +3,24 @@ package net.runelite.client.plugins.microbot;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
+import net.runelite.client.plugins.microbot.agentserver.handler.ScriptHeartbeatRegistry;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
 import net.runelite.client.plugins.microbot.util.Global;
 import net.runelite.client.plugins.microbot.agentserver.handler.ScriptHeartbeatRegistry;
-import net.runelite.client.plugins.microbot.util.antiban.SessionFatigue;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
+import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.tabs.Rs2Tab;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
+import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -47,6 +56,17 @@ public abstract class Script extends Global implements IScript {
 
     @Getter
     protected static WorldPoint initialPlayerLocation;
+    public Instant startTime;
+
+    /**
+     * Get the total runtime of the script
+     *
+     * @return the total runtime of the script
+     */
+    public Duration getRunTime() {
+        if (startTime == null) return Duration.ofSeconds(0);
+        return Duration.between(startTime, Instant.now());
+    }
 
     /**
      * Cancel scheduled tasks, clear shared state, and reset helpers.
@@ -67,6 +87,7 @@ public abstract class Script extends Global implements IScript {
         if (scheduledFuture != null && !scheduledFuture.isDone()) {
             scheduledFuture.cancel(true);
         }
+        startTime = null;
     }
 
     /**
@@ -75,16 +96,23 @@ public abstract class Script extends Global implements IScript {
      * tutorial island is incomplete, or the current thread is interrupted.
      */
     public boolean run() {
-        ScriptHeartbeatRegistry.recordHeartbeat(this.getClass().getName());
-
-        if (Microbot.isLoggedIn() && !SessionFatigue.isActive()) {
-            SessionFatigue.startSession();
+        if (startTime == null) {
+            startTime = Instant.now();
+            //init - things that have to be checked once can be added here
         }
-
+        ScriptHeartbeatRegistry.recordHeartbeat(this.getClass().getName());
+        //Avoid executing any blocking events if the player hasn't finished Tutorial Island
         if (Microbot.isLoggedIn() && !Rs2Player.hasCompletedTutorialIsland())
             return true;
 
-        if (Rs2Player.hasCompletedTutorialIsland() && Microbot.getBlockingEventManager().shouldBlockAndProcess()) {
+        // Add a small delay to ensure the client has fully loaded
+        if (Microbot.getLoginTime().toSeconds() > Rs2Random.betweenInclusive(3,5)) {
+            if (Microbot.getBlockingEventManager().shouldBlockAndProcess()) {
+                // A blocking event was found & is executing
+                return false;
+            }
+        }
+        if (Rs2Player.hasCompletedTutorialIsland()) {
             // A blocking event was found & is executing
             return false;
         }
@@ -99,6 +127,7 @@ public abstract class Script extends Global implements IScript {
                 Rs2Player.toggleRunEnergy(true);
             if (!hasRunEnergy && Microbot.useStaminaPotsIfNeeded && Rs2Player.isMoving()) {
                 Rs2Inventory.useRestoreEnergyItem();
+                Rs2Inventory.waitForInventoryChanges(1000);
             }
             Microbot.getConfigManager().setConfiguration(MicrobotConfig.configGroup, MicrobotConfig.keyEnableAutoRunOn, Microbot.enableAutoRunOn);
             Microbot.getConfigManager().setConfiguration(MicrobotConfig.configGroup, MicrobotConfig.keyUseStaminaPotsIfNeeded, Microbot.useStaminaPotsIfNeeded);
