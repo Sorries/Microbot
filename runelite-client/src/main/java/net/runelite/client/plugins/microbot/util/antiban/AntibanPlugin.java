@@ -13,6 +13,8 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerPlugin;
+import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerScript;
+import net.runelite.client.plugins.microbot.plugindisabler.PluginDisablerScript;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.antiban.enums.ActivityIntensity;
 import net.runelite.client.plugins.microbot.util.antiban.enums.CombatSkills;
@@ -142,15 +144,23 @@ public class AntibanPlugin extends Plugin {
                 }
             } else {
                 Rs2AntibanSettings.actionCooldownActive = false;
-                if (Rs2AntibanSettings.universalAntiban && !Rs2AntibanSettings.microBreakActive)
+                // (Rs2AntibanSettings.universalAntiban && !Rs2AntibanSettings.microBreakActive && !BreakHandlerScript.isBreakActive()){
+                PluginDisablerScript script = PluginDisablerScript.getInstance();
+                Integer breakDuration = script != null ? script.getBreakDuration() : null;
+
+                if (Rs2AntibanSettings.universalAntiban
+                        && !Rs2AntibanSettings.microBreakActive
+                        && (breakDuration == null || breakDuration <= 0)) {
+
 					Microbot.pauseAllScripts.compareAndSet(true, false);
             }
         }
     }
+    }
 
     @Override
     protected void startUp() throws AWTException {
-        Rs2Antiban.setActivityIntensity(ActivityIntensity.EXTREME);
+        Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
         final MasterPanel panel = injector.getInstance(MasterPanel.class);
         final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "antiban.png");
         navButton = NavigationButton.builder()
@@ -159,8 +169,9 @@ public class AntibanPlugin extends Plugin {
                 .priority(1)
                 .panel(panel)
                 .build();
-        Rs2AntibanSettings.reset();
-        Rs2AntibanSettings.loadFromProfile();
+        //Rs2AntibanSettings.reset();
+        //Rs2AntibanSettings.loadFromProfile();
+        Rs2Antiban.antibanSetupTemplates.applyUniversalAntibanSetup();
         validateAndSetBreakDurations();
 
         Timer timer = new Timer();
