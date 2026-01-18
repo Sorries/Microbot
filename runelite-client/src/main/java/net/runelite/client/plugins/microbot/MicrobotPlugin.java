@@ -4,6 +4,7 @@ import ch.qos.logback.classic.LoggerContext;
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.Skill;
 import net.runelite.api.events.*;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.client.RuneLiteProperties;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.*;
 import java.util.List;
+
 
 @PluginDescriptor(
 	name = PluginDescriptor.Default + "Microbot",
@@ -196,7 +198,10 @@ public class MicrobotPlugin extends Plugin
 	@Subscribe
 	public void onStatChanged(StatChanged statChanged)
 	{
-		Microbot.setIsGainingExp(true);
+		Microbot.log("Microbot stat changed: " + statChanged.getSkill() + " " + statChanged.getXp() + " " + statChanged.getLevel() + " " + statChanged.getBoostedLevel());
+		if(statChanged.getSkill() != Skill.HITPOINTS) {
+			Microbot.setIsGainingExp(true);
+		}
 	}
 
 	@Subscribe
