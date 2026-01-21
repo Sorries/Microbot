@@ -167,9 +167,9 @@ public class Rs2Combat {
 
     public static boolean disableAutoRetaliate() {
         if (Microbot.getVarbitPlayerValue(172) == 0) {
-            Rs2Tab.switchToCombatOptionsTab();
+            Rs2Tab.switchTo(InterfaceTab.COMBAT);
             sleepUntil(() -> Rs2Tab.getCurrentTab() == InterfaceTab.COMBAT, 2000);
-            Rs2Widget.clickWidget(38862879);
+            Rs2Widget.clickWidget(38862880);;
         }
 
         return Microbot.getVarbitPlayerValue(172) == 1;
