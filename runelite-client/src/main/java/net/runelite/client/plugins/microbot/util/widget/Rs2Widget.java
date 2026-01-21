@@ -372,6 +372,18 @@ public class Rs2Widget {
                 widget.getBounds());
     }
 
+    public static void clickWidgetFast(Widget widget, int param0, int identifier, String target) {
+        int param1 = widget.getId();
+        MenuAction menuAction = MenuAction.CC_OP;
+        Microbot.doInvoke(new NewMenuEntry(param0 != -1 ? param0 : widget.getType(), param1, menuAction.getId(), identifier, widget.getItemId(), target), widget.getBounds());
+    }
+    //public NewMenuEntry(String option, int param0, int param1, int opcode, int identifier, int itemId, String target) {
+    public static void clickWidgetFast(Widget widget, int param0, int identifier, String target, String option) {
+        int param1 = widget.getId();
+        MenuAction menuAction = MenuAction.CC_OP;
+        Microbot.doInvoke(new NewMenuEntry(option, param0 != -1 ? param0 : widget.getType(), param1, menuAction.getId(), identifier, widget.getItemId(), target), widget.getBounds());
+    }
+
     public static void clickWidgetFast(Widget widget, int param0) {
         clickWidgetFast(widget, param0, 1);
     }
@@ -409,12 +421,20 @@ public class Rs2Widget {
         return isWidgetVisible(475, 11);
     }
 
+    public static boolean isWorldMapInterfaceOpen() {return isWidgetVisible(595, 38);}
+
     public static boolean enterWilderness() {
         if (!isWildernessInterfaceOpen()) return false;
 
         Microbot.log("Detected Wilderness warning, interacting...");
         Rs2Widget.clickWidget(475, 11);
 
+        return true;
+    }
+    public static boolean worldMapInterfaceClose() {
+        if (!isWorldMapInterfaceOpen()) return false;
+        Microbot.log("Detected WorldMap opened, interacting...");
+        Rs2Widget.clickWidget(595, 38);
         return true;
     }
 
