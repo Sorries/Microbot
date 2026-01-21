@@ -107,7 +107,7 @@ public class OuraniaScript extends Script
 				if (!Rs2Combat.isAutoRetaliateDisabled()) {
 					if (Rs2Combat.disableAutoRetaliate()) {
 						sleep(500, 750);
-						Rs2Tab.switchToInventoryTab();
+						Rs2Tab.switchTo(InterfaceTab.INVENTORY);
 					}
 				}
 
