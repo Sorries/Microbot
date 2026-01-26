@@ -460,7 +460,7 @@ public class MageTrainingArenaScript extends Script {
 
         var room = mtaPlugin.getAlchemyRoom();
         var best = room.getBest();
-        var item = Rs2Inventory.getLast(best.getId());
+        var item = Rs2Inventory.getRandom(best.getId());
         if (item != null) {
             sleep(50,150);
             Rs2Magic.alch(item);
