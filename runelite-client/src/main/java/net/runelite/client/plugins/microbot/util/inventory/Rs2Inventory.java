@@ -748,7 +748,24 @@ public class Rs2Inventory {
     public static Rs2ItemModel getLast(int id) {
         return items(item -> item.getId() == id).reduce((a, b) -> b).orElse(null);
     }
+    /**
+     * Gets the random item in the inventory that matches the specified item ID.
+     *
+     * @param id The ID to match.
+     *
+     * @return The last item that matches the ID, or null if not found.
+     */
+    public static Rs2ItemModel getRandom(int id) {
+        final Rs2ItemModel[] items = items(item -> item.getId() == id)
+                .toArray(Rs2ItemModel[]::new);
 
+        if (items.length == 0) {
+            return null;
+        }
+
+        int randomIndex = Rs2Random.betweenInclusive(0, items.length - 1);
+        return items[randomIndex];
+    }
     /**
      * Gets the item in the inventory that matches the specified filter criteria.
      *
