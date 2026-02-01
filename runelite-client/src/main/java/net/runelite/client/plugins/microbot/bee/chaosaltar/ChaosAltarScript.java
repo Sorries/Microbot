@@ -243,11 +243,11 @@ public class ChaosAltarScript extends Script {
             sleep(500,750);
         }
 
-        boolean underAttack = Rs2Player.getHealthPercentage() < 95;
-        if (underAttack) {
-            offerBonesFast();
-            return;
-        }
+//        boolean underAttack = Rs2Player.getHealthPercentage() < 95;
+//        if (underAttack) {
+//            offerBonesFast();
+//            return;
+//        }
         //System.out.println("11");
         if (CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Inventory.contains(DRAGON_BONES) && isRunning()) {
             //System.out.println("22");
