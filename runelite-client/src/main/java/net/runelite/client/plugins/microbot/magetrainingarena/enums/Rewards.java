@@ -75,6 +75,12 @@ public enum Rewards {
             Points.ENCHANTMENT, 6000,
             Points.ALCHEMIST, 550), null),
 
+    RUNE_POUCH(ItemID.BH_RUNE_POUCH, Map.of(
+            Points.TELEKINETIC, 150,
+            Points.GRAVEYARD, 150,
+            Points.ENCHANTMENT, 1500,
+            Points.ALCHEMIST, 200), null),
+
     BONES_TO_PEACHES(ItemID.MAGICTRAINING_PEACHSPELL, Map.of(
             Points.TELEKINETIC, 200,
             Points.GRAVEYARD, 200,
