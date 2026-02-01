@@ -108,13 +108,12 @@ public class MotherloadMineScript extends Script
 
         //handleDragonPickaxeSpec();
         determineStatusFromInventory();
-
+        Microbot.log("status: " + status);
         switch (status)
         {
             case IDLE:
                 break;
             case MINING:
-                Rs2Antiban.setActivityIntensity(Rs2Antiban.getActivity().getActivityIntensity());
                 handleMining();
                 break;
             case EMPTY_SACK:
