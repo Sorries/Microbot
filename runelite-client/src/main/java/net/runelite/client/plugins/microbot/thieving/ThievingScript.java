@@ -33,8 +33,10 @@ public class ThievingScript extends Script {
 
     public static String version = "1.6.5";
     ThievingConfig config;
+    public volatile boolean stopScript = false;
 
     public boolean run(ThievingConfig config) {
+        stopScript = false;
         this.config = config;
         Microbot.isCantReachTargetDetectionEnabled = true;
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -96,6 +98,7 @@ public class ThievingScript extends Script {
 
     @Override
     public void shutdown() {
+        stopScript = true;
         super.shutdown();
         Rs2Walker.setTarget(null);
         Microbot.isCantReachTargetDetectionEnabled = false;
@@ -225,17 +228,25 @@ public class ThievingScript extends Script {
             }
         }
 
+        if (stopScript) return;
+
         if (config.THIEVING_NPC() == ThievingNpc.WEALTHY_CITIZEN) {
             handleWealthyCitizen();
         } else if (config.THIEVING_NPC() == ThievingNpc.ELVES) {
             handleElves();
         } else {
             if (highlightedNpcs.isEmpty()) {
-                if (Rs2Npc.getNpc(config.THIEVING_NPC().getName()) == null) {
+                NPC npc = Rs2Npc.getNpc(config.THIEVING_NPC().getName());
+                if (npc == null) {
                     Rs2Walker.walkTo(initialPlayerLocation);
-                } else if (Rs2Npc.pickpocket(config.THIEVING_NPC().getName())) {
-                    Rs2Walker.setTarget(null);
-                    sleep(50, 250);
+                } else {
+                        Microbot.log("Pickpocketing " + npc.getName() +
+                                " at " + npc.getWorldLocation());
+
+                        if (Rs2Npc.pickpocket(npc)) {
+                            Rs2Walker.setTarget(null);
+                            sleep(50, 250);
+                        }
                 }
             } else {
                 equipSet(rogueEquipment);
