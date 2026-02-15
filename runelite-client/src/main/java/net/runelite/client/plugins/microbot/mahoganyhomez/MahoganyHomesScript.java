@@ -202,6 +202,7 @@ public class MahoganyHomesScript extends Script {
 
     private boolean openDoorToObject(GameObject object, Rs2WorldPoint objectLocation) {
         if (Rs2Player.getWorldLocation().getPlane() != object.getWorldLocation().getPlane()) {
+            Microbot.log("Current Player Plane: " + Rs2Player.getWorldLocation().getPlane() + " Object Plane: " + object.getWorldLocation().getPlane());
             return false;
         }
         log("Local Path seems to be blocked, checking for doors to open.");
@@ -291,16 +292,30 @@ public class MahoganyHomesScript extends Script {
             var npc = Rs2Npc.getNpc(plugin.getCurrentHome().getNpcId());
             if (npc == null && Rs2Player.getWorldLocation().getPlane() > 0) {
                 log("We are on the wrong floor, Trying to find ladder to go down");
-                GameObject closestLadder = Rs2GameObject.findObject(plugin.getCurrentHome().getLadders());
+//                GameObject closestLadder = Rs2GameObject.findObject(plugin.getCurrentHome().getLadders());
+                int playerPlane = Rs2Player.getWorldLocation().getPlane();
+
+                List<GameObject> ladders = Rs2GameObject.getGameObjects(
+                        obj -> Arrays.stream(plugin.getCurrentHome().getLadders())
+                                .anyMatch(id -> id == obj.getId())
+                                && obj.getWorldLocation().getPlane() == playerPlane
+                );
+                GameObject closestLadder = ladders.stream()
+                        .min(Comparator.comparingInt(obj ->
+                                obj.getWorldLocation().distanceTo(Rs2Player.getWorldLocation())))
+                        .orElse(null);
                 Rs2WorldPoint objectLocation = Rs2Tile.getNearestWalkableTile(closestLadder);
-                if (!openDoorToObject(closestLadder, objectLocation)) {
-                    if (Rs2GameObject.interact(closestLadder)) {
-                        sleepUntil(
-                                () -> Rs2Player.getWorldLocation().getPlane() == 0
-                                , 5000);
-                        return;
+                Microbot.log("Closest Ladder: " + closestLadder.getId() + " Found ladder: " + objectLocation);
+                //if (objectLocation != null) {
+                    if (!openDoorToObject(closestLadder, objectLocation)) {
+                        if (Rs2GameObject.interact(closestLadder)) {
+                            sleepUntil(
+                                    () -> Rs2Player.getWorldLocation().getPlane() == 0
+                                    , 5000);
+                            return;
+                        }
                     }
-                }
+                //}
             }
             if (npc != null) {
                 Rs2WorldPoint npcLocation = new Rs2WorldPoint(npc.getWorldLocation());
