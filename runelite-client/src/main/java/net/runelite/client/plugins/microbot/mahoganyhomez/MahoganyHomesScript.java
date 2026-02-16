@@ -111,6 +111,7 @@ public class MahoganyHomesScript extends Script {
             if (Rs2Inventory.contains(ItemID.PLANK_SACK)) {
                 Rs2ItemModel plankSack = Rs2Inventory.get(ItemID.PLANK_SACK);
                 if (plankSack != null) {
+                    plugin.setPlankCount(0);
                     Rs2Inventory.interact(plankSack, "Check");
                     sleep(Rs2Random.randomGaussian(800, 200));
                 }
