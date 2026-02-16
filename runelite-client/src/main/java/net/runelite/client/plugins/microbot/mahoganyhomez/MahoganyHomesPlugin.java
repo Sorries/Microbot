@@ -270,6 +270,7 @@ public class MahoganyHomesPlugin extends Plugin
         mapArrow = null;
         lastChanged = null;
         lastCompletedCount = -1;
+        plankCount = -1;
         contractTier = 0;
         script.shutdown();
     }
@@ -547,6 +548,7 @@ public class MahoganyHomesPlugin extends Plugin
             if (event.getWidget().getItemId() == ItemID.PLANK_SACK &&
                     (event.getMenuOption().equals("Fill") || event.getMenuOption().equals("Empty") || event.getMenuOption().equals("Use")))
             {
+                watchForAnimations = false;
                 inventorySnapshot = createSnapshot(client.getItemContainer(InventoryID.INVENTORY));
                 checkForUpdate = true;
             }
@@ -607,13 +609,16 @@ public class MahoganyHomesPlugin extends Plugin
                     if (!snapshot.contains(i.getId()))
                     {
                         plankCount -= i.getQuantity();
+                        Microbot.log("Plank count from Prefire 1: " + plankCount);
                     }
                     else if (snapshot.count(i.getId()) < i.getQuantity())
                     {
                         plankCount -= i.getQuantity() - snapshot.count(i.getId());
+                        Microbot.log("Plank count from Prefire 2: " + plankCount);
                     }
                 }
                 setPlankCount(plankCount);
+                Microbot.log("Plank count from Prefire 3: " + plankCount);
             }
         }
 
@@ -647,13 +652,17 @@ public class MahoganyHomesPlugin extends Plugin
         {
             Multiset<Integer> current = createSnapshot(client.getItemContainer(InventoryID.INVENTORY));
             Multiset<Integer> delta = Multisets.difference(inventorySnapshot, current);
-
+            Microbot.log("Current: " + current + " InventorySnapshot: " + inventorySnapshot);
             int planksUsedFromInventory = delta.size();
             int planksUsedFromSack = buildCost - planksUsedFromInventory;
+            Microbot.log("Current: " + current + " Delta: " + delta);
+            Microbot.log("Build Cost: " + buildCost + " Planks Used From Inventory: " + planksUsedFromInventory);
 
             if(planksUsedFromSack > 0)
             {
-                setPlankCount(plankCount - planksUsedFromSack);
+                int updatedCount = (plankCount - planksUsedFromSack);
+                setPlankCount(updatedCount);
+                Microbot.log("Plank count from onAnimation: " + (updatedCount) + " planksUsedFromSack: " + planksUsedFromSack);
             }
 
             watchForAnimations = false;
