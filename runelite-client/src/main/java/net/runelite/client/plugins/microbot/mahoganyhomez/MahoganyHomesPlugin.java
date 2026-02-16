@@ -24,6 +24,7 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.events.OverlayMenuClicked;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPointManager;
@@ -454,10 +455,29 @@ public class MahoganyHomesPlugin extends Plugin
         }
 
         final String message = e.getMessage();
-        if (message.startsWith("Basic\u00A0planks:"))
+//        if (message.startsWith("Basic\u00A0planks:"))
+//        {
+//            String stripped = Text.removeTags(e.getMessage());
+//            int plankCount = Arrays.stream(stripped.split(",")).mapToInt(s -> Integer.parseInt(s.split(":\u00A0")[1])).sum();
+//            setPlankCount(plankCount);
+//            Microbot.log("Message Set Plank as:" + plankCount);
+//        }
+        String stripped = Text.removeTags(e.getMessage());
+        Microbot.log("Chat Message: " + stripped);
+
+        if (stripped.contains("planks:"))
         {
-            String stripped = Text.removeTags(e.getMessage());
-            setPlankCount(Arrays.stream(stripped.split(",")).mapToInt(s -> Integer.parseInt(s.split(":\u00A0")[1])).sum());
+
+            String numberPart = stripped.split(":")[1]
+                    .replaceAll("[^0-9]", "");
+
+            int value = Integer.parseInt(numberPart);
+
+            plankCount += value;
+
+            setPlankCount(plankCount);
+
+            Microbot.log("Updated total plank count: " + plankCount);
         }
         else if (message.equals("You haven't got any planks that can go in the sack."))
         {
@@ -465,11 +485,13 @@ public class MahoganyHomesPlugin extends Plugin
         }
         else if (message.equals("Your sack is full."))
         {
+            Microbot.log("Set Plank as 28");
             setPlankCount(28);
             checkForUpdate = false;
         }
-        else if (message.equals("Your sack is empty."))
+        else if (message.equals("Your sack is currently empty."))
         {
+            Microbot.log("Set Plank as 0");
             setPlankCount(0);
             checkForUpdate = false;
         }
@@ -502,11 +524,15 @@ public class MahoganyHomesPlugin extends Plugin
         {
             checkForUpdate = false;
             Multiset<Integer> currentInventory = createSnapshot(event.getItemContainer());
+            Microbot.log("Before Plank count: " + plankCount);
+
             Multiset<Integer> deltaMinus = Multisets.difference(currentInventory, inventorySnapshot);
             Multiset<Integer> deltaPlus = Multisets.difference(inventorySnapshot, currentInventory);
             deltaPlus.forEachEntry((id, c) -> plankCount += c);
             deltaMinus.forEachEntry((id, c) -> plankCount -= c);
             setPlankCount(plankCount);
+            Microbot.log("Delta minus: " + deltaMinus + " DeltaPlus: " + deltaPlus);
+            Microbot.log("After Plank count: " + plankCount + " Current inventory: " + currentInventory + " Inventory Snapshot: " + inventorySnapshot);
         }
 
     }
@@ -1014,7 +1040,7 @@ public class MahoganyHomesPlugin extends Plugin
         }
     }
 
-    private void setPlankCount(int count)
+    public void setPlankCount(int count)
     {
         plankCount = Ints.constrainToRange(count, 0, 28);
 
