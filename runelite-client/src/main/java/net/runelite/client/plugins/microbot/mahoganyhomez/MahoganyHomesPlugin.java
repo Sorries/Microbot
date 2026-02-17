@@ -15,6 +15,7 @@ import net.runelite.api.*;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
@@ -356,6 +357,19 @@ public class MahoganyHomesPlugin extends Plugin
         }
     }
 
+    private void updatePlankSackVarbit()
+    {
+        if(config.currentTier() == ContractTeirEnum.BEGINNER){
+            setPlankCount(Microbot.getVarbitValue(VarbitID.PLANK_SACK_PLAIN));
+        }else if(config.currentTier() == ContractTeirEnum.NOVICE){
+            setPlankCount(Microbot.getVarbitValue(VarbitID.PLANK_SACK_OAK));
+        }else if(config.currentTier() == ContractTeirEnum.ADEPT){
+            setPlankCount(Microbot.getVarbitValue(VarbitID.PLANK_SACK_TEAK));
+        }else if(config.currentTier() == ContractTeirEnum.EXPERT) {
+            setPlankCount(Microbot.getVarbitValue(VarbitID.PLANK_SACK_MAHOGANY));
+        }
+//        Microbot.log("Current Tier: " + getConfig().currentTier() + " - Plank Sack Varbit: " + getPlankCount());
+    }
     private void plankSackCheck()
     {
         if (menuItemsToCheck <= 0)
@@ -404,7 +418,7 @@ public class MahoganyHomesPlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick t)
     {
-
+        updatePlankSackVarbit();
         plankSackCheck();
         if (contractTier == 0 || currentHome == null)
         {
@@ -468,17 +482,17 @@ public class MahoganyHomesPlugin extends Plugin
 
         if (stripped.contains("planks:"))
         {
-
-            String numberPart = stripped.split(":")[1]
-                    .replaceAll("[^0-9]", "");
-
-            int value = Integer.parseInt(numberPart);
-
-            plankCount += value;
-
-            setPlankCount(plankCount);
-
-            Microbot.log("Updated total plank count: " + plankCount);
+            updatePlankSackVarbit();
+//            String numberPart = stripped.split(":")[1]
+//                    .replaceAll("[^0-9]", "");
+//
+//            int value = Integer.parseInt(numberPart);
+//
+//            plankCount += value;
+//
+//            setPlankCount(plankCount);
+//
+//            Microbot.log("Updated total plank count: " + plankCount);
         }
         else if (message.equals("You haven't got any planks that can go in the sack."))
         {
@@ -500,12 +514,14 @@ public class MahoganyHomesPlugin extends Plugin
         final Matcher matcher = CONTRACT_ASSIGNED.matcher(Text.removeTags(e.getMessage()));
         if (matcher.matches())
         {
+            Microbot.log("Contract Assigned" + " - Plank Sack Varbit: " + getPlankCount());
             final String type = matcher.group(1).toLowerCase();
             setContactTierFromString(type);
         }
 
         if (CONTRACT_FINISHED.matcher(Text.removeTags(e.getMessage())).matches())
         {
+            Microbot.log("Contract Finished" + " - Plank Sack Varbit: " + getPlankCount());
             sessionContracts++;
             sessionPoints += getPointsForCompletingTask();
             setCurrentHome(null);
@@ -513,30 +529,30 @@ public class MahoganyHomesPlugin extends Plugin
         }
     }
 
-    @Subscribe
-    public void onItemContainerChanged(ItemContainerChanged event)
-    {
-        if (event.getContainerId() != InventoryID.INVENTORY.getId())
-        {
-            return;
-        }
-
-        if (checkForUpdate)
-        {
-            checkForUpdate = false;
-            Multiset<Integer> currentInventory = createSnapshot(event.getItemContainer());
-            Microbot.log("Before Plank count: " + plankCount);
-
-            Multiset<Integer> deltaMinus = Multisets.difference(currentInventory, inventorySnapshot);
-            Multiset<Integer> deltaPlus = Multisets.difference(inventorySnapshot, currentInventory);
-            deltaPlus.forEachEntry((id, c) -> plankCount += c);
-            deltaMinus.forEachEntry((id, c) -> plankCount -= c);
-            setPlankCount(plankCount);
-            Microbot.log("Delta minus: " + deltaMinus + " DeltaPlus: " + deltaPlus);
-            Microbot.log("After Plank count: " + plankCount + " Current inventory: " + currentInventory + " Inventory Snapshot: " + inventorySnapshot);
-        }
-
-    }
+//    @Subscribe
+//    public void onItemContainerChanged(ItemContainerChanged event)
+//    {
+//        if (event.getContainerId() != InventoryID.INVENTORY.getId())
+//        {
+//            return;
+//        }
+//
+//        if (checkForUpdate)
+//        {
+//            checkForUpdate = false;
+//            Multiset<Integer> currentInventory = createSnapshot(event.getItemContainer());
+//            Microbot.log("Before Plank count: " + plankCount);
+//
+//            Multiset<Integer> deltaMinus = Multisets.difference(currentInventory, inventorySnapshot);
+//            Multiset<Integer> deltaPlus = Multisets.difference(inventorySnapshot, currentInventory);
+//            deltaPlus.forEachEntry((id, c) -> plankCount += c);
+//            deltaMinus.forEachEntry((id, c) -> plankCount -= c);
+//            setPlankCount(plankCount);
+//            Microbot.log("Delta minus: " + deltaMinus + " DeltaPlus: " + deltaPlus);
+//            Microbot.log("After Plank count: " + plankCount + " Current inventory: " + currentInventory + " Inventory Snapshot: " + inventorySnapshot);
+//        }
+//
+//    }
 
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event)
@@ -571,7 +587,8 @@ public class MahoganyHomesPlugin extends Plugin
         else if ((event.getMenuOption().equals("Repair") || event.getMenuOption().equals("Build")) &&
                 MAHOGANY_HOMES_REPAIRS.containsKey(event.getId()) && !watchForAnimations)
         {
-            watchForAnimations = true;
+            Microbot.log("Plank Sack Varbit: " + getPlankCount());
+            //watchForAnimations = true;
             buildCost = MAHOGANY_HOMES_REPAIRS.get(event.getId());
             inventorySnapshot = createSnapshot(client.getItemContainer(InventoryID.INVENTORY));
         }
@@ -581,49 +598,49 @@ public class MahoganyHomesPlugin extends Plugin
         }
     }
 
-    @Subscribe
-    public void onScriptPreFired(ScriptPreFired event)
-    {
-        // Construction menu option selected
-        // Construction menu option selected with keybind
-        if (event.getScriptId() != SCRIPT_CONSTRUCTION_OPTION_CLICKED
-                && event.getScriptId() != SCRIPT_CONSTRUCTION_OPTION_KEYBIND)
-        {
-            return;
-        }
-
-        Widget widget = event.getScriptEvent().getSource();
-        int idx = TO_CHILD(widget.getId()) - CONSTRUCTION_WIDGET_BUILD_IDX_START;
-        if (idx >= buildMenuItems.size())
-        {
-            return;
-        }
-        BuildMenuItem item = buildMenuItems.get(idx);
-        if (item != null && item.canBuild)
-        {
-            Multiset<Integer> snapshot = createSnapshot(client.getItemContainer(InventoryID.INVENTORY));
-            if (snapshot != null)
-            {
-                for (Item i : item.planks)
-                {
-                    if (!snapshot.contains(i.getId()))
-                    {
-                        plankCount -= i.getQuantity();
-                        Microbot.log("Plank count from Prefire 1: " + plankCount);
-                    }
-                    else if (snapshot.count(i.getId()) < i.getQuantity())
-                    {
-                        plankCount -= i.getQuantity() - snapshot.count(i.getId());
-                        Microbot.log("Plank count from Prefire 2: " + plankCount);
-                    }
-                }
-                setPlankCount(plankCount);
-                Microbot.log("Plank count from Prefire 3: " + plankCount);
-            }
-        }
-
-        buildMenuItems.clear();
-    }
+//    @Subscribe
+//    public void onScriptPreFired(ScriptPreFired event)
+//    {
+//        // Construction menu option selected
+//        // Construction menu option selected with keybind
+//        if (event.getScriptId() != SCRIPT_CONSTRUCTION_OPTION_CLICKED
+//                && event.getScriptId() != SCRIPT_CONSTRUCTION_OPTION_KEYBIND)
+//        {
+//            return;
+//        }
+//
+//        Widget widget = event.getScriptEvent().getSource();
+//        int idx = TO_CHILD(widget.getId()) - CONSTRUCTION_WIDGET_BUILD_IDX_START;
+//        if (idx >= buildMenuItems.size())
+//        {
+//            return;
+//        }
+//        BuildMenuItem item = buildMenuItems.get(idx);
+//        if (item != null && item.canBuild)
+//        {
+//            Multiset<Integer> snapshot = createSnapshot(client.getItemContainer(InventoryID.INVENTORY));
+//            if (snapshot != null)
+//            {
+//                for (Item i : item.planks)
+//                {
+//                    if (!snapshot.contains(i.getId()))
+//                    {
+//                        plankCount -= i.getQuantity();
+//                        Microbot.log("Plank count from Prefire 1: " + plankCount);
+//                    }
+//                    else if (snapshot.count(i.getId()) < i.getQuantity())
+//                    {
+//                        plankCount -= i.getQuantity() - snapshot.count(i.getId());
+//                        Microbot.log("Plank count from Prefire 2: " + plankCount);
+//                    }
+//                }
+//                setPlankCount(plankCount);
+//                Microbot.log("Plank count from Prefire 3: " + plankCount);
+//            }
+//        }
+//
+//        buildMenuItems.clear();
+//    }
 
     @Subscribe
     public void onScriptPostFired(ScriptPostFired event)
@@ -638,42 +655,41 @@ public class MahoganyHomesPlugin extends Plugin
         watchForAnimations = false;
     }
 
-    @Subscribe
-    public void onAnimationChanged(AnimationChanged event)
-    {
-        if (!watchForAnimations || event.getActor() != client.getLocalPlayer() || client.getLocalPlayer() == null)
-        {
-            return;
-        }
-
-        int anim = client.getLocalPlayer().getAnimation();
-        if ((lastAnimation == AnimationID.CONSTRUCTION || lastAnimation == AnimationID.CONSTRUCTION_IMCANDO)
-                && anim != lastAnimation)
-        {
-            Multiset<Integer> current = createSnapshot(client.getItemContainer(InventoryID.INVENTORY));
-            Multiset<Integer> delta = Multisets.difference(inventorySnapshot, current);
-            Microbot.log("Current: " + current + " InventorySnapshot: " + inventorySnapshot);
-            int planksUsedFromInventory = delta.size();
-            int planksUsedFromSack = buildCost - planksUsedFromInventory;
-            Microbot.log("Current: " + current + " Delta: " + delta);
-            Microbot.log("Build Cost: " + buildCost + " Planks Used From Inventory: " + planksUsedFromInventory);
-
-            if(planksUsedFromSack > 0)
-            {
-                int updatedCount = (plankCount - planksUsedFromSack);
-                setPlankCount(updatedCount);
-                Microbot.log("Plank count from onAnimation: " + (updatedCount) + " planksUsedFromSack: " + planksUsedFromSack);
-            }
-
-            watchForAnimations = false;
-            lastAnimation = -1;
-            buildCost = 0;
-        }
-        else
-        {
-            lastAnimation = anim;
-        }
-    }
+//    @Subscribe
+//    public void onAnimationChanged(AnimationChanged event)
+//    {
+//        if (!watchForAnimations || event.getActor() != client.getLocalPlayer() || client.getLocalPlayer() == null)
+//        {
+//            return;
+//        }
+//        int anim = Microbot.getClient().getLocalPlayer().getAnimation();
+//        if ((lastAnimation == AnimationID.CONSTRUCTION || lastAnimation == AnimationID.CONSTRUCTION_IMCANDO)
+//                && anim != lastAnimation)
+//        {
+//            Multiset<Integer> current = createSnapshot(client.getItemContainer(InventoryID.INVENTORY));
+//            Multiset<Integer> delta = Multisets.difference(inventorySnapshot, current);
+//            Microbot.log("Current: " + current + " InventorySnapshot: " + inventorySnapshot);
+//            int planksUsedFromInventory = delta.size();
+//            int planksUsedFromSack = buildCost - planksUsedFromInventory;
+//            Microbot.log("Current: " + current + " Delta: " + delta);
+//            Microbot.log("Build Cost: " + buildCost + " Planks Used From Inventory: " + planksUsedFromInventory);
+//
+//            if(planksUsedFromSack > 0)
+//            {
+//                int updatedCount = (plankCount - planksUsedFromSack);
+//                setPlankCount(updatedCount);
+//                Microbot.log("Plank count from onAnimation: " + (updatedCount) + " planksUsedFromSack: " + planksUsedFromSack);
+//            }
+//
+//            watchForAnimations = false;
+//            lastAnimation = -1;
+//            buildCost = 0;
+//        }
+//        else
+//        {
+//            lastAnimation = anim;
+//        }
+//    }
 
     private void checkForContractTierDialog()
     {
