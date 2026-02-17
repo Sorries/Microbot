@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
@@ -23,6 +24,7 @@ import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.tile.Rs2Tile;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.walker.WalkerState;
+import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
 import java.sql.SQLOutput;
 import java.util.*;
@@ -130,6 +132,13 @@ public class MahoganyHomesScript extends Script {
         if (plugin.getCurrentHome() == null
                 || !plugin.getCurrentHome().isInside(Rs2Player.getWorldLocation())
                 || Hotspot.isEverythingFixed()) {
+            return;
+        }
+
+        if (Rs2Widget.isWidgetVisible(InterfaceID.PohFurnitureCreation.FRAME)){
+            Microbot.log("Out of plank and furniture creation widget pop up");
+            Rs2Bank.walkToBank();
+            bank();
             return;
         }
 
@@ -282,6 +291,7 @@ public class MahoganyHomesScript extends Script {
                 && plugin.getCurrentHome().isInside(Rs2Player.getWorldLocation())
                 && Hotspot.isEverythingFixed()) {
             if(plugin.getConfig().usePlankSack() && planksInPlankSack() > 0 && !Rs2Inventory.isFull()){
+                sleepUntil(()->!Rs2Player.isAnimating(), 5000);
                 if (Rs2Inventory.contains(ItemID.PLANK_SACK) && Rs2Inventory.contains(ItemID.STEEL_BAR)) {
                     Rs2ItemModel plankSack = Rs2Inventory.get(ItemID.PLANK_SACK);
                     if (plankSack != null && !Rs2Inventory.isFull()) {
@@ -446,11 +456,12 @@ public class MahoganyHomesScript extends Script {
                                 Rs2Inventory.waitForInventoryChanges(1000);
                             }
                         }, 20000, 1000);
-                        if (Rs2Inventory.getEmptySlots() > 0)
+                        if (Rs2Inventory.getEmptySlots() > 0){
                             Rs2Bank.openBank();
                             Rs2Bank.withdrawAll(plugin.getConfig().currentTier().getPlankSelection().getPlankId());
                             Rs2Inventory.waitForInventoryChanges(1000);
                             Rs2Bank.closeBank();
+                        }
                     } else {
                         // Withdraw steel bars first if needed
                         if (steelBarsNeeded() > steelBarsInInventory()) {
