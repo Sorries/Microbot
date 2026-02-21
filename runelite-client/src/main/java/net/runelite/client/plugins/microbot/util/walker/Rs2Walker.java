@@ -1000,7 +1000,6 @@ public class Rs2Walker {
         if (reachableTileCheck || (!walkableCheck && distToTarget <= distance)) {
             return WalkerState.ARRIVED;
         }
-
         final Pathfinder pathfinder = ShortestPathPlugin.getPathfinder();
         if (pathfinder != null && !pathfinder.isDone()) {
             return WalkerState.MOVING;
