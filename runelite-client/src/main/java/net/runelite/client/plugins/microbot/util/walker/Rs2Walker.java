@@ -134,7 +134,6 @@ public class Rs2Walker {
         if (reachableTileCheck || (!walkableCheck && distToTarget <= distance)) {
             return WalkerState.ARRIVED;
         }
-
         final Pathfinder pathfinder = ShortestPathPlugin.getPathfinder();
         if (pathfinder != null && !pathfinder.isDone()) {
             return WalkerState.MOVING;
@@ -151,7 +150,17 @@ public class Rs2Walker {
             return WalkerState.EXIT;
         }
 
+		/*
+			Close worldmap if it's open, this can happen when the walker is called from the panel or worldmap set target
+		 */
 		closeWorldMap();
+        /**
+         * When running the walkTo method from scripts
+         * the code will run on the script thread
+         * If you really like to run this on a seperate thread because you want to do
+         * other actions while walking you can wrap the walkTo from within the script
+         * on a seperate thread
+         */
         return processWalk(target, distance);
     }
 
@@ -172,6 +181,7 @@ public class Rs2Walker {
      */
     private static WalkerState processWalk(WorldPoint target, int distance) {
         if (debug) {
+            log.info("Pathfinder in debug, exiting");
             return WalkerState.EXIT;
         }
         try {
@@ -179,6 +189,7 @@ public class Rs2Walker {
                 setTarget(null);
             }
 
+            // storing the reference ensures pathfinder cannot become null during
             Pathfinder pathfinder = ShortestPathPlugin.getPathfinder();
             if (pathfinder == null) {
                 if (ShortestPathPlugin.getMarker() == null) {
@@ -186,6 +197,7 @@ public class Rs2Walker {
                 }
                 pathfinder = sleepUntilNotNull(ShortestPathPlugin::getPathfinder, 2_000);
                 if (pathfinder == null) {
+                    log.error("Pathfinder took to long to initialize, exiting walker: 140");
                     setTarget(null);
                     return WalkerState.EXIT;
                 }
@@ -194,12 +206,14 @@ public class Rs2Walker {
             if (!pathfinder.isDone()) {
                 boolean isDone = sleepUntilTrue(pathfinder::isDone, 100, 10_000);
                 if (!isDone) {
+                    log.error("Pathfinder took to long to calculate path, exiting: 149");
                     setTarget(null);
                     return WalkerState.EXIT;
                 }
             }
 
             if (ShortestPathPlugin.getMarker() == null) {
+                log.error("marker is null, exiting: 156");
                 setTarget(null);
                 return WalkerState.EXIT;
             }
@@ -207,12 +221,14 @@ public class Rs2Walker {
             final List<WorldPoint> path = pathfinder.getPath();
             final WorldPoint dst;
             if (path == null || path.isEmpty()) {
+                log.debug("Path is {}, using current location as destination", path == null ? "null" : "empty");
                 dst = Rs2Player.getWorldLocation();
             } else {
                 dst = path.get(path.size()-1);
             }
 
             if (dst == null || dst.distanceTo(target) > distance) {
+                log.warn("Location {} impossible to reach", dst);
                 setTarget(null);
                 return WalkerState.UNREACHABLE;
             }
@@ -238,7 +254,9 @@ public class Rs2Walker {
 
             int indexOfStartPoint = getClosestTileIndex(path);
             if (indexOfStartPoint == -1) {
+                log.error("The walker is confused, unable to find our starting point in the web, exiting.");
                 setTarget(null);
+                log.error("pathfinder is null, exiting: 255");
                 return WalkerState.EXIT;
             }
 
@@ -293,7 +311,9 @@ public class Rs2Walker {
                     log.debug("start loop {}, from={}, to={}", i, currentWorldPoint, nextWorldPoint);
                 }
 
-				// add breakpoint here
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
 
                 if (ShortestPathPlugin.getMarker() == null) {
                     log.debug("Marker is null, breaking path iteration");
@@ -373,6 +393,9 @@ public class Rs2Walker {
             }
             int finalDist = Rs2Player.getWorldLocation().distanceTo(target);
             if (finalDist < distance) {
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
                 setTarget(null);
                 return WalkerState.ARRIVED;
             } else {
@@ -3411,6 +3434,9 @@ public class Rs2Walker {
             if (bankLocation == null || finalTarget == null) {
                 log.warn("Cannot perform banking workflow with null locations");
                 return WalkerState.EXIT;
+            }
+            if (Rs2Widget.worldMapInterfaceClose()) {
+                sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
             }
             // Step 1: Walk to bank
             setTarget(null); // Clear current target to avoid conflicts
