@@ -140,7 +140,6 @@ public class Rs2Walker {
             log.info("[Walker] ARRIVED early. arrivalCheck={}ms, distToTarget={}", arrivalCheckMs, distToTarget);
             return WalkerState.ARRIVED;
         }
-
         final Pathfinder pathfinder = ShortestPathPlugin.getPathfinder();
         if (pathfinder != null && !pathfinder.isDone()) {
             return WalkerState.MOVING;
