@@ -301,7 +301,9 @@ public class Rs2Walker {
                     System.out.printf("start loop %s, from=%s, to=%s\n", i, currentWorldPoint, nextWorldPoint);
                 }
 
-				// add breakpoint here
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
 
                 if (ShortestPathPlugin.getMarker() == null) {
                     System.out.println("marker is null");
@@ -378,6 +380,9 @@ public class Rs2Walker {
                 }
             }
             if (Rs2Player.getWorldLocation().distanceTo(target) < distance) {
+                if (Rs2Widget.worldMapInterfaceClose()) {
+                    sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
+                }
                 setTarget(null);
                 return WalkerState.ARRIVED;
             } else {
@@ -3401,6 +3406,9 @@ public class Rs2Walker {
             if (bankLocation == null || finalTarget == null) {
                 log.warn("Cannot perform banking workflow with null locations");
                 return WalkerState.EXIT;
+            }
+            if (Rs2Widget.worldMapInterfaceClose()) {
+                sleepUntil(()->!Rs2Widget.isWorldMapInterfaceOpen());
             }
             // Step 1: Walk to bank
             setTarget(null); // Clear current target to avoid conflicts
