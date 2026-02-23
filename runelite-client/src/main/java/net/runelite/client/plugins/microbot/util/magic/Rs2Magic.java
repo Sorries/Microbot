@@ -336,7 +336,7 @@ public class Rs2Magic {
             return false;
         }
 
-        if (!cast(MagicAction.NPC_CONTACT)) return false;
+        if (!Rs2Widget.isWidgetVisible(CHOOSE_CHARACTER_WIDGET_ID) && !cast(MagicAction.NPC_CONTACT)) return false;
         if (!sleepUntilTrue(() -> !Rs2Widget.isHidden(CHOOSE_CHARACTER_WIDGET_ID), 100, 5000)) return false;
 
         final Widget chooseCharacterWidget = Rs2Widget.getWidget(CHOOSE_CHARACTER_WIDGET_ID);
@@ -356,9 +356,9 @@ public class Rs2Magic {
                 else Microbot.getMouse().scrollUp(Rs2UiHelper.getClickingPoint(chooseCharacterWidget.getBounds(),true));
             }, 5000, 300);
         }
-
-        if (!Rs2Widget.clickWidget(npcName, Optional.of(75), 0, false)) return false;
-        Rs2Player.waitForAnimation();
+        if (Rs2Widget.isWidgetVisible(CHOOSE_CHARACTER_WIDGET_ID) && !Rs2Widget.clickWidget(npcName, Optional.of(75), 0, false)) {
+            return false;}
+        sleepUntilTrue(()->!Rs2Player.isAnimating() && Rs2Dialogue.hasContinue());
         return true;
     }
 
