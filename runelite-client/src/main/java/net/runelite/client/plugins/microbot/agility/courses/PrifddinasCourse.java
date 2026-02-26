@@ -70,7 +70,7 @@ public class PrifddinasCourse implements AgilityCourseHandler
 			{
 				Global.sleepUntil(()-> Rs2Player.isMoving());
 				Global.sleepUntil(()-> !Rs2Player.isMoving());
-				Global.sleep(2000, 3000);
+				Global.sleep(1000, 1500);
 				return true;
 			}
 		}
