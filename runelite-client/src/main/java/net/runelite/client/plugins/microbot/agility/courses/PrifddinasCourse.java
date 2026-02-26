@@ -87,7 +87,7 @@ public class PrifddinasCourse implements AgilityCourseHandler
 
 		if (prifFallArea.contains(playerWorldLocation))
 		{
-			Rs2Walker.walkTo(getStartPoint(), 5);
+			Rs2Walker.walkTo(new WorldPoint(3250,6109,0), 3);
 			Microbot.log("Going back to course's starting point");
 			return true;
 		}
