@@ -1122,11 +1122,11 @@ public class Rs2Walker {
                 WorldPoint playerLoc = Rs2Player.getWorldLocation();
                 if (!adjacentToPath || playerLoc == null || !Objects.equals(probe.getPlane(), playerLoc.getPlane())) continue;
 
-                WallObject wall = Rs2GameObject.getWallObject(o -> o.getWorldLocation().equals(probe), probe, 3);
+                WallObject wall = Rs2GameObject.getWallObject(o -> o.getWorldLocation().equals(probe), probe, 1);
 
                 TileObject object = (wall != null)
                         ? wall
-                        : Rs2GameObject.getGameObject(o -> o.getWorldLocation().equals(probe), probe, 3);
+                        : Rs2GameObject.getGameObject(o -> o.getWorldLocation().equals(probe), probe, 1);
                 if (object == null) continue;
 
                 ObjectComposition comp = Rs2GameObject.convertToObjectComposition(object);
@@ -1160,7 +1160,25 @@ public class Rs2Walker {
                 }
 
                 if (found) {
+                    Set<Integer> BLOCKED_REGIONS = Set.of(
+                            13150
+                    );
+                    if (BLOCKED_REGIONS.contains(Rs2Player.getWorldLocation().getRegionID())) {
+                        Microbot.log("Skipped regions: " + Rs2Player.getWorldLocation().getRegionID() + ", Due to: " + name);
+                        continue;
+                    }
+
+                    List<String> BLOCKED_DOORS = List.of(
+                            "bamboo door"
+                    );
+                    String lowerName = name.toLowerCase();
+                    if (BLOCKED_DOORS.stream().anyMatch(lowerName::contains)) {
+                        Microbot.log("Skipped due to name: " + name);
+                        continue;
+                    }
+
                     if (!handleDoorException(object, action)) {
+                        Microbot.log("Door Object: " + object + ", Door action: " + action);
                         Rs2GameObject.interact(object, action);
                         Rs2Player.waitForWalking();
                     }
