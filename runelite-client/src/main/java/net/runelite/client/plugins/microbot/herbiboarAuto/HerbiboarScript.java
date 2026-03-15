@@ -84,7 +84,8 @@ public class HerbiboarScript extends Script {
     
     private void manageRunEnergy(HerbiboarConfig config) {
         HerbiboarConfig.RunEnergyOption energyOption = config.runEnergyOption();
-        if (Microbot.getClient().getEnergy() >= 20) {
+        Microbot.log("run energy: " + Microbot.getClient().getEnergy());
+        if (Microbot.getClient().getEnergy() >= 2000) {
             return;
         } else if (energyOption == HerbiboarConfig.RunEnergyOption.STAMINA_POTION &&  Rs2Player.hasStaminaBuffActive()) {
             return;
