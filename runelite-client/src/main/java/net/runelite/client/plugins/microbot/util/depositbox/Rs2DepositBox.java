@@ -5,6 +5,7 @@ import net.runelite.api.GameObject;
 import net.runelite.api.MenuAction;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
@@ -32,8 +33,8 @@ import static net.runelite.client.plugins.microbot.util.Global.*;
 @Slf4j
 public class Rs2DepositBox {
 
-    private static final int DEPOSITBOX_PARENT_WIDGET_ID = 192;
-    private static final int DEPOSITBOX_INVENTORY_ITEM_CONTAINER_COMPONENT_ID = 12582935;
+    private static final int DEPOSITBOX_PARENT_WIDGET_ID = InterfaceID.BankDepositbox.UNIVERSE >> 16;
+    private static final int DEPOSITBOX_INVENTORY_ITEM_CONTAINER_COMPONENT_ID = InterfaceID.BankDepositbox.INVENTORY;
 
     /**
      * Checks if the deposit box interface is open.
