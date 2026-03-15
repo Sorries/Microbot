@@ -16,6 +16,7 @@ import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerScript;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
+import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
@@ -525,13 +526,7 @@ public class HerbiboarScript extends Script {
                     case CHECK_AUTO_RETALIATE:
                         Microbot.status = "Checking auto retaliate...";
                         Microbot.log(Level.INFO,"Checking auto retaliate...");
-                        if (Microbot.getVarbitPlayerValue(172) == 0) {
-                            Microbot.status = "Disabling auto retaliate...";
-                            Rs2Tab.switchTo(InterfaceTab.COMBAT);
-                            sleepUntil(() -> Rs2Tab.getCurrentTab() == InterfaceTab.COMBAT, 2000);
-                            Rs2Widget.clickWidget(38862879);
-                            sleepUntil(() -> Microbot.getVarbitPlayerValue(172) == 1, 3000);
-                        }
+                        Rs2Combat.setAutoRetaliate(false);
                         setState(HerbiboarState.START);
                         break;
                     case START:
