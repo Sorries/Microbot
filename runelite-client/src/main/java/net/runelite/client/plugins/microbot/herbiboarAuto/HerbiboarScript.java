@@ -254,21 +254,21 @@ public class HerbiboarScript extends Script {
 
     /* Withdraw potions using greedy exact-dose logic: try to reach target doses starting with the highest dose potions */
     private void withdrawDosesDescending(int[] ids, int[] doses, int targetDoses) {
-        Microbot.log(Level.INFO, "Withdrawing potions to reach "+targetDoses+" total doses");
+        log.info( "Withdrawing potions to reach "+targetDoses+" total doses");
 
         // Calculate current doses we already have
         int current = 0;
         for (int i = 0; i < ids.length; i++) {
             int count = Rs2Inventory.count(ids[i]);
             current += count * doses[i];
-            Microbot.log(Level.INFO,"Already have "+count+"x "+doses[i]+"-dose potions = "+(count * doses[i])+" doses");
+            log.info("Already have "+count+"x "+doses[i]+"-dose potions = "+(count * doses[i])+" doses");
         }
 
         int remaining = targetDoses - current;
-        Microbot.log(Level.INFO,"Current total: "+current+" doses, Need: "+remaining+" more doses to reach target of "+targetDoses);
+        log.info("Current total: "+current+" doses, Need: "+remaining+" more doses to reach target of "+targetDoses);
 
         if (remaining <= 0) {
-            Microbot.log(Level.INFO,"Already have enough doses, no need to withdraw more");
+            log.info("Already have enough doses, no need to withdraw more");
             return;
         }
 
@@ -279,11 +279,11 @@ public class HerbiboarScript extends Script {
             int potionsToWithdraw = (int) Math.ceil(remaining / (double) dose); // How many of this potion we need
 
             if (potionsToWithdraw <= 0) {
-                Microbot.log(Level.INFO,"Don't need any {}-dose potions (remaining doses: {})", dose, remaining);
+                log.info("Don't need any {}-dose potions (remaining doses: {})", dose, remaining);
                 continue;
             }
 
-            Microbot.log(Level.INFO,"Attempting to withdraw {}x {}-dose potions (id: {})", potionsToWithdraw, dose, id);
+            log.info("Attempting to withdraw {}x {}-dose potions (id: {})", potionsToWithdraw, dose, id);
 
             int before = Rs2Inventory.count(id);
             if (potionsToWithdraw == 1) {
@@ -300,8 +300,8 @@ public class HerbiboarScript extends Script {
             if (withdrawn > 0) {
                 int dosesWithdrawn = withdrawn * dose;
                 remaining -= dosesWithdrawn;
-                Microbot.log(Level.INFO,"Successfully withdrawn {}x {}-dose potions = {} doses", withdrawn, dose, dosesWithdrawn);
-                Microbot.log(Level.INFO,"Remaining doses needed: {}", remaining);
+                log.info("Successfully withdrawn {}x {}-dose potions = {} doses", withdrawn, dose, dosesWithdrawn);
+                log.info("Remaining doses needed: {}", remaining);
 
                 // Recalculate current total doses after this withdrawal
                 current = 0;
@@ -309,32 +309,32 @@ public class HerbiboarScript extends Script {
                     int count = Rs2Inventory.count(ids[j]);
                     current += count * doses[j];
                 }
-                Microbot.log(Level.INFO,"Current total: {} doses", current);
+                log.info("Current total: {} doses", current);
 
                 // If we've reached or exceeded our target, stop withdrawing
                 if (current >= targetDoses) {
-                    Microbot.log(Level.INFO,"Reached or exceeded target doses ({}), stopping withdrawal", targetDoses);
+                    log.info("Reached or exceeded target doses ({}), stopping withdrawal", targetDoses);
                     break;
                 }
             } else {
-                Microbot.log(Level.INFO,"Failed to withdraw any {}-dose potions", dose);
+                log.info("Failed to withdraw any {}-dose potions", dose);
             }
         }
 
         // Log final counts
         current = 0;
-        Microbot.log(Level.INFO,"--- Final inventory after withdrawal ---");
+        log.info("--- Final inventory after withdrawal ---");
         for (int i = 0; i < ids.length; i++) {
             int count = Rs2Inventory.count(ids[i]);
             current += count * doses[i];
-            Microbot.log(Level.INFO,"{}x {}-dose potions = {} doses", count, doses[i], count * doses[i]);
+            log.info("{}x {}-dose potions = {} doses", count, doses[i], count * doses[i]);
         }
-        Microbot.log(Level.INFO,"Final total: {} doses (target was {})", current, targetDoses);
+        log.info("Final total: {} doses (target was {})", current, targetDoses);
     }
 
     private int getEnergyDoseCount(HerbiboarConfig.RunEnergyOption option) {
         // Check inventory for all potions regardless of type to get a more accurate count
-        Microbot.log(Level.INFO,"Checking inventory for all potion types");
+        log.info("Checking inventory for all potion types");
         int totalDoses = 0;
 
         // Count all potion types in inventory
@@ -355,7 +355,7 @@ public class HerbiboarScript extends Script {
 
         int fruitCount = Rs2Inventory.count(ItemID.MACRO_TRIFFIDFRUIT);
 
-        Microbot.log(Level.INFO,"Found in inventory: stamina={}, superEnergy={}, energy={}, fruit={}",
+        log.info("Found in inventory: stamina={}, superEnergy={}, energy={}, fruit={}",
                 staminaCount, superEnergyCount, energyCount, fruitCount);
 
         // Return the correct count based on the option
@@ -379,16 +379,16 @@ public class HerbiboarScript extends Script {
 
         // Get current doses before doing any bank operations
         int currentDoses = getEnergyDoseCount(option);
-        Microbot.log(Level.INFO,"Ensuring energy doses for {}: current={}, target={}", option, currentDoses, targetDoses);
+        log.info("Ensuring energy doses for {}: current={}, target={}", option, currentDoses, targetDoses);
 
         if (currentDoses >= targetDoses) {
-            Microbot.log(Level.INFO,"Already have enough doses ({}), no need to withdraw more", currentDoses);
+            log.info("Already have enough doses ({}), no need to withdraw more", currentDoses);
             return;
         }
 
         // Only proceed with withdrawal if bank is open
         if (!Rs2Bank.isOpen()) {
-            Microbot.log(Level.INFO,"Bank not open, skipping dose withdrawal");
+            log.info("Bank not open, skipping dose withdrawal");
             return;
         }
 
@@ -417,7 +417,7 @@ public class HerbiboarScript extends Script {
 
         // One final check after withdrawal to avoid multiple calls
         currentDoses = getEnergyDoseCount(option);
-        Microbot.log(Level.INFO,"After withdrawal check: current={}, target={}", currentDoses, targetDoses);
+        log.info("After withdrawal check: current={}, target={}", currentDoses, targetDoses);
     }
 
     public boolean run(HerbiboarConfig config, HerbiboarPlugin herbiboarPlugin) {
@@ -451,7 +451,7 @@ public class HerbiboarScript extends Script {
                         && state != HerbiboarState.RESET && state != HerbiboarState.INITIALIZING
                         && state != HerbiboarState.CHECK_AUTO_RETALIATE && state != HerbiboarState.BANK) {
                     System.out.println("2");
-                    Microbot.log(Level.INFO,"Player has not moved for over 1 minute, resetting script state");
+                    log.info("Player has not moved for over 1 minute, resetting script state");
                     setLastMove(Instant.now());
                     setLastLocation(null);
                     setState(HerbiboarState.RESET);
@@ -463,18 +463,18 @@ public class HerbiboarScript extends Script {
 
 
                 if (!Rs2Player.isMoving() && !Rs2Player.isInteracting()) {
-                    Microbot.log(Level.INFO,"Checking inventory and run energy");
+                    log.info("Checking inventory and run energy");
                     dropConfiguredItems(config);
                     manageRunEnergy(config);
                 }
                 
                 if (state != HerbiboarState.INITIALIZING && state != HerbiboarState.CHECK_AUTO_RETALIATE) {
                     if (needsToBank(config)) {
-                        Microbot.log(Level.INFO,"Need to bank, switching to BANK state");
+                        log.info("Need to bank, switching to BANK state");
                         setState(HerbiboarState.BANK);
                     } else if (hasRequiredInventorySetup(config) && isNearBank() && 
                               (getState() == HerbiboarState.START)) {
-                        Microbot.log(Level.INFO,"Returning to island, switching to RETURN_FROM_ISLAND state");
+                        log.info("Returning to island, switching to RETURN_FROM_ISLAND state");
                         setState(HerbiboarState.RETURN_FROM_ISLAND);
                     }
                 }
@@ -493,14 +493,14 @@ public class HerbiboarScript extends Script {
                          * After resetting, we check if there is a trail and then decide to go to START or TRAIL state.
                          */
                         Microbot.status = "Resetting...";
-                        Microbot.log(Level.INFO,"Resetting...");
+                        log.info("Resetting...");
                         attackedTunnel = false;
                         setLastMove(Instant.now());
                         setLastLocation(null);
                         WorldPoint resetRock = new WorldPoint(3704, 3810, 0);
                         boolean reached = Rs2Walker.walkTo(resetRock);
                         if (!reached) {
-                            Microbot.log(Level.INFO, "Failed to reach reset rock, stopping script");
+                            log.info( "Failed to reach reset rock, stopping script");
                             Rs2Player.logout();
                             Microbot.showMessage("Failed to reach reset rock, stopping script");
                             Microbot.stopPlugin(herbiboarPlugin.getClass());
@@ -524,19 +524,19 @@ public class HerbiboarScript extends Script {
                         break;
                     case INITIALIZING:
                         Microbot.status = "Starting...";
-                        Microbot.log(Level.INFO,"Initializing...");
+                        log.info("Initializing...");
                         setState(HerbiboarState.CHECK_AUTO_RETALIATE);
                         break;
                     case CHECK_AUTO_RETALIATE:
                         Microbot.status = "Checking auto retaliate...";
-                        Microbot.log(Level.INFO,"Checking auto retaliate...");
+                        log.info("Checking auto retaliate...");
                         Rs2Combat.setAutoRetaliate(false);
                         setState(HerbiboarState.START);
                         break;
                     case START:
                         BreakHandlerScript.setLockState(true);
                         Microbot.status = "Finding start location";
-                        Microbot.log(Level.INFO,"Finding start location");
+                        log.info("Finding start location");
                         if (herbiboarPlugin.getCurrentGroup() == null) {
                             TileObject start = herbiboarPlugin.getStarts().values().stream()
                                 .min(Comparator.comparing(s -> Rs2Player.getWorldLocation().distanceTo(s.getWorldLocation())))
@@ -562,7 +562,7 @@ public class HerbiboarScript extends Script {
                         break;
                     case TRAIL:
                         Microbot.status = "Following trail";
-                        Microbot.log(Level.INFO,"Following trail");
+                        log.info("Following trail");
                         if (herbiboarPlugin.getFinishId() > 0) {
                             if (checkForConfusionMessage(herbiboarPlugin)) return;
                             setState(HerbiboarState.TUNNEL);
@@ -596,7 +596,7 @@ public class HerbiboarScript extends Script {
                         break;
                     case TUNNEL:
                         Microbot.status = "Attacking tunnel";
-                        Microbot.log(Level.INFO,"Attacking tunnel");
+                        log.info("Attacking tunnel");
                         if (!attackedTunnel || (Rs2Npc.getNpc("Herbiboar") == null && attackedTunnel)) {
                             int finishId = herbiboarPlugin.getFinishId();
                             if (finishId > 0) {
@@ -624,7 +624,7 @@ public class HerbiboarScript extends Script {
                         break;
                     case HARVEST:
                         Microbot.status = "Harvesting herbiboar";
-                        Microbot.log(Level.INFO,"Harvesting herbiboar");
+                        log.info("Harvesting herbiboar");
                         Rs2NpcModel herb = Rs2Npc.getNpc("Herbiboar");
                         if (herb != null) {
                             WorldPoint loc = herb.getWorldLocation();
@@ -646,7 +646,7 @@ public class HerbiboarScript extends Script {
                                         if(!Rs2Camera.isTileOnScreen(localPoint)){
                                             Rs2Camera.turnTo(localPoint);
                                         }
-                                        Microbot.log(Level.INFO,"Searching for next herbiboar");
+                                        log.info("Searching for next herbiboar");
                                         Rs2GameObject.interact(start, "Search");
                                         Rs2Player.waitForAnimation();
                                         sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 10000);
@@ -666,14 +666,14 @@ public class HerbiboarScript extends Script {
                         break;
                     case BANK:
                         Microbot.status = "Banking items";
-                        Microbot.log(Level.INFO,"Banking items");
+                        log.info("Banking items");
 
                         LocalPoint bankLocalPoint = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), BANK_LOCATION);
                         if (bankLocalPoint == null || Rs2Player.getWorldLocation().distanceTo(BANK_LOCATION) >= 5) {
-                            Microbot.log(Level.INFO,"Walking to bank");
+                            log.info("Walking to bank");
                             Rs2Walker.walkTo(BANK_LOCATION);
                         } else if (!Rs2Bank.isOpen()) {
-                            Microbot.log(Level.INFO,"Opening bank");
+                            log.info("Opening bank");
                             Rs2Bank.openBank();
                             sleepUntil(Rs2Bank::isOpen, 3000);
                         } else {
@@ -698,7 +698,7 @@ public class HerbiboarScript extends Script {
                             /**
                              * Lock items that should not be deposited
                              */
-                            Microbot.log(Level.INFO,"Locking configured items");
+                            log.info("Locking configured items");
 
                             if (Microbot.getVarbitValue(VarbitID.BANK_SIDE_SLOT_SHOWOP) != 1 ||
                             Microbot.getVarbitValue(VarbitID.BANK_SIDE_SLOT_IGNOREINVLOCKS) != 0) {
@@ -736,7 +736,7 @@ public class HerbiboarScript extends Script {
                              * Empty herb sack if there
                              * Deposit all unlocked items again to get rid of any herbs that were in the sack
                              */
-                            Microbot.log(Level.INFO,"Depositing all items except locked slots: "+ slotsToLock);
+                            log.info("Depositing all items except locked slots: "+ slotsToLock);
                             Rs2Bank.depositAll();
                             if (config.useHerbSack() && Rs2Inventory.contains(ItemID.SLAYER_HERB_SACK, ItemID.SLAYER_HERB_SACK_OPEN)) {
                                 itemCharge = Microbot.getPluginManager()
@@ -747,7 +747,8 @@ public class HerbiboarScript extends Script {
                                         .orElse(null);
                                 if (Microbot.isPluginEnabled(itemCharge)) {
                                     Microbot.stopPlugin(itemCharge);
-                                    Rs2Inventory.interact(24478,"Empty");
+                                    //Rs2Inventory.interact(24478,"Empty");
+                                    Rs2Inventory.interact(new int[] {ItemID.SLAYER_HERB_SACK_OPEN, ItemID.SLAYER_HERB_SACK},"Empty");
                                     Rs2Inventory.waitForInventoryChanges(1000);
                                     Microbot.startPlugin(itemCharge);
                                 }
@@ -768,12 +769,12 @@ public class HerbiboarScript extends Script {
                                 case STAMINA_POTION:
                                 case SUPER_ENERGY_POTION:
                                 case ENERGY_POTION:
-                                    Microbot.log(Level.INFO,"Withdrawing potions to ensure 24 doses of "+energyOption);
+                                    log.info("Withdrawing potions to ensure 24 doses of "+energyOption);
                                     ensureEnergyDoses(energyOption, 24);
                                     potionsWithdrawn = true;
                                     break;
                                 case STRANGE_FRUIT:
-                                    Microbot.log(Level.INFO,"Withdrawing strange fruit to ensure 6 in inventory");
+                                    log.info("Withdrawing strange fruit to ensure 6 in inventory");
                                     if (Rs2Inventory.count(ItemID.MACRO_TRIFFIDFRUIT) < 6) {
                                         Rs2Bank.withdrawX(ItemID.MACRO_TRIFFIDFRUIT, 6 - Rs2Inventory.count(ItemID.MACRO_TRIFFIDFRUIT));
                                         sleep(300);
@@ -782,11 +783,11 @@ public class HerbiboarScript extends Script {
                                     break;
                                 case NONE:
                                 default:
-                                    Microbot.log(Level.INFO,"No energy restoration selected");
+                                    log.info("No energy restoration selected");
                                     break;
                             }
 
-                            Microbot.log(Level.INFO,"Fished banking, status: "+ (potionsWithdrawn ? "Potions withdrawn" : "No potions needed")+" | energy option: "+energyOption);
+                            log.info("Fished banking, status: "+ (potionsWithdrawn ? "Potions withdrawn" : "No potions needed")+" | energy option: "+energyOption);
                             if (potionsWithdrawn || energyOption == HerbiboarConfig.RunEnergyOption.NONE) {
                                 sleep(300); // Give time for inventory to update
                                 Rs2Bank.closeBank();
@@ -797,7 +798,7 @@ public class HerbiboarScript extends Script {
                         break;
                     case RETURN_FROM_ISLAND:
                         Microbot.status = "Returning to island";
-                        Microbot.log(Level.INFO,"Returning to island");
+                        log.info("Returning to island");
                         LocalPoint returnLocalPoint = LocalPoint.fromWorld(Microbot.getClient().getTopLevelWorldView(), RETURN_LOCATION);
                         if (returnLocalPoint == null) {
                             Rs2Walker.walkTo(RETURN_LOCATION);
