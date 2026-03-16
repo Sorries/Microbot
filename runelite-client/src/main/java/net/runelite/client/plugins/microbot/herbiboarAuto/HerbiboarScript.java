@@ -11,9 +11,11 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarbitID;
+import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.breakhandler.BreakHandlerScript;
+import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
@@ -56,6 +58,7 @@ public class HerbiboarScript extends Script {
     @Setter
     private WorldPoint lastLocation = null;
 
+    private Plugin itemCharge;
 
     public static String version = HerbiboarPlugin.version;
 
@@ -734,10 +737,20 @@ public class HerbiboarScript extends Script {
                              * Deposit all unlocked items again to get rid of any herbs that were in the sack
                              */
                             Microbot.log(Level.INFO,"Depositing all items except locked slots: "+ slotsToLock);
-                            Rs2Widget.clickWidget(InterfaceID.Bankmain.DEPOSITINV);
+                            Rs2Bank.depositAll();
                             if (config.useHerbSack() && Rs2Inventory.contains(ItemID.SLAYER_HERB_SACK, ItemID.SLAYER_HERB_SACK_OPEN)) {
-                                Rs2Inventory.interact(24478,"Empty");
-                                Rs2Inventory.waitForInventoryChanges(1000);
+                                itemCharge = Microbot.getPluginManager()
+                                        .getPlugins()
+                                        .stream()
+                                        .filter(plugin -> plugin.getClass().getSimpleName().equalsIgnoreCase("TicTac7xChargesImprovedPlugin"))
+                                        .findFirst()
+                                        .orElse(null);
+                                if (Microbot.isPluginEnabled(itemCharge)) {
+                                    Microbot.stopPlugin(itemCharge);
+                                    Rs2Inventory.interact(24478,"Empty");
+                                    Rs2Inventory.waitForInventoryChanges(1000);
+                                    Microbot.startPlugin(itemCharge);
+                                }
                             }
                             Rs2Inventory.waitForInventoryChanges(1000);
                             sleep(300);
