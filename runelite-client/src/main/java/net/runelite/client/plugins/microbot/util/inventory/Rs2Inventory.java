@@ -1679,6 +1679,29 @@ public class Rs2Inventory {
     }
 
     /**
+     * Uses the item with the specified name in the inventory.
+     *
+     * @param name The name of the item to use.
+     * @param action
+     * @param exclude name
+     * @param exact for exact match
+     *
+     * @return True if the item is successfully used, false otherwise.
+     */
+
+    public static boolean use(String name, String action, String exclude, boolean exact) {
+        Predicate<Rs2ItemModel> includeFilter = Rs2ItemModel.matches(exact, name);
+        Predicate<Rs2ItemModel> excludeFilter = Rs2ItemModel.matches(exact, exclude).negate();
+
+        Predicate<Rs2ItemModel> combinedFilter = includeFilter.and(excludeFilter);
+
+        Rs2ItemModel item = Rs2Inventory.get(combinedFilter);
+        if (item == null) return false;
+
+        return interact(item, action);
+    }
+
+    /**
      * Uses the given item in the inventory.
      *
      * @param rs2Item The item to use.
@@ -1972,6 +1995,7 @@ public class Rs2Inventory {
             String[] actions = itemWidget != null && itemWidget.getActions() != null ?
                     itemWidget.getActions() :
                     rs2Item.getInventoryActions();
+            System.out.println("actions: " + Arrays.toString(actions)+ " itemWidget: " + Arrays.toString(itemWidget.getActions())+ " rs2item: " + Arrays.toString(rs2Item.getInventoryActions()));
 
             int simpleIndex = indexOfIgnoreCase(stripColTags(actions), action);
             if (simpleIndex != -1) {
