@@ -17,6 +17,7 @@ import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.magic.Rs2Spellbook;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.menu.NewMenuEntry;
 import net.runelite.client.plugins.microbot.util.npc.Rs2Npc;
@@ -48,6 +49,10 @@ public class MahoganyHomesScript extends Script {
                         if (!plugin.getConfig().pause() || !this.isRunning()) { break; }
                         sleep(100, 1000);
                     }
+                }
+                if (!Rs2Magic.isSpellbook(Rs2Spellbook.LUNAR)) {
+                    shutdown();
+                    return;
                 }
                 checkPlankSack();
                 fix();
