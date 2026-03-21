@@ -212,12 +212,15 @@ public class HerbiboarPlugin extends Plugin {
     @Subscribe
     public void onChatMessage(ChatMessage chatMessage) {
         String msg = chatMessage.getMessage();
-        if (lastMessages.size() == 5) lastMessages.removeFirst();
-        lastMessages.addLast(msg);
+        if (lastMessages.size() == 5) {
+            lastMessages.removeFirst();
+        }
         if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
+            lastMessages.addLast(msg);
             if (msg.toLowerCase().contains("successfully confused you with its tracks") ||
                     msg.toLowerCase().contains("need to start again")) {
                 Microbot.log("Chat Reset");
+                lastMessages.clear();
                 script.handleConfusionMessage();
             }
         }
@@ -238,7 +241,7 @@ public class HerbiboarPlugin extends Plugin {
             for (TrailToSpot trail : spot.getTrails())
             {
                 int value = client.getVarbitValue(trail.getVarbitId());
-                Microbot.log("Trail varbit "+trail.getVarbitId()+" = " + value + " for "+spot.name());
+                //Microbot.log("Trail varbit "+trail.getVarbitId()+" = " + value + " for "+spot.name());
 
                 if (value == trail.getValue())
                 {
@@ -335,11 +338,11 @@ public class HerbiboarPlugin extends Plugin {
         }
     }
 
-    @Subscribe
-    public void onVarbitChanged(VarbitChanged event)
-    {
-        updateTrailData();
-    }
+//    @Subscribe
+//    public void onVarbitChanged(VarbitChanged event)
+//    {
+//        updateTrailData();
+//    }
 
     @Subscribe
     public void onGameObjectSpawned(GameObjectSpawned event)
@@ -425,6 +428,7 @@ public class HerbiboarPlugin extends Plugin {
     public void onGameTick(GameTick event) {
         setRunningTime(Instant.now().getEpochSecond() - getStartTime().getEpochSecond());
         setXpPerHour(calculateXpPerHour());
+        updateTrailData();
     }
 
     private boolean checkArea()
