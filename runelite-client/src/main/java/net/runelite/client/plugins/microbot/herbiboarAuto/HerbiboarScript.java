@@ -516,6 +516,14 @@ public class HerbiboarScript extends Script {
                         sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 10000);
                         sleep(1000,2000);
                         herbiboarPlugin.resetTrailData();
+                        sleep(1000,2000);
+                        Microbot.getClientThread().invokeLater(() -> {
+                            try {
+                                herbiboarPlugin.updateTrailData();
+                            } catch (Exception e) {
+                                Microbot.log("updateTrailData() failed: " + e.getMessage());
+                            }
+                        });
                         if (herbiboarPlugin.getCurrentGroup() == null) {
                             setState(HerbiboarState.START);
                         } else {
@@ -554,6 +562,13 @@ public class HerbiboarScript extends Script {
                                     Rs2Player.waitForAnimation();
                                     sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 10000);
                                     sleep(1000,1500);
+                                    Microbot.getClientThread().invokeLater(() -> {
+                                        try {
+                                            herbiboarPlugin.updateTrailData();
+                                        } catch (Exception e) {
+                                            Microbot.log("updateTrailData() failed: " + e.getMessage());
+                                        }
+                                    });
                                 }
                             }
                         } else {
@@ -823,7 +838,10 @@ public class HerbiboarScript extends Script {
      */
     private boolean checkForConfusionMessage(HerbiboarPlugin plugin) {
         for (String msg : plugin.getLastMessages()) {
+            Microbot.log(msg);
             if (msg.contains("successfully confused you with its tracks") || msg.contains("need to start again")) {
+                Microbot.log("Script Chat Reset");
+                plugin.getLastMessages().clear();
                 handleConfusionMessage();
                 return true;
             }
