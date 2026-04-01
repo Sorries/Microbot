@@ -454,7 +454,8 @@ public class HerbiboarScript extends Script {
                     log.info("Player has not moved for over 1 minute, resetting script state");
                     setLastMove(Instant.now());
                     setLastLocation(null);
-                    setState(HerbiboarState.RESET);
+                    shutdown();
+                    return;
                 } else if (getLastMove() == null || getLastLocation() == null) {
                     System.out.println("3");
                     setLastMove(Instant.now());
@@ -515,7 +516,6 @@ public class HerbiboarScript extends Script {
                         Rs2Player.waitForAnimation();
                         sleepUntil(() -> !Rs2Player.isAnimating() && !Rs2Player.isInteracting() && !Rs2Player.isMoving(), 10000);
                         sleep(1000,2000);
-                        herbiboarPlugin.resetTrailData();
                         if (herbiboarPlugin.getCurrentGroup() == null) {
                             setState(HerbiboarState.START);
                         } else {
@@ -537,7 +537,7 @@ public class HerbiboarScript extends Script {
                         BreakHandlerScript.setLockState(true);
                         Microbot.status = "Finding start location";
                         log.info("Finding start location");
-                        if (herbiboarPlugin.getCurrentGroup() == null) {
+                        if (herbiboarPlugin.getCurrentGroup() == null && !herbiboarPlugin.isStarted()) {
                             TileObject start = herbiboarPlugin.getStarts().values().stream()
                                 .min(Comparator.comparing(s -> Rs2Player.getWorldLocation().distanceTo(s.getWorldLocation())))
                                 .orElse(null);
