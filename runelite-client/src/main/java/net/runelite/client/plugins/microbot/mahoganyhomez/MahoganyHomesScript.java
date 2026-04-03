@@ -447,14 +447,14 @@ public class MahoganyHomesScript extends Script {
                             Rs2ItemModel plankSack = Rs2Inventory.get(ItemID.PLANK_SACK);
                             if (plankSack != null) {
                                 NewMenuEntry plankSackEntry = new NewMenuEntry();
-                                plankSackEntry.setOption("Use");
+                                plankSackEntry.setOption("Fill");
                                 plankSackEntry.setTarget("<col=ff9040>Plank sack</col>");
                                 plankSackEntry.setIdentifier(9);
                                 plankSackEntry.setType(MenuAction.CC_OP);
                                 plankSackEntry.setParam0(plankSack.getSlot());
                                 plankSackEntry.setParam1(983043);
                                 plankSackEntry.setItemId(plankSack.getId());
-                                plankSackEntry.setWorldViewId(-1);
+                                plankSackEntry.setWorldViewId(0);
                                 plankSackEntry.setForceLeftClick(false);
                                 plankSackEntry.setDeprioritized(false);
                                 Microbot.doInvoke(plankSackEntry,Rs2Inventory.itemBounds(plankSack));
