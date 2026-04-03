@@ -42,7 +42,8 @@ public class WintertodtScript extends Script {
     private QoLPlugin qolPlugin;
 
     public static boolean isInWintertodtRegion() {
-        return Rs2Player.getWorldLocation().getRegionID() == 6462;
+        return Rs2Player.getWorldLocation() != null &&
+                Rs2Player.getWorldLocation().getRegionID() == 6462;
     }
 
     public boolean run(QoLConfig config) {
