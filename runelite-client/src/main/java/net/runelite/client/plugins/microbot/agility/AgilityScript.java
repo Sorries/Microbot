@@ -87,8 +87,7 @@ public class AgilityScript extends Script
 					return;
 				}
 
-				final WorldPoint playerWorldLocation = Microbot.getClient().getLocalPlayer().getWorldLocation();
-
+				final WorldPoint playerWorldLocation = Rs2Player.getWorldLocation();
 				if (handleFood())
 				{
 					return;
@@ -154,7 +153,7 @@ public class AgilityScript extends Script
 
 				if (Rs2GameObject.interact(gameObject))
 				{
-					plugin.getCourseHandler().waitForCompletion(agilityExp, Microbot.getClient().getLocalPlayer().getWorldLocation().getPlane());
+					plugin.getCourseHandler().waitForCompletion(agilityExp, Rs2Player.getWorldLocation().getPlane());
 					sleep(Rs2Random.skewedRandAuto(750));
 				}
 			}
