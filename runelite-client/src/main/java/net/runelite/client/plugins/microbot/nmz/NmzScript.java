@@ -8,6 +8,8 @@ import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.api.tileobject.Rs2TileObjectQueryable;
+import net.runelite.client.plugins.microbot.api.tileobject.models.Rs2TileObjectModel;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
@@ -196,19 +198,21 @@ public class NmzScript extends Script {
     }
 
     public boolean interactWithObject(int objectId) {
-        TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
-        Microbot.log("rs2 obj "+ rs2GameObject);
-        if (rs2GameObject != null) {
-            Microbot.log("4");
+        //TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
+        Rs2TileObjectModel rs2GameObject = new Rs2TileObjectQueryable()
+                .where(x -> x.getId() == objectId)
+                .nearest();
+        if (rs2GameObject != null && rs2GameObject.getWorldLocation() != null) {
+            Microbot.log("rs2 obj "+ rs2GameObject + " rs2 plane " + rs2GameObject.getPlane());
             sleep(Rs2Random.between(2000, 10000));
-            Microbot.log("Distance between: " + Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()));
-            if(Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) > 10) {
-                Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
-                sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
-            }
-            Microbot.log("5");
-            Rs2GameObject.interact(objectId);
-            Microbot.log("6");
+            Microbot.log("Distance between: " + Rs2Player.getWorldLocation().distanceTo2D(rs2GameObject.getWorldLocation()));
+            Microbot.log("Player Location: "+ Rs2Player.getLocalLocation());
+            Microbot.log("Game Object Location: " + rs2GameObject.getLocalLocation());
+//            if(Rs2Player.getWorldLocation().distanceTo2D(rs2GameObject.getWorldLocation()) > 10) {
+//                Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
+//                sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
+//            }
+            rs2GameObject.click("Activate");
             return true;
         }
         return false;
