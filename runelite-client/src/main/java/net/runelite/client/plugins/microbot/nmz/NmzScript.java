@@ -64,18 +64,22 @@ public class NmzScript extends Script {
             try {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
-                Rs2Combat.enableAutoRetialiate();
+                Microbot.log("1");
+                Rs2Combat.setAutoRetaliate(true);
                 if (Rs2Random.between(1, 50) == 1 && config.randomMouseMovements()) {
                     Microbot.getMouse().click(Rs2Random.between(0, Microbot.getClient().getCanvasWidth()), Rs2Random.between(0, Microbot.getClient().getCanvasHeight()), true);
                 }
-                boolean isOutsideNmz = Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(new WorldPoint(2602, 3116, 0)) < 20;
+                boolean isOutsideNmz = Rs2Player.getWorldLocation().distanceTo(new WorldPoint(2602, 3116, 0)) < 20;
+                Microbot.log("2");
                 useOverload = Microbot.getClient().getBoostedSkillLevel(Skill.RANGED) == Microbot.getClient().getRealSkillLevel(Skill.RANGED) && config.overloadPotionAmount() > 0;
                 if (isOutsideNmz) {
+                    Microbot.log("out");
                     Rs2Walker.setTarget(null);
                     hasWalkedToCenter = false;
                     firstIterationOfOverLoad = true;
                     handleOutsideNmz();
                 } else {
+                    Microbot.log("in");
                     handleInsideNmz();
                 }
             } catch (Exception ex) {
@@ -117,6 +121,7 @@ public class NmzScript extends Script {
         if (!hasWalkedToCenter) {
             walkToCenter();
             hasWalkedToCenter = true;
+            Microbot.log("walked to center");
         }
         useOverloadPotion();
         manageSelfHarm();
@@ -171,6 +176,7 @@ public class NmzScript extends Script {
     }
 
     public boolean useOrbs() {
+        Microbot.log("Check orb");
         boolean orbHasSpawned = false;
         if (config.useZapper()) {
 
@@ -193,10 +199,10 @@ public class NmzScript extends Script {
         TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
         if (rs2GameObject != null) {
             sleep(Rs2Random.between(2000, 10000));
-            Microbot.log("Distance between: " + Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()));
-            if(Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) > 10) {
+            Microbot.log("Distance between: " + Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()));
+            if(Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) > 10) {
                 Rs2Walker.walkFastLocal(rs2GameObject.getLocalLocation());
-                sleepUntil(() -> Microbot.getClient().getLocalPlayer().getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
+                sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
             }
             Rs2GameObject.interact(objectId);
             return true;
@@ -217,7 +223,7 @@ public class NmzScript extends Script {
         if (currentHP >= maxHealth
                 && (!useOverload && overloadTimeLeft > 0) // false = not active overload , true = active overload
                 && (!hasOverloadPotions || currentRangedLevel != realRangedLevel)
-                ) {
+        ) {
             Microbot.log("!useOverload: " + !useOverload + " overloadTimeLeft: " + overloadTimeLeft);
             maxHealth = 1;
             Microbot.log("Current Hp: " + currentHP);
