@@ -213,6 +213,7 @@ public class NmzScript extends Script {
 //                sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
 //            }
             rs2GameObject.click("Activate");
+            sleepUntil(()->!Rs2Player.isMoving());
             return true;
         }
         return false;
