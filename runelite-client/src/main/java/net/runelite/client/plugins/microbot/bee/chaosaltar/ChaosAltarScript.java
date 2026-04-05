@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 import static net.runelite.api.ItemID.DRAGON_BONES;
 import static net.runelite.api.NpcID.CHAOS_FANATIC;
-import static net.runelite.client.plugins.microbot.util.walker.Rs2Walker.walkTo;
+
 
 
 public class ChaosAltarScript extends Script {
@@ -87,7 +87,7 @@ public class ChaosAltarScript extends Script {
                     case WALK_TO_ALTAR:
                         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Pvp.isInWilderness()) {
                             Microbot.log("Cur 1 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
-                            walkTo(CHAOS_ALTAR_POINT, 3);
+                            Rs2Walker.walkTo(CHAOS_ALTAR_POINT, 3);
                             Microbot.log("Cur 2 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                         }//2949,3822
                         break;
@@ -225,7 +225,7 @@ public class ChaosAltarScript extends Script {
 //        }
         if (Rs2Pvp.isInWilderness()){return;}
         if (hasBurningAmulet() && !Rs2Pvp.isInWilderness()){
-            walkTo(CHAOS_ALTAR_POINT_SOUTH,10);
+            Rs2Walker.walkTo(CHAOS_ALTAR_POINT_SOUTH,10);
             //Microbot.log("Fin");
         }
     }
@@ -235,7 +235,7 @@ public class ChaosAltarScript extends Script {
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Pvp.isInWilderness()) {
             Microbot.log("Cur 3 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
-            walkTo(CHAOS_ALTAR_POINT,3);
+            Rs2Walker.walkTo(CHAOS_ALTAR_POINT,3);
             Microbot.log("Cur 4 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
         }
         if (Rs2Camera.getYaw() != 0){
@@ -280,7 +280,7 @@ public class ChaosAltarScript extends Script {
         //Microbot.log("Offering bones f");
 
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation())) {
-            walkTo(CHAOS_ALTAR_POINT,3);
+            Rs2Walker.walkTo(CHAOS_ALTAR_POINT,3);
         }
         if (Rs2Camera.getYaw() != 0){
             Rs2Widget.clickWidget(10747935);
