@@ -2,7 +2,10 @@ package net.runelite.client.plugins.microbot.shortestpath.components;
 
 import net.runelite.api.GameObject;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.ObjectID;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.api.tileobject.Rs2TileObjectCache;
+import net.runelite.client.plugins.microbot.api.tileobject.models.Rs2TileObjectModel;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.ui.ColorScheme;
@@ -54,7 +57,11 @@ public class ExitTilePanel extends JPanel {
     }
 
     public void detectTile() {
-        GameObject exitPortal = Rs2GameObject.getGameObject(POH_EXIT_PORTAL);
+//        GameObject exitPortal = Rs2GameObject.getGameObject(POH_EXIT_PORTAL);
+        Rs2TileObjectModel exitPortal = Microbot.getRs2TileObjectCache()
+                .query()
+                .withId(ObjectID.POH_EXIT_PORTAL)
+                .nearest();
         if (exitPortal == null) {
             Microbot.log("Failed to find exit portal");
         } else {
