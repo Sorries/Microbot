@@ -325,7 +325,7 @@ public class Rs2Walker {
                     log.debug("start loop {}, from={}, to={}", i, currentWorldPoint, nextWorldPoint);
                 }
 
-				// add breakpoint here
+                closeWorldMap();
 
                 if (ShortestPathPlugin.getMarker() == null) {
                     log.debug("Marker is null, breaking path iteration");
@@ -405,6 +405,7 @@ public class Rs2Walker {
             }
             int finalDist = Rs2Player.getWorldLocation().distanceTo(target);
             if (finalDist < distance) {
+                closeWorldMap();
                 setTarget(null);
                 return WalkerState.ARRIVED;
             } else if (partialPath) {
@@ -3477,6 +3478,7 @@ public class Rs2Walker {
                 log.warn("Cannot perform banking workflow with null locations");
                 return WalkerState.EXIT;
             }
+            closeWorldMap();
             // Step 1: Walk to bank
             setTarget(null); // Clear current target to avoid conflicts
             WalkerState bankWalkResult = walkWithStateInternal(bankLocation, distance);
