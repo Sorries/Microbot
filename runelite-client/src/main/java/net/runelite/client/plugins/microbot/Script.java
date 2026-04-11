@@ -112,10 +112,6 @@ public abstract class Script extends Global implements IScript {
                 return false;
             }
         }
-        if (Rs2Player.hasCompletedTutorialIsland()) {
-            // A blocking event was found & is executing
-            return false;
-        }
         if (Microbot.pauseAllScripts.get())
             return false;
         if (Thread.currentThread().isInterrupted())
