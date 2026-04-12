@@ -149,6 +149,9 @@ public class ChaosAltarScript extends Script {
             return State.OFFER_BONES;
         }
         if ((inWilderness || inWilderness3) && hasAnyBones && !atAltar) {
+            if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
+                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
+            }
             return State.WALK_TO_ALTAR;
         }
         if ((inWilderness || inWilderness3) && !hasAnyBones) {
@@ -161,9 +164,6 @@ public class ChaosAltarScript extends Script {
             return State.BANK;
         }
         if (!inWilderness && hasBones) {
-            if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
-                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
-            }
             return State.TELEPORT_TO_WILDERNESS;
         }
         return State.UNKNOWN;
@@ -211,14 +211,14 @@ public class ChaosAltarScript extends Script {
         Rs2NpcModel chaosFanatic = npcCache.query().withName("Chaos Fanatic").within(15).nearest();
         Microbot.log("Chaos Fanatic: " + chaosFanatic);
         Rs2Player.hopIfPlayerDetected(1,0,0);
-        if (Rs2Player.isInCombat() || chaosFanatic.click("Attack")) {
+        if (chaosFanatic == null){
+            Rs2Walker.walkTo(2979, 3845,0,10);
+            sleep(1000,1500);
+        }else if (Rs2Player.isInCombat() || chaosFanatic.click("Attack")) {
             Rs2Equipment.unEquip(EquipmentInventorySlot.WEAPON);
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
             sleep(1000,3000);
-        }else if (chaosFanatic == null){
-            Rs2Walker.walkTo(2979, 3845,0,10);
-            sleep(1000,1500);
         }else{
             Rs2Player.hopIfPlayerDetected(1,Rs2Random.betweenInclusive(100,500),30);
         }
