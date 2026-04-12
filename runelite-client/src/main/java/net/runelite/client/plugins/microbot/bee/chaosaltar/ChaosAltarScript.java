@@ -210,16 +210,21 @@ public class ChaosAltarScript extends Script {
         }
         Rs2NpcModel chaosFanatic = npcCache.query().withName("Chaos Fanatic").within(15).nearest();
         Microbot.log("Chaos Fanatic: " + chaosFanatic);
+        Microbot.log("1");
         Rs2Player.hopIfPlayerDetected(1,0,0);
+        Microbot.log("2");
         if (chaosFanatic == null){
+            Microbot.log("3");
             Rs2Walker.walkTo(2979, 3845,0,10);
             sleep(1000,1500);
         }else if (Rs2Player.isInCombat() || chaosFanatic.click("Attack")) {
+            Microbot.log("4");
             Rs2Equipment.unEquip(EquipmentInventorySlot.WEAPON);
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
             sleep(1000,3000);
         }else{
+            Microbot.log("5");
             Rs2Player.hopIfPlayerDetected(1,Rs2Random.betweenInclusive(100,500),30);
         }
     }
