@@ -7,6 +7,8 @@ import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.api.npc.Rs2NpcQueryable;
+import net.runelite.client.plugins.microbot.api.npc.models.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.shortestpath.ShortestPathPlugin;
 import net.runelite.client.plugins.microbot.storm.plugins.PlayerMonitor.PlayerMonitorPlugin;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
@@ -14,6 +16,8 @@ import net.runelite.client.plugins.microbot.util.camera.Rs2Camera;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
+import net.runelite.client.plugins.microbot.api.npc.Rs2NpcCache;
+import net.runelite.client.plugins.microbot.api.npc.models.Rs2NpcModel;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.math.Rs2Random;
@@ -24,6 +28,7 @@ import net.runelite.client.plugins.microbot.util.prayer.Rs2Prayer;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +40,9 @@ import static net.runelite.api.NpcID.CHAOS_FANATIC;
 
 
 public class ChaosAltarScript extends Script {
+
+    @Inject
+    private Rs2NpcCache npcCache;
 
     public static final WorldArea CHAOS_ALTAR_AREA = new WorldArea(2947, 3818, 11, 6, 0);
     public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 6, 0); //2953,3824
@@ -200,13 +208,15 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
             sleep(1000,2000);
         }
+        Rs2NpcModel chaosFanatic = npcCache.query().withName("Chaos Fanactic").within(15).nearest();
+        Microbot.log("Chaos Fanatic: " + chaosFanatic);
         Rs2Player.hopIfPlayerDetected(1,0,0);
-        if (Rs2Player.isInCombat() || Rs2Npc.attack("Chaos Fanatic")) {
+        if (Rs2Player.isInCombat() || chaosFanatic.click("Attack")) {
             Rs2Equipment.unEquip(EquipmentInventorySlot.WEAPON);
             sleepUntil(() -> Microbot.getClient().getBoostedSkillLevel(Skill.HITPOINTS) == 0, 60000);
             sleepUntil(() -> !Rs2Pvp.isInWilderness(), 15000);
             sleep(1000,3000);
-        }else if (Rs2Npc.getNpc(CHAOS_FANATIC) == null){
+        }else if (chaosFanatic == null){
             Rs2Walker.walkTo(2979, 3845,0,10);
             sleep(1000,1500);
         }else{
