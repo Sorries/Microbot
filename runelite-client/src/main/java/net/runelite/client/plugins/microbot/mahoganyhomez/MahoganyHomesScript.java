@@ -182,11 +182,6 @@ public class MahoganyHomesScript extends Script {
                 tryToUseLadder();
                 return;
             }
-            if (pathDistance == Integer.MAX_VALUE) {
-                log("Someone home, trying to use ladder.");
-                tryToUseLadder();
-                return;
-            }
             log("Local Path Distance is too far or unreachable, switching to WebWalker.");
 
             WalkerState state = Rs2Walker.walkWithState(object.getWorldLocation(), 3);
