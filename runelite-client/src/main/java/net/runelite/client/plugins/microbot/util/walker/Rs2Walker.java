@@ -232,14 +232,14 @@ public class Rs2Walker {
 
             boolean partialPath = false;
             if (dst == null || dst.distanceTo(target) > distance) {
-                if (path != null && path.size() > 1) {
-                    log.info("[Walker] Path endpoint {} is {} tiles from target {}, walking partial path ({} tiles)",
-                            dst, dst.distanceTo(target), target, path.size());
-                    partialPath = true;
-                } else {
+//                if (path != null && path.size() > 1) {
+//                    log.info("[Walker] Path endpoint {} is {} tiles from target {}, walking partial path ({} tiles)",
+//                            dst, dst.distanceTo(target), target, path.size());
+//                    partialPath = true;
+//                } else {
                     setTarget(null);
                     return WalkerState.UNREACHABLE;
-                }
+//                }
             }
 
             if (path == null || path.isEmpty()) {
