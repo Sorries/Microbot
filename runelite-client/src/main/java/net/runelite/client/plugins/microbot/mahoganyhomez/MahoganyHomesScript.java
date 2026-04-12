@@ -185,6 +185,7 @@ public class MahoganyHomesScript extends Script {
             log("Local Path Distance is too far or unreachable, switching to WebWalker.");
 
             WalkerState state = Rs2Walker.walkWithState(object.getWorldLocation(), 3);
+            Microbot.log("State: " + state);
             if (state == WalkerState.UNREACHABLE) {
                 if (Rs2Player.getWorldLocation().getPlane() != object.getWorldLocation().getPlane()) {
                     tryToUseLadder();
