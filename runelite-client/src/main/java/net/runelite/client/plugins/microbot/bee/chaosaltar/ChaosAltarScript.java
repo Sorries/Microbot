@@ -145,6 +145,11 @@ public class ChaosAltarScript extends Script {
             //Rs2Prayer.toggleQuickPrayer(underAttack);
             Rs2Widget.clickWidget(10485779);
         }
+        if (inWilderness && hasAnyBones){
+            if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
+                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
+            }
+        }
 
         if ((inWilderness || inWilderness3) && hasAnyBones && atAltar) {
             return State.OFFER_BONES;
@@ -237,9 +242,6 @@ public class ChaosAltarScript extends Script {
 //            sleep(500, 800);
 //        }
         if (Rs2Pvp.isInWilderness()){return;}
-        if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
-            Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
-        }
         if (hasBurningAmulet() && !Rs2Pvp.isInWilderness()){
             Rs2Walker.walkTo(CHAOS_ALTAR_POINT_SOUTH,10);
             //Microbot.log("Fin");
