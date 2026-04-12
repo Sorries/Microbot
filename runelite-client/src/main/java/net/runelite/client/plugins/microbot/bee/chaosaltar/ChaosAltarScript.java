@@ -208,7 +208,7 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
             sleep(1000,2000);
         }
-        Rs2NpcModel chaosFanatic = npcCache.query().withName("Chaos Fanactic").within(15).nearest();
+        Rs2NpcModel chaosFanatic = npcCache.query().withName("Chaos Fanatic").within(15).nearest();
         Microbot.log("Chaos Fanatic: " + chaosFanatic);
         Rs2Player.hopIfPlayerDetected(1,0,0);
         if (Rs2Player.isInCombat() || chaosFanatic.click("Attack")) {
