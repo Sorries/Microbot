@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.nmz;
 
+import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.*;
@@ -8,6 +9,7 @@ import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.api.tileobject.Rs2TileObjectCache;
 import net.runelite.client.plugins.microbot.api.tileobject.Rs2TileObjectQueryable;
 import net.runelite.client.plugins.microbot.api.tileobject.models.Rs2TileObjectModel;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
@@ -34,6 +36,9 @@ import static net.runelite.api.Varbits.NMZ_ABSORPTION;
 
 public class NmzScript extends Script {
 
+    @Inject
+    private Rs2TileObjectCache tileObjectCache;
+
     public static double version = 2.0;
 
     public static NmzConfig config;
@@ -52,6 +57,7 @@ public class NmzScript extends Script {
     @Getter
     @Setter
     private static boolean hasSurge = false;
+
 
     public boolean canStartNmz() {
         return Rs2Inventory.count("overload (4)") == config.overloadPotionAmount() && Rs2Inventory.count("absorption (4)") == config.absorptionPotionAmount() ||
@@ -199,8 +205,8 @@ public class NmzScript extends Script {
 
     public boolean interactWithObject(int objectId) {
         //TileObject rs2GameObject = Rs2GameObject.findObjectById(objectId);
-        Rs2TileObjectModel rs2GameObject = new Rs2TileObjectQueryable()
-                .where(x -> x.getId() == objectId)
+        Rs2TileObjectModel rs2GameObject = tileObjectCache.query()
+                .withId(objectId)
                 .nearest();
         if (rs2GameObject != null && rs2GameObject.getWorldLocation() != null) {
             Microbot.log("rs2 obj "+ rs2GameObject + " rs2 plane " + rs2GameObject.getPlane());
@@ -213,9 +219,7 @@ public class NmzScript extends Script {
 //                sleepUntil(() -> Rs2Player.getWorldLocation().distanceTo(rs2GameObject.getWorldLocation()) < 10);
 //            }
             rs2GameObject.click("Activate");
-            if (Rs2Player.isMoving() || sleepUntil(() -> Rs2Player.isMoving(), 2000)) {
-                sleepUntil(() -> !Rs2Player.isMoving(), 10000);
-            }
+            sleepUntil(() -> tileObjectCache.query().withId(objectId).nearest() == null,5000);
             return true;
         }
         return false;
