@@ -1383,7 +1383,8 @@ public class Rs2Walker {
             // any registered POH transport origin (PohPanel registers them keyed to the exit
             // portal tile). Remap the pathfinder start to the configured exit portal so the
             // pathfinder can consider all POH teleports as step 0.
-            if (Microbot.getClient().getTopLevelWorldView().isInstance()) {
+            if (Microbot.getClient().getTopLevelWorldView().isInstance()
+                    && PohTeleports.isInHouse()) {
                 WorldPoint exitPortal = net.runelite.client.plugins.microbot.shortestpath.PohPanel.getExitPortalTile();
                 if (exitPortal != null) {
                     Microbot.log("[Walker] In POH instance — remapping pathfinder start " + start
