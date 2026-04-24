@@ -166,6 +166,7 @@ public class MageTrainingArenaScript extends Script {
                         Microbot.showMessage("MTA: Out of runes! Please restart the plugin after you restocked on runes.");
                         sleep(500);
                         shutdown();
+                        finishWithError("Out of runes - please restock and restart.");
                     }
             } else if (config.repeatRoom()) {
                 if (currentRoom != null) {
@@ -438,9 +439,8 @@ public class MageTrainingArenaScript extends Script {
             //                    && !Objects.equals(Microbot.getClientThread().invoke(() -> Microbot.getClient().getLocalDestinationLocation()), localTarget)) {
             //                if (Rs2Camera.isTileOnScreen(localTarget)) {
             if (!Rs2Player.getWorldLocation().equals(targetConverted)
-                    && (Microbot.getClient().getLocalDestinationLocation() == null
-                    || !Objects.equals(Microbot.getClientThread().invoke(() -> Microbot.getClient().getLocalDestinationLocation()), localTarget))) {
-                if (Rs2Camera.isTileOnScreen(localTarget) && Rs2Player.getWorldLocation().distanceTo(targetConverted) < 10) {
+                    && !Objects.equals(Microbot.getClientThread().invoke(() -> Microbot.getClient().getLocalDestinationLocation()), localTarget)) {
+                if (Rs2Camera.isTileOnScreen(localTarget)) {
                     Rs2Walker.walkFastCanvas(targetConverted);
                     sleepGaussian(600, 150);
                 } else {
