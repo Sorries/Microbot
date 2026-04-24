@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.magetrainingarena;
 
+import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -59,8 +60,13 @@ public class MageTrainingArenaOverlay extends OverlayPanel {
                     .left("Status: " + statusText)
                     .leftColor(statusColor)
                     .build());
-
-            if (!Microbot.getPluginManager().isActive(MageTrainingArenaScript.getMtaPlugin())){
+            Plugin mtaplugin = Microbot.getPluginManager()
+                    .getPlugins()
+                    .stream()
+                    .filter(plugin -> plugin.getClass().getSimpleName().equalsIgnoreCase("MTAPlugin"))
+                    .findFirst()
+                    .orElse(null);
+            if (mtaplugin == null) {
                 panelComponent.getChildren().add(LineComponent.builder()
                         .left("Make sure to enable the 'Mage Training Arena' plugin!")
                         .leftColor(Color.RED)
