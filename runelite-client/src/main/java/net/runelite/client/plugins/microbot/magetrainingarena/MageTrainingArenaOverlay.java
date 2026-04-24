@@ -60,13 +60,8 @@ public class MageTrainingArenaOverlay extends OverlayPanel {
                     .left("Status: " + statusText)
                     .leftColor(statusColor)
                     .build());
-            Plugin mtaplugin = Microbot.getPluginManager()
-                    .getPlugins()
-                    .stream()
-                    .filter(plugin -> plugin.getClass().getSimpleName().equalsIgnoreCase("MTAPlugin"))
-                    .findFirst()
-                    .orElse(null);
-            if (mtaplugin == null) {
+
+            if (!Microbot.getPluginManager().isActive(MageTrainingArenaScript.getMtaPlugin())){
                 panelComponent.getChildren().add(LineComponent.builder()
                         .left("Make sure to enable the 'Mage Training Arena' plugin!")
                         .leftColor(Color.RED)
