@@ -407,7 +407,7 @@ public class MageTrainingArenaScript extends Script {
         if (room.getTarget() != null)
             target = room.getTarget();
         else {
-            Microbot.log("Current Maze is: " + teleRoom.getMaze());
+            Microbot.log("Current Maze is: " + teleRoom.getMaze() + " Player Position: " + Rs2Player.getWorldLocation());
             Rs2Walker.walkTo(teleRoom.getMaze(), 4);
             sleepUntil(() -> room.getTarget() != null, 10_000);
             // MageTrainingArenaScript is dependent on the official mage arena plugin of runelite
@@ -445,6 +445,7 @@ public class MageTrainingArenaScript extends Script {
                     Rs2Walker.walkFastCanvas(targetConverted);
                     sleepGaussian(600, 150);
                 } else {
+                    Microbot.log("TargetConverted: "+ targetConverted);
                     Rs2Walker.walkTo(targetConverted);
                 }
             }
