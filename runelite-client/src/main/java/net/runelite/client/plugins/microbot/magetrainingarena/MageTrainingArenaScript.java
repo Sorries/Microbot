@@ -407,6 +407,7 @@ public class MageTrainingArenaScript extends Script {
         if (room.getTarget() != null)
             target = room.getTarget();
         else {
+            Microbot.log("Current Maze is: " + teleRoom.getMaze());
             Rs2Walker.walkTo(teleRoom.getMaze(), 4);
             sleepUntil(() -> room.getTarget() != null, 10_000);
             // MageTrainingArenaScript is dependent on the official mage arena plugin of runelite
