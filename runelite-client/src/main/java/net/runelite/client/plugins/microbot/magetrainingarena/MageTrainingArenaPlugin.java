@@ -18,8 +18,11 @@ import java.awt.*;
 )
 @Slf4j
 public class MageTrainingArenaPlugin extends Plugin {
+    public static final String version = "1.1.8";
+
     @Inject
     private MageTrainingArenaConfig config;
+
     @Provides
     MageTrainingArenaConfig provideConfig(ConfigManager configManager) {
         return configManager.getConfig(MageTrainingArenaConfig.class);
@@ -39,12 +42,14 @@ public class MageTrainingArenaPlugin extends Plugin {
         if (overlayManager != null) {
             overlayManager.add(overlay);
         }
-
         script.run(config);
     }
 
+    @Override
     protected void shutDown() {
         script.shutdown();
-        overlayManager.remove(overlay);
+        if (overlayManager != null) {
+            overlayManager.remove(overlay);
+        }
     }
 }
