@@ -370,7 +370,10 @@ public class MageTrainingArenaScript extends Script {
             Rs2Magic.cast(enchant);
             sleepUntil(() -> Rs2Tab.getCurrentTab() == InterfaceTab.INVENTORY);
             sleepGaussian(600, 150);
-            Rs2Inventory.interact(itemId);
+            if(Rs2Magic.canCast(enchant)) {
+                Rs2Inventory.interact(itemId);
+            }
+
 
             sleepUntil(() -> !Rs2Inventory.contains(itemId) || itemId != ItemID.MAGICTRAINING_DRAGONSTONE && bonusShape != getBonusShape(), 20000);
         } else if (object.click("Take-from")) {
