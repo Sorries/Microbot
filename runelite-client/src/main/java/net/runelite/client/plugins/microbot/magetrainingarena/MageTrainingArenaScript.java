@@ -370,7 +370,7 @@ public class MageTrainingArenaScript extends Script {
             Rs2Magic.cast(enchant);
             sleepUntil(() -> Rs2Tab.getCurrentTab() == InterfaceTab.INVENTORY);
             sleepGaussian(600, 150);
-            if(Rs2Magic.canCast(enchant)) {
+            if(Rs2Tab.getCurrentTab() == InterfaceTab.INVENTORY) {
                 Rs2Inventory.interact(itemId);
             }
 
