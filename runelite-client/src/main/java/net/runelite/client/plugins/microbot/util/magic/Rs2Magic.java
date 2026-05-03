@@ -2,6 +2,7 @@ package net.runelite.client.plugins.microbot.util.magic;
 
 import net.runelite.api.*;
 import net.runelite.api.Point;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
@@ -96,11 +97,11 @@ public class Rs2Magic {
 
         if (magicSpell.getName().toLowerCase().contains("enchant")){
             if (Rs2Widget.clickWidget("Jewellery Enchantments", Optional.of(218), 3, true)) {
-                sleepUntil(() -> Rs2Widget.hasWidgetText("Jewellery Enchantments", 218, 3, true), 2000);
+                sleepUntil(() -> !Rs2Widget.hasWidgetText("Jewellery Enchantments", 218, 3, true), 2000);
             }
-        } else if (!Rs2Widget.isHidden(14286852)) {
+        } else if (!Rs2Widget.isHidden(InterfaceID.MagicSpellbook.BACK_BUTTON)) {
             // back button inside the enchant jewellery interface has no text, that's why we use hardcoded id
-            Rs2Widget.clickWidget(14286852);
+            Rs2Widget.clickWidget(InterfaceID.MagicSpellbook.BACK_BUTTON);
         }
 
         Widget spellbook = Rs2Widget.getWidget(218, 3);
