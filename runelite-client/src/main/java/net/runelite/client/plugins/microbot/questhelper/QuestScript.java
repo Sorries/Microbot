@@ -191,9 +191,9 @@ public class QuestScript extends Script {
                         //if there is no quest option in the dialogue, just click player location to remove
                         // the dialogue to avoid getting stuck in an infinite loop of dialogues
                         if (!hasOption) {
-                            if (Rs2Dialogue.acceptQuestStartDialogue()) {
-                                return;
-                            }
+//                            if (Rs2Dialogue.acceptQuestStartDialogue()) {
+//                                return;
+//                            }
                             if (getQuestHelperPlugin().getSelectedQuest() != null &&
                                     getQuestHelperPlugin().getSelectedQuest().getQuest().getId() == Quest.IMP_CATCHER.getId()
                                     && Microbot.getClient().getTopLevelWorldView().getPlane() == 1) {
