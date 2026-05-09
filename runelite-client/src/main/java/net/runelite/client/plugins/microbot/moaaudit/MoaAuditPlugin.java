@@ -16,17 +16,17 @@ import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 )
 @Slf4j
 public class MoaAuditPlugin extends Plugin {
-    private Thread worker;
-
-    @Override
-    protected void startUp() {
-        worker = new Thread(Rs2Walker::runMoaAudit, "moa-audit");
-        worker.setDaemon(true);
-        worker.start();
-    }
-
-    @Override
-    protected void shutDown() {
-        if (worker != null) worker.interrupt();
-    }
+//    private Thread worker;
+//
+//    @Override
+//    protected void startUp() {
+//        worker = new Thread(Rs2Walker::runMoaAudit, "moa-audit");
+//        worker.setDaemon(true);
+//        worker.start();
+//    }
+//
+//    @Override
+//    protected void shutDown() {
+//        if (worker != null) worker.interrupt();
+//    }
 }

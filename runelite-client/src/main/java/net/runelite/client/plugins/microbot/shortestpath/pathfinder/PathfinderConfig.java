@@ -572,10 +572,10 @@ public class PathfinderConfig {
 
         // Session blacklist: once an MoA destination fails at runtime (locked region or
         // unrecognised name), don't let the pathfinder keep routing through it.
-        if (traceMoa && Rs2Walker.blacklistedMoaDestinations.contains(
-                WorldPointUtil.packWorldPoint(transport.getDestination()))) {
-            return false;
-        }
+//        if (traceMoa && Rs2Walker.blacklistedMoaDestinations.contains(
+//                WorldPointUtil.packWorldPoint(transport.getDestination()))) {
+//            return false;
+//        }
 
         // Check if the feature flag is disabled
         if (!isFeatureEnabled(transport)) {
