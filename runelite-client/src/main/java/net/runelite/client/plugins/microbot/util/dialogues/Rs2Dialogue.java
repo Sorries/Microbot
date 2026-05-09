@@ -132,7 +132,7 @@ public class Rs2Dialogue {
      * @return true if the spell filter continue option is visible, false otherwise.
      */
     private static boolean hasSpellFilterContinue() {
-        return Rs2Widget.isWidgetVisible(162, 44);
+        return false; //Rs2Widget.isWidgetVisible(162, 44);
     }
 
     /**
