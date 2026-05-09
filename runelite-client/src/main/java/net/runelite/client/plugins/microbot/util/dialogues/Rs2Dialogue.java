@@ -44,9 +44,23 @@ public class Rs2Dialogue {
      * @return true if the "Click here to continue" widget is visible, false otherwise.
      */
     public static boolean hasContinue() {
-        return hasNPCContinue() || hasPlayerContinue() || hasDeathContinue() ||
-                hasSpriteContinue() || hasTutContinue() ||
-                hasBarrowsContinue() || hasSpellFilterContinue();
+        boolean npc = hasNPCContinue();
+        boolean player = hasPlayerContinue();
+        boolean death = hasDeathContinue();
+        boolean sprite = hasSpriteContinue();
+        boolean tut = hasTutContinue();
+        boolean barrows = hasBarrowsContinue();
+        boolean spell = hasSpellFilterContinue();
+
+        if (npc) Microbot.log("Continue due to NPC continue");
+        if (player) Microbot.log("Continue due to Player continue");
+        if (death) Microbot.log("Continue due to Death continue");
+        if (sprite) Microbot.log("Continue due to Sprite continue");
+        if (tut) Microbot.log("Continue due to Tutorial continue");
+        if (barrows) Microbot.log("Continue due to Barrows continue");
+        if (spell) Microbot.log("Continue due to Spell filter continue");
+
+        return npc || player || death || sprite || tut || barrows || spell;
     }
 
     /**
