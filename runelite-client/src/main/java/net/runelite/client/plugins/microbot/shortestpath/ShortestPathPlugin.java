@@ -198,8 +198,8 @@ public class ShortestPathPlugin extends Plugin implements KeyListener {
     public static boolean startPointSet = false;
     @Setter
     private static int reachedDistance;
-    @Getter(AccessLevel.PACKAGE)
-    private ShortestPathScript shortestPathScript;
+    @Getter(AccessLevel.PUBLIC)
+    public ShortestPathScript shortestPathScript;
 
     // Set by onGameStateChanged when the client transitions to LOGGED_IN. Consumed on the next
     // game tick so varbits, quest states, inventory, and bank containers are hydrated before
