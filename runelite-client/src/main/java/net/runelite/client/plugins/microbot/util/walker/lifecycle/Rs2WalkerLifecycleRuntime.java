@@ -45,7 +45,7 @@ public final class Rs2WalkerLifecycleRuntime {
 
         WorldMapPointManager wmm = Microbot.getWorldMapPointManager();
         if (wmm == null) {
-            Rs2Walker.clearWalkingRoute("walker:wmm-unavailable retry-setTarget dest=" + target);
+            //Rs2Walker.clearWalkingRoute("walker:wmm-unavailable retry-setTarget dest=" + target);
             return;
         }
         wmm.removeIf(x -> x == ShortestPathPlugin.getMarker());

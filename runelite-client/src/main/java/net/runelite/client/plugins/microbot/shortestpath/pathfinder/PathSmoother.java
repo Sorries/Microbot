@@ -1,7 +1,6 @@
 package net.runelite.client.plugins.microbot.shortestpath.pathfinder;
 
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.client.plugins.microbot.shortestpath.WorldPointUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,19 +46,11 @@ public final class PathSmoother {
     }
 
     public static List<WorldPoint> smooth(List<WorldPoint> path, CollisionMap map, Set<WorldPoint> transportAnchors) {
-        return smooth(path, map, transportAnchors, Collections.emptySet());
-    }
-
-    public static List<WorldPoint> smooth(List<WorldPoint> path, CollisionMap map, Set<WorldPoint> transportAnchors,
-                                          Set<Long> blockedTransportEdges) {
         if (path == null || path.size() < 3 || map == null) {
             return path;
         }
         if (transportAnchors == null) {
             transportAnchors = Collections.emptySet();
-        }
-        if (blockedTransportEdges == null) {
-            blockedTransportEdges = Collections.emptySet();
         }
 
         final int n = path.size();
@@ -73,7 +64,7 @@ public final class PathSmoother {
                     && !transportAnchors.contains(path.get(j))
                     && isChebyshevAdjacentSamePlane(path.get(j), path.get(j + 1))
                     && chebyshev(path.get(i), path.get(j + 1)) <= MAX_SEGMENT_CHEBYSHEV
-                    && lineOfSight(path.get(i), path.get(j + 1), map, blockedTransportEdges)) {
+                    && lineOfSight(path.get(i), path.get(j + 1), map)) {
                 j++;
             }
             result.add(path.get(j));
@@ -92,7 +83,7 @@ public final class PathSmoother {
         return Math.max(Math.abs(a.getX() - b.getX()), Math.abs(a.getY() - b.getY()));
     }
 
-    private static boolean lineOfSight(WorldPoint from, WorldPoint to, CollisionMap map, Set<Long> blockedTransportEdges) {
+    private static boolean lineOfSight(WorldPoint from, WorldPoint to, CollisionMap map) {
         if (from.getPlane() != to.getPlane()) return false;
         final int z = from.getPlane();
         int x = from.getX();
@@ -102,11 +93,6 @@ public final class PathSmoother {
         while (x != tx || y != ty) {
             int dx = Integer.signum(tx - x);
             int dy = Integer.signum(ty - y);
-            int fromPacked = WorldPointUtil.packWorldPoint(x, y, z);
-            int toPacked = WorldPointUtil.packWorldPoint(x + dx, y + dy, z);
-            if (PathfinderConfig.isBlockedTransportStep(fromPacked, toPacked, blockedTransportEdges)) {
-                return false;
-            }
             if (!map.canStep(x, y, z, dx, dy)) {
                 return false;
             }
