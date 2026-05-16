@@ -83,6 +83,7 @@ public abstract class Script extends Global implements IScript {
             Microbot.pauseAllScripts.set(false);
             Rs2Walker.disableTeleports = false;
             Microbot.getSpecialAttackConfigs().reset();
+            Rs2Walker.setTarget(null);
         }
         if (scheduledFuture != null && !scheduledFuture.isDone()) {
             scheduledFuture.cancel(true);
