@@ -151,6 +151,7 @@ public class MicrobotPlugin extends Plugin
 		);
 
 		Microbot.pauseAllScripts.set(false);
+		Microbot.getBlockingEventManager().start();
 
 		MicrobotPluginListPanel pluginListPanel = pluginListPanelProvider.get();
 		pluginListPanel.addFakePlugin(new MicrobotPluginConfigurationDescriptor(
