@@ -34,6 +34,7 @@ import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.bank.enums.BankLocation;
 import net.runelite.client.plugins.microbot.util.depositbox.DepositBoxLocation;
 import net.runelite.client.plugins.microbot.util.depositbox.Rs2DepositBox;
+import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.walker.enums.Allotments;
 import net.runelite.client.plugins.microbot.util.walker.enums.Birds;
 import net.runelite.client.plugins.microbot.util.walker.enums.Bushes;
@@ -132,22 +133,22 @@ public class ShortestPathPanel extends PluginPanel
 		Border lineBorder = BorderFactory.createLineBorder(Color.GRAY);
 
 		return BorderFactory.createCompoundBorder(
-			BorderFactory.createCompoundBorder(
-				lineBorder,
-				BorderFactory.createEmptyBorder(2, 2, 2, 2)
-			),
-			new TitledBorder(emptyBorder, title, TitledBorder.CENTER, TitledBorder.TOP, null, null)
-			{
-				@Override
-				public void paintBorder(Component c, Graphics g, int x, int y, int width, int height)
+				BorderFactory.createCompoundBorder(
+						lineBorder,
+						BorderFactory.createEmptyBorder(2, 2, 2, 2)
+				),
+				new TitledBorder(emptyBorder, title, TitledBorder.CENTER, TitledBorder.TOP, null, null)
 				{
-					Graphics2D g2d = (Graphics2D) g.create();
-					g2d.translate(x + width / 2 - titleLabel.getPreferredSize().width / 2, y);
-					titleLabel.setSize(titleLabel.getPreferredSize());
-					titleLabel.paint(g2d);
-					g2d.dispose();
+					@Override
+					public void paintBorder(Component c, Graphics g, int x, int y, int width, int height)
+					{
+						Graphics2D g2d = (Graphics2D) g.create();
+						g2d.translate(x + width / 2 - titleLabel.getPreferredSize().width / 2, y);
+						titleLabel.setSize(titleLabel.getPreferredSize());
+						titleLabel.paint(g2d);
+						g2d.dispose();
+					}
 				}
-			}
 		);
 	}
 
@@ -216,7 +217,7 @@ public class ShortestPathPanel extends PluginPanel
 		panel.add(buttonPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(createHotkeyRow("customLocationToggleHotkey", config.customLocationToggleHotkey(),
-			"Toggle hotkey: start walking to the X/Y/Z coordinates entered above; press again to stop."));
+				"Toggle hotkey: start walking to the X/Y/Z coordinates entered above; press again to stop."));
 
 		return panel;
 	}
@@ -257,7 +258,7 @@ public class ShortestPathPanel extends PluginPanel
 		JPanel nearestBankRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 		nearestBankRow.add(useNearestBankButton);
 		nearestBankRow.add(createHotkeyButton("nearestBankHotkey", config.nearestBankHotkey(),
-			"Hotkey: walk to the nearest bank from your current location."));
+				"Hotkey: walk to the nearest bank from your current location."));
 		nearestBankPanel.add(nearestBankRow);
 		nearestBankPanel.add(goToGrandExchangeButton); // Go to GE button
 
@@ -269,7 +270,7 @@ public class ShortestPathPanel extends PluginPanel
 		panel.add(buttonPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(createHotkeyRow("bankToggleHotkey", config.bankToggleHotkey(),
-			"Toggle hotkey: start walking to the bank selected above; press again to stop."));
+				"Toggle hotkey: start walking to the bank selected above; press again to stop."));
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(nearestBankPanel);
 
@@ -302,7 +303,7 @@ public class ShortestPathPanel extends PluginPanel
 
 		nearestDepositBoxPanel.add(useNearestDepositBoxButton);
 		nearestDepositBoxPanel.add(createHotkeyButton("nearestDepositBoxHotkey", config.nearestDepositBoxHotkey(),
-			"Hotkey: walk to the nearest deposit box from your current location."));
+				"Hotkey: walk to the nearest deposit box from your current location."));
 
 		buttonPanel.add(startButton);
 		buttonPanel.add(stopButton);
@@ -312,7 +313,7 @@ public class ShortestPathPanel extends PluginPanel
 		panel.add(buttonPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(createHotkeyRow("depositBoxToggleHotkey", config.depositBoxToggleHotkey(),
-			"Toggle hotkey: start walking to the deposit box selected above; press again to stop."));
+				"Toggle hotkey: start walking to the deposit box selected above; press again to stop."));
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(nearestDepositBoxPanel);
 
@@ -353,7 +354,7 @@ public class ShortestPathPanel extends PluginPanel
 		panel.add(buttonPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(createHotkeyRow("slayerMasterToggleHotkey", config.slayerMasterToggleHotkey(),
-			"Toggle hotkey: start walking to the slayer master selected above; press again to stop."));
+				"Toggle hotkey: start walking to the slayer master selected above; press again to stop."));
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(turaelSkipPanel);
 
@@ -371,7 +372,7 @@ public class ShortestPathPanel extends PluginPanel
 		questInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		questInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		questInfoLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, questInfoLabel.getPreferredSize().height * 2));
-		
+
 		// Update quest info dynamically
 		questInfoTimer = new javax.swing.Timer(1000, e -> {
 			String questInfo = getCurrentQuestInfo();
@@ -407,7 +408,7 @@ public class ShortestPathPanel extends PluginPanel
 				}
 			}
 		});
-		
+
 		stopButton.addActionListener(e -> stopWalking());
 
 		buttonPanel.add(startButton);
@@ -424,7 +425,7 @@ public class ShortestPathPanel extends PluginPanel
 		panel.add(buttonPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(createHotkeyRow("questToggleHotkey", config.questToggleHotkey(),
-			"Toggle hotkey: start walking to the active QuestHelper step; press again to stop."));
+				"Toggle hotkey: start walking to the active QuestHelper step; press again to stop."));
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(helpPanel);
 
@@ -492,7 +493,7 @@ public class ShortestPathPanel extends PluginPanel
 		panel.add(buttonPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(createHotkeyRow("farmingToggleHotkey", config.farmingToggleHotkey(),
-			"Toggle hotkey: start walking to the farming location selected above; press again to stop."));
+				"Toggle hotkey: start walking to the farming location selected above; press again to stop."));
 
 		return panel;
 	}
@@ -563,7 +564,7 @@ public class ShortestPathPanel extends PluginPanel
 		panel.add(buttonPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(createHotkeyRow("hunterToggleHotkey", config.hunterToggleHotkey(),
-			"Toggle hotkey: start walking to the hunting area selected above; press again to stop."));
+				"Toggle hotkey: start walking to the hunting area selected above; press again to stop."));
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(hunterGuildPanel);
 
@@ -700,7 +701,8 @@ public class ShortestPathPanel extends PluginPanel
 	void stopWalking()
 	{
 		Microbot.log("Web walking stopping..");
-		plugin.getShortestPathScript().setTriggerWalker(null, "panel:stop-walking-button");
+		plugin.getShortestPathScript().setTriggerWalker(null);
+		Rs2Walker.setTarget(null);
 	}
 
 	/* ------------------------------------------------------------------
@@ -736,47 +738,47 @@ public class ShortestPathPanel extends PluginPanel
 	void startWalkingNearestBank()
 	{
 		CompletableFuture.supplyAsync(Rs2Bank::getNearestBank)
-			.thenAccept(nearestBank -> {
-				if (nearestBank != null)
-				{
-					startWalking(nearestBank.getWorldPoint());
-				}
-				else
-				{
-					Microbot.log("WebWalker: could not find a nearest bank.");
-				}
-			})
-			.exceptionally(ex -> {
-				Microbot.log("Error while finding the nearest bank: " + ex.getMessage());
-				return null;
-			});
+				.thenAccept(nearestBank -> {
+					if (nearestBank != null)
+					{
+						startWalking(nearestBank.getWorldPoint());
+					}
+					else
+					{
+						Microbot.log("WebWalker: could not find a nearest bank.");
+					}
+				})
+				.exceptionally(ex -> {
+					Microbot.log("Error while finding the nearest bank: " + ex.getMessage());
+					return null;
+				});
 	}
 
 	void startWalkingNearestDepositBox()
 	{
 		CompletableFuture.supplyAsync(Rs2DepositBox::getNearestDepositBox)
-			.thenAccept(nearestDepositBox -> {
-				if (nearestDepositBox != null)
-				{
-					startWalking(nearestDepositBox.getWorldPoint());
-				}
-				else
-				{
-					Microbot.log("WebWalker: could not find a nearest deposit box.");
-				}
-			})
-			.exceptionally(ex -> {
-				Microbot.log("Error while finding the nearest deposit box: " + ex.getMessage());
-				return null;
-			});
+				.thenAccept(nearestDepositBox -> {
+					if (nearestDepositBox != null)
+					{
+						startWalking(nearestDepositBox.getWorldPoint());
+					}
+					else
+					{
+						Microbot.log("WebWalker: could not find a nearest deposit box.");
+					}
+				})
+				.exceptionally(ex -> {
+					Microbot.log("Error while finding the nearest deposit box: " + ex.getMessage());
+					return null;
+				});
 	}
 
 	private QuestHelperPlugin getQuestHelperPlugin()
 	{
 		return (QuestHelperPlugin) Microbot.getPluginManager().getPlugins().stream()
-			.filter(x -> x instanceof QuestHelperPlugin)
-			.findFirst()
-			.orElse(null);
+				.filter(x -> x instanceof QuestHelperPlugin)
+				.findFirst()
+				.orElse(null);
 	}
 
 	WorldPoint getCurrentQuestLocation()
@@ -833,7 +835,7 @@ public class ShortestPathPanel extends PluginPanel
 		{
 			QuestHelper quest = questHelper.getSelectedQuest();
 			String questName = quest.getQuest() != null ? quest.getQuest().getName() : "Unknown Quest";
-			
+
 			QuestStep currentStep = quest.getCurrentStep();
 			if (currentStep != null)
 			{
@@ -869,10 +871,10 @@ public class ShortestPathPanel extends PluginPanel
 						}
 					}
 				}
-				
+
 				return questName + " - " + stepText;
 			}
-			
+
 			return questName + " - No active step";
 		}
 		catch (Exception e)
@@ -892,7 +894,7 @@ public class ShortestPathPanel extends PluginPanel
 		clueInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		clueInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		clueInfoLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, clueInfoLabel.getPreferredSize().height * 2));
-		
+
 		// Update clue info dynamically
 		clueInfoTimer = new javax.swing.Timer(1000, e -> {
 			String clueInfo = getCurrentClueInfo();
@@ -928,7 +930,7 @@ public class ShortestPathPanel extends PluginPanel
 				}
 			}
 		});
-		
+
 		stopButton.addActionListener(e -> stopWalking());
 
 		buttonPanel.add(startButton);
@@ -945,7 +947,7 @@ public class ShortestPathPanel extends PluginPanel
 		panel.add(buttonPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(createHotkeyRow("clueToggleHotkey", config.clueToggleHotkey(),
-			"Toggle hotkey: start walking to the active clue step; press again to stop."));
+				"Toggle hotkey: start walking to the active clue step; press again to stop."));
 		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(helpPanel);
 
@@ -955,9 +957,9 @@ public class ShortestPathPanel extends PluginPanel
 	private ClueScrollPlugin getCluePlugin()
 	{
 		return (ClueScrollPlugin) Microbot.getPluginManager().getPlugins().stream()
-			.filter(x -> x instanceof ClueScrollPlugin)
-			.findFirst()
-			.orElse(null);
+				.filter(x -> x instanceof ClueScrollPlugin)
+				.findFirst()
+				.orElse(null);
 	}
 
 	WorldPoint getCurrentClueLocation()
@@ -1015,16 +1017,16 @@ public class ShortestPathPanel extends PluginPanel
 
 		// Get clue type from class name
 		String clueType = clue.getClass().getSimpleName();
-		
+
 		// Remove "Clue" suffix if present
 		if (clueType.endsWith("Clue"))
 		{
 			clueType = clueType.substring(0, clueType.length() - 4);
 		}
-		
+
 		// Add spaces between camelCase words
 		clueType = clueType.replaceAll("([a-z])([A-Z])", "$1 $2");
-		
+
 		// Check if clue has a location
 		WorldPoint location = getCurrentClueLocation();
 		if (location == null)
