@@ -367,6 +367,11 @@ public class ChaosAltarScript extends Script {
                 sleep(1000,2000);
             }
 
+            if (Rs2Inventory.count(DRAGON_BONES) <= 4){
+                Microbot.log("No enough dragon bones, shutting down");
+                shutdown();
+            }
+
             Rs2Bank.closeBank();
         }
     }
