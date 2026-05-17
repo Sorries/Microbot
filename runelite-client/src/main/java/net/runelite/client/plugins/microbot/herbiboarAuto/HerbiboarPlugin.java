@@ -211,20 +211,50 @@ public class HerbiboarPlugin extends Plugin {
 
     @Subscribe
     public void onChatMessage(ChatMessage chatMessage) {
-        String msg = chatMessage.getMessage();
-        if (lastMessages.size() == 5) {
+        if (chatMessage.getType() != ChatMessageType.GAMEMESSAGE) {
+            return;
+        }
+
+        String msg = chatMessage.getMessage().toLowerCase();
+
+        if (lastMessages.size() >= 5) {
             lastMessages.removeFirst();
         }
-        if (chatMessage.getType() == ChatMessageType.GAMEMESSAGE) {
-            lastMessages.addLast(msg);
-            if (msg.toLowerCase().contains("successfully confused you with its tracks") ||
-                    msg.toLowerCase().contains("need to start again")) {
-                Microbot.log("Chat Reset");
+
+        lastMessages.addLast(msg);
+
+        // Existing confusion handling
+        if (msg.contains("successfully confused you with its tracks")
+                || msg.contains("need to start again")) {
+
+            Microbot.log("Chat Reset");
+            lastMessages.clear();
+            script.handleConfusionMessage();
+            return;
+        }
+
+        // New failed-search handling
+        if (lastMessages.size() >= 3) {
+            List<String> messages = new ArrayList<>(lastMessages);
+
+            int size = messages.size();
+
+            boolean failedSearch =
+                    messages.get(size - 1).contains("nothing seems to be out of place here.")
+                            && messages.get(size - 2).contains("nothing seems to be out of place here.")
+                            && messages.get(size - 3).contains("nothing seems to be out of place here.");
+
+            if (failedSearch) {
+                Microbot.log("Detected 3 failed herbiboar searches - resetting trail");
+
                 lastMessages.clear();
+
+                resetTrailData();
                 script.handleConfusionMessage();
             }
         }
     }
+
     public void updateTrailData()
     {
         if (!isInHerbiboarArea())
