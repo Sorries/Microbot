@@ -97,6 +97,18 @@ public class ChaosAltarScript extends Script {
                         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Pvp.isInWilderness()) {
                             Microbot.log("Cur 1 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                             Rs2Walker.walkTo(CHAOS_ALTAR_POINT, 3);
+                            if(!Rs2Player.isMoving()) {
+                                if(Microbot.isPluginEnabled(ShortestPathPlugin.class)){
+                                    var plugin = Microbot.getPlugin(ShortestPathPlugin.class);
+                                    if (plugin != null) {
+                                        Microbot.log("Shortest path plugin stopped");
+                                        plugin.getShortestPathScript().setTriggerWalker(null);
+                                        Rs2Walker.setTarget(null);
+                                    } else {
+                                        Microbot.log("ShortestPathPlugin is not running.");
+                                    }
+                                }
+                            }
                             Microbot.log("Cur 2 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
                         }//2949,3822
                         break;
@@ -254,6 +266,18 @@ public class ChaosAltarScript extends Script {
         if (!CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()) && Rs2Pvp.isInWilderness()) {
             Microbot.log("Cur 3 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
             Rs2Walker.walkTo(CHAOS_ALTAR_POINT,3);
+            if(!Rs2Player.isMoving()) {
+                if(Microbot.isPluginEnabled(ShortestPathPlugin.class)){
+                    var plugin = Microbot.getPlugin(ShortestPathPlugin.class);
+                    if (plugin != null) {
+                        Microbot.log("Shortest path plugin stopped");
+                        plugin.getShortestPathScript().setTriggerWalker(null);
+                        Rs2Walker.setTarget(null);
+                    } else {
+                        Microbot.log("ShortestPathPlugin is not running.");
+                    }
+                }
+            }
             Microbot.log("Cur 4 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
         }
         if (Rs2Camera.getYaw() != 0){
