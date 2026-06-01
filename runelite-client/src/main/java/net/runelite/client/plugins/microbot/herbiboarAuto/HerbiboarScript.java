@@ -440,7 +440,7 @@ public class HerbiboarScript extends Script {
                 if (BreakHandlerScript.isMicroBreakActive()) return;
                 if (BreakHandlerScript.isBreakActive()) return;
 
-                System.out.println("last move: " + getLastMove() + " last move 2: " + getLastMove().plusSeconds(30));
+                System.out.println("last move: " + getLastMove() + " last move 2: " + getLastMove().plusSeconds(30) + " last move 3: "+ getLastMove().plusSeconds(180));
                 System.out.println("last location: " + getLastLocation());
                 PluginDisablerScript script = PluginDisablerScript.getInstance();
                 // Keep checking for time of last movement, if more than 1 minute, set state to RESET
@@ -457,6 +457,7 @@ public class HerbiboarScript extends Script {
                         && state != HerbiboarState.RESET && state != HerbiboarState.INITIALIZING
                         && state != HerbiboarState.CHECK_AUTO_RETALIATE && state != HerbiboarState.BANK) {
                     System.out.println("2");
+                    System.out.println(Instant.now());
                     log.info("Player has not moved for over 1 minute, resetting script state");
                     setLastMove(Instant.now());
                     setLastLocation(null);
