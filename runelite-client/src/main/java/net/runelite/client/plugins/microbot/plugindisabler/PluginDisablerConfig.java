@@ -74,7 +74,7 @@ public interface PluginDisablerConfig extends Config {
             description = "How many minutes to check before shutting off"
     )
     default int minutes() {
-        return 5;
+        return 3;
     }
 
     @ConfigItem(
