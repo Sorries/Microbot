@@ -45,7 +45,7 @@ public class ChaosAltarScript extends Script {
     private Rs2NpcCache npcCache;
 
     public static final WorldArea CHAOS_ALTAR_AREA = new WorldArea(2947, 3818, 11, 6, 0);
-    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3818, 5, 6, 0); //2953,3824
+    public static final WorldArea CHAOS_ALTAR_FRONT_AREA = new WorldArea(2948, 3817, 5, 7, 0); //<2953,<3824
     public static final WorldPoint CHAOS_ALTAR_POINT = new WorldPoint(2949, 3820,0);
     public static final WorldPoint CHAOS_ALTAR_POINT_SOUTH = new WorldPoint(3014, 3820,0);
     public static final WorldPoint CHAOS_FANATIC = new WorldPoint(2979, 3845,0);
