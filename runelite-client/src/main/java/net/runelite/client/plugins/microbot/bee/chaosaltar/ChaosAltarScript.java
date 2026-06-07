@@ -278,6 +278,9 @@ public class ChaosAltarScript extends Script {
                     }
                 }
             }
+            if (!Rs2Player.isMoving() && isAtChaosAltar()) {
+                Rs2Walker.walkFastCanvas(CHAOS_ALTAR_POINT);
+            }
             Microbot.log("Cur 4 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
         }
         if (Rs2Camera.getYaw() != 0){
