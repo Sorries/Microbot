@@ -326,8 +326,8 @@ class PluginHubPanel extends PluginPanel
 
 				if (search != null)
 				{
-					final String _search = search;
-					configure.addActionListener(l -> topLevelConfigPanel.openWithFilter(_search));
+					final String javaIsABadLanguage = search;
+					configure.addActionListener(l -> topLevelConfigPanel.openWithFilter(javaIsABadLanguage));
 				}
 			}
 			else
