@@ -617,7 +617,7 @@ public class QoLPlugin extends Plugin implements KeyListener {
     @Subscribe
     public void onConfigChanged(ConfigChanged ev) {
         if ("smoothRotation".equals(ev.getKey()) && config.smoothCameraTracking() && Microbot.isLoggedIn()) {
-            previousCamera[YAW_INDEX] = Microbot.getClient().getMapAngle();
+            previousCamera[YAW_INDEX] = Microbot.getClient().getCameraYawTarget();
         }
         if (ev.getKey().equals("accentColor") || ev.getKey().equals("toggleButtonColor") || ev.getKey().equals("pluginLabelColor")) {
             updateUiElements();
@@ -758,7 +758,7 @@ public class QoLPlugin extends Plugin implements KeyListener {
 
 
     private void applySmoothingToAngle(int index) {
-        int currentAngle = index == YAW_INDEX ? Microbot.getClient().getMapAngle() : 0;
+        int currentAngle = index == YAW_INDEX ? Microbot.getClient().getCameraYawTarget() : 0;
         int newDeltaAngle = getSmallestAngle(previousCamera[index], currentAngle);
         deltaCamera[index] += newDeltaAngle;
 
