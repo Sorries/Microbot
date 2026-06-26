@@ -56,17 +56,17 @@ public class PlayerMonitorScript extends Script {
                     if (Microbot.getClient().getGameCycle() % 20 >= 10) {
                         if (!playAlarm) {
                             if (plugin.isOverlayOn()) {
-                                if (config.playAlarmSound()) {
-                                    Microbot.getClientThread().invokeLater(() -> Microbot.getClient().playSoundEffect(config.alarmSoundID().getId(), 127));
-                                }
-                                playAlarm = true;
-                                if (config.useFlash()) {
-                                    flashOverlay.setFlashColor(config.flashColor());
-                                }
+//                                if (config.playAlarmSound()) {
+//                                    Microbot.getClientThread().invokeLater(() -> Microbot.getClient().playSoundEffect(config.alarmSoundID().getId(), 127));
+//                                }
+//                                playAlarm = true;
+//                                if (config.useFlash()) {
+//                                    flashOverlay.setFlashColor(config.flashColor());
+//                                }
                                 if (config.useEmergency() && (config.onlyWilderness() && Microbot.getVarbitValue(Varbits.IN_WILDERNESS) == 1)) {
-                                    newPlayer = true;
-                                    otherPlayerLocation = Rs2Player.getWorldLocation();
-                                    otherPlayerWorld = Rs2Player.getWorld();
+//                                    newPlayer = true;
+//                                    otherPlayerLocation = Rs2Player.getWorldLocation();
+//                                    otherPlayerWorld = Rs2Player.getWorld();
                                     Microbot.getClientThread().runOnSeperateThread(() -> {
                                         switch (config.emergencyAction()) {
                                             case LOGOUT:
@@ -114,19 +114,19 @@ public class PlayerMonitorScript extends Script {
                                     });
                                 }
                             }
-                            if (PlayerMonitorPlugin.mouseAlarm && config.mouseAlarm()) {
-                                Microbot.getClientThread().invokeLater(() -> Microbot.getClient().playSoundEffect(config.mouseAlarmSound().getId(), 127));
-                            }
+//                            if (PlayerMonitorPlugin.mouseAlarm && config.mouseAlarm()) {
+//                                Microbot.getClientThread().invokeLater(() -> Microbot.getClient().playSoundEffect(config.mouseAlarmSound().getId(), 127));
+//                            }
                         }
                     } else {
-                        if (playAlarm) {
-                            playAlarm = false;
-                            flashOverlay.setFlashColor(offColor);
-                        }
+//                        if (playAlarm) {
+//                            playAlarm = false;
+//                            flashOverlay.setFlashColor(offColor);
+//                        }
                     }
-                    if (newPlayer && !plugin.isOverlayOn() && (Rs2Player.getWorldLocation().distanceTo(otherPlayerLocation) > 32 || otherPlayerWorld != Rs2Player.getWorld())) {
-                        newPlayer = false;
-                    }
+//                    if (newPlayer && !plugin.isOverlayOn() && (Rs2Player.getWorldLocation().distanceTo(otherPlayerLocation) > 32 || otherPlayerWorld != Rs2Player.getWorld())) {
+//                        newPlayer = false;
+//                    }
                 }
 
                 if (config.liteMode()) {
