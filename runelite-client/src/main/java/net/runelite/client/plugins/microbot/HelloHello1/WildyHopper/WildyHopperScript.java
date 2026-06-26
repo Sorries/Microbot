@@ -1,34 +1,15 @@
-package net.runelite.client.plugins.microbot.HelloHello1.example;
+package net.runelite.client.plugins.microbot.HelloHello1.WildyHopper;
 
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.GameState;
-import net.runelite.api.Player;
-import net.runelite.api.Skill;
-import net.runelite.api.WorldView;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
-import net.runelite.client.plugins.microbot.api.npc.models.Rs2NpcModel;
-import net.runelite.client.plugins.microbot.api.tileobject.models.Rs2TileObjectModel;
-import net.runelite.client.plugins.microbot.util.dialogues.Rs2Dialogue;
-import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
-import net.runelite.client.plugins.microbot.util.grounditem.Rs2GroundItem;
-import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
-import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
-import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
-import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
-import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
-import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 @Slf4j
-public class ExampleScript extends Script {
+public class WildyHopperScript extends Script {
 
     public boolean run() {
         mainScheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(() -> {
@@ -56,7 +37,9 @@ public class ExampleScript extends Script {
 //
 //                printSummary();
 //                shutdown();
-            Rs2Player.hopIfPlayerDetected(1,0,50);
+            if(Microbot.getVarbitValue(VarbitID.INSIDE_WILDERNESS) == 1) {
+                Rs2Player.hopIfPlayerDetected(1, 0, 0);
+            }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }

@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.microbot.HelloHello1.example;
+package net.runelite.client.plugins.microbot.HelloHello1.WildyHopper;
 
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
@@ -16,7 +16,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExampleScriptOverlay extends Overlay {
+public class WildyHopperOverlay extends Overlay {
 
     private static final Color REACHABLE_COLOR = new Color(0, 255, 0, 50);
     private static final Color REACHABLE_BORDER_COLOR = new Color(0, 255, 0, 150);
@@ -25,7 +25,7 @@ public class ExampleScriptOverlay extends Overlay {
     private Client client;
 
     @Inject
-    public ExampleScriptOverlay() {
+    public WildyHopperOverlay() {
         setPosition(OverlayPosition.DYNAMIC);
         setLayer(OverlayLayer.ABOVE_SCENE);
     }
