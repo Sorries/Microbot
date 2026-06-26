@@ -22,7 +22,7 @@ import java.awt.*;
    )
    String playerAlarm = "Player Alarm";
 
-   @Range(max = 30, min = 0)
+   @Range(max = 100, min = 0)
    @ConfigItem(keyName = "alarmRadius", name = "Alarm radius", description = "Distance for another player to trigger the alarm. WARNING: Players within range that are not rendered will not trigger the alarm.", position = 0, section = playerAlarm)
    default int alarmRadius() { return 15; }
    @ConfigItem(keyName = "desktopNotification", name = "Desktop notification", description = "Receive a desktop notification when the alarm triggers", position = 1, section = playerAlarm)
