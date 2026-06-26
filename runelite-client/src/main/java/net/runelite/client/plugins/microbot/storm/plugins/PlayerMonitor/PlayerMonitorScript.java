@@ -133,16 +133,7 @@ public class PlayerMonitorScript extends Script {
                     if (plugin.isPlayerDetected() && !logoutInitiated) {
                         log.info("Player detected - initiating logout");
                         Microbot.log("PlayerMonitorLite: Player detected - logging out");
-                        logoutInitiated = true;
-                        // Perform logout
-                        if (Rs2AntibanSettings.naturalMouse) {Rs2AntibanSettings.naturalMouse = false; naturalmouse = true;}
-                        Microbot.getClientThread().runOnSeperateThread(() -> {
-                            logoutPlayer();
-                            return true;
-                        });
-                        if (naturalmouse && !Rs2AntibanSettings.naturalMouse) {Rs2AntibanSettings.naturalMouse = true; naturalmouse = false;}
-                    } else if (!plugin.isPlayerDetected() && logoutInitiated) {
-                        logoutInitiated = false;
+                        logoutPlayer();
                     }
                 }
 
