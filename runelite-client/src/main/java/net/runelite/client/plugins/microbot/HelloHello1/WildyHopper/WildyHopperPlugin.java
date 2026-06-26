@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.microbot.HelloHello1.example;
+package net.runelite.client.plugins.microbot.HelloHello1.WildyHopper;
 
 import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
@@ -13,45 +13,45 @@ import javax.inject.Inject;
 import java.awt.*;
 @Slf4j
 @PluginDescriptor(
-        name = PluginDescriptor.Default + "Hello Example Plugin",
-        description = "Hello Example Plugin - Testing",
+        name = PluginDescriptor.Default + "Hello WildyHopper",
+        description = "Wildy Hopper",
         tags = {"performance", "microbot", "test", "gameobject"},
         enabledByDefault = false
 )
-public class ExamplePlugin extends Plugin {
+public class WildyHopperPlugin extends Plugin {
 
     @Inject
-    private ExampleScript exampleScript;
+    private WildyHopperScript wildyHopperScript;
 
     @Inject
-    private ExampleScriptOverlay exampleScriptOverlay;
+    private WildyHopperOverlay wildyHopperOverlay;
 
     @Inject
     private OverlayManager overlayManager;
 
     @Inject
-    private ExampleConfig exampleConfig;
+    private WildyHopperConfig wildyHopperConfig;
 
     @Provides
-    ExampleConfig provideConfig(ConfigManager configManager) {
-        return configManager.getConfig(ExampleConfig.class);
+    WildyHopperConfig provideConfig(ConfigManager configManager) {
+        return configManager.getConfig(WildyHopperConfig.class);
     }
 
     @Override
     protected void startUp() throws AWTException {
-        overlayManager.add(exampleScriptOverlay);
-        exampleScript.run();
+        overlayManager.add(wildyHopperOverlay);
+        wildyHopperScript.run();
     }
 
     @Override
     protected void shutDown() {
-        overlayManager.remove(exampleScriptOverlay);
-        exampleScript.shutdown();
+        overlayManager.remove(wildyHopperOverlay);
+        wildyHopperScript.shutdown();
     }
 
     @Subscribe
     public void onConfigChanged(ConfigChanged event) {
-        if (!event.getGroup().equals("example")) {
+        if (!event.getGroup().equalsIgnoreCase("wildyhopper")) {
             return;
         }
 
