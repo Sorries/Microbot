@@ -7,6 +7,7 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Player;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.MenuOptionClicked;
@@ -80,24 +81,17 @@ import java.util.stream.Collectors;
    private final HashMap<String, Integer> playerNameToTimeInRange = new HashMap<>();
 
    private boolean isDangerousPlayerNearby() {
-     // Get local player's position
-     LocalPoint currentPosition = client.getLocalPlayer().getLocalLocation();
+     WorldPoint currentPosition = Rs2Player.getWorldLocation();
 
-     // Get players in combat level range from the Rs2Player utility class
      List<Rs2PlayerModel> threatPlayers = Rs2Player.getPlayersInCombatLevelRange();
 
-     if (!threatPlayers.isEmpty()) {
-       //log.debug("Found {} players in combat level range", threatPlayers.size());
-     }
-
-     // Check if any of them are within the configured alarm radius
      for (Rs2PlayerModel playerModel : threatPlayers) {
-       LocalPoint playerLocation = playerModel.getPlayer().getLocalLocation();
-       float distanceInTiles = playerLocation.distanceTo(currentPosition) / 128f;
+       WorldPoint playerLocation = playerModel.getPlayer().getWorldLocation();
 
-       if (distanceInTiles <= config.alarmRadius()) {
-         log.debug("Player {} is within alarm radius: {} tiles",
-                 playerModel.getPlayer().getName(), distanceInTiles);
+       if (playerLocation.distanceTo(currentPosition) <= config.alarmRadius()) {
+         Microbot.log("Player {} is within alarm radius: {} tiles",
+                 playerModel.getPlayer().getName(),
+                 playerLocation.distanceTo(currentPosition));
          return true;
        }
      }
