@@ -1,11 +1,11 @@
-package net.runelite.client.plugins.microbot.HelloHello1.example;
+package net.runelite.client.plugins.microbot.HelloHello1.WildyHopper;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("example")
-public interface ExampleConfig extends Config {
+@ConfigGroup("wildyhopper")
+public interface WildyHopperConfig extends Config {
 
     @ConfigItem(
             keyName = "debug",
