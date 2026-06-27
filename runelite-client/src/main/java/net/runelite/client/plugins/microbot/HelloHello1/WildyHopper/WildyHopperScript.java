@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 
 import java.util.concurrent.TimeUnit;
@@ -38,12 +39,13 @@ public class WildyHopperScript extends Script {
 //                printSummary();
 //                shutdown();
             if(Microbot.getVarbitValue(VarbitID.INSIDE_WILDERNESS) == 1) {
+                sleep(Rs2Random.skewedRandAuto(200));
                 Rs2Player.hopIfPlayerDetected(1, 0, 0);
             }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
-        }, 0, 600, TimeUnit.MILLISECONDS);
+        }, 0, 100, TimeUnit.MILLISECONDS);
 
         return true;
     }
