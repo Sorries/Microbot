@@ -26,10 +26,8 @@ public class WildyHopperOverlay extends OverlayPanel {
     @Inject
     public WildyHopperOverlay() {
         setPosition(OverlayPosition.TOP_LEFT);
-        setLayer(OverlayLayer.ABOVE_SCENE);
         setNaughty();
     }
-
     @Override
     public Dimension render(Graphics2D graphics) {
         if (!Microbot.isLoggedIn())
