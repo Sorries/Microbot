@@ -5,6 +5,7 @@ import net.runelite.api.GameObject;
 import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.plugins.microbot.HelloHello1.WildyHopper.WildyHopperPlugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.api.npc.Rs2NpcQueryable;
@@ -158,8 +159,8 @@ public class ChaosAltarScript extends Script {
             Rs2Widget.clickWidget(10485779);
         }
         if (inWilderness && hasAnyBones){
-            if (!Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
-                Microbot.startPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
+            if (!Microbot.isPluginEnabled(WildyHopperPlugin.class)){
+                Microbot.startPlugin(Microbot.getPlugin(WildyHopperPlugin.class));
             }
         }
 
@@ -170,8 +171,8 @@ public class ChaosAltarScript extends Script {
             return State.WALK_TO_ALTAR;
         }
         if ((inWilderness || inWilderness3) && !hasAnyBones) {
-            if (Microbot.isPluginEnabled(PlayerMonitorPlugin.class)){
-                Microbot.stopPlugin(Microbot.getPlugin(PlayerMonitorPlugin.class));
+            if (Microbot.isPluginEnabled(WildyHopperPlugin.class)){
+                Microbot.stopPlugin(Microbot.getPlugin(WildyHopperPlugin.class));
             }
             return State.DIE_TO_NPC;
         }
