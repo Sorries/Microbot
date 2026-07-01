@@ -510,8 +510,8 @@ public class PerilousMoon extends BasicQuestHelper
 		getFishingSupplies = new ObjectStep(this, ObjectID.PMOON_SUPPLY_CRATE, new WorldPoint(1511, 9695, 0),
 			"Take fishing supplies from the supply crates in the camp.");
 		getFishingSupplies.addDialogStep("Take fishing supplies.");
-		fishBream = new ObjectStep(this, ObjectID.PMOON_FISHING_SPOT_MULTI, new WorldPoint(1521, 9689, 0),
-			"Fish a bream from the stream east of the camp.", bigFishingNet, knife);
+//		fishBream = new ObjectStep(this, ObjectID.PMOON_FISHING_SPOT_MULTI, new WorldPoint(1521, 9689, 0),
+//			"Fish a bream from the stream east of the camp.", bigFishingNet, knife);
 		useKnifeOnBream = new DetailedQuestStep(this, "Use a knife on the raw bream.", knife.highlighted(), bream.highlighted());
 		getHunterSupplies = new ObjectStep(this, ObjectID.PMOON_SUPPLY_CRATE, new WorldPoint(1511, 9695, 0),
 			"Take hunter supplies from the supply crates in the camp. You only need the rope, and the knife from the fishing supplies.");
