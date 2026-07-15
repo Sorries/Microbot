@@ -49,7 +49,7 @@ import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.FatalErrorDialog;
 import net.runelite.client.ui.SplashScreen;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.ui.overlay.WidgetOverlay;
+//import net.runelite.client.ui.overlay.WidgetOverlay;
 import net.runelite.client.ui.overlay.tooltip.TooltipOverlay;
 import net.runelite.client.ui.overlay.worldmap.WorldMapOverlay;
 import net.runelite.client.util.OSType;
@@ -298,20 +298,20 @@ public class RuneLiteDebug {
             final String crashSummary = CrashReportFormatter.summarize(e);
             final String crashDetails = CrashReportFormatter.buildReport(e);
             SwingUtilities.invokeLater(() ->
-                    {
-                        if (SplashScreen.isOpen())
-                        {
-                                SplashScreen.showError("RuneLite failed to start", crashSummary, crashDetails);
-                        }
-                        else
-                        {
-                                new FatalErrorDialog("RuneLite has encountered an unexpected error during startup.")
-                                        .setContent(crashDetails)
-                                        .addCopyButton("Copy error details")
-                                        .addHelpButtons()
-                                        .open();
-                        }
-                    });
+            {
+                if (SplashScreen.isOpen())
+                {
+                    SplashScreen.showError("RuneLite failed to start", crashSummary, crashDetails);
+                }
+                else
+                {
+                    new FatalErrorDialog("RuneLite has encountered an unexpected error during startup.")
+                            .setContent(crashDetails)
+                            .addCopyButton("Copy error details")
+                            .addHelpButtons()
+                            .open();
+                }
+            });
         } finally {
             if (!startupFailed) {
                 SplashScreen.stop();
@@ -341,7 +341,7 @@ public class RuneLiteDebug {
         }
 
         client.initialize();
-        
+
         SplashScreen.stage(.57, null, "Loading configuration");
 
         // Load the session so that the session profiles can be loaded next
@@ -350,8 +350,8 @@ public class RuneLiteDebug {
         // Load user configuration
         configManager.load();
 
-		// Initialize MicrobotPluginManager after configManager is loaded
-		microbotPluginManager.init();
+        // Initialize MicrobotPluginManager after configManager is loaded
+        microbotPluginManager.init();
 
         // Update check requires ConfigManager to be ready before it runs
         Updater updater = injector.getInstance(Updater.class);
@@ -379,16 +379,17 @@ public class RuneLiteDebug {
         eventBus.register(clientUI);
         eventBus.register(pluginManager);
         eventBus.register(externalPluginManager);
-		eventBus.register(microbotPluginManager);
+        eventBus.register(microbotPluginManager);
         eventBus.register(overlayManager);
         eventBus.register(configManager);
         eventBus.register(discordService);
 
         if (!isOutdated) {
             // Add core overlays
-            WidgetOverlay.createOverlays(overlayManager, client).forEach(overlayManager::add);
-            overlayManager.add(worldMapOverlay.get());
-            overlayManager.add(tooltipOverlay.get());
+//            WidgetOverlay.createOverlays(overlayManager, client).forEach(overlayManager::add);
+//            overlayManager.add(worldMapOverlay.get());
+//            overlayManager.add(tooltipOverlay.get());
+            overlayManager.init();
         }
 
         clientUI.show();
