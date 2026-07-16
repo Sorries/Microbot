@@ -27,6 +27,21 @@ package net.runelite.client.plugins.gpu;
 import com.google.common.base.Stopwatch;
 import com.google.common.primitives.Ints;
 import com.google.inject.Provides;
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import javax.inject.Inject;
+import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.BufferProvider;
 import net.runelite.api.Client;
@@ -58,7 +73,6 @@ import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.gpu.config.AntiAliasingMode;
 import net.runelite.client.plugins.gpu.config.UIScalingMode;
 import net.runelite.client.plugins.gpu.template.Template;
-import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.rlawt.AWTContext;
@@ -74,19 +88,6 @@ import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.nio.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 
 @PluginDescriptor(
 	name = "GPU",
@@ -1429,9 +1430,6 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 		}
 		catch (RuntimeException ex)
 		{
-			// Notice that for some machines the GPU plugin might crash after long session
-			// Pause all scripts if this happens to avoid getting stuck
-			Microbot.pauseAllScripts.compareAndSet(false, true);
 			// this is always fatal
 			if (!canvas.isValid())
 			{
@@ -1538,26 +1536,19 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 		width = getScaledValue(t.getScaleX(), width);
 		height = getScaledValue(t.getScaleY(), height);
 
-		ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4)
-			.order(ByteOrder.nativeOrder());
-
-		glReadBuffer(awtContext.getBufferMode());
-		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
-		for (int y = 0; y < height; ++y)
-		{
-			for (int x = 0; x < width; ++x)
-			{
-				int r = buffer.get() & 0xff;
-				int g = buffer.get() & 0xff;
-				int b = buffer.get() & 0xff;
-				buffer.get(); // alpha
+		glReadBuffer(awtContext.getBufferMode());
+		glReadPixels(0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels);
 
-				pixels[(height - y - 1) * width + x] = (r << 16) | (g << 8) | b;
-			}
+		// glReadPixels returns rows bottom-up, flip them to top-down
+		int[] row = new int[width];
+		for (int y0 = 0, y1 = height - 1; y0 < y1; ++y0, --y1)
+		{
+			System.arraycopy(pixels, y0 * width, row, 0, width);
+			System.arraycopy(pixels, y1 * width, pixels, y0 * width, width);
+			System.arraycopy(row, 0, pixels, y1 * width, width);
 		}
 
 		return image;
