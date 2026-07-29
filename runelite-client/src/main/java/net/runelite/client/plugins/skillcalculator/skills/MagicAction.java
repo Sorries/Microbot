@@ -27,6 +27,7 @@ package net.runelite.client.plugins.skillcalculator.skills;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.SpriteID;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Spellbook;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
@@ -139,7 +140,7 @@ public enum MagicAction implements SkillAction
 	KHARYRLL_TELEPORT("Kharyrll Teleport", 66, 76, SpriteID.SPELL_KHARYRLL_TELEPORT, true, Rs2Spellbook.ANCIENT),
 	VILE_VIGOUR("Vile Vigour", 66, 76, SpriteID.SPELL_VILE_VIGOUR, true, Rs2Spellbook.ARCEUUS),
 	VULNERABILITY("Vulnerability", 66, 76, SpriteID.SPELL_VULNERABILITY, true, Rs2Spellbook.MODERN),
-	NPC_CONTACT("Npc Contact", 67, 63, SpriteID.SPELL_NPC_CONTACT, true, Rs2Spellbook.LUNAR),
+	NPC_CONTACT("Astral Contact", 67, 63, SpriteID.SPELL_NPC_CONTACT, true, Rs2Spellbook.LUNAR),
 	BLOOD_BURST("Blood Burst", 68, 39, SpriteID.SPELL_BLOOD_BURST, true, Rs2Spellbook.ANCIENT),
 	CURE_OTHER("Cure Other", 68, 65, SpriteID.SPELL_CURE_OTHER, true, Rs2Spellbook.LUNAR),
 	HUMIDIFY("Humidify", 68, 65, SpriteID.SPELL_HUMIDIFY, true, Rs2Spellbook.LUNAR),
@@ -259,10 +260,11 @@ public enum MagicAction implements SkillAction
 	}
 
 	public int getWidgetId() {
-		return Rs2Widget.findWidget(name, Arrays.stream(Rs2Widget.getWidget(218, 0).getStaticChildren()).collect(Collectors.toList())).getId();
+		return Rs2Widget.findWidget(name, Arrays.stream(Rs2Widget.getWidget(InterfaceID.MagicSpellbook.SPELLLAYER).getStaticChildren()).collect(Collectors.toList())).getId();
 	}
 
 	public String[] getActions() {
-		return Rs2Widget.findWidget(name, Arrays.stream(Rs2Widget.getWidget(218, 0).getStaticChildren()).collect(Collectors.toList())).getActions();
+		//return Rs2Widget.findWidget(name, Arrays.stream(Rs2Widget.getWidget(218, 3).getStaticChildren()).collect(Collectors.toList())).getActions();
+		return Rs2Widget.findWidget(name, Arrays.stream(Rs2Widget.getWidget(InterfaceID.MagicSpellbook.SPELLLAYER).getStaticChildren()).collect(Collectors.toList())).getActions();
 	}
 }
