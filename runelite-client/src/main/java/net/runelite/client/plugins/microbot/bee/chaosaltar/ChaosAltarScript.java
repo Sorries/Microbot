@@ -5,6 +5,7 @@ import net.runelite.api.GameObject;
 import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.client.plugins.microbot.HelloHello1.WildyHopper.WildyHopperPlugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
@@ -156,7 +157,7 @@ public class ChaosAltarScript extends Script {
         boolean underAttack = Rs2Player.getHealthPercentage() < 95;
         if (!Rs2Prayer.isQuickPrayerEnabled() && underAttack) {
             //Rs2Prayer.toggleQuickPrayer(underAttack);
-            Rs2Widget.clickWidget(10485779);
+            Rs2Widget.clickWidget(InterfaceID.Orbs.PRAYERBUTTON);
         }
         if (inWilderness && hasAnyBones){
             if (!Microbot.isPluginEnabled(WildyHopperPlugin.class)){
@@ -221,7 +222,7 @@ public class ChaosAltarScript extends Script {
         // Attack chaos fanatic to die
         if (!Rs2Prayer.isQuickPrayerEnabled()) {
             sleep(1000,2000);
-            Rs2Widget.clickWidget(10485779);
+            Rs2Widget.clickWidget(InterfaceID.Orbs.PRAYERBUTTON);
             sleep(1000,2000);
         }
         Rs2NpcModel chaosFanatic = npcCache.query().withName("Chaos Fanatic").within(15).nearest();
@@ -285,7 +286,7 @@ public class ChaosAltarScript extends Script {
             Microbot.log("Cur 4 " + CHAOS_ALTAR_FRONT_AREA.contains(Rs2Player.getWorldLocation()));
         }
         if (Rs2Camera.getYaw() != 0){
-            Rs2Widget.clickWidget(10747935);
+            Rs2Widget.clickWidget(InterfaceID.ToplevelPreEoc.COMPASSCLICK);
             sleep(500,750);
         }
 
@@ -329,7 +330,7 @@ public class ChaosAltarScript extends Script {
             Rs2Walker.walkTo(CHAOS_ALTAR_POINT,3);
         }
         if (Rs2Camera.getYaw() != 0){
-            Rs2Widget.clickWidget(10747935);
+            Rs2Widget.clickWidget(InterfaceID.ToplevelPreEoc.COMPASSCLICK);
         }
 
         while (Rs2Inventory.contains(DRAGON_BONES)
