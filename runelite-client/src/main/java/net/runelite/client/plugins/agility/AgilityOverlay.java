@@ -40,11 +40,17 @@ import net.runelite.api.Point;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.game.AgilityShortcut;
+import net.runelite.client.plugins.microbot.util.models.RS2Item;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
 import net.runelite.client.util.ColorUtil;
+
+import javax.inject.Inject;
+import java.awt.*;
+import java.util.List;
+import java.util.Set;
 
 class AgilityOverlay extends Overlay
 {
@@ -77,7 +83,7 @@ class AgilityOverlay extends Overlay
 
 		LocalPoint playerLocation = cameraFocus.getCameraFocus();
 		Point mousePosition = client.getMouseCanvasPosition();
-		final List<Tile> marksOfGrace = plugin.getMarksOfGrace();
+		final List<RS2Item> marksOfGrace = plugin.getMarksOfGrace();
 		final Tile stickTile = plugin.getStickTile();
 
 		plugin.getObstacles().forEach((object, obstacle) ->
@@ -145,9 +151,9 @@ class AgilityOverlay extends Overlay
 
 		if (config.highlightMarks() && !marksOfGrace.isEmpty())
 		{
-			for (Tile markOfGraceTile : marksOfGrace)
+			for (RS2Item markOfGraceTile : marksOfGrace)
 			{
-				highlightTile(graphics, playerLocation, markOfGraceTile, config.getMarkColor());
+				highlightTile(graphics, playerLocation, markOfGraceTile.getTile(), config.getMarkColor());
 			}
 		}
 
