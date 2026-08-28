@@ -30,6 +30,70 @@ import com.formdev.flatlaf.util.SystemInfo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
+import java.awt.AWTException;
+import java.awt.Canvas;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.KeyboardFocusManager;
+import java.awt.LayoutManager2;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.SystemTray;
+import java.awt.Taskbar;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.desktop.QuitStrategy;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.image.BufferedImage;
+import java.time.Duration;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+import java.util.TreeSet;
+import java.util.function.Function;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import javax.swing.Box;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRootPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.ToolTipManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.event.HyperlinkEvent;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import lombok.Getter;
@@ -317,7 +381,14 @@ public class ClientUI
 				OSXFullScreenAdapter.install(frame);
 			}
 
-			frame.setTitle(title);
+			final Client client = (Client) this.client;
+			String frameTitle = title;
+			if (client.getLauncherDisplayName() != null && config.usernameInTitle())
+			{
+				frameTitle += " - " + client.getLauncherDisplayName();
+			}
+
+			frame.setTitle(frameTitle);
 			frame.setIconImages(Arrays.asList(ICON_128, ICON_16));
 			frame.setLocationRelativeTo(frame.getOwner());
 			frame.setResizable(true);
@@ -377,12 +448,12 @@ public class ClientUI
 			content = new JPanel();
 			content.setLayout(new Layout());
 
-			clientPanel = new ClientPanel(client);
-			consolePanel = new LogConsolePanel();
-			clientPanel.setConsole(consolePanel);
-			clientPanel.setConsoleVisible(false);
-			consoleVisible = false;
-			initializeConsoleLogging();
+			clientPanel = new ClientPanel(this.client);
+            consolePanel = new LogConsolePanel();
+            clientPanel.setConsole(consolePanel);
+            clientPanel.setConsoleVisible(false);
+            consoleVisible = false;
+            initializeConsoleLogging();
 			content.add(clientPanel);
 
 			sidebar = new JTabbedPane(JTabbedPane.RIGHT);
@@ -1298,12 +1369,24 @@ public class ClientUI
 
 		if (config.usernameInTitle())
 		{
-			final Player player = ((Client) client).getLocalPlayer();
+			final Client client = (Client) this.client;
+			final Player player = client.getLocalPlayer();
 
+			String playerName = null;
 			if (player != null && player.getName() != null)
 			{
-				frame.setTitle(title + " - " + player.getName());
+				playerName = player.getName();
 			}
+			else if (client.getLauncherDisplayName() != null)
+			{
+				playerName = client.getLauncherDisplayName();
+			}
+
+			if (playerName != null)
+			{
+				frame.setTitle(title + " - " + playerName);
+			}
+
 		}
 		else
 		{
