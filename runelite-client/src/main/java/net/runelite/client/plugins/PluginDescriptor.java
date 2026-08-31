@@ -23,9 +23,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package net.runelite.client.plugins;
-
 import java.awt.*;
 import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -105,7 +109,7 @@ public @interface PluginDescriptor
 	 * If this plugin should be disabled on startup. This is used for plugins that
 	 * are not needed in certain situations, like the cache debugger.
 	 */
-	boolean disableOnStartUp() default false; 
+	boolean disableOnStartUp() default false;
 	/**
 	 * disable the plugin on startup and not allow it to be enabled
 	 * This is used for plugins that are not needed in certain situations
@@ -117,6 +121,18 @@ public @interface PluginDescriptor
 	 * Whether or not plugin is hidden from configuration panel
 	 */
 	boolean hidden() default false;
+
+	/**
+	 * The internal-name of a Plugin Hub plugin as used in the PluginHub repository.
+	 * This value must be all lowercase and snake-cased
+	 */
+	String internalName() default "";
+
+	/**
+	 * The subpath of .runelite this plugin that should be migrated to the plugin's
+	 * {@link Plugin#getPluginDirectory() plugin directory}.
+	 */
+	String legacyDataDirectory() default "";
 
 	boolean developerPlugin() default false;
 
