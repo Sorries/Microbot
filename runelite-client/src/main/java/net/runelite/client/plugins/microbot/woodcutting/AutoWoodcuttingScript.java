@@ -188,7 +188,7 @@ public class AutoWoodcuttingScript extends Script {
             if(currentLogBasketCount < Rs2LogBasket.LOG_BASKET_CAPACITY && Rs2Inventory.isFull() && Rs2Inventory.contains(treeType.getLog())) {
 
                 if (Rs2LogBasket.fillLogBasket()) {
-                    Rs2Antiban.actionCooldown();
+                    //Rs2Antiban.actionCooldown();
                 }
                 int currentLogCountAfterFill = Rs2Inventory.count(treeType.getLogID());
                 int addedLogs = currentLogCountBeforeFill - currentLogCountAfterFill;
@@ -204,7 +204,7 @@ public class AutoWoodcuttingScript extends Script {
         }
 
         if (handleLooting(config)) {
-            Rs2Antiban.actionCooldown();
+            //Rs2Antiban.actionCooldown();
             return true;
         }
 
@@ -669,7 +669,7 @@ public class AutoWoodcuttingScript extends Script {
         returnPoint = null;
         initialPlayerLocation = null;
         hasAutoHopMessageShown = false;
-        Rs2Antiban.resetAntibanSettings();
+        //Rs2Antiban.resetAntibanSettings();
         activeLocation = null;
     }
 }
