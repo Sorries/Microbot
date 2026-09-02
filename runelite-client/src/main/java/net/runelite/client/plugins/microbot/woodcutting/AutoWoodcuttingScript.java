@@ -199,6 +199,7 @@ public class AutoWoodcuttingScript extends Script {
        
 
         if (Rs2Inventory.isFull()) {
+            sleep(1000,5000);
             woodcuttingScriptState = WoodcuttingScriptState.RESETTING;
             return true;
         }

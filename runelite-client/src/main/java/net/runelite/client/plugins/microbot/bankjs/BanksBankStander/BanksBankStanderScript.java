@@ -244,7 +244,8 @@ public class BanksBankStanderScript extends Script {
             } else {
                 sleepUntil(() -> !Rs2Inventory.hasItem(config.secondItemIdentifier()), 40000);
             }
-            sleep(calculateSleepDuration(1));
+            //sleep(calculateSleepDuration(1));
+            sleep(1000,5000);
         }
         return true;
     }
