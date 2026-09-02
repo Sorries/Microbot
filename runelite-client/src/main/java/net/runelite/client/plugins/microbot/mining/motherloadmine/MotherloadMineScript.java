@@ -303,7 +303,11 @@ public class MotherloadMineScript extends Script
         if(Rs2Inventory.hasItem("hammer") || Rs2Equipment.isWearing("hammer")){
             if(Rs2DepositBox.openDepositBox()){
                 sleepUntil(() -> Rs2DepositBox.isOpen());
-                Rs2DepositBox.depositAllExcept("hammer",pickaxeName);
+                if (pickaxeName != null) {
+                    Rs2DepositBox.depositAllExcept("hammer", pickaxeName);
+                } else {
+                    Rs2DepositBox.depositAllExcept("hammer");
+                }
                 Rs2Inventory.waitForInventoryChanges(1000);
                 sleep(800,1300);
                 if(Rs2DepositBox.isOpen()) {
