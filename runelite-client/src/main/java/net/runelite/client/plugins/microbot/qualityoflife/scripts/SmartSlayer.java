@@ -170,11 +170,11 @@ private static String slayerMonster = null;
                                 true
                         );
                         if(Rs2Random.betweenInclusive(0,1) == 0) {
-                            Rs2GroundItem.lootItemsBasedOnNames(nameParams);
-                            Rs2GroundItem.lootItemBasedOnValue(valueParams);
+                            //Rs2GroundItem.lootItemsBasedOnNames(nameParams);
+                            //Rs2GroundItem.lootItemBasedOnValue(valueParams);
                         }else{
-                            Rs2GroundItem.lootItemBasedOnValue(valueParams);
-                            Rs2GroundItem.lootItemsBasedOnNames(nameParams);
+                            //Rs2GroundItem.lootItemBasedOnValue(valueParams);
+                            //Rs2GroundItem.lootItemsBasedOnNames(nameParams);
                         }
                         sleep(1000,2000);
                     }
@@ -259,7 +259,7 @@ private static String slayerMonster = null;
                             false,
                             true
                     );
-                    Rs2GroundItem.lootItemBasedOnValue(valueParams);
+                    //Rs2GroundItem.lootItemBasedOnValue(valueParams);
                     sleep(500,1500);
                     Rs2Cannon.repair();
                     Rs2Cannon.pickup();
