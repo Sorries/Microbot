@@ -22,6 +22,7 @@ import org.slf4j.event.Level;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class Rs2Slayer {
@@ -110,14 +111,35 @@ public class Rs2Slayer {
      * @return a List of String containing the names of Slayer monsters for the current task, or null if there is no active task
      */
     // get slayer monster names
+//    public static List<String> getSlayerMonsters() {
+//        String taskName = getSlayerTask();
+//        if (taskName == null) {
+//            return null;
+//        }
+//        // Check if the monster is blacklisted and remove it from the list
+//        return Rs2NpcManager.getSlayerMonstersByCategory(taskName).stream()
+//                .filter(monster -> !blacklistedSlayerMonsters.contains(monster))
+//                .collect(Collectors.toList());
+//    }
     public static List<String> getSlayerMonsters() {
         String taskName = getSlayerTask();
         if (taskName == null) {
             return null;
         }
-        // Check if the monster is blacklisted and remove it from the list
-        return Rs2NpcManager.getSlayerMonstersByCategory(taskName).stream()
+
+        String singular = taskName.endsWith("s")
+                ? taskName.substring(0, taskName.length() - 1)
+                : taskName;
+
+        String plural = taskName.endsWith("s")
+                ? taskName
+                : taskName + "s";
+
+        return Stream.of(taskName, singular, plural)
+                .distinct()
+                .flatMap(name -> Rs2NpcManager.getSlayerMonstersByCategory(name).stream())
                 .filter(monster -> !blacklistedSlayerMonsters.contains(monster))
+                .distinct()
                 .collect(Collectors.toList());
     }
 
