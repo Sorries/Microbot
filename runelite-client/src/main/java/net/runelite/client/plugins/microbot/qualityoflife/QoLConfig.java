@@ -517,7 +517,7 @@ public interface QoLConfig extends Config {
             keyName = "krakenMode",
             name = "Kraken Mode",
             description = "Will fight kraken in private instance",
-            position = 16,
+            position = 17,
             section = upkeepSection
     )
     default boolean krakenMode() {

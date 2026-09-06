@@ -222,7 +222,7 @@ private static String slayerMonster = null;
                         }
                     }
                     if (config.krakenMode()) {
-
+                        Microbot.log("1");
                         // Stop if we have no food
                         if (Rs2Inventory.getInventoryFood().isEmpty()) {
                             shutdown();
@@ -246,7 +246,7 @@ private static String slayerMonster = null;
                             if (whirlpool != null) {
                                 sleep(1000,5000);
 
-                                if (Rs2Inventory.use(ItemID.SLAYERGUIDE_FISHING_EXPLOSIVE)) {
+                                if (Rs2Inventory.use(ItemID.FISHING_EXPLOSIVE)) {
                                     sleepUntil(Rs2Inventory::isItemSelected);
 
                                     sleep(1000, 2000);
@@ -258,7 +258,7 @@ private static String slayerMonster = null;
                             }
                         }
                     }
-                    if(!Rs2Combat.inCombat()){
+                    if(!Rs2Combat.inCombat() && !config.krakenMode()) {
                         int waited = 0;
                         int timeout = Rs2Random.between(3000,8000);
                         System.out.println(timeout);
