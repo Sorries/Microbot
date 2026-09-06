@@ -8,6 +8,7 @@ import net.runelite.api.ObjectID;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.NpcID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.api.npc.Rs2NpcCache;
@@ -229,7 +230,7 @@ private static String slayerMonster = null;
                             return;
                         }
 
-                        Rs2NpcModel kraken = Rs2Npc.getNpc("Kraken");
+                        Rs2NpcModel kraken = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS);
                         String interactingName = Rs2Player.getInteracting() != null
                                 ? Rs2Player.getInteracting().getName()
                                 : null;
@@ -241,7 +242,7 @@ private static String slayerMonster = null;
 
                         // Otherwise, use fishing explosive on the Whirlpool
                         else if (Rs2Inventory.itemQuantity("Fishing explosive") > 0) {
-                            Rs2NpcModel whirlpool = Rs2Npc.getNpc("Whirlpool");
+                            Rs2NpcModel whirlpool = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS_WHIRLPOOL);
 
                             if (whirlpool != null) {
                                 sleep(1000,5000);
