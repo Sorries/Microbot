@@ -7,8 +7,11 @@ import net.runelite.api.NPC;
 import net.runelite.api.ObjectID;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.api.npc.Rs2NpcCache;
+import net.runelite.client.plugins.microbot.api.npc.Rs2NpcQueryable;
 import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
 import net.runelite.client.plugins.microbot.qualityoflife.QoLConfig;
 import net.runelite.client.plugins.microbot.util.ActorModel;
@@ -218,7 +221,23 @@ private static String slayerMonster = null;
                             validNpc.remove(selectedNpc);
                         }
                     }
-
+                    if (config.krakenMode()){
+                        Rs2NpcModel kraken = Rs2Npc.getNpc("Kraken");
+                        if(!Objects.equals(Rs2Player.getInteracting().getName(), "Kraken") && kraken != null){
+                            Rs2Npc.attackInInstance2( new Rs2NpcModel(kraken));
+                        }else if (Rs2Inventory.itemQuantity("Fishing explosive") > 1 && Rs2Npc.getNpc("Whirlpool") != null) {
+                            sleep(1000,5000);
+                            if (Rs2Inventory.use(ItemID.SLAYERGUIDE_FISHING_EXPLOSIVE)){
+                                sleepUntil(Rs2Inventory::isItemSelected);
+                                sleep(1000,2000);
+                                Rs2Npc.interact(Rs2Npc.getNpc("Whirlpool"));
+                                sleepUntil(()->Rs2Player.isInCombat());
+                            }
+                        }
+                        if (Rs2Inventory.getInventoryFood().isEmpty()) {
+                            shutdown();
+                        }
+                    }
                     if(!Rs2Combat.inCombat()){
                         int waited = 0;
                         int timeout = Rs2Random.between(3000,8000);

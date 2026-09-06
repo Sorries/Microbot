@@ -882,6 +882,15 @@ public class Rs2Npc {
         return interact(npc, "attack");
     }
 
+    public static boolean attackInInstance2(Rs2NpcModel npc) {
+        if (npc == null) return false;
+        if (npc.isInteracting() && !Objects.equals(npc.getInteracting(), Microbot.getClient().getLocalPlayer()) && !Rs2Player.isInMulti())
+            return false;
+
+        return interact(npc, "attack");
+    }
+
+
     public static boolean attackInMulti(Rs2NpcModel npc) {
         if (npc == null) return false;
         if (!hasLineOfSight(npc))

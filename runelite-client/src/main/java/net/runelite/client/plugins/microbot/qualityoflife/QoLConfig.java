@@ -513,6 +513,17 @@ public interface QoLConfig extends Config {
         return false;
     }
 
+    @ConfigItem(
+            keyName = "krakenMode",
+            name = "Kraken Mode",
+            description = "Will fight kraken in private instance",
+            position = 16,
+            section = upkeepSection
+    )
+    default boolean krakenMode() {
+        return false;
+    }
+
 
     // boolean to display Inventory setups as a menu option in the bank
     @ConfigItem(
