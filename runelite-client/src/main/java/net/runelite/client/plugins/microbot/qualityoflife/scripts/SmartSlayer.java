@@ -224,12 +224,6 @@ private static String slayerMonster = null;
                     }
                     if (config.krakenMode()) {
                         Microbot.log("1");
-                        // Stop if we have no food
-                        if (Rs2Inventory.getInventoryFood().isEmpty()) {
-                            Microbot.log("Out of food, shutdown");
-                            shutdown();
-                            return;
-                        }
 
                         Rs2NpcModel kraken = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS);
                         Rs2NpcModel whirlpool = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS_WHIRLPOOL);
@@ -245,6 +239,12 @@ private static String slayerMonster = null;
                                 Rs2Npc.attackInInstance2(kraken);
                             }
                         }
+                        // Stop if we have no food
+                        else if (Rs2Inventory.getInventoryFood().isEmpty()) {
+                            Microbot.log("Out of food, shutdown");
+                            shutdown();
+                            return;
+                        }
 
                         // Otherwise, use fishing explosive on the Whirlpool
                         else if (Rs2Inventory.itemQuantity("Fishing explosive") > 0 && kraken == null) {
@@ -259,7 +259,7 @@ private static String slayerMonster = null;
 
                                     Rs2Npc.interact(whirlpool);
 
-                                    sleepUntil(() -> Rs2Player.isInCombat(),10000);
+                                    sleepUntil( () -> Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS) != null, 10000);
                                 }
                             }
                         }
