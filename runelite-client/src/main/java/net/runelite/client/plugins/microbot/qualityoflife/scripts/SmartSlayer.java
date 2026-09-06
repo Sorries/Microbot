@@ -237,7 +237,10 @@ private static String slayerMonster = null;
 
                         // Attack Kraken if we're not already fighting it
                         if (kraken != null && !"Kraken".equals(interactingName)) {
-                            Rs2Npc.attackInInstance2(kraken);
+                            sleep(1000,2000);
+                            if (!kraken.isDead()) {
+                                Rs2Npc.attackInInstance2(kraken);
+                            }
                         }
 
                         // Otherwise, use fishing explosive on the Whirlpool
