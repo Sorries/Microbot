@@ -246,6 +246,7 @@ private static String slayerMonster = null;
                         // Otherwise, use fishing explosive on the Whirlpool
                         else if (Rs2Inventory.itemQuantity("Fishing explosive") > 0) {
                             Rs2NpcModel whirlpool = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS_WHIRLPOOL);
+                            assert kraken != null;
                             if (kraken.isDead()){
                                 return;
                             }
