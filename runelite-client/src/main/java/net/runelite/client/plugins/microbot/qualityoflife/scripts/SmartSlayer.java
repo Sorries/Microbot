@@ -226,30 +226,29 @@ private static String slayerMonster = null;
                         Microbot.log("1");
                         // Stop if we have no food
                         if (Rs2Inventory.getInventoryFood().isEmpty()) {
+                            Microbot.log("Out of food, shutdown");
                             shutdown();
                             return;
                         }
 
                         Rs2NpcModel kraken = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS);
+                        Rs2NpcModel whirlpool = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS_WHIRLPOOL);
+
                         String interactingName = Rs2Player.getInteracting() != null
                                 ? Rs2Player.getInteracting().getName()
                                 : null;
 
                         // Attack Kraken if we're not already fighting it
                         if (kraken != null && !"Kraken".equals(interactingName)) {
-                            sleep(1000,2000);
+                            sleep(1000,3000);
                             if (!kraken.isDead()) {
                                 Rs2Npc.attackInInstance2(kraken);
                             }
                         }
 
                         // Otherwise, use fishing explosive on the Whirlpool
-                        else if (Rs2Inventory.itemQuantity("Fishing explosive") > 0) {
-                            Rs2NpcModel whirlpool = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS_WHIRLPOOL);
-                            assert kraken != null;
-                            if (!kraken.isDead()){
-                                return;
-                            }
+                        else if (Rs2Inventory.itemQuantity("Fishing explosive") > 0 && kraken == null) {
+                            Microbot.log("2");
                             if (whirlpool != null) {
                                 sleep(1000,5000);
 
@@ -260,7 +259,7 @@ private static String slayerMonster = null;
 
                                     Rs2Npc.interact(whirlpool);
 
-                                    sleepUntil(() -> Rs2Player.isInCombat());
+                                    sleepUntil(() -> Rs2Player.isInCombat(),10000);
                                 }
                             }
                         }
