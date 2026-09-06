@@ -122,11 +122,13 @@ private static String slayerMonster = null;
                 }
                 if (!highlightedNpcs.isEmpty()) {
                     for (NPC npc : highlightedNpcs.keySet()) {
-                        if (npc != null && !npc.isDead()) {
-                            if (npc.getWorldLocation() != null && Rs2Player.getWorldLocation() != null) {
-                                if (Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) <= 8) {
-                                    //Microbot.log("Highlighted slayer monster is " + new ActorModel(npc).getName()+ " and " + Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation()) + " tiles far");
-                                    slayerMonster = new ActorModel(npc).getName();
+                        ActorModel actor = new ActorModel(npc);
+                        //Microbot.log("NPC: "+ actor.getName() + " dead: " + actor.isDead() + " location: " + actor.getLocalLocation() + " player location: "+ Rs2Player.getLocalLocation());
+                        if (actor != null && !actor.isDead()) {
+                            if (actor.getWorldLocation() != null && Rs2Player.getWorldLocation() != null) {
+                                if (Rs2Player.getWorldLocation().distanceTo(actor.getWorldLocation()) <= 8) {
+                                    Microbot.log("Highlighted slayer monster is " + actor.getName()+ " and " + Rs2Player.getWorldLocation().distanceTo(actor.getWorldLocation()) + " tiles far");
+                                    slayerMonster = actor.getName();
                                     isNearSlayerMonster.set(true);
                                     break;
                                 }
@@ -229,14 +231,25 @@ private static String slayerMonster = null;
                             waited += 250;
                         }
                         if(!Rs2Combat.inCombat()){
-                            if (monsters != null && !monsters.isEmpty()) {
+                            if (monsters != null && !monsters.isEmpty() && highlightedNpcs.isEmpty()) {
+                                Microbot.log("Attacking monster: " + monsters);
                                 Rs2Npc.attack(monsters);
                             } else if (!highlightedNpcs.isEmpty()) {
-                                highlightedNpcs.keySet().stream()
-                                        .filter(npc -> npc != null && !npc.isDead() && npc.getWorldLocation() != null)
-                                        .min(Comparator.comparingInt(npc ->
-                                                Rs2Player.getWorldLocation().distanceTo(npc.getWorldLocation())))
-                                        .ifPresent(npc -> Rs2Npc.attack(new Rs2NpcModel(npc)));
+                                WorldPoint playerLocation = Rs2Player.getWorldLocation();
+
+                                if (playerLocation != null) {
+                                    highlightedNpcs.keySet().stream()
+                                        .filter(Objects::nonNull)
+                                        .filter(npc -> !npc.isDead())
+                                        .map(npc -> new ActorModel(npc))
+                                        .filter(actor -> actor.getWorldLocation() != null)
+                                        .min(Comparator.comparingInt(actor ->
+                                                playerLocation.distanceTo(actor.getWorldLocation())))
+                                        .ifPresent(actor -> {
+                                            Microbot.log("Attacking monster: " + actor.getName());
+                                            Rs2Npc.attack(new Rs2NpcModel((NPC) actor.getActor()));
+                                        });
+                                }
                             } else {
                                 Microbot.log("No slayer monsters found.");
                             }
@@ -301,5 +314,10 @@ private static String slayerMonster = null;
             }
         }, 0, 1000, TimeUnit.MILLISECONDS);
     return true;
+    }
+    @Override
+    public void shutdown() {
+        Microbot.getConfigManager().setConfiguration("npcindicators", "npcToHighlight", "");
+        super.shutdown();
     }
 }
