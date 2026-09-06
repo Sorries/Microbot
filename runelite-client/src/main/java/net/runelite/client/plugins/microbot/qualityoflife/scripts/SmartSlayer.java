@@ -221,21 +221,41 @@ private static String slayerMonster = null;
                             validNpc.remove(selectedNpc);
                         }
                     }
-                    if (config.krakenMode()){
-                        Rs2NpcModel kraken = Rs2Npc.getNpc("Kraken");
-                        if(!Objects.equals(Rs2Player.getInteracting().getName(), "Kraken") && kraken != null){
-                            Rs2Npc.attackInInstance2( new Rs2NpcModel(kraken));
-                        }else if (Rs2Inventory.itemQuantity("Fishing explosive") > 1 && Rs2Npc.getNpc("Whirlpool") != null) {
-                            sleep(1000,5000);
-                            if (Rs2Inventory.use(ItemID.SLAYERGUIDE_FISHING_EXPLOSIVE)){
-                                sleepUntil(Rs2Inventory::isItemSelected);
-                                sleep(1000,2000);
-                                Rs2Npc.interact(Rs2Npc.getNpc("Whirlpool"));
-                                sleepUntil(()->Rs2Player.isInCombat());
-                            }
-                        }
+                    if (config.krakenMode()) {
+
+                        // Stop if we have no food
                         if (Rs2Inventory.getInventoryFood().isEmpty()) {
                             shutdown();
+                            return;
+                        }
+
+                        Rs2NpcModel kraken = Rs2Npc.getNpc("Kraken");
+                        String interactingName = Rs2Player.getInteracting() != null
+                                ? Rs2Player.getInteracting().getName()
+                                : null;
+
+                        // Attack Kraken if we're not already fighting it
+                        if (kraken != null && !"Kraken".equals(interactingName)) {
+                            Rs2Npc.attackInInstance2(kraken);
+                        }
+
+                        // Otherwise, use fishing explosive on the Whirlpool
+                        else if (Rs2Inventory.itemQuantity("Fishing explosive") > 0) {
+                            Rs2NpcModel whirlpool = Rs2Npc.getNpc("Whirlpool");
+
+                            if (whirlpool != null) {
+                                sleep(1000,5000);
+
+                                if (Rs2Inventory.use(ItemID.SLAYERGUIDE_FISHING_EXPLOSIVE)) {
+                                    sleepUntil(Rs2Inventory::isItemSelected);
+
+                                    sleep(1000, 2000);
+
+                                    Rs2Npc.interact(whirlpool);
+
+                                    sleepUntil(() -> Rs2Player.isInCombat());
+                                }
+                            }
                         }
                     }
                     if(!Rs2Combat.inCombat()){
