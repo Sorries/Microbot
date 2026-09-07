@@ -114,18 +114,20 @@ public class SalvagingScript {
     }
 
     public void run(SailingConfig config) {
+        Microbot.log("1");
         if (Rs2Player.isAnimating()) {
             return;
         }
-
+        Microbot.log("2");
         if (Rs2Inventory.count() >= INVENTORY_THRESHOLD) {
             clearInventory(config);
             return;
         }
-
+        Microbot.log("3");
         if (nearestActiveWreck(Rs2Player.getWorldLocation()) != null) {
             deployHook();
         }
+        Microbot.log("4");
     }
 
     private Rs2TileObjectModel nearestActiveWreck(WorldPoint playerLocation) {
@@ -148,7 +150,7 @@ public class SalvagingScript {
             if (station == null) {
                 return;
             }
-            station.click();
+            station.click("Sort-salvage");
             sleepUntil(() -> Rs2Inventory.count("salvage") == 0, DEPOSIT_TIMEOUT_MS);
             return;
         }
