@@ -222,7 +222,7 @@ private static String slayerMonster = null;
                             validNpc.remove(selectedNpc);
                         }
                     }
-                    if (config.krakenMode()) {
+                    if (config.krakenMode() && Rs2Player.getWorldLocation().getRegionID() == 9116) {
                         Microbot.log("1");
 
                         Rs2NpcModel kraken = Rs2Npc.getNpc(NpcID.SLAYER_KRAKEN_BOSS);
