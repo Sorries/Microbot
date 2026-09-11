@@ -241,8 +241,7 @@ private static String slayerMonster = null;
                         }
                         // Stop if we have no food
                         else if (Rs2Inventory.getInventoryFood().isEmpty()) {
-                            Microbot.log("Out of food, shutdown");
-                            shutdown();
+                            Microbot.log("Out of food, return");
                             return;
                         }
 
