@@ -249,6 +249,8 @@ private static String slayerMonster = null;
                         else if (Rs2Inventory.itemQuantity("Fishing explosive") > 0 && kraken == null) {
                             Microbot.log("2");
                             if (whirlpool != null) {
+                                sleep(1000,2000);
+                                Rs2Player.eatAt(Rs2Random.betweenInclusive(50,75),true);
                                 sleep(1000,5000);
 
                                 if (Rs2Inventory.use(ItemID.FISHING_EXPLOSIVE)) {
