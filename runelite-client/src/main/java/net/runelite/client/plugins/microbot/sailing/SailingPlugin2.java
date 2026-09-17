@@ -16,7 +16,7 @@ import java.awt.AWTException;
         tags = {"sailing", "salvaging", "microbot"},
         enabledByDefault = false
 )
-public class SailingPlugin extends Plugin {
+public class SailingPlugin2 extends Plugin {
 
     static final String VERSION = "1.0.0";
 
