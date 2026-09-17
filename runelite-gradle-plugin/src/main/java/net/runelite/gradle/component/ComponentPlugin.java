@@ -22,46 +22,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.runelite.gradle.component;
 
-plugins {
-    `java-gradle-plugin`
-    pmd
-}
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
+import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.api.tasks.TaskProvider;
 
-dependencies {
-    implementation("net.runelite:cache:${project.version}")
+public class ComponentPlugin implements Plugin<Project>
+{
 
-    implementation(libs.guava)
-    implementation(libs.tomlj)
-    implementation(libs.javapoet)
-}
+	@Override
+	public void apply(Project project)
+	{
+		TaskProvider<ComponentTask> packComponents = project.getTasks()
+			.register("packComponents", ComponentTask.class, (task) -> task.setGroup("build"));
 
-gradlePlugin {
-    plugins {
-        create("rl-assemble") {
-            id = "net.runelite.runelite-gradle-plugin.assemble"
-            implementationClass = "net.runelite.gradle.assemble.AssemblePlugin"
-        }
-        create("rl-component") {
-            id = "net.runelite.runelite-gradle-plugin.component"
-            implementationClass = "net.runelite.gradle.component.ComponentPlugin"
-        }
-        create("rl-index") {
-            id = "net.runelite.runelite-gradle-plugin.index"
-            implementationClass = "net.runelite.gradle.index.IndexPlugin"
-        }
-        create("rl-jarsign") {
-            id = "net.runelite.runelite-gradle-plugin.jarsign"
-            implementationClass = "net.runelite.gradle.jarsign.JarsignPlugin"
-        }
-    }
-}
+		project.getTasks()
+			.getByName("compileJava")
+			.dependsOn(packComponents);
 
-pmd {
-    toolVersion = "7.2.0"
-    ruleSetFiles("./pmd-ruleset.xml")
-    isConsoleOutput = true
-    incrementalAnalysis = true
-    isIgnoreFailures = false
-    threads = Runtime.getRuntime().availableProcessors()
+		project.getExtensions()
+			.getByType(SourceSetContainer.class)
+			.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+			.getJava()
+			.srcDir(packComponents.map(ComponentTask::getOutputDirectory));
+	}
+
 }
