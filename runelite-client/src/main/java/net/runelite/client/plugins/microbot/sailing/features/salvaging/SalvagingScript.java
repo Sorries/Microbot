@@ -37,8 +37,8 @@ public class SalvagingScript {
     private static final int INVENTORY_THRESHOLD = 24;
     private static final int ACTION_TIMEOUT_MS = 5_000;
     private static final int DEPOSIT_TIMEOUT_MS = 20_000;
-    private int occupiedCapacity = 0;
-    private int totalCapacity = 0;
+    private int occupiedCapacity = -1;
+    private int totalCapacity = -1;
 
     private final EventBus eventBus;
 
@@ -72,7 +72,7 @@ public class SalvagingScript {
     public void run(SailingConfig config) {
         Microbot.log("1");
         /// check cargo hold and start crystal extractor
-        if (occupiedCapacity == 0) {
+        if (occupiedCapacity == -1 || totalCapacity == -1) {
             openCargoHold();
             closeCargoHold();
         }
@@ -125,25 +125,26 @@ public class SalvagingScript {
                 .anyMatch(n -> n.getAnimation() != -1);
     }
 
-    private void openCargoHold(){
+    private boolean openCargoHold(){
         var cargoHold = new Rs2TileObjectQueryable()
                 .withId(ObjectID1.SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE)
                 .fromWorldView()
                 .first();
 
         if (cargoHold == null){
-            return;
+            return false;
         }
         var actions = cargoHold.getObjectComposition().getActions();
         Microbot.log("Actions"+ actions);
 
         if (actions == null || !Arrays.stream(actions)
                 .anyMatch(action -> "Open".equalsIgnoreCase(action))) {
-            return;
+            return false;
         }
 
         cargoHold.click("Open");
         sleepUntil(()->Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER),10000);
+        return Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER);
     }
 
     private boolean closeCargoHold(){
@@ -153,9 +154,9 @@ public class SalvagingScript {
         return false;
     }
 
-    private void sortSalvage() {
+    private boolean sortSalvage() {
         if (Rs2Inventory.count("salvage") <= 0) {
-            return;
+            return false;
         }
 
 
@@ -165,27 +166,28 @@ public class SalvagingScript {
                 .first();
 
         if (station == null) {
-            return;
+            return false;
         }
 
         station.click("Sort-salvage");
         sleepUntil(() -> Rs2Inventory.count("salvage") == 0, DEPOSIT_TIMEOUT_MS);
-
+        return Rs2Inventory.count("salvage") == 0;
 
     }
 
-    private void deployHook() {
+    private boolean deployHook() {
         Rs2TileObjectModel hook = new Rs2TileObjectQueryable()
                 .withId(ObjectID1.SALVAGING_HOOK_LARGE_RUNE_B)
                 .fromWorldView()
                 .first();
 
         if (hook == null) {
-            return;
+            return false;
         }
 
         hook.click("Deploy");
         sleepUntil(Rs2Player::isAnimating, ACTION_TIMEOUT_MS);
+        return Rs2Player.isAnimating(5000);
     }
 
     private void dropConfiguredItems(SailingConfig config) {
