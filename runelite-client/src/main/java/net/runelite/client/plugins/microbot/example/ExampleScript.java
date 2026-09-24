@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.api.npc.Rs2NpcCache;
 import net.runelite.client.plugins.microbot.api.npc.models.Rs2NpcModel;
+import net.runelite.client.plugins.microbot.api.tileobject.Rs2TileObjectQueryable;
 import net.runelite.client.plugins.microbot.api.tileobject.models.Rs2TileObjectModel;
 import net.runelite.client.plugins.microbot.util.dialogues.Rs2Dialogue;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
@@ -20,13 +22,20 @@ import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+import java.lang.reflect.InvocationTargetException;
 
 @Slf4j
 public class ExampleScript extends Script {
+
+    private Plugin sailingPlugin;
+    private Object cargoHoldTracker;
 
     private final List<CheckResult> results = new ArrayList<>();
 
@@ -36,28 +45,47 @@ public class ExampleScript extends Script {
             try {
                 if (!Microbot.isLoggedIn()) return;
                 if (!super.run()) return;
+                //Microbot.log("Example Run");
+//
+//                log.info("========================================");
+//                log.info("  MICROBOT POST-MERGE SMOKE TEST");
+//                log.info("========================================");
+//
+//                checkClientState();
+//                checkPlayerState();
+//                checkWorldViewAndThreading();
+//                checkNpcCache();
+//                checkTileObjectCache();
+//                checkGroundItemCache();
+//                checkPlayerCache();
+//                checkInventory();
+//                checkEquipment();
+//                checkWidgets();
+//                checkWalker();
+//                checkDialogue();
+//                checkLooting();
+//                checkHomeTeleport();
+//
+//                printSummary();
+//                shutdown();
 
-                log.info("========================================");
-                log.info("  MICROBOT POST-MERGE SMOKE TEST");
-                log.info("========================================");
-
-                checkClientState();
-                checkPlayerState();
-                checkWorldViewAndThreading();
-                checkNpcCache();
-                checkTileObjectCache();
-                checkGroundItemCache();
-                checkPlayerCache();
-                checkInventory();
-                checkEquipment();
-                checkWidgets();
-                checkWalker();
-                checkDialogue();
-                checkLooting();
-                checkHomeTeleport();
-
-                printSummary();
-                shutdown();
+//                int used = getUsedCapacity();
+//                int max = getMaxCapacity();
+//
+//                if (used != -1 && max != -1)
+//                {
+//                    Microbot.log("Cargo: "+ used + " + " + max);
+//                }
+                Microbot.getClientThread().invoke(() ->
+                        new Rs2TileObjectQueryable()
+                                .fromWorldView()
+                                .within(15)
+                                .toList()
+                                .forEach(obj -> Microbot.log(
+                                        "Object: " + obj.getName()
+                                                + " | ID: " + obj.getId()
+                                ))
+                );
 
             } catch (Exception ex) {
                 log.error("[SmokeTest] Unexpected top-level error: ", ex);
@@ -372,6 +400,140 @@ public class ExampleScript extends Script {
             this.name = name;
             this.passed = passed;
             this.error = error;
+        }
+    }
+
+    private Plugin getSailingPlugin()
+    {
+        if (sailingPlugin != null)
+        {
+            return sailingPlugin;
+        }
+
+        sailingPlugin = Microbot.getPluginManager()
+                .getPlugins()
+                .stream()
+                .filter(plugin ->
+                        plugin.getClass().getName()
+                                .equals("com.duckblade.osrs.sailing.SailingPlugin"))
+                .findFirst()
+                .orElse(null);
+
+        return sailingPlugin;
+    }
+
+    private Object getCargoHoldTracker()
+    {
+        if (cargoHoldTracker != null)
+        {
+            return cargoHoldTracker;
+        }
+
+        Plugin sailing = getSailingPlugin();
+
+        if (sailing == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            Field componentManagerField =
+                    sailing.getClass().getDeclaredField("componentManager");
+
+            componentManagerField.setAccessible(true);
+
+            Object componentManager = componentManagerField.get(sailing);
+
+            Field componentsField =
+                    componentManager.getClass().getDeclaredField("components");
+
+            componentsField.setAccessible(true);
+
+            for (Object component : (Iterable<?>) componentsField.get(componentManager))
+            {
+                if (component != null &&
+                        component.getClass().getSimpleName().equals("CargoHoldTracker"))
+                {
+                    cargoHoldTracker = component;
+                    return cargoHoldTracker;
+                }
+            }
+        }
+        catch (Exception ignored)
+        {
+        }
+
+        return null;
+    }
+
+    private int getUsedCapacity()
+    {
+        Object tracker = getCargoHoldTracker();
+
+        if (tracker == null)
+        {
+            return -1;
+        }
+
+        try
+        {
+            Method method = tracker.getClass()
+                    .getDeclaredMethod("usedCapacity");
+
+            method.setAccessible(true);
+
+            Integer result = Microbot.getClientThread().invoke(() -> {
+                try
+                {
+                    return (Integer) method.invoke(tracker);
+                }
+                catch (IllegalAccessException | InvocationTargetException e)
+                {
+                    return -1;
+                }
+            });
+
+            return result != null ? result : -1;
+        }
+        catch (NoSuchMethodException e)
+        {
+            return -1;
+        }
+    }
+
+    private int getMaxCapacity()
+    {
+        Object tracker = getCargoHoldTracker();
+
+        if (tracker == null)
+        {
+            return -1;
+        }
+
+        try
+        {
+            Method method = tracker.getClass()
+                    .getDeclaredMethod("maxCapacity");
+
+            method.setAccessible(true);
+
+            Integer result = Microbot.getClientThread().invoke(() -> {
+                try
+                {
+                    return (Integer) method.invoke(tracker);
+                }
+                catch (IllegalAccessException | InvocationTargetException e)
+                {
+                    return -1;
+                }
+            });
+
+            return result != null ? result : -1;
+        }
+        catch (NoSuchMethodException e)
+        {
+            return -1;
         }
     }
 }
