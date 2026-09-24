@@ -150,16 +150,20 @@ public class SalvagingScript extends Script {
                 .fromWorldView()
                 .first();
         if (crystalActive != null) {
-            if (crystalActive.getTileObject() instanceof GameObject object
-                    && object.getRenderable() instanceof DynamicObject dynamicObject) {
+            if (crystalActive.getTileObject() instanceof GameObject) {
+                GameObject object = (GameObject) crystalActive.getTileObject();
 
-                Animation animation = dynamicObject.getAnimation();
+                if (object.getRenderable() instanceof DynamicObject) {
+                    DynamicObject dynamicObject = (DynamicObject) object.getRenderable();
 
-                if (animation != null &&
-                        animation.getId() == AnimationID.SAILING_BOATS_CRYSTAL_EXTRACTOR_KANDARIN_EXTRACTED_01) {
-                    Microbot.log("Harvesting Crystal Extractor");
-                    crystalActive.click("Harvest");
-                    Rs2Player.waitForXpDrop(Skill.SAILING);
+                    Animation animation = dynamicObject.getAnimation();
+
+                    if (animation != null &&
+                            animation.getId() == AnimationID.SAILING_BOATS_CRYSTAL_EXTRACTOR_KANDARIN_EXTRACTED_01) {
+                        Microbot.log("Animation ID is " + animation.getId());
+                        Microbot.log("Harvesting Crystal Extractor");
+                        crystalActive.click("Harvest");
+                    }
                 }
             }
         }
