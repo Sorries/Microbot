@@ -9,23 +9,24 @@ import net.runelite.api.TileObject;
 import net.runelite.api.WorldView;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.gameval.ObjectID1;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.microbot.Microbot;
+import net.runelite.client.plugins.microbot.api.npc.Rs2NpcQueryable;
+import net.runelite.client.plugins.microbot.api.npc.models.Rs2NpcModel;
+import net.runelite.client.plugins.microbot.api.tileobject.Rs2TileObjectQueryable;
 import net.runelite.client.plugins.microbot.api.tileobject.models.Rs2TileObjectModel;
 import net.runelite.client.plugins.microbot.sailing.SailingConfig;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
+import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static net.runelite.client.plugins.microbot.util.Global.sleepUntil;
 
@@ -36,9 +37,10 @@ public class SalvagingScript {
     private static final int INVENTORY_THRESHOLD = 24;
     private static final int ACTION_TIMEOUT_MS = 5_000;
     private static final int DEPOSIT_TIMEOUT_MS = 20_000;
+    private int occupiedCapacity = -1;
+    private int totalCapacity = -1;
 
     private final EventBus eventBus;
-    private volatile List<Rs2TileObjectModel> activeWrecks = List.of();
 
     @Inject
     public SalvagingScript(EventBus eventBus) {
@@ -56,122 +58,136 @@ public class SalvagingScript {
     /** Collects wrecks from the top-level sea view for the background script. */
     @Subscribe
     public void onGameTick(GameTick event) {
-        Map<String, Rs2TileObjectModel> wrecks = new LinkedHashMap<>();
-        Client client = Microbot.getClient();
-        if (client == null) {
-            activeWrecks = List.of();
-            return;
+        if (Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER)) {
+            occupiedCapacity = Integer.parseInt(
+                    Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.OCCUPIEDSLOTS).getText()
+            );
+
+            totalCapacity = Integer.parseInt(
+                    Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.CAPACITY).getText()
+            );
         }
-
-        WorldView worldView = client.getTopLevelWorldView();
-        if (worldView == null || worldView.getScene() == null) {
-            return;
-        }
-
-        Tile[][][] tiles = worldView.getScene().getTiles();
-        int plane = worldView.getPlane();
-        if (tiles == null || plane < 0 || plane >= tiles.length || tiles[plane] == null) {
-            return;
-        }
-
-        Tile[][] planeTiles = tiles[plane];
-        for (int x = 0; x < Math.min(Constants.SCENE_SIZE, planeTiles.length); x++) {
-            Tile[] column = planeTiles[x];
-            if (column == null) {
-                continue;
-            }
-            for (int y = 0; y < Math.min(Constants.SCENE_SIZE, column.length); y++) {
-                Tile tile = column[y];
-                if (tile == null) {
-                    continue;
-                }
-                GameObject[] gameObjects = tile.getGameObjects();
-                if (gameObjects != null) {
-                    for (GameObject object : gameObjects) {
-                        if (object != null && object.getSceneMinLocation().equals(tile.getSceneLocation())) {
-                            addWreck(object, wrecks);
-                        }
-                    }
-                }
-                DecorativeObject decorativeObject = tile.getDecorativeObject();
-                if (decorativeObject != null) {
-                    addWreck(decorativeObject, wrecks);
-                }
-            }
-        }
-
-        activeWrecks = List.copyOf(wrecks.values());
-    }
-
-    private void addWreck(TileObject object, Map<String, Rs2TileObjectModel> wrecks) {
-        if (!SalvageObjectIds.ACTIVE_SHIPWRECK_IDS.contains(object.getId())) {
-            return;
-        }
-
-        WorldPoint location = object.getWorldLocation();
-        String key = object.getId() + ":" + location.getX() + ":" + location.getY() + ":" + location.getPlane();
-        wrecks.put(key, new Rs2TileObjectModel(object));
     }
 
     public void run(SailingConfig config) {
         Microbot.log("1");
+        /// check cargo hold and start crystal extractor
+        if (occupiedCapacity == -1 || totalCapacity == -1) {
+            openCargoHold();
+            closeCargoHold();
+        }
+
+        /// if animating, wait until it finishes animating
         if (Rs2Player.isAnimating()) {
             return;
         }
+        /// if
+        ///  determine if crewmate is animating
+        if(nearestNpcAnimating())
         Microbot.log("2");
-        if (Rs2Inventory.count() >= INVENTORY_THRESHOLD) {
-            clearInventory(config);
-            return;
+        //// if
+        if ( occupiedCapacity >= totalCapacity ) {
+            Microbot.log("Occupied Capacity: " + occupiedCapacity + " / " + totalCapacity);
+            if (Rs2Inventory.count("Grimy")>0) {
+                Rs2Inventory.interact("herb sack","Fill");
+            }
+            if(Rs2Inventory.count("salvage") > 0){
+                sortSalvage();
+            }
+            if(Rs2Inventory.count("salvage") <= 0){
+                dropConfiguredItems(config);
+            }
+
         }
         Microbot.log("3");
-        if (nearestActiveWreck(Rs2Player.getWorldLocation()) != null) {
+        if (nearestActiveWreck()) {
             deployHook();
         }
         Microbot.log("4");
     }
 
-    private Rs2TileObjectModel nearestActiveWreck(WorldPoint playerLocation) {
-        if (playerLocation == null) {
-            return null;
-        }
+    private boolean nearestActiveWreck() {
+        //merchant ship active 60478 , inactive 60479
+        Rs2TileObjectModel wreck = new Rs2TileObjectQueryable()
+                .withId(60478)
+                .nearest(15);
 
-        return activeWrecks.stream()
-                .filter(wreck -> playerLocation.distanceTo(wreck.getWorldLocation()) <= SALVAGE_RANGE)
-                .min(Comparator.comparingInt(wreck -> playerLocation.distanceTo(wreck.getWorldLocation())))
-                .orElse(null);
+        return wreck != null;
     }
 
-    private void clearInventory(SailingConfig config) {
-        if (Rs2Inventory.count("salvage") > 0) {
-            Rs2TileObjectModel station = Microbot.getRs2TileObjectCache().query()
-                    .fromWorldView()
-                    .where(object -> SalvagingStationObjectIds.ALL_IDS.contains(object.getId()))
-                    .nearestOnClientThread();
-            if (station == null) {
-                return;
-            }
-            station.click("Sort-salvage");
-            sleepUntil(() -> Rs2Inventory.count("salvage") == 0, DEPOSIT_TIMEOUT_MS);
-            return;
-        }
-
-        dropConfiguredItems(config);
-        alchConfiguredItems(config);
-        dropConfiguredItems(config);
-    }
-
-    private void deployHook() {
-        Rs2TileObjectModel hook = Microbot.getRs2TileObjectCache().query()
+    private boolean nearestNpcAnimating() {
+        List<Rs2NpcModel> npcs = new Rs2NpcQueryable()
+                .withNames("Jolly Jim", "Cabin Boy Jenkins")
                 .fromWorldView()
-                .where(object -> object.getName() != null
-                        && object.getName().toLowerCase().contains("salvaging hook"))
-                .nearestOnClientThread();
+                .toList();
+
+        return npcs.stream()
+                .anyMatch(n -> n.getAnimation() != -1);
+    }
+
+    private boolean openCargoHold(){
+        var cargoHold = new Rs2TileObjectQueryable()
+                .withId(ObjectID1.SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE)
+                .fromWorldView()
+                .first();
+
+        if (cargoHold == null){
+            return false;
+        }
+        var actions = cargoHold.getObjectComposition().getActions();
+        Microbot.log("Actions"+ actions);
+
+        if (actions == null || !Arrays.stream(actions)
+                .anyMatch(action -> "Open".equalsIgnoreCase(action))) {
+            return false;
+        }
+
+        cargoHold.click("Open");
+        sleepUntil(()->Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER),10000);
+        return Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER);
+    }
+
+    private boolean closeCargoHold(){
+        if (Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER)){
+            return Rs2Widget.clickWidget("Close", Optional.of(943),1,true);
+        }
+        return false;
+    }
+
+    private boolean sortSalvage() {
+        if (Rs2Inventory.count("salvage") <= 0) {
+            return false;
+        }
+
+
+        var station = new Rs2TileObjectQueryable()
+                .withNameContains("salvaging station")
+                .fromWorldView()
+                .first();
+
+        if (station == null) {
+            return false;
+        }
+
+        station.click("Sort-salvage");
+        sleepUntil(() -> Rs2Inventory.count("salvage") == 0, DEPOSIT_TIMEOUT_MS);
+        return Rs2Inventory.count("salvage") == 0;
+
+    }
+
+    private boolean deployHook() {
+        Rs2TileObjectModel hook = new Rs2TileObjectQueryable()
+                .withId(ObjectID1.SALVAGING_HOOK_LARGE_RUNE_B)
+                .fromWorldView()
+                .first();
+
         if (hook == null) {
-            return;
+            return false;
         }
 
         hook.click("Deploy");
         sleepUntil(Rs2Player::isAnimating, ACTION_TIMEOUT_MS);
+        return Rs2Player.isAnimating(5000);
     }
 
     private void dropConfiguredItems(SailingConfig config) {
