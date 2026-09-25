@@ -72,7 +72,7 @@ public class SalvagingScript extends Script {
         }
         /// check crystal extractor status
         if (!crystalExtractorStatus()){
-            sleep(1000,3000);
+            sleep(1000,5000);
             activateCrystalExtractor();
         }
         /// if animating, wait until it finishes animating
@@ -81,12 +81,12 @@ public class SalvagingScript extends Script {
         }
         /// if crystal extractor can be harvested
         if(crystalExtractorStatus()){
-            sleep(1000,3000);
+            sleep(1000,5000);
             harvestCrystalExtractor();
         }
 
         ///  determine if cargo hold is full
-        if(nearestNpcAnimating() && nearestActiveWreck()){
+        if(!nearestNpcAnimating() && nearestActiveWreck()){
             occupiedCapacity = totalCapacity;
         }
 
@@ -96,10 +96,14 @@ public class SalvagingScript extends Script {
         }
 
         ///  sorting salvage
-        salvaging(config);
+        if(Rs2Inventory.isFull()){
+            salvaging(config);
+            return;
+        }
 
         /// deploying hook
-        if (nearestActiveWreck()){
+        if (nearestActiveWreck() && !Rs2Inventory.isFull()) {
+            sleep(2000,10000);
             deployHook();
         }
 
@@ -109,21 +113,21 @@ public class SalvagingScript extends Script {
         //merchant ship active 60478 , inactive 60479
         Rs2TileObjectModel wreck = new Rs2TileObjectQueryable()
                 .withId(ObjectID1.SAILING_MERCHANT_SHIPWRECK)
-                .nearest(15);
+                .nearestOnClientThread(15);
 
         return wreck != null;
     }
 
     private boolean crystalExtractorStatus(){
         Rs2TileObjectModel crystalInactive = new Rs2TileObjectQueryable()
-                .withId(ObjectID1.SAILING_CRYSTAL_EXTRACTOR_DEACTIVATED)
                 .fromWorldView()
-                .first();
+                .withId(ObjectID1.SAILING_CRYSTAL_EXTRACTOR_DEACTIVATED)
+                .firstOnClientThread();
 
         Rs2TileObjectModel crystalActive = new Rs2TileObjectQueryable()
-                .withId(ObjectID1.SAILING_CRYSTAL_EXTRACTOR_ACTIVATED)
                 .fromWorldView()
-                .first();
+                .withId(ObjectID1.SAILING_CRYSTAL_EXTRACTOR_ACTIVATED)
+                .firstOnClientThread();
 
         if (crystalActive != null ) {
             return true;}
@@ -134,9 +138,9 @@ public class SalvagingScript extends Script {
 
     private void activateCrystalExtractor () {
         Rs2TileObjectModel crystalInactive = new Rs2TileObjectQueryable()
-                .withId(ObjectID1.SAILING_CRYSTAL_EXTRACTOR_DEACTIVATED)
                 .fromWorldView()
-                .first();
+                .withId(ObjectID1.SAILING_CRYSTAL_EXTRACTOR_DEACTIVATED)
+                .firstOnClientThread();
 
         if (crystalInactive != null) {
             Microbot.log("Activating Crystal Extractor");
@@ -146,9 +150,9 @@ public class SalvagingScript extends Script {
 
     private void harvestCrystalExtractor(){
         Rs2TileObjectModel crystalActive = new Rs2TileObjectQueryable()
-                .withId(ObjectID1.SAILING_CRYSTAL_EXTRACTOR_ACTIVATED)
                 .fromWorldView()
-                .first();
+                .withId(ObjectID1.SAILING_CRYSTAL_EXTRACTOR_ACTIVATED)
+                .firstOnClientThread();
         if (crystalActive != null) {
             if (crystalActive.getTileObject() instanceof GameObject) {
                 GameObject object = (GameObject) crystalActive.getTileObject();
@@ -171,8 +175,8 @@ public class SalvagingScript extends Script {
 
     private boolean nearestNpcAnimating() {
         List<Rs2NpcModel> npcs = new Rs2NpcQueryable()
-                .withNames("Jolly Jim", "Cabin Boy Jenkins")
                 .fromWorldView()
+                .withNames("Jolly Jim", "Cabin Boy Jenkins")
                 .toList();
 
         return npcs.stream()
@@ -181,15 +185,15 @@ public class SalvagingScript extends Script {
 
     private boolean openCargoHold(){
         var cargoHold = new Rs2TileObjectQueryable()
-                .withId(ObjectID1.SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE)
                 .fromWorldView()
-                .first();
+                .withId(ObjectID1.SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE)
+                .firstOnClientThread();
 
         if (cargoHold == null){
             return false;
         }
         var actions = cargoHold.getObjectComposition().getActions();
-        Microbot.log("Actions"+ actions);
+        Microbot.log("Actions"+ Arrays.toString(actions));
 
         if (actions == null || !Arrays.stream(actions)
                 .anyMatch(action -> "Open".equalsIgnoreCase(action))) {
@@ -211,15 +215,19 @@ public class SalvagingScript extends Script {
 
     private void salvaging(SailingConfig config){
         if(Rs2Inventory.count("salvage") > 0){
-            Microbot.log("Sorting salvage");
+            Microbot.log("Sorting salvage 1 " + Rs2Inventory.count("salvage"));
+            sleep(1000,5000);
             sortSalvage();
         }
         if (Rs2Inventory.count("grimy")>0) {
-            Microbot.log("Filling herb sack");
+            Microbot.log("Filling herb sack" + Rs2Inventory.count("grimy"));
+            sleep(1000,5000);
             Rs2Inventory.interact("herb sack","Fill");
+            Rs2Inventory.waitForInventoryChanges(500);
         }
         if(Rs2Inventory.count("salvage") <= 0){
-            Microbot.log("Dropping salvage");
+            Microbot.log("Dropping salvage "+ Rs2Inventory.count("salvage"));
+            sleep(2000,10000);
             dropItems(config);
         }
     }
@@ -230,16 +238,17 @@ public class SalvagingScript extends Script {
         }
 
         var station = new Rs2TileObjectQueryable()
-                .withNameContains("salvaging station")
                 .fromWorldView()
-                .first();
+                .withNameContains("salvaging station")
+                .firstOnClientThread();
+
 
         if (station == null) {
             return false;
         }
-        Microbot.log("Sorting salvage");
+        Microbot.log("Sorting salvage 2");
         station.click("Sort-salvage");
-        sleepUntil(() -> Rs2Inventory.count("salvage") == 0, 30000);
+        sleepUntil(() -> Rs2Inventory.count("salvage") == 0, 60000);
         return Rs2Inventory.count("salvage") == 0;
 
     }
@@ -248,7 +257,7 @@ public class SalvagingScript extends Script {
         Rs2TileObjectModel hook = new Rs2TileObjectQueryable()
                 .withId(ObjectID1.SALVAGING_HOOK_LARGE_RUNE_B)
                 .fromWorldView()
-                .first();
+                .firstOnClientThread();
 
         if (hook == null) {
             return false;
@@ -274,9 +283,15 @@ public class SalvagingScript extends Script {
 
         if (itemNames.length > 0) {
             Rs2Inventory.dropAll(
-                    Rs2ItemModel.matches(true, itemNames),
+                    Rs2ItemModel.matches(false, itemNames),
                     dropOrder
             );
         }
+    }
+    @Override
+    public void shutdown() {
+        occupiedCapacity = -1;
+        totalCapacity = -1;
+        super.shutdown();
     }
 }
