@@ -6,6 +6,7 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.gameval.AnimationID;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.ObjectID1;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.microbot.Microbot;
@@ -67,6 +68,7 @@ public class SalvagingScript extends Script {
         if (occupiedCapacity == -1 || totalCapacity == -1) {
             Microbot.log("Opening Cargo Hold to check capacity");
             openCargoHold();
+            Microbot.log("Occupied Capacity: " + occupiedCapacity + " / " + totalCapacity);
             sleep(2000,10000);
             closeCargoHold();
         }
@@ -90,9 +92,12 @@ public class SalvagingScript extends Script {
             occupiedCapacity = totalCapacity;
         }
 
-        //// Todo : add cargo hold withdraw
+        // Todo : add cargo hold withdraw
         if ( occupiedCapacity >= totalCapacity ) {
-            Microbot.log("Occupied Capacity: " + occupiedCapacity + " / " + totalCapacity);
+            Microbot.log("Occupied Capacity2 : " + occupiedCapacity + " / " + totalCapacity);
+            openCargoHold();
+
+            closeCargoHold();
         }
 
         ///  sorting salvage
@@ -209,6 +214,60 @@ public class SalvagingScript extends Script {
         if (Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER)){
             Microbot.log("Close cargo hold");
             return Rs2Widget.clickWidget("Close", Optional.of(943),1,true);
+        }
+        return false;
+    }
+
+    private boolean withdrawCargoHold(){
+        if (Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER)) {
+            Widget selectAll = Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.ALL);
+            if (selectAll != null){
+            }
+
+
+            //Widget widget = Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.ITEMS);
+            //if (widget != null) {
+            //}
+            Microbot.log("Withdraw cargo hold");
+            //
+            Widget widget = Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.ITEMS);
+
+            if (widget != null) {
+                Widget[] children = widget.getDynamicChildren();
+
+                if (children != null) {
+                    for (Widget child : children) {
+                        if (child == null) {
+                            continue;
+                        }
+
+                        String name = child.getName();
+
+                        if (name == null || name.isBlank()) {
+                            continue;
+                        }
+
+                        String[] actions = child.getActions();
+
+                        if (actions == null) {
+                            continue;
+                        }
+
+                        if (name.toLowerCase().contains("salvage") && Arrays.stream(actions)
+                                .anyMatch(action -> action != null && action.equalsIgnoreCase("withdraw-all"))) {
+                            Rs2Widget.clickWidgetFast(child,2,1,name,"Withdraw-All");
+
+                            Microbot.log(
+                                    "ID=" + child.getId() +
+                                            " itemId=" + child.getItemId() +
+                                            " text=" + name +
+                                            " actions = " + Arrays.toString(actions)
+                            );
+                        }
+                    }
+                }
+            }
+            //
         }
         return false;
     }
