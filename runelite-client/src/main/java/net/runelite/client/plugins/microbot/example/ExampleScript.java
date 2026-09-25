@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
@@ -26,6 +28,7 @@ import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -76,16 +79,16 @@ public class ExampleScript extends Script {
 //                {
 //                    Microbot.log("Cargo: "+ used + " + " + max);
 //                }
-                Microbot.getClientThread().invoke(() ->
-                        new Rs2TileObjectQueryable()
-                                .fromWorldView()
-                                .within(15)
-                                .toList()
-                                .forEach(obj -> Microbot.log(
-                                        "Object: " + obj.getName()
-                                                + " | ID: " + obj.getId()
-                                ))
-                );
+                Widget selectAll = Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.ALL);
+                if (selectAll != null) {
+                    Object[] listener = selectAll.getOnOpListener();
+                    Microbot.log("onOpListener = " + Arrays.toString(selectAll.getOnOpListener()));
+                    if (listener != null &&
+                            Arrays.stream(listener)
+                                    .anyMatch(obj -> "489".equals(String.valueOf(obj)))) {
+                        Microbot.log("Found 489");
+                    }
+                }
 
             } catch (Exception ex) {
                 log.error("[SmokeTest] Unexpected top-level error: ", ex);

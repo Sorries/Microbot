@@ -44,5 +44,6 @@ public class SailingPlugin2 extends Plugin {
     protected void shutDown() {
         script.shutdown();
         salvagingScript.unregister();
+        salvagingScript.shutdown();
     }
 }
