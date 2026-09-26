@@ -334,8 +334,8 @@ public class SalvagingScript extends Script {
 
     private boolean deployHook() {
         Rs2TileObjectModel hook = new Rs2TileObjectQueryable()
-                .withId(ObjectID1.SALVAGING_HOOK_LARGE_RUNE_B)
                 .fromWorldView()
+                .withId(ObjectID1.SALVAGING_HOOK_LARGE_RUNE_B)
                 .firstOnClientThread();
 
         if (hook == null) {
