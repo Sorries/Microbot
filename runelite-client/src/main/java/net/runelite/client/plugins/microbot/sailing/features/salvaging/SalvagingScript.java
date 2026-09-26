@@ -20,6 +20,7 @@ import net.runelite.client.plugins.microbot.util.inventory.InteractOrder;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 import net.runelite.client.plugins.microbot.util.magic.Rs2Magic;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
@@ -32,6 +33,7 @@ public class SalvagingScript extends Script {
 
     private int occupiedCapacity = -1;
     private int totalCapacity = -1;
+    private int randomTotalCapacity = -1;
 
     private final EventBus eventBus;
 
@@ -68,8 +70,9 @@ public class SalvagingScript extends Script {
         if (occupiedCapacity == -1 || totalCapacity == -1) {
             Microbot.log("Opening Cargo Hold to check capacity");
             openCargoHold();
-            Microbot.log("Occupied Capacity: " + occupiedCapacity + " / " + totalCapacity);
             sleep(2000,10000);
+            randomTotalCapacity = Rs2Random.betweenInclusive(totalCapacity/4, totalCapacity);
+            Microbot.log("Startup Occupied Capacity: " + occupiedCapacity + " / " + totalCapacity + " / " + randomTotalCapacity);
             closeCargoHold();
         }
         /// check crystal extractor status
@@ -93,11 +96,19 @@ public class SalvagingScript extends Script {
         }
 
         // Todo : add cargo hold withdraw
-        if ( occupiedCapacity >= totalCapacity ) {
-            Microbot.log("Occupied Capacity2 : " + occupiedCapacity + " / " + totalCapacity);
+        if ( occupiedCapacity >= randomTotalCapacity) {
+            randomTotalCapacity = 0;
+            Microbot.log("Regular Occupied Capacity : " + occupiedCapacity + " / " + totalCapacity + " / " + randomTotalCapacity);
+            sleep(1000,5000);
             openCargoHold();
-
+            sleep(1000,5000);
+            withdrawCargoHold();
+            sleep(1000,5000);
             closeCargoHold();
+            if (occupiedCapacity<=28){
+                randomTotalCapacity = Rs2Random.betweenInclusive(totalCapacity/4, totalCapacity);
+                Microbot.log("New Random Capacity: "+ randomTotalCapacity);
+            }
         }
 
         ///  sorting salvage
@@ -221,13 +232,16 @@ public class SalvagingScript extends Script {
     private boolean withdrawCargoHold(){
         if (Rs2Widget.isWidgetVisible(InterfaceID.SailingBoatCargohold.CAPACITY_CONTAINER)) {
             Widget selectAll = Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.ALL);
-            if (selectAll != null){
+            if (selectAll != null) {
+                Object[] listener = selectAll.getOnOpListener();
+                Microbot.log("onOpListener = " + Arrays.toString(selectAll.getOnOpListener()));
+                if (listener != null && Arrays.stream(listener)
+                                .anyMatch(obj -> "489".equals(String.valueOf(obj)))) {
+                    Microbot.log("Currently on Withdraw all : found 489");
+                }else{
+                    Rs2Widget.clickWidget(InterfaceID.SailingBoatCargohold.ALL);
+                }
             }
-
-
-            //Widget widget = Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.ITEMS);
-            //if (widget != null) {
-            //}
             Microbot.log("Withdraw cargo hold");
             //
             Widget widget = Rs2Widget.getWidget(InterfaceID.SailingBoatCargohold.ITEMS);
@@ -240,29 +254,26 @@ public class SalvagingScript extends Script {
                         if (child == null) {
                             continue;
                         }
-
                         String name = child.getName();
-
                         if (name == null || name.isBlank()) {
                             continue;
                         }
-
                         String[] actions = child.getActions();
-
                         if (actions == null) {
                             continue;
                         }
-
                         if (name.toLowerCase().contains("salvage") && Arrays.stream(actions)
                                 .anyMatch(action -> action != null && action.equalsIgnoreCase("withdraw-all"))) {
-                            Rs2Widget.clickWidgetFast(child,2,1,name,"Withdraw-All");
-
-                            Microbot.log(
-                                    "ID=" + child.getId() +
-                                            " itemId=" + child.getItemId() +
-                                            " text=" + name +
-                                            " actions = " + Arrays.toString(actions)
-                            );
+                            if(!Rs2Inventory.isFull()) {
+                                Rs2Widget.clickWidgetFast(child, 2, 1, name, "Withdraw-All");
+                                Rs2Inventory.waitForInventoryChanges(300);
+                            }
+//                            Microbot.log(
+//                                    "ID=" + child.getId() +
+//                                    " itemId=" + child.getItemId() +
+//                                    " text=" + name +
+//                                    " actions = " + Arrays.toString(actions)
+//                            );
                         }
                     }
                 }
@@ -351,6 +362,7 @@ public class SalvagingScript extends Script {
     public void shutdown() {
         occupiedCapacity = -1;
         totalCapacity = -1;
+        randomTotalCapacity = -1;
         super.shutdown();
     }
 }
