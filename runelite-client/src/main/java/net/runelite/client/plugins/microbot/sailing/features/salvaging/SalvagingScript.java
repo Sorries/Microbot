@@ -93,6 +93,13 @@ public class SalvagingScript extends Script {
         ///  determine if cargo hold is full
         if(!nearestNpcAnimating() && nearestActiveWreck()){
             occupiedCapacity = totalCapacity;
+        }else if (Rs2Random.betweenInclusive(1,25) == 1)
+        {
+            sleep(1000,10000);
+            openCargoHold();
+            sleep(1000,5000);
+            Microbot.log("Random Occupied Capacity: " + occupiedCapacity + " / " + totalCapacity + " / " + randomTotalCapacity);
+            closeCargoHold();
         }
 
         // Todo : add cargo hold withdraw
@@ -113,6 +120,7 @@ public class SalvagingScript extends Script {
 
         ///  sorting salvage
         if(Rs2Inventory.isFull()){
+            sleep(1000,5000);
             salvaging(config);
             return;
         }
@@ -183,6 +191,7 @@ public class SalvagingScript extends Script {
                         Microbot.log("Animation ID is " + animation.getId());
                         Microbot.log("Harvesting Crystal Extractor");
                         crystalActive.click("Harvest");
+                        Rs2Player.waitForXpDrop(Skill.SAILING);
                     }
                 }
             }
