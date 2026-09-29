@@ -208,8 +208,6 @@ public class OverlayRenderer extends MouseAdapter
 			return;
 		}
 
-		overlayManager.addOriginMenu(overlay);
-
 		List<OverlayMenuEntry> menuEntries = overlay.getMenuEntries();
 		if (menuEntries.isEmpty())
 		{

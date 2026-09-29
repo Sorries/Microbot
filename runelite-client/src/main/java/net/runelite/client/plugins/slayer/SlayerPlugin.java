@@ -27,8 +27,9 @@ package net.runelite.client.plugins.slayer;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-import com.google.inject.Binder;
+import com.google.inject.Module;
 import com.google.inject.Provides;
+import com.google.inject.util.Providers;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -100,6 +101,8 @@ public class SlayerPlugin extends Plugin
 {
 	//Chat messages
 	private static final String CHAT_SUPERIOR_MESSAGE = "A superior foe has appeared...";
+	private static final Pattern CHAT_SUPERIOR_PATTERN = Pattern.compile(
+		"^(?:@mes_hl_red@|<col=[0-9a-fA-F]{6}>)?" + Pattern.quote(CHAT_SUPERIOR_MESSAGE) + "(?:</col>)?$");
 
 	// Chat Command
 	private static final String TASK_COMMAND_STRING = "!task";
@@ -152,6 +155,9 @@ public class SlayerPlugin extends Plugin
 	@Inject
 	private NpcOverlayService npcOverlayService;
 
+	@Inject
+	private SlayerPluginServiceImpl slayerPluginService;
+
 	@Getter(AccessLevel.PACKAGE)
 	private final List<NPC> targets = new ArrayList<>();
 
@@ -201,9 +207,9 @@ public class SlayerPlugin extends Plugin
 	};
 
 	@Override
-	public void configure(Binder binder)
+	public Module getPublicModule()
 	{
-		binder.bind(SlayerPluginService.class).to(SlayerPluginServiceImpl.class);
+		return b -> b.bind(SlayerPluginService.class).toProvider(Providers.of(slayerPluginService));
 	}
 
 	@Override
@@ -348,7 +354,7 @@ public class SlayerPlugin extends Plugin
 		}
 		else if (varbitId == VarbitID.SLAYER_TASKS_COMPLETED || varbitId == VarbitID.SLAYER_WILDERNESS_TASKS_COMPLETED || varpId == VarPlayerID.SLAYER_MORTIMER_TASKS_COMPLETED)
 		{
-			setProfileConfig(SlayerConfig.STREAK_KEY, varbitChanged.getValue());
+			setProfileConfig(SlayerConfig.STREAK_KEY, getTaskStreak());
 
 			// streak is on a tooltip on the counter, so requires a rebuild if it changes
 			if (counter != null)
@@ -421,7 +427,7 @@ public class SlayerPlugin extends Plugin
 
 				// initialize streak and points in the event the plugin was toggled on after login
 				setProfileConfig(SlayerConfig.POINTS_KEY, client.getVarbitValue(VarbitID.SLAYER_POINTS));
-				setProfileConfig(SlayerConfig.STREAK_KEY, client.getVarbitValue(VarbitID.SLAYER_TASKS_COMPLETED));
+				setProfileConfig(SlayerConfig.STREAK_KEY, getTaskStreak());
 			}
 			else if (!Objects.equals(taskName, this.taskName) || !Objects.equals(taskLocation, this.taskLocation))
 			{
@@ -477,8 +483,7 @@ public class SlayerPlugin extends Plugin
 			return;
 		}
 
-		var msg = event.getMessage();
-		if (msg.contains(CHAT_SUPERIOR_MESSAGE))
+		if (CHAT_SUPERIOR_PATTERN.matcher(event.getMessage()).matches())
 		{
 			notifier.notify(config.showSuperiorNotification(), CHAT_SUPERIOR_MESSAGE);
 		}
@@ -676,23 +681,24 @@ public class SlayerPlugin extends Plugin
 				+ " " + initialAmount;
 		}
 
-		final int streak;
-		switch (client.getVarbitValue(VarbitID.SLAYER_MASTER))
-		{
-			case KRYSTILIA_SLAYER_MASTER:
-				streak = client.getVarbitValue(VarbitID.SLAYER_WILDERNESS_TASKS_COMPLETED);
-				break;
-			case MORTIMER_SLAYER_MASTER:
-				streak = client.getVarpValue(VarPlayerID.SLAYER_MORTIMER_TASKS_COMPLETED);
-				break;
-			default:
-				streak = client.getVarbitValue(VarbitID.SLAYER_TASKS_COMPLETED);
-				break;
-		}
+		final int streak = getTaskStreak();
 		counter = new TaskCounter(taskImg, this, amount);
 		counter.setTooltip(String.format(taskTooltip, capsString(taskName), client.getVarbitValue(VarbitID.SLAYER_POINTS),  streak));
 
 		infoBoxManager.addInfoBox(counter);
+	}
+
+	private int getTaskStreak()
+	{
+		switch (client.getVarbitValue(VarbitID.SLAYER_MASTER))
+		{
+			case KRYSTILIA_SLAYER_MASTER:
+				return client.getVarbitValue(VarbitID.SLAYER_WILDERNESS_TASKS_COMPLETED);
+			case MORTIMER_SLAYER_MASTER:
+				return client.getVarpValue(VarPlayerID.SLAYER_MORTIMER_TASKS_COMPLETED);
+			default:
+				return client.getVarbitValue(VarbitID.SLAYER_TASKS_COMPLETED);
+		}
 	}
 
 	private void removeCounter()

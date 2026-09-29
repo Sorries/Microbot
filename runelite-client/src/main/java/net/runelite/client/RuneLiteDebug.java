@@ -49,9 +49,6 @@ import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.FatalErrorDialog;
 import net.runelite.client.ui.SplashScreen;
 import net.runelite.client.ui.overlay.OverlayManager;
-//import net.runelite.client.ui.overlay.WidgetOverlay;
-import net.runelite.client.ui.overlay.tooltip.TooltipOverlay;
-import net.runelite.client.ui.overlay.worldmap.WorldMapOverlay;
 import net.runelite.client.util.OSType;
 import net.runelite.client.util.ReflectUtil;
 import net.runelite.client.util.CrashReportFormatter;
@@ -63,7 +60,6 @@ import okhttp3.Response;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -129,12 +125,6 @@ public class RuneLiteDebug {
 
     @Inject
     private OverlayManager overlayManager;
-
-    @Inject
-    private Provider<TooltipOverlay> tooltipOverlay;
-
-    @Inject
-    private Provider<WorldMapOverlay> worldMapOverlay;
 
     @Inject
     @Nullable
@@ -298,20 +288,20 @@ public class RuneLiteDebug {
             final String crashSummary = CrashReportFormatter.summarize(e);
             final String crashDetails = CrashReportFormatter.buildReport(e);
             SwingUtilities.invokeLater(() ->
-            {
-                if (SplashScreen.isOpen())
-                {
-                    SplashScreen.showError("RuneLite failed to start", crashSummary, crashDetails);
-                }
-                else
-                {
-                    new FatalErrorDialog("RuneLite has encountered an unexpected error during startup.")
-                            .setContent(crashDetails)
-                            .addCopyButton("Copy error details")
-                            .addHelpButtons()
-                            .open();
-                }
-            });
+                    {
+                        if (SplashScreen.isOpen())
+                        {
+                                SplashScreen.showError("RuneLite failed to start", crashSummary, crashDetails);
+                        }
+                        else
+                        {
+                                new FatalErrorDialog("RuneLite has encountered an unexpected error during startup.")
+                                        .setContent(crashDetails)
+                                        .addCopyButton("Copy error details")
+                                        .addHelpButtons()
+                                        .open();
+                        }
+                    });
         } finally {
             if (!startupFailed) {
                 SplashScreen.stop();
@@ -350,8 +340,8 @@ public class RuneLiteDebug {
         // Load user configuration
         configManager.load();
 
-        // Initialize MicrobotPluginManager after configManager is loaded
-        microbotPluginManager.init();
+		// Initialize MicrobotPluginManager after configManager is loaded
+		microbotPluginManager.init();
 
         // Update check requires ConfigManager to be ready before it runs
         Updater updater = injector.getInstance(Updater.class);
@@ -379,16 +369,13 @@ public class RuneLiteDebug {
         eventBus.register(clientUI);
         eventBus.register(pluginManager);
         eventBus.register(externalPluginManager);
-        eventBus.register(microbotPluginManager);
+		eventBus.register(microbotPluginManager);
         eventBus.register(overlayManager);
         eventBus.register(configManager);
         eventBus.register(discordService);
 
         if (!isOutdated) {
             // Add core overlays
-//            WidgetOverlay.createOverlays(overlayManager, client).forEach(overlayManager::add);
-//            overlayManager.add(worldMapOverlay.get());
-//            overlayManager.add(tooltipOverlay.get());
             overlayManager.init();
         }
 
@@ -457,14 +444,19 @@ public class RuneLiteDebug {
                 .addInterceptor(chain ->
                 {
                     Request request = chain.request();
-                    if (request.header("User-Agent") != null)
+                    String ua = request.header("User-Agent");
+                    if (ua == null)
                     {
-                        return chain.proceed(request);
+                        ua = USER_AGENT;
+                    }
+                    else if (!ua.startsWith("RuneLite"))
+                    {
+                        ua = USER_AGENT + " " + ua;
                     }
 
                     Request userAgentRequest = request
                             .newBuilder()
-                            .header("User-Agent", USER_AGENT)
+                            .header("User-Agent", ua)
                             .build();
                     return chain.proceed(userAgentRequest);
                 })

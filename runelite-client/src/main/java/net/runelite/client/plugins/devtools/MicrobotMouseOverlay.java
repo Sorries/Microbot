@@ -26,7 +26,9 @@ public class MicrobotMouseOverlay extends Overlay {
         this.client = client;
         this.plugin = plugin;
         setPosition(OverlayPosition.DYNAMIC);
-        setLayer(OverlayLayer.ABOVE_WIDGETS);
+        // Not ABOVE_WIDGETS: that layer is defined as "render under the right-click menu", so the
+        // crosshair vanished behind an open context menu. A real cursor draws above it.
+        setLayer(OverlayLayer.ALWAYS_ON_TOP);
         setPriority(Overlay.PRIORITY_LOW);
         setNaughty();
         // Increase the angle

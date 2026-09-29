@@ -381,11 +381,11 @@ public class ClientUI
 				OSXFullScreenAdapter.install(frame);
 			}
 
-			final Client client = (Client) this.client;
+			final Client apiClient = (Client) this.client;
 			String frameTitle = title;
-			if (client.getLauncherDisplayName() != null && config.usernameInTitle())
+			if (apiClient.getLauncherDisplayName() != null && config.usernameInTitle())
 			{
-				frameTitle += " - " + client.getLauncherDisplayName();
+				frameTitle += " - " + apiClient.getLauncherDisplayName();
 			}
 
 			frame.setTitle(frameTitle);
@@ -448,12 +448,12 @@ public class ClientUI
 			content = new JPanel();
 			content.setLayout(new Layout());
 
-			clientPanel = new ClientPanel(this.client);
-            consolePanel = new LogConsolePanel();
-            clientPanel.setConsole(consolePanel);
-            clientPanel.setConsoleVisible(false);
-            consoleVisible = false;
-            initializeConsoleLogging();
+			clientPanel = new ClientPanel(client);
+			consolePanel = new LogConsolePanel();
+			clientPanel.setConsole(consolePanel);
+			clientPanel.setConsoleVisible(false);
+			consoleVisible = false;
+			initializeConsoleLogging();
 			content.add(clientPanel);
 
 			sidebar = new JTabbedPane(JTabbedPane.RIGHT);
@@ -1373,7 +1373,7 @@ public class ClientUI
 			final Player player = client.getLocalPlayer();
 
 			String playerName = null;
-			if (player != null && player.getName() != null)
+			if (player != null && !Strings.isNullOrEmpty(player.getName()))
 			{
 				playerName = player.getName();
 			}

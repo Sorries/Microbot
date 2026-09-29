@@ -29,7 +29,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Binder;
 import com.google.inject.Inject;
+import com.google.inject.Module;
 import com.google.inject.Provides;
+import com.google.inject.util.Providers;
 import java.awt.FontMetrics;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +97,9 @@ public class ItemStatPlugin extends Plugin
 	@Inject
 	private ClientThread clientThread;
 
+	@Inject
+	private ItemStatChangesServiceImpl itemStatChangesService;
+
 	private Widget itemInformationTitle;
 
 	@Provides
@@ -104,9 +109,9 @@ public class ItemStatPlugin extends Plugin
 	}
 
 	@Override
-	public void configure(Binder binder)
+	protected Module getPublicModule()
 	{
-		binder.bind(ItemStatChangesService.class).to(ItemStatChangesServiceImpl.class);
+		return b -> b.bind(ItemStatChangesService.class).toProvider(Providers.of(itemStatChangesService));
 	}
 
 	@Override
