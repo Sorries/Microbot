@@ -701,7 +701,7 @@ public class Rs2Inventory {
     public static boolean dropAllExcept(int gpValue, List<String> ignoreItems) {
         final Predicate<Rs2ItemModel> ignore = item -> ignoreItems.stream().anyMatch(x -> x.equalsIgnoreCase(item.getName()));
         final Predicate<Rs2ItemModel> price = item -> (long) Microbot.getClientThread().runOnClientThreadOptional(() ->
-                Microbot.getItemManager().getItemPrice(item.getId()) * item.getQuantity()).orElse(0) >= gpValue;
+                Microbot.getItemManager().getItemPrice(item.getId()) * item.getQuantity()).orElse(0L) >= gpValue;
         return dropAllExcept(ignore.or(price));
     }
 

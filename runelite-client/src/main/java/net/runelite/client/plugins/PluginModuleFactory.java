@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026, Zoinkwiz <https://github.com/Zoinkwiz>
+ * Copyright (c) 2026 Abex
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,27 +22,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.microbot.questhelper.helpers.quests.thebloodmoonrises;
+package net.runelite.client.plugins;
 
-import net.runelite.client.plugins.microbot.questhelper.questhelpers.QuestHelper;
-import net.runelite.client.plugins.microbot.questhelper.requirements.Requirement;
-import net.runelite.client.plugins.microbot.questhelper.steps.ConditionalStep;
-import net.runelite.client.plugins.microbot.questhelper.steps.QuestStep;
-import java.util.List;
-import lombok.Getter;
+import com.google.inject.AbstractModule;
+import javax.inject.Singleton;
+import lombok.RequiredArgsConstructor;
 
-class CastleDrakanGoalStep extends ConditionalStep
+@Singleton
+class PluginModuleFactory
 {
-	@Getter
-	private List<QuestStep> displaySteps = List.of();
-
-	CastleDrakanGoalStep(QuestHelper questHelper, QuestStep step, String text, Requirement... requirements)
+	@RequiredArgsConstructor
+	class PluginModule extends AbstractModule
 	{
-		super(questHelper, step, text, requirements);
-	}
+		private final Plugin plugin;
 
-	void orderSidebar(QuestStep... rows)
-	{
-		displaySteps = List.of(rows);
+		@Override
+		protected void configure()
+		{
+			// Since the plugin itself is a module, it won't bind itself, so we'll bind it here
+			binder().bind((Class<Plugin>) plugin.getClass()).toInstance(plugin);
+			binder().install(plugin);
+		}
 	}
 }

@@ -70,7 +70,6 @@ public enum AgilityAction implements NamedSkillAction
 	RELLEKKA_ROOFTOP("Rellekka Rooftop", 80, 780, ItemID.GRACE),
 	HALLOWED_SEPULCHRE_FLOOR_5("Hallowed Sepulchre Floor 5", 87, 5725, ItemID.RING_OF_ENDURANCE),
 	ARDOUGNE_ROOFTOP("Ardougne Rooftop", 90, 889, ItemID.GRACE),
-	HALLOWED_SEPULCHRE_FLOOR_5("Hallowed Sepulchre Floor 5", 92, 5725, ItemID.RING_OF_ENDURANCE),
 	;
 
 	private final String name;
