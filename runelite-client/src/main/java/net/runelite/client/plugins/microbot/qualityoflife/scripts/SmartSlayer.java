@@ -339,6 +339,13 @@ private static String slayerMonster = null;
                             sleep(500, 1000);
                             attempts++;
                         }
+                    } else if (Rs2Inventory.contains(ItemID.POH_TABLET_VARROCKTELEPORT)) {
+                        attempts = 0;
+                        while (!Rs2Bank.isNearBank(15) && attempts < 3) {
+                            Rs2Inventory.interact(ItemID.POH_TABLET_VARROCKTELEPORT, "Grand Exchange");
+                            sleepUntil(() -> Rs2Bank.isNearBank(15));
+                            attempts++;
+                        }
                     } else if (Rs2Inventory.contains(13393)) {
                         attempts = 0;
                         while (!Rs2Bank.isNearBank(5) && attempts < 3) {
