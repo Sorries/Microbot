@@ -265,7 +265,7 @@ private static String slayerMonster = null;
                             }
                         }
                     }
-                    if(!Rs2Combat.inCombat() && !config.krakenMode()) {
+                    if(!Rs2Combat.inCombat() && Rs2Slayer.hasSlayerTask()) {
                         int waited = 0;
                         int timeout = Rs2Random.between(3000,8000);
                         System.out.println(timeout);
