@@ -11,6 +11,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.ScriptPauseController;
 import net.runelite.client.plugins.microbot.globval.enums.InterfaceTab;
+import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
@@ -71,6 +72,7 @@ public class Rs2Tab {
         if (ScriptPauseController.isPaused()) return false;
         long generation = ScriptPauseController.getGeneration();
         if (!Microbot.isLoggedIn()) return false;
+        if (Rs2Bank.isOpen()) return true;
         if (readCurrentTab() == tab) return true;
 
         if (tab == InterfaceTab.NOTHING_SELECTED && Microbot.getVarbitValue(VarbitID.RESIZABLE_STONE_ARRANGEMENT) == 0)
