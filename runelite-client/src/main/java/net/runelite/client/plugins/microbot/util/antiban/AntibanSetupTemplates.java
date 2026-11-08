@@ -1,6 +1,7 @@
 package net.runelite.client.plugins.microbot.util.antiban;
-
+import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
+import net.runelite.client.plugins.microbot.util.antiban.enums.ActivityIntensity;
 
 /**
  * The {@code AntibanSetupTemplates} class provides predefined antiban setup configurations tailored to specific
@@ -647,6 +648,7 @@ public class AntibanSetupTemplates {
         Rs2AntibanSettings.microBreakDurationHigh = 8;
         Rs2AntibanSettings.actionCooldownChance = 1.00;
         Rs2AntibanSettings.microBreakChance = 0.05;
+        Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
     }
     /**
      * Applies the basic antiban setup.
@@ -670,16 +672,19 @@ public class AntibanSetupTemplates {
         Rs2AntibanSettings.simulateMistakes = true;
         Rs2AntibanSettings.naturalMouse = true;
         Rs2AntibanSettings.contextualVariability = true;
-        Rs2AntibanSettings.dynamicIntensity = true;
-        Rs2AntibanSettings.dynamicActivity = true;
+        Rs2AntibanSettings.dynamicIntensity = false;
+        Rs2AntibanSettings.dynamicActivity = false;
         Rs2AntibanSettings.devDebug = false;
         Rs2AntibanSettings.takeMicroBreaks = false;
         Rs2AntibanSettings.playSchedule = false;
         Rs2AntibanSettings.universalAntiban = true;
         Rs2AntibanSettings.microBreakDurationLow = 3;
         Rs2AntibanSettings.microBreakDurationHigh = 8;
-        Rs2AntibanSettings.actionCooldownChance = 1.00;
+        Rs2AntibanSettings.actionCooldownChance = 0.00;
         Rs2AntibanSettings.microBreakChance = 0.05;
+        Rs2AntibanSettings.moveMouseRandomly = false;
+        Rs2AntibanSettings.moveMouseOffScreen = false;
+        Rs2Antiban.setActivityIntensity(ActivityIntensity.LOW);
     }
 
 }

@@ -22,7 +22,7 @@ public enum BankLocation {
     ARCEUUS(new WorldPoint(1624, 3745, 0), true),
     ARDOUGNE_NORTH(new WorldPoint(2616, 3332, 0), true),
     ARDOUGNE_SOUTH(new WorldPoint(2655, 3283, 0), true),
-	AUBURNVALE(new WorldPoint(1413, 3353, 0), true),
+    AUBURNVALE(new WorldPoint(1413, 3353, 0), true),
     BARBARIAN_OUTPOST(new WorldPoint(2536, 3574, 0), true),
     BLAST_FURNACE_BANK(new WorldPoint(1948, 4957, 0), true),
     BLAST_MINE(new WorldPoint(1502, 3856, 0), true),
@@ -37,7 +37,7 @@ public enum BankLocation {
     COOKS_GUILD(new WorldPoint(3147,3450,0), true),
     CORSAIR_COVE(new WorldPoint(2570, 2864, 0), false),
     CRAFTING_GUILD(new WorldPoint(2936, 3281, 0), true),
-	DARKFROST(new WorldPoint(1527, 3292, 0), true),
+    DARKFROST(new WorldPoint(1527, 3292, 0), true),
     DARKMEYER(new WorldPoint(3604, 3366, 0), true),
     DEEPFIN_POINT(new WorldPoint(1935, 2755,0), true),
     DEEPFIN_MINE_MID(new WorldPoint(2011, 9186,0), true),
@@ -75,7 +75,7 @@ public enum BankLocation {
     LUMBRIDGE_TOP(new WorldPoint(3209, 3220, 2), false),
     LUNAR_ISLE(new WorldPoint(2099, 3919, 0), true),
     MAGE_TRAINING_ARENA(new WorldPoint(3366, 3318, 1), true),
-	MAGE_ARENA(new WorldPoint(2534, 4712, 0), true),
+    MAGE_ARENA(new WorldPoint(2534, 4712, 0), true),
     MINING_GUILD(new WorldPoint(3013, 9718, 0), true),
     MISTROCK(new WorldPoint(1381, 2866, 0), true),
     MOR_UL_REK(new WorldPoint(2541, 5140, 0), true),
@@ -84,7 +84,7 @@ public enum BankLocation {
     MOUNT_QUIDAMORTEM (new WorldPoint(1254,3571,0),true),
     MYTHS_GUILD(new WorldPoint(2463, 2847, 1), true),
     NARDAH(new WorldPoint(3428, 2892, 0), true),
-	NEMUS_RETREAT(new WorldPoint(1386, 3309, 0), true),
+    NEMUS_RETREAT(new WorldPoint(1386, 3309, 0), true),
     NEITIZNOT(new WorldPoint(2337, 3807, 0), true),
     PEST_CONTROL(new WorldPoint(2667, 2653, 0), true),
     PISCARILIUS(new WorldPoint(1803, 3790, 0), true),
@@ -102,7 +102,7 @@ public enum BankLocation {
     SHILO_VILLAGE(new WorldPoint(2852, 2954, 0), true),
     SOPHANEM(new WorldPoint(2799, 5169, 0), true),
     SULPHUR_MINE(new WorldPoint(1453, 3858, 0), true),
-	SUNBLEAK_ISLAND(new WorldPoint(2195, 2314, 0), true),
+    SUNBLEAK_ISLAND(new WorldPoint(2195, 2314, 0), true),
     TAL_TEKLAN(new WorldPoint(1243, 3121, 0), true),
     TREE_GNOME_STRONGHOLD_NIEVE(new WorldPoint(2445, 3424, 1), true),
     TZHAAR(new WorldPoint(2446, 5178, 0), true),
@@ -187,7 +187,7 @@ public enum BankLocation {
                     return Rs2Player.getQuestState(Quest.DREAM_MENTOR) == QuestState.FINISHED;
                 }
             case JATIZSO:
-				// Requires The Fremennik Trials & starting The Fremennik Isles
+                // Requires The Fremennik Trials & starting The Fremennik Isles
                 return Rs2Player.getQuestState(Quest.THE_FREMENNIK_TRIALS) == QuestState.FINISHED && Rs2Player.getQuestState(Quest.THE_FREMENNIK_ISLES) != QuestState.NOT_STARTED;
             case NEITIZNOT:
                 // Requires The Fremennik Trials & The Fremennik Isles
@@ -213,11 +213,11 @@ public enum BankLocation {
                 // Requires Bone Voyage
                 return Rs2Player.getQuestState(Quest.BONE_VOYAGE) == QuestState.FINISHED;
             case ALDARIN:
-			case AUBURNVALE:
-			case DARKFROST:
+            case AUBURNVALE:
+            case DARKFROST:
             case MOUNT_QUIDAMORTEM:
-			case NEMUS_RETREAT:
-			case TAL_TEKLAN:
+            case NEMUS_RETREAT:
+            case TAL_TEKLAN:
             case VARLAMORE_EAST:
             case VARLAMORE_WEST:
                 // Requires Children of the Sun

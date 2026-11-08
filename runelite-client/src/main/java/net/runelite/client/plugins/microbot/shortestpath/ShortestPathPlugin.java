@@ -219,7 +219,7 @@ public class ShortestPathPlugin extends Plugin {
     public static boolean startPointSet = false;
     @Setter
     private static int reachedDistance;
-    @Getter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PUBLIC)
     private ShortestPathScript shortestPathScript;
 
     // Set by onGameStateChanged when the client transitions to LOGGED_IN. Consumed on the next

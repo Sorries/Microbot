@@ -8,6 +8,7 @@ import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.misc.SpecialAttackWeaponEnum;
 
 import java.util.ArrayList;
@@ -106,18 +107,49 @@ public class SpecialAttackConfigs {
                         .findFirst()
                         .orElse(null);
 
-                if (shield != null) {
-                    Rs2Inventory.wear(shield.getName());
-                }
-                if (weapon != null) {
-                    Rs2Inventory.wear(Objects.requireNonNull(weapon).getName());
-                }
+//                if (shield != null) {
+//                    sleep(750,1250);
+//                    Rs2Inventory.wear(shield.name);
+//                }
+//                if (weapon != null) {
+//                    sleep(750,1250);
+//                    Rs2Inventory.wear(Objects.requireNonNull(weapon).name);
+//                }
+                wearWithRandomOrder(weapon,shield);
             }
             return false;
         }
-
+        sleep(1000,5000);
         boolean didInteract = Rs2Inventory.wear(name);
-        if (didInteract) sleep(600);
+        if (didInteract) {
+            sleep(1250,2000);
+        }
         return Rs2Combat.setSpecState(true, specEnergy);
+    }
+    public static void wearWithRandomOrder(Rs2ItemModel item1, Rs2ItemModel item2) {
+        if (item1 == null && item2 == null) return;
+
+        boolean wearFirstItem = Rs2Random.between(0, 2) == 0;
+        if (wearFirstItem) {
+            if (item1 != null) {
+                sleep(750, 1250);
+                Rs2Inventory.wear(item1.getName());
+            }
+            if (item2 != null) {
+                sleep(750, 1250);
+                Rs2Inventory.wear(item2.getName());
+                Microbot.log("Weapon First");
+            }
+        } else {
+            if (item2 != null) {
+                sleep(750, 1250);
+                Rs2Inventory.wear(item2.getName());
+            }
+            if (item1 != null) {
+                sleep(750, 1250);
+                Rs2Inventory.wear(item1.getName());
+                Microbot.log("Weapon Second");
+            }
+        }
     }
 }

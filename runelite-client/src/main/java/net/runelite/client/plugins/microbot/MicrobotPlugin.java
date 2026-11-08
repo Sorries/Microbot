@@ -316,7 +316,10 @@ public class MicrobotPlugin extends Plugin
 	@Subscribe
 	public void onStatChanged(StatChanged statChanged)
 	{
+		Microbot.log("Microbot stat changed: " + statChanged.getSkill() + " " + statChanged.getXp() + " " + statChanged.getLevel() + " " + statChanged.getBoostedLevel());
+		if(statChanged.getSkill() != Skill.HITPOINTS) {
 		Microbot.setIsGainingExp(true);
+	}
 	}
 
 	@Subscribe

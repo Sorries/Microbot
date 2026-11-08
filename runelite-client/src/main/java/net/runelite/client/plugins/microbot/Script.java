@@ -16,6 +16,7 @@ import net.runelite.client.plugins.microbot.util.antiban.SessionFatigue;
 import net.runelite.client.plugins.microbot.util.input.InputArbiter;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
+import net.runelite.client.plugins.microbot.util.math.Rs2Random;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 import net.runelite.client.plugins.microbot.util.walker.Rs2PathApi;
 import net.runelite.client.plugins.microbot.util.walker.Rs2Walker;
@@ -24,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.event.Level;
 
 import java.lang.reflect.Field;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
@@ -159,6 +162,17 @@ public abstract class Script extends Global implements IScript {
 
     @Getter
     protected static WorldPoint initialPlayerLocation;
+    public Instant startTime;
+
+    /**
+     * Get the total runtime of the script
+     *
+     * @return the total runtime of the script
+     */
+    public Duration getRunTime() {
+        if (startTime == null) return Duration.ofSeconds(0);
+        return Duration.between(startTime, Instant.now());
+    }
 
     /**
      * Cancel scheduled tasks, clear shared state, and reset helpers.
@@ -184,10 +198,12 @@ public abstract class Script extends Global implements IScript {
             CantReachTargetRecovery.reset();
             Rs2Walker.disableTeleports = false;
             Microbot.getSpecialAttackConfigs().reset();
+            Rs2Walker.setTarget(null);
         }
         if (scheduledFuture != null && !scheduledFuture.isDone()) {
             scheduledFuture.cancel(true);
         }
+        startTime = null;
     }
 
     /**
@@ -198,6 +214,10 @@ public abstract class Script extends Global implements IScript {
      * {@link Microbot#runEnergyThreshold} and no blocking interface is open (see {@link #isBlockingInterfaceOpen()}).
      */
     public boolean run() {
+        if (startTime == null) {
+            startTime = Instant.now();
+            //init - things that have to be checked once can be added here
+        }
         synchronized (lifecycleLock) {
             if (disposed || Thread.currentThread().isInterrupted()) {
                 return false;
@@ -219,32 +239,36 @@ public abstract class Script extends Global implements IScript {
         if (Microbot.isLoggedIn() && !Rs2Player.hasCompletedTutorialIsland())
             return true;
 
-        if (Rs2Player.hasCompletedTutorialIsland() && Microbot.getBlockingEventManager().shouldBlockAndProcess()) {
-            // A blocking event was found & is executing
-            return false;
-        }
-        // The arbiter keeps its own flag, so a takeover idles every script through the gate that
-        // already exists, cancelling nothing.
-        boolean humanOwnsInput = InputArbiter.isHuman();
-        if (humanOwnsInput) {
-            // A held key is not gesture-scoped, so InputLoop cannot unwind it.
-            Rs2Keyboard.releaseHeldKeys();
-        }
-        if (Microbot.pauseAllScripts.get() || humanOwnsInput)
-            return false;
-        if (Thread.currentThread().isInterrupted())
-            return false;
-
-        if (Microbot.isLoggedIn()) {
-            boolean hasRunEnergy = Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getEnergy()).orElse(0) > Microbot.runEnergyThreshold;
-            // Clicking the run orb mid-interface steals focus from the script's own dialogue/bank/production flow.
-            if (Microbot.enableAutoRunOn && hasRunEnergy && !isBlockingInterfaceOpen())
-                Rs2Player.toggleRunEnergy(true);
-            if (!hasRunEnergy && Microbot.useStaminaPotsIfNeeded && Rs2Player.isMoving()) {
-                Rs2Inventory.useRestoreEnergyItem();
+        // Add a small delay to ensure the client has fully loaded
+        if (Microbot.getLoginTime().toSeconds() > Rs2Random.betweenInclusive(3, 5)) {
+            if (Microbot.getBlockingEventManager().shouldBlockAndProcess()) {
+                // A blocking event was found & is executing
+                return false;
             }
-            Microbot.getConfigManager().setConfiguration(MicrobotConfig.configGroup, MicrobotConfig.keyEnableAutoRunOn, Microbot.enableAutoRunOn);
-            Microbot.getConfigManager().setConfiguration(MicrobotConfig.configGroup, MicrobotConfig.keyUseStaminaPotsIfNeeded, Microbot.useStaminaPotsIfNeeded);
+            // The arbiter keeps its own flag, so a takeover idles every script through the gate that
+            // already exists, cancelling nothing.
+            boolean humanOwnsInput = InputArbiter.isHuman();
+            if (humanOwnsInput) {
+                // A held key is not gesture-scoped, so InputLoop cannot unwind it.
+                Rs2Keyboard.releaseHeldKeys();
+            }
+            if (Microbot.pauseAllScripts.get() || humanOwnsInput)
+                return false;
+            if (Thread.currentThread().isInterrupted())
+                return false;
+
+            if (Microbot.isLoggedIn()) {
+                boolean hasRunEnergy = Microbot.getClientThread().runOnClientThreadOptional(() -> Microbot.getClient().getEnergy()).orElse(0) > Microbot.runEnergyThreshold;
+                // Clicking the run orb mid-interface steals focus from the script's own dialogue/bank/production flow.
+                if (Microbot.enableAutoRunOn && hasRunEnergy && !isBlockingInterfaceOpen())
+                    Rs2Player.toggleRunEnergy(true);
+                if (!hasRunEnergy && Microbot.useStaminaPotsIfNeeded && Rs2Player.isMoving()) {
+                    Rs2Inventory.useRestoreEnergyItem();
+                    Rs2Inventory.waitForInventoryChanges(1000);
+                }
+                Microbot.getConfigManager().setConfiguration(MicrobotConfig.configGroup, MicrobotConfig.keyEnableAutoRunOn, Microbot.enableAutoRunOn);
+                Microbot.getConfigManager().setConfiguration(MicrobotConfig.configGroup, MicrobotConfig.keyUseStaminaPotsIfNeeded, Microbot.useStaminaPotsIfNeeded);
+            }
         }
         return true;
     }

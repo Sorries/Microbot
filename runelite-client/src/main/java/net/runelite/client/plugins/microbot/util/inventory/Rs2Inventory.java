@@ -696,6 +696,15 @@ public class Rs2Inventory {
         return dropAllExcept(ignore.or(price));
     }
 
+    // overload for old method
+    public static boolean dropAllExcept(int gpValue, List<String> ignoreItems) {
+        final Predicate<Rs2ItemModel> ignore = item -> ignoreItems.stream().anyMatch(x -> x.equalsIgnoreCase(item.getName()));
+        final Predicate<Rs2ItemModel> price = item -> (long) Microbot.getClientThread().runOnClientThreadOptional(() ->
+                Microbot.getItemManager().getItemPrice(item.getId()) * item.getQuantity()).orElse(0L) >= gpValue;
+        return dropAllExcept(ignore.or(price));
+    }
+
+
     /**
      * Returns the count of empty slots in your inventory.
      *
@@ -735,7 +744,24 @@ public class Rs2Inventory {
     public static Rs2ItemModel getLast(int id) {
         return items(item -> item.getId() == id).reduce((a, b) -> b).orElse(null);
     }
+    /**
+     * Gets the random item in the inventory that matches the specified item ID.
+     *
+     * @param id The ID to match.
+     *
+     * @return The last item that matches the ID, or null if not found.
+     */
+    public static Rs2ItemModel getRandom(int id) {
+        final Rs2ItemModel[] items = items(item -> item.getId() == id)
+                .toArray(Rs2ItemModel[]::new);
 
+        if (items.length == 0) {
+            return null;
+        }
+
+        int randomIndex = Rs2Random.betweenInclusive(0, items.length - 1);
+        return items[randomIndex];
+    }
     /**
      * Gets the item in the inventory that matches the specified filter criteria.
      *
@@ -1639,6 +1665,29 @@ public class Rs2Inventory {
     }
 
     /**
+     * Uses the item with the specified name in the inventory.
+     *
+     * @param name The name of the item to use.
+     * @param action
+     * @param exclude name
+     * @param exact for exact match
+     *
+     * @return True if the item is successfully used, false otherwise.
+     */
+
+    public static boolean use(String name, String action, String exclude, boolean exact) {
+        Predicate<Rs2ItemModel> includeFilter = Rs2ItemModel.matches(exact, name);
+        Predicate<Rs2ItemModel> excludeFilter = Rs2ItemModel.matches(exact, exclude).negate();
+
+        Predicate<Rs2ItemModel> combinedFilter = includeFilter.and(excludeFilter);
+
+        Rs2ItemModel item = Rs2Inventory.get(combinedFilter);
+        if (item == null) return false;
+
+        return interact(item, action);
+    }
+
+    /**
      * Uses the given item in the inventory.
      *
      * @param rs2Item The item to use.
@@ -1933,6 +1982,7 @@ public class Rs2Inventory {
             String[] actions = itemWidget != null && itemWidget.getActions() != null ?
                     itemWidget.getActions() :
                     rs2Item.getInventoryActions();
+            System.out.println("actions: " + Arrays.toString(actions)+ " itemWidget: " + Arrays.toString(itemWidget.getActions())+ " rs2item: " + Arrays.toString(rs2Item.getInventoryActions()));
 
             int simpleIndex = indexOfIgnoreCase(stripColTags(actions), action);
             if (simpleIndex != -1) {

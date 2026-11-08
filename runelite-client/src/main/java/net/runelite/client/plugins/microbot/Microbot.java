@@ -106,8 +106,8 @@ public class Microbot {
     public static String status = "IDLE";
 
     // Feature Flags
-    public static boolean enableAutoRunOn = true;
-    public static boolean useStaminaPotsIfNeeded = true;
+    public static boolean enableAutoRunOn = false;
+    public static boolean useStaminaPotsIfNeeded = false;
     public static int runEnergyThreshold = 1000;
     /**
      * Reactive unreachable-interaction recovery. When the game prints "I can't reach that!"
@@ -1128,7 +1128,12 @@ public class Microbot {
                         && !x.getClass().getSimpleName().equalsIgnoreCase("MInventorySetupsPlugin")
                         && !x.getClass().getSimpleName().equalsIgnoreCase("MicrobotPlugin")
                         && !x.getClass().getSimpleName().equalsIgnoreCase("ShortestPathPlugin")
-                        && !x.getClass().getSimpleName().equalsIgnoreCase("AntibanPlugin"))
+                        && !x.getClass().getSimpleName().equalsIgnoreCase("AntibanPlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("ExamplePlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("PluginDisablerPlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("QoLPlugin")
+                         && !x.getClass().getSimpleName().equalsIgnoreCase("EventDismissPlugin")
+                 )
                 .collect(Collectors.toList());
     }
 
